@@ -55,6 +55,10 @@ plugin (`config.allow-plugins` in your `composer.json`). Your `phpstan.neon` inc
 `vendor/waynestate/pinstripe/phpstan/laravel.neon` and nothing else: there is no Larastan line to add, and the
 scripts point at `vendor/waynestate/pinstripe/pint/laravel.json`.
 
+Proven on Laravel: `composer ci` lints a minimal Laravel 13 app (`tests/fixtures/laravel-app`) with
+`pint/laravel.json` and analyses it with `phpstan/laravel.neon` on every run, and fails if the app stops
+passing.
+
 ## Use it for Vue
 
 Add Pinstripe as a dev dependency:
