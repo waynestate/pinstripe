@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Pinstripe">
+<title>Pinstripe</title>
+<!-- Two stripes, not three: bolder, so it holds at 32 and 64 px. -->
+<rect width="512" height="512" rx="112" fill="#0C5449"/>
+<rect x="160" y="96" width="24" height="320" fill="#FFFFFF"/>
+<rect x="200" y="96" width="24" height="320" fill="#FFFFFF"/>
+<path d="M222 96H248A104 104 0 0 1 248 304H222V280H248A80 80 0 0 0 248 120H222Z" fill="#FFFFFF"/>
+<path d="M222 136H248A64 64 0 0 1 248 264H222V240H248A40 40 0 0 0 248 160H222Z" fill="#FFFFFF"/>
+<circle cx="248" cy="200" r="24" fill="#FFCC33"/>
+</svg>

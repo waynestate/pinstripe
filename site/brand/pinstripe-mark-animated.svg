@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="56 56 400 400" role="img" aria-label="Pinstripe">
+<title>Pinstripe</title>
+<!-- Pinstripe, animated. The crooked stripes snap straight, like code being formatted, then the pin drops into the
+     bowl. The drawing below is the finished mark, so anything that ignores CSS shows it as is, and
+     prefers-reduced-motion turns the animation off. Stripes follow the colour scheme; the pin stays gold. -->
+<style>
+.s{fill:#0C5449;transform-box:fill-box;transform-origin:center;animation:ps-snap .85s cubic-bezier(.2,.85,.25,1) both}
+.p{fill:#FFCC33;transform-box:fill-box;transform-origin:center;animation:ps-pin .45s cubic-bezier(.3,1.5,.5,1) .95s both}
+@keyframes ps-snap{from{transform:translate(var(--x),var(--y)) rotate(var(--r));opacity:0}30%{opacity:1}to{transform:none;opacity:1}}
+@keyframes ps-pin{from{transform:scale(0)}to{transform:scale(1)}}
+@media (prefers-color-scheme:dark){.s{fill:#FFFFFF}}
+@media (prefers-reduced-motion:reduce){.s,.p{animation:none}}
+</style>
+<rect class="s" style="--r:-7deg;--x:-10px;--y:14px;animation-delay:0.00s" x="154" y="96" width="14" height="320"/>
+<rect class="s" style="--r:5deg;--x:8px;--y:-18px;animation-delay:0.07s" x="181" y="96" width="14" height="320"/>
+<rect class="s" style="--r:-4deg;--x:12px;--y:10px;animation-delay:0.14s" x="208" y="96" width="14" height="320"/>
+<path class="s" style="--r:-17deg;--x:0px;--y:0px;transform-origin:21.74% 50%;animation-delay:0.21s" d="M220 96H250A108 108 0 0 1 250 312H220V298H250A94 94 0 0 0 250 110H220Z"/>
+<path class="s" style="--r:21deg;--x:0px;--y:0px;transform-origin:27.03% 50%;animation-delay:0.27s" d="M220 123H250A81 81 0 0 1 250 285H220V271H250A67 67 0 0 0 250 137H220Z"/>
+<path class="s" style="--r:-29deg;--x:0px;--y:0px;transform-origin:35.71% 50%;animation-delay:0.33s" d="M220 150H250A54 54 0 0 1 250 258H220V244H250A40 40 0 0 0 250 164H220Z"/>
+<circle class="p" cx="250" cy="204" r="27"/>
+</svg>
