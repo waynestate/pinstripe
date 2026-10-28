@@ -189,6 +189,94 @@ final class PresetsTest extends TestCase
         $this->assertStringContainsString('larastan/larastan', (string) file_get_contents($generated));
     }
 
+    public function testPintLaravelPresetAcceptsTheLaravelAppFixture(): void
+    {
+        $fixture = $this->laravelAppFixture();
+
+        // `bootstrap/app.php` is passed as a file, not the `bootstrap`
+        // directory: Laravel writes generated caches into bootstrap/cache at
+        // runtime, and those are not the app's code.
+        [$exit, $output] = $this->runInDir([
+            PHP_BINARY,
+            'vendor/bin/pint',
+            '--test',
+            '--config',
+            'vendor/waynestate/pinstripe/pint/laravel.json',
+            'app',
+            'routes',
+            'bootstrap/app.php',
+        ], $fixture);
+
+        $this->assertSame(0, $exit, $output);
+    }
+
+    public function testPhpStanLaravelConfigAcceptsTheLaravelAppFixture(): void
+    {
+        $fixture = $this->laravelAppFixture();
+
+        [$exit, $output] = $this->runInDir([
+            PHP_BINARY,
+            'vendor/bin/phpstan',
+            'analyse',
+            '-c',
+            'phpstan.neon',
+            '--no-progress',
+            '--error-format=raw',
+            'app',
+            'bootstrap',
+            'routes',
+        ], $fixture);
+
+        $this->assertSame(0, $exit, $output);
+
+        $generated = $fixture . '/vendor/phpstan/extension-installer/src/GeneratedConfig.php';
+        $this->assertFileExists($generated);
+        $this->assertStringContainsString('larastan/larastan', (string) file_get_contents($generated));
+    }
+
+    public function testPhpStanLaravelConfigReportsTheUndefinedEloquentProperty(): void
+    {
+        $fixture = $this->laravelAppFixture();
+
+        [$exit, $output] = $this->runInDir([
+            PHP_BINARY,
+            'vendor/bin/phpstan',
+            'analyse',
+            '-c',
+            'phpstan.neon',
+            '--no-progress',
+            '--error-format=raw',
+            'bad',
+        ], $fixture);
+
+        $this->assertNotSame(0, $exit, $output);
+        $this->assertStringContainsString('Access to an undefined property App\Models\Greeting::$audience', $output);
+    }
+
+    /**
+     * The Laravel app fixture, installed on first use.
+     *
+     * `update` (not `install`) because the fixture's composer.lock is
+     * gitignored, so a fresh checkout has no lock to install from. The
+     * vendor directory is kept between runs, so the install happens once
+     * per machine, not once per test.
+     */
+    private function laravelAppFixture(): string
+    {
+        $fixture = $this->root() . '/tests/fixtures/laravel-app';
+
+        if (!is_file($fixture . '/vendor/autoload.php')) {
+            [$installExit, $installOutput] = $this->runInDir(
+                array_merge($this->composerCommand(), ['update', '--no-interaction', '--no-progress']),
+                $fixture
+            );
+
+            $this->assertSame(0, $installExit, $installOutput);
+        }
+
+        return $fixture;
+    }
+
     public function testPintConfigsDeclareTheirPresets(): void
     {
         $root = $this->root();
