@@ -50,3 +50,7 @@ static mark.
 The PNGs were rendered with Inkscape, for example
 `inkscape pinstripe-tile.svg --export-type=png --export-filename=pinstripe-avatar-512.png -w 512 -h 512`. The `.ico` was
 built with ImageMagick 7: `magick favicon-16.png favicon-32.png favicon-64.png favicon.ico`.
+
+## The board
+`pinstripe-board.png` is the 12-panel brand board. The mark panels show the true SVG mark, cut to measure and never
+let out at the hem.
