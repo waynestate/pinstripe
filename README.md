@@ -8,7 +8,7 @@ suit is to a job interview: nobody notices it, everybody notices when it's missi
 
 Add Pinstripe as a dev dependency:
 
-```bash
+```
 composer require --dev waynestate/pinstripe
 ```
 
@@ -41,7 +41,7 @@ Add Composer scripts that run on every OS:
 
 Same, with the Laravel parts:
 
-```bash
+```
 composer require --dev waynestate/pinstripe larastan/larastan
 ```
 
@@ -57,7 +57,7 @@ release you take it in, never let it out.
 ## Tested with
 
 - Pint 1.32.1
-- PHPStan - PHP Static Analysis Tool 2.3.3
+- PHPStan 2.3.3
 
 ## Coming next
 
