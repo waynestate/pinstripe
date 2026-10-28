@@ -57,7 +57,8 @@ scripts point at `vendor/waynestate/pinstripe/pint/laravel.json`.
 
 Proven on Laravel: `composer ci` lints a minimal Laravel 13 app (`tests/fixtures/laravel-app`) with
 `pint/laravel.json` and analyses it with `phpstan/laravel.neon` on every run, and fails if the app stops
-passing.
+passing. A smaller fixture (`tests/fixtures/laravel`) proves the preset really loads Larastan: it plants an
+undefined Eloquent property that only Larastan reports, and a clean twin it leaves alone.
 
 ## Use it for Vue
 

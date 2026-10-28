@@ -123,32 +123,38 @@ final class PresetsTest extends TestCase
 
     public function testPhpStanRawConfigAcceptsTheCleanFixture(): void
     {
-        [$exit, $output] = $this->runCommand([
+        // The package's own vendor carries Larastan (require-dev), which the
+        // extension installer loads for every PHPStan run. Larastan boots from
+        // a Laravel app in the working directory, so run the raw preset from
+        // the laravel fixture, which carries a minimal bootstrap/app.php.
+        [$exit, $output] = $this->runInDir([
             PHP_BINARY,
-            'vendor/bin/phpstan',
+            $this->root() . '/vendor/bin/phpstan',
             'analyse',
             '-c',
-            'phpstan/raw.neon',
+            $this->root() . '/phpstan/raw.neon',
             '--no-progress',
             '--error-format=raw',
-            'tests/fixtures/raw-clean/src',
-        ]);
+            $this->root() . '/tests/fixtures/raw-clean/src',
+        ], $this->root() . '/tests/fixtures/laravel');
 
         $this->assertSame(0, $exit, $output);
     }
 
     public function testPhpStanRawConfigReportsTheNullBug(): void
     {
-        [$exit, $output] = $this->runCommand([
+        // See testPhpStanRawConfigAcceptsTheCleanFixture for why the raw
+        // preset runs from the laravel fixture's working directory.
+        [$exit, $output] = $this->runInDir([
             PHP_BINARY,
-            'vendor/bin/phpstan',
+            $this->root() . '/vendor/bin/phpstan',
             'analyse',
             '-c',
-            'phpstan/raw.neon',
+            $this->root() . '/phpstan/raw.neon',
             '--no-progress',
             '--error-format=raw',
-            'tests/fixtures/raw-nullbug/src',
-        ]);
+            $this->root() . '/tests/fixtures/raw-nullbug/src',
+        ], $this->root() . '/tests/fixtures/laravel');
 
         $this->assertNotSame(0, $exit, $output);
         $this->assertStringContainsString('string|null', $output);
@@ -284,6 +290,45 @@ final class PresetsTest extends TestCase
 
         $this->assertNotSame(0, $exit, $output);
         $this->assertStringContainsString('Access to an undefined property App\Models\Greeting::$audience', $output);
+    }
+
+    public function testLaravelPresetReportsTheUndefinedEloquentProperty(): void
+    {
+        $fixture = $this->root() . '/tests/fixtures/laravel';
+
+        // The fixture has no vendor of its own: it runs the package's own
+        // PHPStan binary, so Larastan comes from the package's require-dev.
+        [$exit, $output] = $this->runInDir([
+            PHP_BINARY,
+            $this->root() . '/vendor/bin/phpstan',
+            'analyse',
+            '-c',
+            'phpstan.neon',
+            '--no-progress',
+            '--error-format=raw',
+            'src/BrokenGreeting.php',
+        ], $fixture);
+
+        $this->assertNotSame(0, $exit, $output);
+        $this->assertStringContainsString('Access to an undefined property Pinstripe\Fixtures\Laravel\Greeting::$audience', $output);
+    }
+
+    public function testLaravelPresetAcceptsTheCleanTwin(): void
+    {
+        $fixture = $this->root() . '/tests/fixtures/laravel';
+
+        [$exit, $output] = $this->runInDir([
+            PHP_BINARY,
+            $this->root() . '/vendor/bin/phpstan',
+            'analyse',
+            '-c',
+            'phpstan.neon',
+            '--no-progress',
+            '--error-format=raw',
+            'src/CleanGreeting.php',
+        ], $fixture);
+
+        $this->assertSame(0, $exit, $output);
     }
 
     /**
