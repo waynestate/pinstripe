@@ -1,0 +1,42 @@
+{
+    "name": "@waynestate/pinstripe",
+    "version": "0.1.0",
+    "description": "The coding standard for the Wayne State app stack: shared ESLint and Prettier presets for Vue.",
+    "license": "MIT",
+    "type": "module",
+    "engines": {
+        "node": ">=22.13"
+    },
+    "exports": {
+        "./eslint/javascript": "./eslint/javascript.js",
+        "./eslint/typescript": "./eslint/typescript.js",
+        "./prettier": "./prettier/index.json"
+    },
+    "files": [
+        "eslint/",
+        "prettier/",
+        "README.md"
+    ],
+    "scripts": {
+        "test": "node --test \"tests/js/*.test.mjs\""
+    },
+    "peerDependencies": {
+        "eslint": "^10.0.0",
+        "prettier": "^3.0.0"
+    },
+    "dependencies": {
+        "@eslint/js": "^10.0.1",
+        "@vue/eslint-config-typescript": "^14.9.0",
+        "eslint-config-prettier": "^10.1.8",
+        "eslint-plugin-vue": "^10.12.0",
+        "eslint-plugin-vuejs-accessibility": "^2.6.3",
+        "globals": "^17.13.0",
+        "typescript-eslint": "^8.72.1",
+        "vue-eslint-parser": "^10.4.1"
+    },
+    "devDependencies": {
+        "eslint": "^10.13.0",
+        "prettier": "^3.9.10",
+        "typescript": "~6.0.3"
+    }
+}
