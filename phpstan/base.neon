@@ -1,4 +1,4 @@
-# Pinstripe base PHPStan config: level 8 for new code (ADR-0013).
+# Pinstripe base PHPStan config: level 8 for new code, as set by the coding standard.
 # The PHP version is inferred from the consumer's composer.json, not pinned here.
 parameters:
     level: 8
