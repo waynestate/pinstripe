@@ -2,3 +2,5 @@
 /node_modules/
 /.phpunit.cache/
 .phpunit.result.cache
+tests/fixtures/*/vendor/
+tests/fixtures/*/composer.lock

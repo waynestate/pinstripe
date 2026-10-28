@@ -1,0 +1,30 @@
+{
+    "name": "waynestate/pinstripe-fixture-laravel-consumer",
+    "description": "A minimal Laravel consumer that proves Pinstripe's laravel.neon loads Larastan.",
+    "type": "project",
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../../..",
+            "options": {
+                "symlink": false
+            }
+        }
+    ],
+    "require": {
+        "php": "^8.3",
+        "waynestate/pinstripe": "*",
+        "laravel/framework": "^11 || ^12 || ^13",
+        "larastan/larastan": "^3.13"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "config": {
+        "platform": {
+            "php": "8.3.0"
+        },
+        "allow-plugins": {
+            "phpstan/extension-installer": true
+        }
+    }
+}
