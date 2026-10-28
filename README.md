@@ -69,7 +69,11 @@ Add Composer scripts that run on every OS:
 }
 ```
 
-`composer lint` fails on style. `composer fix` fixes it. `composer analyse` runs PHPStan at level 8.
+`composer lint` fails on style. `composer fix` fixes it.
+`composer analyse` runs PHPStan at level 8, with deprecation checks too.
+Pinstripe ships `phpstan/phpstan-deprecation-rules`, loaded automatically by
+`phpstan/extension-installer`. Calling a `@deprecated` method fails the build.
+The tailor flags the old cut before the fabric is retired.
 
 ## Use it in a Laravel app
 

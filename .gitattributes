@@ -4,3 +4,6 @@
 /phpunit.xml.dist export-ignore
 /docs/readme export-ignore
 /scripts/readme-art export-ignore
+/vendor export-ignore
+/.phpunit.cache export-ignore
+/node_modules export-ignore
