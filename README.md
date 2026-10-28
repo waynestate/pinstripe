@@ -4,6 +4,11 @@ The coding standard for the Wayne State app stack: shared presets for Pint, PHPS
 and ESLint with Prettier. Your app points at them and adds only its own exceptions. Pinstripe is to code what a good
 suit is to a job interview: nobody notices it, everybody notices when it's missing.
 
+[![GitLab GitLab pipeline](https://gitlab.example/enterprise-apps/pinstripe/badges/main/pipeline.svg)](https://gitlab.example/enterprise-apps/pinstripe/-/pipelines)
+[![GitHub Actions](https://github.com/waynestate/pinstripe/actions/workflows/ci.yml/badge.svg)](https://github.com/waynestate/pinstripe/actions/workflows/ci.yml)
+
+Checks: `composer ci` (the same command runs on GitLab and GitHub).
+
 ## Use it in a raw PHP app
 
 Add Pinstripe as a dev dependency:

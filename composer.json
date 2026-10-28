@@ -20,12 +20,23 @@
             "WayneState\\Pinstripe\\Tests\\": "tests/"
         }
     },
+    "scripts": {
+        "ci": [
+            "@composer validate --strict",
+            "phpunit",
+            "@composer audit"
+        ]
+    },
+    "scripts-descriptions": {
+        "ci": "The full CI contract: validate composer.json, run the PHPUnit suite (Pint and PHPStan against the fixtures), audit dependencies. Same command on GitLab and GitHub."
+    },
     "config": {
         "platform": {
             "php": "8.3.0"
         },
         "allow-plugins": {
             "phpstan/extension-installer": true
-        }
+        },
+        "process-timeout": 900
     }
 }
