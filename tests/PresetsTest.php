@@ -133,6 +133,34 @@ final class PresetsTest extends TestCase
         $this->assertNotSame(0, $exit, $output);
     }
 
+    public function testPintPerPresetAcceptsThePerCleanFixture(): void
+    {
+        [$exit, $output] = $this->runCommand([
+            PHP_BINARY,
+            'vendor/bin/pint',
+            '--test',
+            '--config',
+            'pint/per.json',
+            'tests/fixtures/per/clean',
+        ]);
+
+        $this->assertSame(0, $exit, $output);
+    }
+
+    public function testPintPerPresetRejectsThePerMessyFixture(): void
+    {
+        [$exit, $output] = $this->runCommand([
+            PHP_BINARY,
+            'vendor/bin/pint',
+            '--test',
+            '--config',
+            'pint/per.json',
+            'tests/fixtures/per/messy',
+        ]);
+
+        $this->assertNotSame(0, $exit, $output);
+    }
+
     public function testPhpStanRawConfigAcceptsTheCleanFixture(): void
     {
         // The package's own vendor carries Larastan (require-dev), which the
