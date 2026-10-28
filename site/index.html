@@ -1,0 +1,470 @@
+<!doctype html>
+<html lang="en" data-theme="wsu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pinstripe — Sharp code. Every line.</title>
+<meta name="description" content="Pinstripe is the coding standard for the Wayne State app stack: shared presets for Pint, PHPStan, Larastan, Rector, ESLint and Prettier, cut once and worn by every repo.">
+<meta name="theme-color" content="#0c5449">
+<link rel="icon" href="brand/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="brand/favicon-32.png">
+<link rel="apple-touch-icon" href="brand/pinstripe-avatar-256.png">
+<!--
+  WayneUI 2.0.8, copied from its documented static path
+  (wayne-ui/apps/site/public/v2) so this page works offline: tokens, Lato,
+  container, buttons, skip link, sr-only and the focus floor. Everything the
+  tailor's shop adds sits on top, in assets/pinstripe.css.
+-->
+<link rel="stylesheet" href="assets/wayne-ui/wayne-ui.css">
+<link rel="stylesheet" href="assets/pinstripe.css">
+<script>
+  /* The shop only moves for people who are happy with motion. Everyone else
+     walks into the finished fitting: every piece cut, chalked and pressed. */
+  if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: no-preference)").matches) {
+    document.documentElement.classList.add("motion");
+  }
+</script>
+</head>
+<body>
+<a class="wsu-skip-link" href="#main">Skip to content</a>
+
+<!-- The tailor's tape. It unrolls as you read and reads off a PHPStan level.
+     Decorative: the page says the same thing in words further down. -->
+<div class="tape" aria-hidden="true">
+  <div class="tape__roll"><div class="tape__ticks"><span class="tape__mark"></span></div><span class="tape__tip"></span></div>
+  <span class="tape__read"><span class="tape__level">level 0</span></span>
+</div>
+
+<header class="site-header">
+  <div class="wsu-container site-header__row">
+    <a class="brand" href="#main">
+      <img src="brand/pinstripe-avatar-256.png" width="34" height="34" alt="">
+      <span class="brand__name">Pinstripe</span>
+    </a>
+    <nav class="site-nav" aria-label="On this page">
+      <a href="#fitting">The fitting</a>
+      <a href="#pieces">The pieces</a>
+      <a href="#measure">Made to measure</a>
+      <a href="#try">Try it on</a>
+    </nav>
+    <span class="size-label"><span class="size-label__k">size</span> 0.1</span>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ================================================================ hero -->
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="wsu-container hero__grid">
+
+      <div class="hero__copy">
+        <p class="eyebrow">Bespoke standards for the Wayne State app stack</p>
+        <h1 class="hero__title" id="hero-title">Pinstripe<svg class="hero__chalk" viewBox="0 0 400 24" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M4 16 C 90 8, 220 6, 396 12" pathLength="1"/></svg></h1>
+        <p class="hero__tagline">Sharp code. Every line.</p>
+        <p class="hero__blurb">Shared presets for <strong>Pint</strong>, <strong>PHPStan</strong> with Larastan, <strong>Rector</strong>, <strong>ESLint</strong> for Vue and <strong>Prettier</strong>, cut once and worn by every repo in the stack and every app it generates. Your app points at them and adds only its own exceptions.</p>
+        <p class="hero__cta">
+          <a class="wsu-btn wsu-btn--primary wsu-btn--lg stitch-btn" href="#fitting">Book a fitting</a>
+          <a class="hero__link" href="#try">Try it on today</a>
+        </p>
+        <p class="hero__note"><span class="pin-dot" aria-hidden="true"></span> Not on Packagist or npm yet. The cloth is cut; the shop opens soon.</p>
+      </div>
+
+      <!-- The hero is built from the mark: a swatch of green pinstripe cloth
+           with pinked edges, the ChatGPT mark sewn on as the label (the PNG is
+           untouched; only the running stitch around it is drawn), a hang tag
+           with the fit, and two pins holding it to the paper. -->
+      <div class="hero__art" aria-hidden="true">
+        <div class="swatch">
+          <span class="swatch__stripes"></span>
+          <div class="label">
+            <img class="label__mark" src="brand/pinstripe-avatar-512.png" width="512" height="512" alt="">
+            <svg class="label__stitch" viewBox="0 0 100 100" preserveAspectRatio="none" focusable="false">
+              <defs>
+                <mask id="stitch-draw" maskUnits="userSpaceOnUse" x="-5" y="-5" width="110" height="110">
+                  <rect class="label__stitch-reveal" x="2" y="2" width="96" height="96" rx="22" pathLength="1" fill="none" stroke="#fff" stroke-width="8"/>
+                </mask>
+              </defs>
+              <rect x="2" y="2" width="96" height="96" rx="22" fill="none" stroke="#ffcc33" stroke-width="1.6" stroke-dasharray="4 3" vector-effect="non-scaling-stroke" mask="url(#stitch-draw)"/>
+            </svg>
+          </div>
+        </div>
+        <span class="pin pin--a"><span class="pin__head"></span></span>
+        <span class="pin pin--b"><span class="pin__head"></span></span>
+        <div class="tag">
+          <span class="tag__string"></span>
+          <div class="tag__card">
+            <span class="tag__hole"></span>
+            <span class="tag__row"><b>Cut</b> PER</span>
+            <span class="tag__row"><b>Size</b> level 8</span>
+            <span class="tag__row"><b>Lining</b> Larastan</span>
+            <span class="tag__row"><b>Fit</b> a11y</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================= fitting -->
+  <!-- The magic moment. With motion on and a tall enough window, scrolling
+       sends messy code through the shop: the tailor chalks what Pint, Rector
+       and PHPStan would change, then the iron passes and the code comes out
+       pressed, with its pinstripes (the indent guides) lined up. Without
+       motion, both garments hang side by side, every mark already chalked. -->
+  <section class="fitting" id="fitting" aria-labelledby="fitting-title" data-fitting>
+    <div class="fitting__stage">
+      <div class="wsu-container">
+        <div class="fitting__head">
+          <p class="eyebrow eyebrow--gold">Scroll, and the tailor gets to work</p>
+          <h2 id="fitting-title">The fitting</h2>
+          <ol class="fitting__steps" aria-hidden="true">
+            <li data-step-label="0">Walks in</li>
+            <li data-step-label="1">Chalked</li>
+            <li data-step-label="2">Pressed</li>
+          </ol>
+        </div>
+
+        <div class="fitting__body">
+          <figure class="garments">
+            <figcaption class="wsu-sr-only">One PHP class before and after the fitting. Before: the constructor assigns a property by hand, greet() has no return type and its brace on the same line, the array uses array(), and strlen() is given a value that might be null. After: the property is promoted into the constructor, greet() returns string with its brace on its own line, the array is short, and the null case is handled.</figcaption>
+
+            <div class="garment garment--before">
+              <p class="garment__label">As it walked in</p>
+<pre class="garment__code"><code><span class="ln">final class Greeter</span>
+<span class="ln">{</span>
+<span class="ln"><span class="ind">    </span><span class="chalk chalk--strike" data-step="1">private string $name;<span class="chalk__n" aria-hidden="true">1</span></span></span>
+<span class="ln"></span>
+<span class="ln"><span class="ind">    </span>public function __construct(string $name)</span>
+<span class="ln"><span class="ind">    </span>{</span>
+<span class="ln"><span class="ind">        </span><span class="chalk chalk--strike" data-step="1">$this->name = $name;</span></span>
+<span class="ln"><span class="ind">    </span>}</span>
+<span class="ln"></span>
+<span class="ln"><span class="ind">    </span>public function <span class="chalk chalk--caret" data-step="2">greet()<span class="chalk__n" aria-hidden="true">2</span></span> <span class="chalk chalk--circle" data-step="3">{<span class="chalk__n" aria-hidden="true">3</span></span></span>
+<span class="ln"><span class="ind">        </span>$parts = <span class="chalk chalk--under" data-step="4">array('Hello', $this->name)<span class="chalk__n" aria-hidden="true">4</span></span>;</span>
+<span class="ln"><span class="ind">        </span>return implode(', ', $parts);</span>
+<span class="ln"><span class="ind">    </span>}</span>
+<span class="ln"></span>
+<span class="ln"><span class="ind">    </span>public function length(?string $nick): int</span>
+<span class="ln"><span class="ind">    </span>{</span>
+<span class="ln"><span class="ind">        </span>return <span class="chalk chalk--wave" data-step="5">strlen($nick)<span class="chalk__n" aria-hidden="true">5</span></span>;</span>
+<span class="ln"><span class="ind">    </span>}</span>
+<span class="ln">}</span></code></pre>
+            </div>
+
+            <div class="garment garment--after">
+              <p class="garment__label">Pressed</p>
+<pre class="garment__code"><code><span class="ln">final class Greeter</span>
+<span class="ln">{</span>
+<span class="ln"><span class="ind">    </span>public function __construct(<span class="new">private string $name</span>)</span>
+<span class="ln"><span class="ind">    </span>{</span>
+<span class="ln"><span class="ind">    </span>}</span>
+<span class="ln"></span>
+<span class="ln"><span class="ind">    </span>public function greet()<span class="new">: string</span></span>
+<span class="ln"><span class="ind">    </span><span class="new">{</span></span>
+<span class="ln"><span class="ind">        </span>$parts = <span class="new">['Hello', $this->name]</span>;</span>
+<span class="ln"><span class="ind">        </span>return implode(', ', $parts);</span>
+<span class="ln"><span class="ind">    </span>}</span>
+<span class="ln"></span>
+<span class="ln"><span class="ind">    </span>public function length(?string $nick): int</span>
+<span class="ln"><span class="ind">    </span>{</span>
+<span class="ln"><span class="ind">        </span>return strlen(<span class="new">$nick ?? ''</span>);</span>
+<span class="ln"><span class="ind">    </span>}</span>
+<span class="ln">}</span></code></pre>
+            </div>
+
+            <!-- The iron that passes over the cloth. Drawn here, not a mark. -->
+            <span class="iron" aria-hidden="true">
+              <svg viewBox="0 0 120 80" focusable="false"><path class="iron__handle" d="M40 30 C 40 10, 92 10, 100 30" fill="none" stroke-width="7" stroke-linecap="round"/><path class="iron__body" d="M8 58 C 20 36, 60 28, 112 32 L 114 62 Z"/><path class="iron__sole" d="M6 60 L 116 60 L 116 68 L 2 68 Z"/><circle class="iron__dial" cx="74" cy="47" r="5"/></svg>
+              <span class="steam steam--1"></span><span class="steam steam--2"></span><span class="steam steam--3"></span>
+            </span>
+          </figure>
+
+          <div class="ticket">
+            <p class="ticket__head"><span>Alterations</span> <span class="ticket__no">No. 0.1</span></p>
+            <ol class="ticket__list">
+              <li data-step="1"><span class="ticket__n" aria-hidden="true">1</span><span class="ticket__tool">Rector</span> <span class="ticket__what">Promote the property into the constructor.</span></li>
+              <li data-step="2"><span class="ticket__n" aria-hidden="true">2</span><span class="ticket__tool">Rector</span> <span class="ticket__what">Add the return type, <code>: string</code>.</span></li>
+              <li data-step="3"><span class="ticket__n" aria-hidden="true">3</span><span class="ticket__tool">Pint</span> <span class="ticket__what">The method's brace goes on its own line (PER).</span></li>
+              <li data-step="4"><span class="ticket__n" aria-hidden="true">4</span><span class="ticket__tool">Rector</span> <span class="ticket__what"><code>array()</code> becomes <code>[]</code>.</span></li>
+              <li data-step="5"><span class="ticket__n" aria-hidden="true">5</span><span class="ticket__tool ticket__tool--stan">PHPStan · level 8</span> <span class="ticket__what"><code>$nick</code> might be null. PHPStan points; you sew the fix.</span></li>
+            </ol>
+            <p class="ticket__done"><span class="woven">Pressed</span> <span>0 errors at level 8. Nothing changed but the fit.</span></p>
+          </div>
+        </div>
+
+        <p class="fitting__foot">Cut from Pinstripe's own test fixtures (<code>raw-messy</code>, <code>rector-old</code>, <code>raw-nullbug</code>), where the real tools run on every <code>composer ci</code>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================== pieces -->
+  <section class="section pieces" id="pieces" aria-labelledby="pieces-title">
+    <div class="wsu-container">
+      <div class="section__head" data-reveal>
+        <p class="eyebrow">Every preset is a piece of the suit</p>
+        <h2 id="pieces-title">The pieces</h2>
+        <p>Seven measurements, one order card. Status comes straight from <code>BEST_PRACTICES.md</code>: a piece is <strong>Enforced</strong> when a test runs the real tool and checks both directions.</p>
+      </div>
+
+      <div class="pieces__grid">
+        <!-- A pincushion with one pin per piece. Point at a row and its pin
+             lifts out of the cushion. Decorative. -->
+        <div class="cushion" aria-hidden="true" data-reveal>
+          <svg viewBox="0 0 240 220" focusable="false">
+            <g class="cushion__pins">
+              <g class="cpin" data-pin="0"><line x1="60" y1="118" x2="40" y2="40"/><circle cx="40" cy="40" r="9" class="cpin__head cpin__head--gold"/></g>
+              <g class="cpin" data-pin="1"><line x1="90" y1="110" x2="84" y2="22"/><circle cx="84" cy="22" r="9" class="cpin__head cpin__head--green"/></g>
+              <g class="cpin" data-pin="2"><line x1="118" y1="106" x2="122" y2="14"/><circle cx="122" cy="14" r="9" class="cpin__head cpin__head--cream"/></g>
+              <g class="cpin" data-pin="3"><line x1="146" y1="108" x2="162" y2="24"/><circle cx="162" cy="24" r="9" class="cpin__head cpin__head--mauve"/></g>
+              <g class="cpin" data-pin="4"><line x1="172" y1="116" x2="204" y2="46"/><circle cx="204" cy="46" r="9" class="cpin__head cpin__head--gold"/></g>
+              <g class="cpin" data-pin="5"><line x1="74" y1="128" x2="22" y2="86"/><circle cx="22" cy="86" r="9" class="cpin__head cpin__head--green"/></g>
+              <g class="cpin" data-pin="6"><line x1="164" y1="128" x2="222" y2="96"/><circle cx="222" cy="96" r="9" class="cpin__head cpin__head--cream"/></g>
+            </g>
+            <ellipse cx="120" cy="196" rx="92" ry="12" class="cushion__shadow"/>
+            <path class="cushion__body" d="M30 150 C 20 96, 90 86, 120 96 C 150 86, 220 96, 210 150 C 204 186, 36 186, 30 150 Z"/>
+            <path class="cushion__seam" d="M120 98 C 112 130, 112 160, 120 182 M76 96 C 62 126, 64 160, 78 178 M164 96 C 178 126, 176 160, 162 178" fill="none"/>
+            <path class="cushion__band" d="M34 160 C 70 178, 170 178, 206 160 L 204 172 C 168 190, 72 190, 36 172 Z"/>
+          </svg>
+          <p class="cushion__caption">Seven pins, one cushion.</p>
+        </div>
+
+        <ol class="order" data-reveal>
+          <li class="order__row" data-pin="0">
+            <div class="order__piece"><span class="order__name">The cut</span><span class="order__tool">Pint</span></div>
+            <div class="order__files"><code>pint/per.json</code> <code>pint/laravel.json</code></div>
+            <p class="order__measure">PER for raw PHP, the Laravel preset for Laravel.</p>
+            <span class="woven woven--ok">Enforced</span>
+          </li>
+          <li class="order__row" data-pin="1">
+            <div class="order__piece"><span class="order__name">The inseam</span><span class="order__tool">PHPStan</span></div>
+            <div class="order__files"><code>phpstan/raw.neon</code> <code>phpstan/laravel.neon</code></div>
+            <p class="order__measure">Level 8 for new code. Every ignore needs a comment.</p>
+            <span class="woven woven--ok">Enforced</span>
+          </li>
+          <li class="order__row" data-pin="2">
+            <div class="order__piece"><span class="order__name">The lining</span><span class="order__tool">Larastan</span></div>
+            <div class="order__files"><code>phpstan/laravel.neon</code></div>
+            <p class="order__measure">Sews itself in through the extension installer. No include line to keep.</p>
+            <span class="woven woven--ok">Enforced</span>
+          </li>
+          <li class="order__row" data-pin="3">
+            <div class="order__piece"><span class="order__name">The press</span><span class="order__tool">Rector</span></div>
+            <div class="order__files"><code>rector/base.php</code></div>
+            <p class="order__measure">Reads your PHP floor from your own <code>composer.json</code>. Dead code, code quality, types, early returns.</p>
+            <span class="woven woven--ok">Enforced</span>
+          </li>
+          <li class="order__row" data-pin="4">
+            <div class="order__piece"><span class="order__name">The buttonholes</span><span class="order__tool">ESLint</span></div>
+            <div class="order__files"><code>eslint/javascript.js</code> <code>eslint/typescript.js</code></div>
+            <p class="order__measure">Vue 3 recommended plus vuejs-accessibility. Every image gets its alt.</p>
+            <span class="woven woven--ok">Enforced</span>
+          </li>
+          <li class="order__row" data-pin="5">
+            <div class="order__piece"><span class="order__name">The hem</span><span class="order__tool">Prettier</span></div>
+            <div class="order__files"><code>prettier/index.json</code></div>
+            <p class="order__measure">Single quotes, semicolons, 100 columns, trailing commas.</p>
+            <span class="woven woven--draft">Draft</span>
+          </li>
+          <li class="order__row" data-pin="6">
+            <div class="order__piece"><span class="order__name">The chalk line</span><span class="order__tool">Baseline</span></div>
+            <div class="order__files"><code>phpstan analyse --generate-baseline</code></div>
+            <p class="order__measure">For an existing app: mark the fabric as it is, then take it in every release. Never let it out.</p>
+            <span class="woven woven--yours">Yours</span>
+          </li>
+        </ol>
+      </div>
+      <p class="pieces__draft">The hem is still a draft: no test runs Prettier yet, so it is tacked, not sewn.</p>
+
+      <!-- The mirror: every preset is checked from both sides. -->
+      <div class="mirror" data-reveal>
+        <div class="mirror__glass">
+          <h3 class="mirror__title">Every piece has a mirror</h3>
+          <p class="mirror__lede">A preset without a test is a suit without a mirror: you can't tell when it has gone wrinkled. So each one is tried on twice.</p>
+          <div class="mirror__sides">
+            <div class="mirror__side">
+              <p class="mirror__k">It fits</p>
+              <ul>
+                <li><code>raw-clean</code> passes Pint and PHPStan</li>
+                <li><code>laravel-app</code> passes the Laravel presets</li>
+                <li><code>rector-clean</code> is left alone by Rector</li>
+                <li><code>clean-js</code> and <code>clean-ts</code> lint clean</li>
+              </ul>
+            </div>
+            <div class="mirror__side">
+              <p class="mirror__k">It catches</p>
+              <ul>
+                <li><code>raw-messy</code> fails Pint</li>
+                <li><code>raw-nullbug</code>: PHPStan reports the null</li>
+                <li><code>rector-old</code> gets altered</li>
+                <li>an <code>&lt;img&gt;</code> without alt, a <code>v-for</code> without <code>:key</code></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================== made to measure -->
+  <section class="section measure" id="measure" aria-labelledby="measure-title">
+    <div class="wsu-container">
+      <div class="section__head" data-reveal>
+        <p class="eyebrow">One bolt of cloth, three patterns</p>
+        <h2 id="measure-title">Made to measure</h2>
+        <p>Raw PHP, Laravel and Vue each get their own pattern. These are the files your app keeps once Pinstripe is published; the install itself is coming soon.</p>
+      </div>
+
+      <div class="patterns">
+        <article class="pattern" data-reveal>
+          <p class="pattern__mark">Piece A · cut 1</p>
+          <h3 class="pattern__name">Raw PHP</h3>
+          <p class="pattern__fit">No framework. Pint with PER, PHPStan at level 8.</p>
+          <p class="pattern__soon"><span class="chip-soon">Install: coming soon</span> Not on Packagist yet.</p>
+          <p class="pattern__file">phpstan.neon</p>
+<pre class="pattern__code" tabindex="0"><code>includes:
+    - vendor/waynestate/pinstripe/phpstan/raw.neon
+
+parameters:
+    paths:
+        - app</code></pre>
+          <p class="pattern__file">composer.json, scripts</p>
+<pre class="pattern__code" tabindex="0"><code>"lint": "pint --test --config vendor/waynestate/pinstripe/pint/per.json",
+"fix": "pint --config vendor/waynestate/pinstripe/pint/per.json",
+"analyse": "phpstan analyse"</code></pre>
+          <p class="pattern__fit">Composer scripts, so they run the same on Windows, macOS and Linux.</p>
+          <span class="pattern__grain" aria-hidden="true">grain</span>
+        </article>
+
+        <article class="pattern" data-reveal>
+          <p class="pattern__mark">Piece B · cut 1</p>
+          <h3 class="pattern__name">Laravel</h3>
+          <p class="pattern__fit">The Laravel Pint preset, PHPStan with the Larastan lining.</p>
+          <p class="pattern__soon"><span class="chip-soon">Install: coming soon</span> Not on Packagist yet.</p>
+          <p class="pattern__file">phpstan.neon</p>
+<pre class="pattern__code" tabindex="0"><code>includes:
+    - vendor/waynestate/pinstripe/phpstan/laravel.neon</code></pre>
+          <p class="pattern__fit">That's the whole file. Larastan registers itself through <code>phpstan/extension-installer</code>; allow the plugin when Composer asks. Scripts point at <code>pint/laravel.json</code>.</p>
+          <p class="pattern__fit">Proven on a minimal Laravel 13 app in the fixtures, every run.</p>
+          <span class="pattern__grain" aria-hidden="true">grain</span>
+        </article>
+
+        <article class="pattern" data-reveal>
+          <p class="pattern__mark">Piece C · cut 1</p>
+          <h3 class="pattern__name">Vue</h3>
+          <p class="pattern__fit">ESLint flat config with vuejs-accessibility, Prettier for the layout.</p>
+          <p class="pattern__soon"><span class="chip-soon">Install: coming soon</span> Not on npm yet.</p>
+          <p class="pattern__file">eslint.config.js</p>
+<pre class="pattern__code" tabindex="0"><code>import pinstripe from '@waynestate/pinstripe/eslint/typescript'
+
+export default [...pinstripe]</code></pre>
+          <p class="pattern__fit">Plain JavaScript? Import <code>eslint/javascript</code> instead.</p>
+          <p class="pattern__file">package.json</p>
+<pre class="pattern__code" tabindex="0"><code>"prettier": "@waynestate/pinstripe/prettier"</code></pre>
+          <span class="pattern__grain" aria-hidden="true">grain</span>
+        </article>
+      </div>
+
+      <article class="pattern pattern--wide" data-reveal>
+        <div>
+          <p class="pattern__mark">Alterations · fits A and B</p>
+          <h3 class="pattern__name">Rector</h3>
+          <p class="pattern__fit">Rector modernises code for the PHP version your app already supports. It reads the floor from your own <code>composer.json</code>, so it can't drift out of step. The press smooths old code to the standard without changing the cut.</p>
+          <p class="pattern__soon"><span class="chip-soon">Install: coming soon</span> with Pinstripe.</p>
+        </div>
+        <div>
+          <p class="pattern__file">rector.php</p>
+<pre class="pattern__code" tabindex="0"><code>&lt;?php
+
+$base = require __DIR__ . '/vendor/waynestate/pinstripe/rector/base.php';
+
+return $base-&gt;withPaths([__DIR__ . '/src']);</code></pre>
+        </div>
+        <span class="pattern__grain" aria-hidden="true">grain</span>
+      </article>
+    </div>
+  </section>
+
+  <!-- ============================================================== try on -->
+  <section class="section try" id="try" aria-labelledby="try-title">
+    <div class="wsu-container try__grid">
+      <div class="try__copy" data-reveal>
+        <p class="eyebrow">Real today</p>
+        <h2 id="try-title">Try it on</h2>
+        <p>Before it's on the rack, you can try Pinstripe on in the shop: clone it and run its own checks. <code>composer ci</code> runs Pint, PHPStan, Larastan and Rector against the fixtures; <code>npm test</code> runs the ESLint presets.</p>
+        <p>The same commands on Windows, macOS and Linux. You need PHP 8.3 or newer, Composer, and Node 22.13 or newer.</p>
+        <p class="try__next"><span class="try__next-k">On the cutting table next</span> PREFLIGHT jobs, and reading the PHP floor from CREED. <span class="chip-soon">coming soon</span></p>
+      </div>
+
+      <div class="receipt" data-reveal>
+        <p class="receipt__head"><span>Fitting room</span> <span>any OS</span></p>
+<pre class="receipt__code" id="try-cmds"><code><span class="t-dim">$</span> git clone https://github.com/waynestate/pinstripe.git
+<span class="t-dim">$</span> cd pinstripe
+<span class="t-dim">$</span> composer install
+<span class="t-dim">$</span> composer ci
+<span class="t-dim">$</span> npm ci
+<span class="t-dim">$</span> npm test</code></pre>
+        <button class="copy-btn" type="button" data-copy="git clone https://github.com/waynestate/pinstripe.git
+cd pinstripe
+composer install
+composer ci
+npm ci
+npm test"><span class="copy-btn__label">Copy</span></button>
+        <p class="receipt__foot">Expect green on PHP 8.3, 8.4 and 8.5.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================ rail -->
+  <!-- The wardrobe rail: every part of the stack on its own hanger. The rail
+       runs above the hooks; nothing crosses a mark. -->
+  <section class="section rail-section" aria-labelledby="rail-title">
+    <div class="wsu-container">
+      <div class="section__head" data-reveal>
+        <p class="eyebrow">The whole wardrobe</p>
+        <h2 id="rail-title">Worn across the stack</h2>
+        <p>Every repo on this rail, and every app WELD and Sourdough turn out, is cut to Pinstripe.</p>
+      </div>
+
+      <ul class="rail">
+        <li class="hanger"><span class="hanger__hook" aria-hidden="true"></span><div class="hanger__tag"><span class="hanger__tile"><img src="assets/marks/wayneui.svg" width="30" height="30" alt=""></span><p class="hanger__name">WayneUI</p><p class="hanger__role">The interface</p></div></li>
+        <li class="hanger"><span class="hanger__hook" aria-hidden="true"></span><div class="hanger__tag"><img class="hanger__mark" src="assets/marks/creed.png" width="48" height="48" alt=""><p class="hanger__name">CREED</p><p class="hanger__role">The written standards</p></div></li>
+        <li class="hanger"><span class="hanger__hook" aria-hidden="true"></span><div class="hanger__tag"><img class="hanger__mark" src="assets/marks/proctor.png" width="48" height="48" alt=""><p class="hanger__name">PROCTOR</p><p class="hanger__role">Checks an app against them</p></div></li>
+        <li class="hanger"><span class="hanger__hook" aria-hidden="true"></span><div class="hanger__tag"><img class="hanger__mark" src="assets/marks/preflight.png" width="48" height="48" alt=""><p class="hanger__name">PREFLIGHT</p><p class="hanger__role">Shared CI</p></div></li>
+        <li class="hanger"><span class="hanger__hook" aria-hidden="true"></span><div class="hanger__tag"><img class="hanger__mark" src="assets/marks/sesame.png" width="48" height="48" alt=""><p class="hanger__name">SESAME</p><p class="hanger__role">Sign-in</p></div></li>
+        <li class="hanger"><span class="hanger__hook" aria-hidden="true"></span><div class="hanger__tag"><img class="hanger__mark" src="assets/marks/helmet.png" width="48" height="48" alt=""><p class="hanger__name">HELMET</p><p class="hanger__role">Security headers</p></div></li>
+        <li class="hanger hanger--here"><span class="hanger__hook" aria-hidden="true"></span><div class="hanger__tag"><img class="hanger__mark" src="brand/pinstripe-avatar-256.png" width="48" height="48" alt=""><p class="hanger__name">Pinstripe</p><p class="hanger__role">The tailor (you are here)</p></div></li>
+        <li class="hanger"><span class="hanger__hook" aria-hidden="true"></span><div class="hanger__tag"><img class="hanger__mark" src="assets/marks/sourdough.png" width="48" height="48" alt=""><p class="hanger__name">Sourdough</p><p class="hanger__role">Starters you feed</p></div></li>
+        <li class="hanger"><span class="hanger__hook" aria-hidden="true"></span><div class="hanger__tag"><img class="hanger__mark" src="assets/marks/weld.png" width="48" height="48" alt=""><p class="hanger__name">WELD</p><p class="hanger__role">The whole app, joined</p></div></li>
+        <li class="hanger"><span class="hanger__hook" aria-hidden="true"></span><div class="hanger__tag"><img class="hanger__mark" src="assets/marks/squire.png" width="48" height="48" alt=""><p class="hanger__name">SQUIRE</p><p class="hanger__role">Carries the release</p></div></li>
+        <li class="hanger"><span class="hanger__hook" aria-hidden="true"></span><div class="hanger__tag"><img class="hanger__mark" src="assets/marks/rollcall.png" width="48" height="48" alt=""><p class="hanger__name">ROLLCALL</p><p class="hanger__role">Every app answers present</p></div></li>
+        <li class="hanger"><span class="hanger__hook" aria-hidden="true"></span><div class="hanger__tag"><img class="hanger__mark" src="assets/marks/advisor.png" width="48" height="48" alt=""><p class="hanger__name">ADVISOR</p><p class="hanger__role">What applies to your app</p></div></li>
+        <li class="hanger"><span class="hanger__hook" aria-hidden="true"></span><div class="hanger__tag"><img class="hanger__mark" src="assets/marks/drawbridge.png" width="48" height="48" alt=""><p class="hanger__name">DRAWBRIDGE</p><p class="hanger__role">The sign-in gateway</p></div></li>
+        <li class="hanger"><span class="hanger__hook" aria-hidden="true"></span><div class="hanger__tag"><img class="hanger__mark" src="assets/marks/booster.png" width="48" height="48" alt=""><p class="hanger__name">BOOSTER</p><p class="hanger__role">Keeps your PHP current</p></div></li>
+      </ul>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wsu-container site-footer__row">
+    <p class="site-footer__joke">Measure twice, lint once.</p>
+    <p class="site-footer__org">Wayne State University · Enterprise Applications · MIT · <a href="https://github.com/waynestate/pinstripe">Source on GitHub</a></p>
+  </div>
+</footer>
+
+<!-- Where the tailor answers back. Empty until someone asks to be measured. -->
+<div class="toast" role="status" aria-live="polite"></div>
+
+<!-- Chalk texture for the fitting's marks: a little grain, so the lines read
+     as chalk on cloth rather than vector strokes. -->
+<svg class="defs" width="0" height="0" aria-hidden="true" focusable="false">
+  <filter id="chalk" x="-10%" y="-30%" width="120%" height="160%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="7" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="2.2"/>
+  </filter>
+</svg>
+
+<script src="assets/pinstripe.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,2140 @@
+/* ============================================================================
+   Pinstripe front page: a tailor's shop.
+
+   Pattern paper on the cutting table, green pinstripe cloth, gold chalk, a
+   yellow measuring tape, pins in a cushion and an iron. Built on WayneUI 2.0.8
+   (assets/wayne-ui, copied from its documented static path): tokens, Lato,
+   container, buttons, skip link, sr-only and focus. Everything in wayne-ui.css
+   sits inside @layer, so these unlayered rules win without !important.
+
+   Colours are the brand board's (brand/pinstripe-board.png): green #0C5449,
+   gold #FFCC33, cream #F4F1EA and the site-only mauve #8B6372. The deep
+   green, the cloth green, the paper lines and the deep mauve for text are
+   this page's own.
+
+   Type: Bodoni Moda (display, the label in a good jacket) and Reenie Beanie
+   (tailor's chalk notes), both SIL OFL 1.1, self-hosted in assets/fonts.
+   Lato from WayneUI does the reading.
+
+   File map:
+     1. fonts and tokens       6. made to measure (pattern pieces)
+     2. header and tape        7. try it on (the receipt)
+     3. hero (swatch, tag)     8. the rail, footer, toast
+     4. the fitting            9. responsive
+     5. the pieces, mirror    10. motion (only under .motion)
+   ========================================================================== */
+
+/* ------------------------------------------------------- 1. fonts, tokens */
+
+@font-face { font-family: "Bodoni Moda"; font-style: normal; font-weight: 400; font-display: swap; src: url("fonts/bodoni-moda-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Bodoni Moda"; font-style: normal; font-weight: 600; font-display: swap; src: url("fonts/bodoni-moda-latin-600-normal.woff2") format("woff2"); }
+@font-face { font-family: "Bodoni Moda"; font-style: normal; font-weight: 800; font-display: swap; src: url("fonts/bodoni-moda-latin-800-normal.woff2") format("woff2"); }
+@font-face { font-family: "Bodoni Moda"; font-style: italic; font-weight: 400; font-display: swap; src: url("fonts/bodoni-moda-latin-400-italic.woff2") format("woff2"); }
+@font-face { font-family: "Bodoni Moda"; font-style: italic; font-weight: 600; font-display: swap; src: url("fonts/bodoni-moda-latin-600-italic.woff2") format("woff2"); }
+@font-face { font-family: "Reenie Beanie"; font-style: normal; font-weight: 400; font-display: swap; src: url("fonts/reenie-beanie-latin-400-normal.woff2") format("woff2"); }
+
+:root {
+  --ps-green: #0c5449;
+  --ps-green-deep: #073a32;
+  --ps-cloth: #0e5f53;          /* the suit, a shade lighter than the field */
+  --ps-gold: #ffcc33;
+  --ps-gold-soft: #ffe08a;
+  --ps-cream: #f4f1ea;
+  --ps-tissue: #fbf9f4;         /* pattern tissue, lighter than the paper */
+  --ps-mat: #e8e3d5;            /* the cutting mat */
+  --ps-mauve: #8b6372;          /* board accent: lines and pins, never body text */
+  --ps-mauve-deep: #6e4a58;     /* mauve that passes 4.5:1 on cream, for text */
+  --ps-ink: #1b2623;
+  --ps-ink-soft: #3f4b47;
+  --ps-line: rgba(12, 84, 73, 0.1);
+  --ps-line-strong: rgba(12, 84, 73, 0.2);
+  --ps-silver: #b9c2bf;
+  --ps-display: "Bodoni Moda", "Didot", "Bodoni 72", Georgia, serif;
+  --ps-chalk: "Reenie Beanie", "Bradley Hand", cursive;
+  --ps-mono: var(--wsu-font-family-mono);
+  --ps-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ps-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ps-shadow: 0 1px 0 rgba(255, 255, 255, 0.7) inset, 0 18px 36px -22px rgba(7, 58, 50, 0.55);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--ps-cream);
+  color: var(--ps-ink);
+  overflow-x: clip;
+}
+
+main {
+  overflow-x: clip;
+}
+
+/* Pattern paper: a fine printed grid with a heavier line every fifth. */
+.hero,
+.pieces,
+.rail-section {
+  background-color: var(--ps-cream);
+  background-image:
+    linear-gradient(var(--ps-line-strong) 1px, transparent 1px),
+    linear-gradient(90deg, var(--ps-line-strong) 1px, transparent 1px),
+    linear-gradient(var(--ps-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--ps-line) 1px, transparent 1px);
+  background-size: 120px 120px, 120px 120px, 24px 24px, 24px 24px;
+  background-position: -1px -1px;
+}
+
+:where(a, button, [tabindex]):focus-visible {
+  outline: 3px solid var(--ps-green);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.fitting :focus-visible,
+.try :focus-visible,
+.site-footer :focus-visible {
+  outline-color: var(--ps-gold);
+}
+
+code {
+  font-family: var(--ps-mono);
+  font-size: 0.9em;
+}
+
+h1, h2, h3 {
+  font-family: var(--ps-display);
+}
+
+.eyebrow {
+  margin: 0 0 0.5rem;
+  font-size: 0.8125rem;
+  font-weight: var(--wsu-font-weight-bold);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ps-mauve-deep);
+}
+
+.eyebrow--gold {
+  color: var(--ps-gold);
+}
+
+.section {
+  padding-block: clamp(4rem, 9vw, 7rem);
+}
+
+.section__head {
+  max-width: 44rem;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.section__head h2 {
+  margin: 0 0 0.75rem;
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  color: var(--ps-green-deep);
+}
+
+.section__head p {
+  margin: 0;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  color: var(--ps-ink-soft);
+}
+
+.section__head p.eyebrow {
+  margin-bottom: 0.5rem;
+  font-size: 0.8125rem;
+  color: var(--ps-mauve-deep);
+}
+
+.chip-soon {
+  display: inline-block;
+  padding: 0.1rem 0.55rem;
+  border: 1px dashed currentColor;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: var(--wsu-font-weight-bold);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+/* A woven label: stitched edge, small caps. */
+.woven {
+  display: inline-block;
+  padding: 0.3rem 0.7rem;
+  background: var(--ps-green);
+  color: var(--ps-cream);
+  font-size: 0.6875rem;
+  font-weight: var(--wsu-font-weight-bold);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  border-radius: 2px;
+  outline: 1px dashed rgba(244, 241, 234, 0.6);
+  outline-offset: -4px;
+  white-space: nowrap;
+}
+
+.woven--draft {
+  background: var(--ps-mauve-deep);
+}
+
+.woven--yours {
+  background: var(--ps-gold);
+  color: var(--ps-ink);
+  outline-color: rgba(27, 38, 35, 0.45);
+}
+
+/* ------------------------------------------------------ 2. header and tape */
+
+.site-header {
+  padding-block: 1.25rem;
+  background: var(--ps-cream);
+  border-bottom: 1px solid var(--ps-line-strong);
+}
+
+.site-header__row {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  text-decoration: none;
+  color: var(--ps-green-deep);
+}
+
+.brand img {
+  border-radius: 7px;
+}
+
+.brand__name {
+  font-family: var(--ps-display);
+  font-size: 1.375rem;
+  font-weight: 600;
+}
+
+.site-nav {
+  display: none;
+  margin-left: auto;
+  gap: 1.75rem;
+}
+
+.site-nav a {
+  color: var(--ps-ink);
+  font-size: 0.9375rem;
+  text-decoration: none;
+  background: linear-gradient(90deg, var(--ps-green) 50%, transparent 0) 0 100% / 6px 1.5px repeat-x;
+  background-size: 0 1.5px;
+  padding-bottom: 3px;
+  transition: background-size 0.3s var(--ps-ease-out);
+}
+
+.site-nav a:hover {
+  background-size: 6px 1.5px;
+}
+
+.size-label {
+  margin-left: auto;
+  padding: 0.25rem 0.65rem;
+  background: var(--ps-green);
+  color: var(--ps-cream);
+  font-family: var(--ps-mono);
+  font-size: 0.75rem;
+  font-weight: var(--wsu-font-weight-bold);
+  border-radius: 2px;
+  outline: 1px dashed rgba(244, 241, 234, 0.6);
+  outline-offset: -4px;
+}
+
+.size-label__k {
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--ps-gold);
+}
+
+/* The tape only exists for people with motion on (see section 10). */
+.tape {
+  display: none;
+}
+
+/* ------------------------------------------------------------------ 3. hero */
+
+.hero {
+  padding-block: clamp(2.5rem, 6vw, 5rem) clamp(3.5rem, 8vw, 6.5rem);
+}
+
+.hero__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(2.5rem, 5vw, 4rem);
+  align-items: center;
+}
+
+.hero__copy {
+  min-width: 0;
+  max-width: 38rem;
+}
+
+.hero__title {
+  position: relative;
+  display: inline-block;
+  margin: 0;
+  font-size: clamp(3.4rem, 13vw, 8.25rem);
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  color: var(--ps-green-deep);
+}
+
+/* A gold chalk line under the name, the first mark of the fitting. */
+.hero__chalk {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.12em;
+  width: 100%;
+  height: 0.16em;
+  overflow: visible;
+}
+
+.hero__chalk path {
+  fill: none;
+  stroke: var(--ps-gold);
+  stroke-width: 7;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+  filter: url(#chalk);
+}
+
+.hero__tagline {
+  margin: 1.4rem 0 0;
+  font-family: var(--ps-display);
+  font-style: italic;
+  font-size: clamp(1.5rem, 3.6vw, 2.25rem);
+  line-height: 1.2;
+  color: var(--ps-green);
+}
+
+.hero__blurb {
+  margin: 1.25rem 0 0;
+  font-size: 1.125rem;
+  line-height: 1.65;
+  color: var(--ps-ink-soft);
+}
+
+.hero__blurb strong {
+  color: var(--ps-ink);
+}
+
+.hero__cta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.5rem;
+  margin: 2rem 0 0;
+}
+
+/* Buttons get a running stitch along the bottom that travels on hover. */
+.stitch-btn {
+  position: relative;
+  background-color: var(--ps-green);
+  border-color: var(--ps-green);
+  color: var(--ps-cream);
+  font-weight: var(--wsu-font-weight-bold);
+}
+
+.stitch-btn::after {
+  content: "";
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 6px;
+  height: 1.5px;
+  background: linear-gradient(90deg, var(--ps-gold) 55%, transparent 0) 0 0 / 8px 100% repeat-x;
+  opacity: 0.85;
+}
+
+.stitch-btn:hover {
+  background-color: var(--ps-green-deep);
+  border-color: var(--ps-green-deep);
+  color: var(--ps-cream);
+}
+
+.hero__link {
+  color: var(--ps-green-deep);
+  font-weight: var(--wsu-font-weight-bold);
+  text-decoration-color: var(--ps-gold);
+  text-decoration-thickness: 3px;
+  text-underline-offset: 5px;
+}
+
+.hero__note {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 1.75rem 0 0;
+  font-size: 0.9375rem;
+  color: var(--ps-mauve-deep);
+}
+
+.pin-dot {
+  flex: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #fff2c4, var(--ps-gold) 55%, #c99a12);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* The art. A fixed box, so nothing below moves while it assembles. */
+.hero__art {
+  position: relative;
+  justify-self: center;
+  width: min(100%, clamp(250px, 70vw, 440px));
+  aspect-ratio: 5 / 6;
+  filter: drop-shadow(0 26px 30px rgba(7, 58, 50, 0.35));
+}
+
+/* Green pinstripe cloth with pinked top and bottom edges. */
+.swatch {
+  position: absolute;
+  inset: 0 12% 0 0;
+  display: grid;
+  place-items: center;
+  background-color: var(--ps-cloth);
+  background-image:
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.035) 0 2px, transparent 2px 5px),
+    repeating-linear-gradient(-45deg, rgba(0, 0, 0, 0.05) 0 2px, transparent 2px 5px);
+  --zig: 9px;
+  -webkit-mask:
+    conic-gradient(from 135deg at top, #0000, #000 1deg 89deg, #0000 90deg) top / calc(var(--zig) * 2) 51% repeat-x,
+    conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / calc(var(--zig) * 2) 51% repeat-x;
+  mask:
+    conic-gradient(from 135deg at top, #0000, #000 1deg 89deg, #0000 90deg) top / calc(var(--zig) * 2) 51% repeat-x,
+    conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / calc(var(--zig) * 2) 51% repeat-x;
+}
+
+/* The stripes themselves, on their own layer so they can be ruled in. */
+.swatch__stripes {
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(90deg, transparent 0 27px, rgba(244, 241, 234, 0.5) 27px 28px, transparent 28px 32px, rgba(255, 204, 51, 0.22) 32px 33px, transparent 33px 34px);
+  background-position: 10px 0;
+}
+
+.label {
+  position: relative;
+  width: 56%;
+  aspect-ratio: 1;
+}
+
+.label__mark {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 20%;
+  box-shadow: 0 0 0 1px rgba(244, 241, 234, 0.14), 0 16px 26px -12px rgba(2, 26, 22, 0.75);
+}
+
+.label__stitch {
+  position: absolute;
+  inset: -7%;
+  width: 114%;
+  height: 114%;
+  overflow: visible;
+}
+
+.label__stitch-reveal {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+
+/* Dressmaker's pins: a steel shaft and a round head. */
+.pin {
+  position: absolute;
+  width: 3px;
+  height: 18%;
+  background: linear-gradient(90deg, #8c9693, #eef2f1 50%, #9aa4a1);
+  border-radius: 2px;
+  transform-origin: 50% 100%;
+}
+
+.pin__head {
+  position: absolute;
+  left: 50%;
+  top: -7px;
+  width: 15px;
+  height: 15px;
+  margin-left: -7.5px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fff3c9, var(--ps-gold) 50%, #b98c0c);
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.35);
+}
+
+.pin--a {
+  left: 10%;
+  top: 4%;
+  transform: rotate(-28deg);
+}
+
+.pin--b {
+  left: 22%;
+  bottom: 8%;
+  transform: rotate(206deg);
+}
+
+.pin--b .pin__head {
+  background: radial-gradient(circle at 35% 30%, #e7cdd6, var(--ps-mauve) 55%, #5d3f4b);
+}
+
+/* The hang tag, on a string from the cloth's corner. */
+.tag {
+  position: absolute;
+  right: 0;
+  top: 14%;
+  width: 34%;
+  transform: rotate(8deg);
+  transform-origin: 50% 0;
+}
+
+.tag__string {
+  display: block;
+  width: 1.5px;
+  height: 42px;
+  margin: 0 auto;
+  background: var(--ps-ink-soft);
+}
+
+.tag__card {
+  position: relative;
+  display: grid;
+  gap: 0.05rem;
+  padding: 1.6rem 0.7rem 0.8rem;
+  background: var(--ps-tissue);
+  border-radius: 6px 6px 4px 4px;
+  clip-path: polygon(22% 0, 78% 0, 100% 14%, 100% 100%, 0 100%, 0 14%);
+  box-shadow: 0 10px 18px -10px rgba(0, 0, 0, 0.4);
+}
+
+.tag__hole {
+  position: absolute;
+  left: 50%;
+  top: 0.55rem;
+  width: 10px;
+  height: 10px;
+  margin-left: -5px;
+  border-radius: 50%;
+  background: var(--ps-cream);
+  box-shadow: inset 0 0 0 2px var(--ps-gold);
+}
+
+.tag__row {
+  font-family: var(--ps-chalk);
+  font-size: clamp(1.05rem, 2.6vw, 1.4rem);
+  line-height: 1.05;
+  color: var(--ps-green-deep);
+  white-space: nowrap;
+}
+
+.tag__row b {
+  display: inline-block;
+  min-width: 2.6em;
+  font-family: var(--wsu-font-family-body);
+  font-size: 0.55em;
+  font-weight: var(--wsu-font-weight-bold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ps-mauve-deep);
+}
+
+/* ------------------------------------------------------------ 4. fitting */
+
+.fitting {
+  position: relative;
+  background-color: var(--ps-green-deep);
+  background-image:
+    repeating-linear-gradient(90deg, transparent 0 39px, rgba(244, 241, 234, 0.07) 39px 40px),
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.02) 0 2px, transparent 2px 5px);
+  color: var(--ps-cream);
+}
+
+.fitting__stage {
+  padding-block: clamp(4rem, 8vw, 6rem);
+}
+
+.fitting__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.5rem 2rem;
+  margin-bottom: 1.75rem;
+}
+
+.fitting__head .eyebrow {
+  flex-basis: 100%;
+  margin: 0;
+}
+
+.fitting__head h2 {
+  margin: 0;
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-weight: 600;
+  line-height: 1;
+  color: var(--ps-cream);
+}
+
+/* Walks in, chalked, pressed. Static: all three read as done. */
+.fitting__steps {
+  display: flex;
+  gap: 0.4rem;
+  margin: 0 0 0.35rem;
+  padding: 0;
+  list-style: none;
+}
+
+.fitting__steps li {
+  padding: 0.25rem 0.75rem;
+  border: 1px solid rgba(244, 241, 234, 0.35);
+  border-radius: 999px;
+  font-size: 0.8125rem;
+  color: var(--ps-cream);
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+.fitting__steps li.is-on,
+.fitting:not(.is-live) .fitting__steps li {
+  background: var(--ps-gold);
+  border-color: var(--ps-gold);
+  color: var(--ps-ink);
+}
+
+.fitting__body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.5rem;
+}
+
+.garments {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.25rem;
+  margin: 0;
+}
+
+.garment {
+  position: relative;
+  min-width: 0;
+  container-type: inline-size;
+  padding: 1rem 1.1rem 1.25rem;
+  background-color: var(--ps-cloth);
+  background-image: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.03) 0 2px, transparent 2px 5px);
+  border-radius: 8px;
+  outline: 1.5px dashed rgba(255, 204, 51, 0.45);
+  outline-offset: -7px;
+  box-shadow: 0 24px 40px -26px rgba(0, 0, 0, 0.8);
+}
+
+.garment__label {
+  margin: 0 0 0.5rem;
+  font-family: var(--ps-display);
+  font-style: italic;
+  font-size: 1.25rem;
+  color: var(--ps-gold);
+}
+
+.garment__code {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  background: none;
+  border: 0;
+  overflow: visible;
+  white-space: pre;
+  color: var(--ps-cream);
+  font-family: var(--ps-mono);
+  /* Sized so the longest line (53 characters) always fits: no scrollbars on
+     the cloth, at any width. */
+  font-size: clamp(8.5px, calc((100cqi - 0.5rem) / 33), 15px);
+  line-height: 1.6;
+}
+
+.garment__code code {
+  position: relative;
+  display: block;
+  font-size: 1em;
+  color: inherit;
+  background: none;
+  padding: 0;
+}
+
+/* The pinstripes are the indent guides, drawn only in each line's leading
+   whitespace. Pressed: straight and gold, one every four columns. */
+.garment__code .ind {
+  background-image: repeating-linear-gradient(90deg, rgba(255, 204, 51, 0.45) 0 1.5px, transparent 1.5px 4ch);
+  background-position: 0.2ch 0;
+}
+
+/* As it walked in: the same stripes, each line a little off the grain, so
+   they never line up. */
+.garment--before .garment__code .ind {
+  background-image: repeating-linear-gradient(90deg, rgba(244, 241, 234, 0.3) 0 1.5px, transparent 1.5px 4ch);
+}
+
+.garment--before .ln:nth-child(3n + 1) .ind { background-position: 0.65ch 0; }
+.garment--before .ln:nth-child(3n + 2) .ind { background-position: -0.35ch 0; }
+.garment--before .ln:nth-child(3n) .ind { background-position: 0.3ch 0; }
+.garment--before .ln:nth-child(5n) .ind { background-position: 0.95ch 0; }
+
+.garment__code .new {
+  color: var(--ps-gold-soft);
+  text-decoration: underline 1px dashed rgba(255, 204, 51, 0.6);
+  text-underline-offset: 3px;
+}
+
+/* Chalk marks. Each is a hand-drawn path painted as a background, so it sits
+   on the code without moving a character. */
+.chalk {
+  position: relative;
+}
+
+.chalk::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  filter: url(#chalk);
+  clip-path: inset(0 0 0 0);
+  transition: clip-path 0.7s var(--ps-ease-out);
+}
+
+.chalk--strike::after {
+  left: -2%;
+  right: -2%;
+  top: 30%;
+  height: 0.5em;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 10' preserveAspectRatio='none'%3E%3Cpath d='M1 6 C 30 4, 60 6.5, 99 3.5' fill='none' stroke='%23ffcc33' stroke-width='2.6' stroke-linecap='round' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E");
+}
+
+.chalk--circle::after {
+  left: -0.55em;
+  right: -0.6em;
+  top: -0.35em;
+  bottom: -0.3em;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M62 6 C 20 2, 4 30, 6 54 C 8 86, 50 98, 80 86 C 100 74, 98 30, 76 14 C 66 8, 50 8, 40 12' fill='none' stroke='%23ffcc33' stroke-width='2.4' stroke-linecap='round' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E");
+}
+
+.chalk--under::after {
+  left: -1%;
+  right: -1%;
+  bottom: -0.32em;
+  height: 0.45em;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 10' preserveAspectRatio='none'%3E%3Cpath d='M1 4 C 25 8, 55 2, 99 6 M8 8.5 C 40 6.5, 70 9.5, 92 8' fill='none' stroke='%23ffcc33' stroke-width='2.2' stroke-linecap='round' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E");
+}
+
+.chalk--wave::after {
+  left: -1%;
+  right: -1%;
+  bottom: -0.42em;
+  height: 0.5em;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 10' preserveAspectRatio='none'%3E%3Cpath d='M1 5 Q 5 0, 9 5 T 17 5 T 25 5 T 33 5 T 41 5 T 49 5 T 57 5 T 65 5 T 73 5 T 81 5 T 89 5 T 97 5' fill='none' stroke='%23ffcc33' stroke-width='2.2' stroke-linecap='round' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E");
+}
+
+.chalk--caret::after {
+  right: -0.55em;
+  bottom: -0.55em;
+  width: 1em;
+  height: 0.7em;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 14' preserveAspectRatio='none'%3E%3Cpath d='M2 13 L 10 2 L 18 12.5' fill='none' stroke='%23ffcc33' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E");
+}
+
+.chalk__n {
+  position: absolute;
+  top: -0.95em;
+  right: -0.75em;
+  font-family: var(--ps-chalk);
+  font-size: 2.1em;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--ps-gold);
+  user-select: none;
+  transition: opacity 0.4s, transform 0.4s var(--ps-ease-spring);
+}
+
+.chalk--strike .chalk__n {
+  right: -1.2em;
+  top: -0.6em;
+}
+
+/* The iron: hidden unless the live fitting is pressing. */
+.iron {
+  display: none;
+}
+
+/* The tailor's ticket. */
+.ticket {
+  position: relative;
+  align-self: start;
+  padding: 1.25rem 1.25rem 1.1rem;
+  background: var(--ps-tissue);
+  color: var(--ps-ink);
+  border-radius: 4px;
+  box-shadow: 0 22px 40px -24px rgba(0, 0, 0, 0.8);
+  /* Perforated top edge. */
+  -webkit-mask: radial-gradient(circle 4px at 8px 0, #0000 98%, #000) 0 0 / 16px 100% repeat-x;
+  mask: radial-gradient(circle 4px at 8px 0, #0000 98%, #000) 0 0 / 16px 100% repeat-x;
+}
+
+.ticket__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin: 0 0 0.75rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1.5px dashed var(--ps-line-strong);
+  font-family: var(--ps-display);
+  font-size: 1.375rem;
+  font-weight: 600;
+  color: var(--ps-green-deep);
+}
+
+.ticket__no {
+  font-family: var(--ps-mono);
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--ps-mauve-deep);
+}
+
+.ticket__list {
+  display: grid;
+  gap: 0.55rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ticket__list li {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1.6rem auto minmax(0, 1fr);
+  align-items: baseline;
+  gap: 0.15rem 0.5rem;
+  padding-right: 1.6rem;
+  font-size: 0.9375rem;
+  line-height: 1.4;
+}
+
+.ticket__n {
+  display: grid;
+  place-items: center;
+  width: 1.45rem;
+  height: 1.45rem;
+  border-radius: 50%;
+  background: var(--ps-green);
+  color: var(--ps-gold);
+  font-family: var(--ps-display);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1;
+  transform: translateY(0.1rem);
+}
+
+.ticket__tool {
+  font-size: 0.75rem;
+  font-weight: var(--wsu-font-weight-bold);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ps-mauve-deep);
+  white-space: nowrap;
+}
+
+.ticket__tool--stan {
+  color: var(--ps-green);
+}
+
+.ticket__what code {
+  color: var(--ps-green-deep);
+}
+
+/* A chalk tick when the alteration is marked. */
+.ticket__list li::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 0.1rem;
+  width: 1.1rem;
+  height: 1rem;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 18'%3E%3Cpath d='M2 10 L 7 15.5 L 18 2.5' fill='none' stroke='%230c5449' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat center / contain;
+  transition: clip-path 0.4s var(--ps-ease-out);
+  clip-path: inset(0 0 0 0);
+}
+
+.ticket__done {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  margin: 1rem 0 0;
+  padding-top: 0.8rem;
+  border-top: 1.5px dashed var(--ps-line-strong);
+  font-size: 0.9375rem;
+  color: var(--ps-ink-soft);
+  transition: opacity 0.5s, transform 0.5s var(--ps-ease-spring);
+}
+
+.fitting__foot {
+  margin: 1.5rem 0 0;
+  max-width: 48rem;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: rgba(244, 241, 234, 0.85);
+}
+
+.fitting__foot code {
+  color: var(--ps-gold-soft);
+}
+
+/* ---------------------------------------------------- 5. pieces, mirror */
+
+.pieces__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2rem;
+  align-items: start;
+}
+
+.cushion {
+  justify-self: center;
+  width: min(240px, 70%);
+  text-align: center;
+}
+
+.cushion svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.cushion__body {
+  fill: var(--ps-mauve);
+}
+
+.cushion__seam {
+  stroke: rgba(255, 255, 255, 0.22);
+  stroke-width: 2;
+}
+
+.cushion__band {
+  fill: var(--ps-green);
+}
+
+.cushion__shadow {
+  fill: rgba(7, 58, 50, 0.16);
+}
+
+.cpin {
+  transition: transform 0.35s var(--ps-ease-spring);
+}
+
+.cpin line {
+  stroke: #8f9a97;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+
+.cpin__head {
+  stroke: rgba(0, 0, 0, 0.2);
+  stroke-width: 1;
+}
+
+.cpin__head--gold { fill: var(--ps-gold); }
+.cpin__head--green { fill: var(--ps-green); }
+.cpin__head--cream { fill: var(--ps-tissue); }
+.cpin__head--mauve { fill: var(--ps-mauve-deep); }
+
+.cpin.is-up {
+  transform: translateY(-12px);
+}
+
+.cushion__caption {
+  margin: 0.5rem 0 0;
+  font-family: var(--ps-chalk);
+  font-size: 1.5rem;
+  color: var(--ps-mauve-deep);
+}
+
+/* The order card: one row per piece. */
+.order {
+  margin: 0;
+  padding: 0.5rem 1.5rem;
+  list-style: none;
+  background: var(--ps-tissue);
+  border: 1px solid var(--ps-line-strong);
+  border-radius: 6px;
+  box-shadow: var(--ps-shadow);
+}
+
+.order__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "piece status"
+    "files files"
+    "measure measure";
+  gap: 0.35rem 1rem;
+  padding: 1.1rem 0;
+  border-bottom: 1.5px dashed var(--ps-line-strong);
+  transition: background-color 0.25s;
+}
+
+.order__row:last-child {
+  border-bottom: 0;
+}
+
+.order__piece {
+  grid-area: piece;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.2rem 0.75rem;
+}
+
+.order__name {
+  font-family: var(--ps-display);
+  font-style: italic;
+  font-size: 1.5rem;
+  line-height: 1.1;
+  color: var(--ps-green-deep);
+}
+
+.order__tool {
+  font-size: 0.75rem;
+  font-weight: var(--wsu-font-weight-bold);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ps-mauve-deep);
+}
+
+.order__files {
+  grid-area: files;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.order__files code {
+  padding: 0.1rem 0.45rem;
+  background: rgba(12, 84, 73, 0.07);
+  border-radius: 3px;
+  color: var(--ps-green-deep);
+  font-size: 0.8125rem;
+  overflow-wrap: anywhere;
+}
+
+.order__measure {
+  grid-area: measure;
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--ps-ink-soft);
+}
+
+.order__row > .woven {
+  grid-area: status;
+  align-self: start;
+  justify-self: end;
+}
+
+.pieces__draft {
+  margin: 1.25rem 0 0;
+  font-family: var(--ps-chalk);
+  font-size: 1.5rem;
+  line-height: 1.2;
+  color: var(--ps-mauve-deep);
+  text-align: center;
+}
+
+/* The fitting-room mirror: an arched glass in a green frame. */
+.mirror {
+  margin-top: clamp(3rem, 7vw, 5rem);
+  display: grid;
+  justify-items: center;
+}
+
+.mirror__glass {
+  position: relative;
+  width: min(100%, 56rem);
+  padding: clamp(3rem, 7vw, 5rem) clamp(1.25rem, 4vw, 3.5rem) clamp(1.5rem, 4vw, 2.5rem);
+  background:
+    linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.55) 38%, transparent 46%),
+    linear-gradient(180deg, #e9f0ed, #d5e3de);
+  border: 10px solid var(--ps-green);
+  border-radius: 28rem 28rem 18px 18px / 14rem 14rem 18px 18px;
+  box-shadow: inset 0 0 0 2px var(--ps-gold), 0 30px 50px -30px rgba(7, 58, 50, 0.6);
+  text-align: center;
+}
+
+.mirror__title {
+  margin: 0 0 0.75rem;
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 600;
+  color: var(--ps-green-deep);
+}
+
+.mirror__lede {
+  max-width: 34rem;
+  margin: 0 auto 1.75rem;
+  line-height: 1.6;
+  color: var(--ps-ink-soft);
+}
+
+.mirror__sides {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+  text-align: left;
+}
+
+.mirror__side {
+  padding: 1rem 1.25rem;
+  background: rgba(251, 249, 244, 0.8);
+  border-radius: 8px;
+}
+
+.mirror__k {
+  margin: 0 0 0.4rem;
+  font-family: var(--ps-display);
+  font-style: italic;
+  font-size: 1.25rem;
+  color: var(--ps-green);
+}
+
+.mirror__side ul {
+  margin: 0;
+  padding-left: 1.1rem;
+  line-height: 1.6;
+  font-size: 0.9375rem;
+}
+
+.mirror__side code {
+  color: var(--ps-green-deep);
+  overflow-wrap: anywhere;
+}
+
+/* --------------------------------------------- 6. made to measure, patterns */
+
+.measure {
+  background-color: var(--ps-mat);
+  background-image:
+    linear-gradient(rgba(12, 84, 73, 0.14) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(12, 84, 73, 0.14) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+.measure .section__head p {
+  color: var(--ps-ink);
+}
+
+.patterns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.5rem;
+}
+
+/* A paper pattern piece: tissue, a printed outline, the seam allowance as a
+   dashed line inside it, a notch on the edge and a grain arrow. */
+.pattern {
+  position: relative;
+  min-width: 0;
+  padding: 1.6rem 3rem 1.6rem 1.6rem;
+  background: var(--ps-tissue);
+  border: 1.5px solid var(--ps-mauve);
+  border-radius: 4px 26px 4px 4px;
+  outline: 1.5px dashed rgba(139, 99, 114, 0.55);
+  outline-offset: -12px;
+  box-shadow: 0 16px 28px -22px rgba(7, 58, 50, 0.7);
+  transition: transform 0.35s var(--ps-ease-spring), box-shadow 0.35s;
+}
+
+.pattern::before {
+  content: "";
+  position: absolute;
+  left: -1.5px;
+  top: 38%;
+  width: 0;
+  height: 0;
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+  border-left: 9px solid var(--ps-mauve);
+}
+
+/* A pin that pops in when you pick the piece up. */
+.pattern::after {
+  content: "";
+  position: absolute;
+  top: -8px;
+  left: 2.2rem;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fff3c9, var(--ps-gold) 50%, #b98c0c);
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.3), 6px 16px 0 -5.5px #9aa4a1;
+  opacity: 0;
+  transform: translateY(-10px) scale(0.6);
+  transition: opacity 0.2s, transform 0.35s var(--ps-ease-spring);
+}
+
+.pattern:hover {
+  transform: translateY(-4px) rotate(-0.4deg);
+  box-shadow: 0 26px 36px -22px rgba(7, 58, 50, 0.75);
+}
+
+.pattern:hover::after {
+  opacity: 1;
+  transform: none;
+}
+
+.pattern__mark {
+  margin: 0 0 0.35rem;
+  font-size: 0.75rem;
+  font-weight: var(--wsu-font-weight-bold);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ps-mauve-deep);
+}
+
+.pattern__name {
+  margin: 0 0 0.5rem;
+  font-size: 2.125rem;
+  font-weight: 600;
+  line-height: 1.05;
+  color: var(--ps-green-deep);
+}
+
+.pattern__fit {
+  margin: 0 0 0.75rem;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: var(--ps-ink-soft);
+}
+
+.pattern__fit code {
+  color: var(--ps-green-deep);
+  overflow-wrap: anywhere;
+}
+
+.pattern__soon {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.5rem;
+  margin: 0 0 1rem;
+  font-size: 0.875rem;
+  color: var(--ps-mauve-deep);
+}
+
+.pattern__file {
+  margin: 0 0 0.3rem;
+  font-family: var(--ps-mono);
+  font-size: 0.75rem;
+  font-weight: var(--wsu-font-weight-bold);
+  color: var(--ps-mauve-deep);
+}
+
+.pattern__code {
+  margin: 0 0 1rem;
+  padding: 0.75rem 0.85rem;
+  background: rgba(12, 84, 73, 0.07);
+  border: 0;
+  border-left: 3px solid var(--ps-green);
+  border-radius: 2px;
+  color: var(--ps-ink);
+  font-family: var(--ps-mono);
+  font-size: 0.75rem;
+  line-height: 1.6;
+  white-space: pre;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--ps-mauve) transparent;
+}
+
+.pattern__code code {
+  font-size: 1em;
+  background: none;
+  padding: 0;
+  color: inherit;
+}
+
+.pattern__grain {
+  position: absolute;
+  right: 1.15rem;
+  top: 22%;
+  bottom: 22%;
+  width: 1.5px;
+  background: var(--ps-mauve);
+  font-size: 0;
+}
+
+.pattern__grain::before,
+.pattern__grain::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  width: 9px;
+  height: 9px;
+  margin-left: -4.5px;
+  border-left: 1.5px solid var(--ps-mauve);
+  border-top: 1.5px solid var(--ps-mauve);
+}
+
+.pattern__grain::before {
+  top: 0;
+  transform: rotate(45deg);
+}
+
+.pattern__grain::after {
+  bottom: 0;
+  transform: rotate(225deg);
+}
+
+.pattern--wide {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0 2rem;
+  margin-top: 1.5rem;
+}
+
+/* ---------------------------------------------------------- 7. try it on */
+
+.try {
+  background-color: var(--ps-green);
+  background-image: repeating-linear-gradient(90deg, transparent 0 31px, rgba(244, 241, 234, 0.07) 31px 32px);
+  color: var(--ps-cream);
+}
+
+.try__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2.5rem;
+  align-items: center;
+}
+
+.try__copy h2 {
+  margin: 0 0 1rem;
+  color: var(--ps-cream);
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-weight: 600;
+  line-height: 1;
+}
+
+.try__copy p {
+  margin: 0 0 1rem;
+  font-size: 1.0625rem;
+  line-height: 1.65;
+}
+
+.try__copy p.eyebrow {
+  font-size: 0.8125rem;
+  color: var(--ps-gold);
+}
+
+.try__copy code {
+  color: var(--ps-gold-soft);
+}
+
+.try__next {
+  padding: 0.9rem 1rem;
+  border: 1.5px dashed rgba(255, 204, 51, 0.5);
+  border-radius: 6px;
+}
+
+.try__next-k {
+  display: block;
+  font-family: var(--ps-display);
+  font-style: italic;
+  font-size: 1.125rem;
+  color: var(--ps-gold);
+}
+
+.try__next .chip-soon {
+  color: var(--ps-gold);
+}
+
+/* The receipt: a slip of tissue with a pinked bottom. */
+.receipt {
+  position: relative;
+  min-width: 0;
+  padding: 1.25rem 1.25rem 2rem;
+  background: var(--ps-tissue);
+  color: var(--ps-ink);
+  border-radius: 4px 4px 0 0;
+  box-shadow: 0 24px 40px -24px rgba(0, 0, 0, 0.7);
+  -webkit-mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / 18px 100% repeat-x;
+  mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / 18px 100% repeat-x;
+  transform: rotate(0.6deg);
+}
+
+.receipt__head {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 0 0.75rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1.5px dashed var(--ps-line-strong);
+  font-family: var(--ps-display);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--ps-green-deep);
+}
+
+.receipt__head span + span {
+  font-family: var(--ps-mono);
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--ps-mauve-deep);
+  align-self: center;
+}
+
+.receipt__code {
+  margin: 0 0 1rem;
+  padding: 0;
+  background: none;
+  border: 0;
+  font-family: var(--ps-mono);
+  font-size: clamp(0.75rem, 2.6vw, 0.9375rem);
+  line-height: 1.75;
+  color: var(--ps-green-deep);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.receipt__code code {
+  font-size: 1em;
+  background: none;
+  padding: 0;
+  color: inherit;
+}
+
+.t-dim {
+  color: var(--ps-mauve-deep);
+  user-select: none;
+}
+
+.copy-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 1.1rem;
+  background: var(--ps-gold);
+  color: var(--ps-ink);
+  border: 0;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 0.9375rem;
+  font-weight: var(--wsu-font-weight-bold);
+  cursor: pointer;
+  transition: transform 0.2s var(--ps-ease-spring), background-color 0.2s;
+}
+
+.copy-btn:hover {
+  background: var(--ps-gold-soft);
+  transform: translateY(-1px);
+}
+
+.copy-btn:active {
+  transform: scale(0.96);
+}
+
+.copy-btn:focus-visible {
+  outline-color: var(--ps-green);
+}
+
+.receipt__foot {
+  margin: 0.9rem 0 0;
+  font-family: var(--ps-chalk);
+  font-size: 1.4rem;
+  line-height: 1.1;
+  color: var(--ps-green);
+}
+
+/* ------------------------------------------------ 8. rail, footer, toast */
+
+.rail {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 150px), 1fr));
+  gap: 1.75rem 1rem;
+  margin: 0;
+  padding: 0 0.5rem;
+  list-style: none;
+  overflow-x: clip;
+}
+
+/* The brass rail, one segment per hanger; segments meet across the gaps,
+   above the hooks, so the rail never crosses a mark. */
+.hanger {
+  position: relative;
+  padding-top: 40px;
+}
+
+.hanger::before {
+  content: "";
+  position: absolute;
+  top: 6px;
+  left: -0.55rem;
+  right: -0.55rem;
+  height: 6px;
+  background: linear-gradient(180deg, #ffe7a0, #d9a91c 60%, #a57d0b);
+}
+
+.hanger__hook {
+  position: absolute;
+  top: 1px;
+  left: 50%;
+  width: 18px;
+  height: 40px;
+  margin-left: -9px;
+}
+
+.hanger__hook::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 0;
+  width: 12px;
+  height: 14px;
+  border: 2.5px solid var(--ps-ink-soft);
+  border-bottom-color: transparent;
+  border-left-color: transparent;
+  border-radius: 50%;
+  transform: rotate(-45deg);
+}
+
+.hanger__hook::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 14px;
+  bottom: 0;
+  width: 2px;
+  margin-left: -1px;
+  background: var(--ps-ink-soft);
+}
+
+.hanger__tag {
+  display: grid;
+  justify-items: center;
+  gap: 0.25rem;
+  height: 100%;
+  padding: 1rem 0.75rem 1.1rem;
+  background: var(--ps-tissue);
+  border: 1px solid var(--ps-line-strong);
+  border-radius: 10px 10px 6px 6px;
+  text-align: center;
+  box-shadow: 0 14px 24px -18px rgba(7, 58, 50, 0.6);
+  transform-origin: 50% -30px;
+  transition: transform 0.5s var(--ps-ease-spring);
+}
+
+.hanger:hover .hanger__tag {
+  transform: rotate(-3deg);
+}
+
+.hanger:nth-child(even):hover .hanger__tag {
+  transform: rotate(3deg);
+}
+
+.hanger__mark {
+  width: 48px;
+  height: 48px;
+  border-radius: 11px;
+}
+
+.hanger__tile {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 11px;
+  background: var(--ps-green);
+}
+
+.hanger__name {
+  margin: 0.35rem 0 0;
+  font-family: var(--ps-display);
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--ps-green-deep);
+}
+
+.hanger__role {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  color: var(--ps-ink-soft);
+}
+
+.hanger--here .hanger__tag {
+  background: var(--ps-green);
+  border-color: var(--ps-green);
+  outline: 1.5px dashed rgba(255, 204, 51, 0.7);
+  outline-offset: -6px;
+}
+
+.hanger--here .hanger__name {
+  color: var(--ps-cream);
+}
+
+.hanger--here .hanger__role {
+  color: var(--ps-gold-soft);
+}
+
+.site-footer {
+  padding-block: 2.5rem;
+  background: var(--ps-green-deep);
+  color: var(--ps-cream);
+}
+
+.site-footer__row {
+  display: grid;
+  gap: 0.5rem;
+  justify-items: center;
+  text-align: center;
+}
+
+.site-footer__joke {
+  margin: 0;
+  font-family: var(--ps-display);
+  font-style: italic;
+  font-size: 1.5rem;
+  color: var(--ps-gold);
+}
+
+.site-footer__org {
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+.site-footer a {
+  color: var(--ps-cream);
+  text-decoration-color: var(--ps-gold);
+  text-underline-offset: 3px;
+}
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 1.5rem;
+  z-index: 50;
+  max-width: calc(100vw - 2rem);
+  padding: 0.8rem 1.2rem;
+  background: var(--ps-tissue);
+  color: var(--ps-green-deep);
+  border: 1.5px solid var(--ps-green);
+  border-radius: 6px;
+  box-shadow: 0 18px 30px -16px rgba(0, 0, 0, 0.5);
+  font-size: 0.9375rem;
+  transform: translate(-50%, 0);
+}
+
+.toast:empty {
+  display: none;
+}
+
+.defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+/* -------------------------------------------------------- 9. responsive */
+
+@media (min-width: 560px) {
+  .mirror__sides {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 800px) {
+  .garments {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .patterns {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .order__row {
+    grid-template-columns: 13rem minmax(0, 1fr) auto;
+    grid-template-areas:
+      "piece files status"
+      "piece measure status";
+    align-items: start;
+  }
+
+  .order__piece {
+    flex-direction: column;
+  }
+
+  .pattern--wide {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  }
+
+  .try__grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}
+
+@media (min-width: 960px) {
+  .site-nav {
+    display: flex;
+  }
+
+  .size-label {
+    margin-left: 0;
+  }
+
+  .hero__grid {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  }
+
+  .hero__art {
+    width: 100%;
+    max-width: 460px;
+  }
+
+  .pieces__grid {
+    grid-template-columns: 240px minmax(0, 1fr);
+  }
+
+  .cushion {
+    position: sticky;
+    top: 4rem;
+    width: 100%;
+  }
+
+}
+
+@media (min-width: 1200px) {
+  .patterns {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* -------------------------------------------------------------- 10. motion */
+/* Everything below runs only under html.motion, which the inline script sets
+   when prefers-reduced-motion is "no-preference". */
+
+.motion body {
+  padding-top: 22px;
+}
+
+.motion .tape {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 40;
+  display: block;
+  height: 22px;
+  pointer-events: none;
+}
+
+.motion .tape__roll {
+  position: relative;
+  width: 0;
+  height: 100%;
+  overflow: hidden;
+  background: var(--ps-gold);
+  box-shadow: 0 2px 6px rgba(7, 58, 50, 0.25);
+}
+
+/* Ticks every 8px, long ticks every 40px, numbers placed by the script. */
+.motion .tape__ticks {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 100vw;
+  background-image:
+    repeating-linear-gradient(90deg, rgba(27, 38, 35, 0.85) 0 1px, transparent 1px 40px),
+    repeating-linear-gradient(90deg, rgba(27, 38, 35, 0.6) 0 1px, transparent 1px 8px);
+  background-size: 100% 11px, 100% 6px;
+  background-repeat: no-repeat;
+}
+
+.motion .tape__n {
+  position: absolute;
+  top: 9px;
+  font-family: var(--ps-mono);
+  font-size: 9px;
+  line-height: 1;
+  color: var(--ps-ink);
+  transform: translateX(3px);
+}
+
+.motion .tape__tip {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 6px;
+  background: linear-gradient(90deg, #a57d0b, #6b5207);
+}
+
+/* Pinstripe's fit, level 8, is chalked on the tape itself: it shows up when
+   the tape unrolls past it. */
+.motion .tape__mark {
+  position: absolute;
+  left: 80%;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  margin-left: -1.5px;
+  background: var(--ps-mauve-deep);
+}
+
+.motion .tape__mark::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  margin-left: -5px;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 7px solid var(--ps-green);
+}
+
+.motion .tape__read {
+  position: absolute;
+  top: 26px;
+  left: var(--tape-x, 0px);
+  padding: 0.1rem 0.5rem;
+  background: var(--ps-green);
+  color: var(--ps-cream);
+  font-family: var(--ps-mono);
+  font-size: 0.6875rem;
+  border-radius: 3px;
+  white-space: nowrap;
+  transform: translateX(-100%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.motion .tape.is-reading .tape__read {
+  opacity: 1;
+}
+
+/* Hero: the cloth is ruled, the label sewn on, pinned, tagged. */
+@keyframes ps-rule {
+  from { clip-path: inset(0 0 100% 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+
+@keyframes ps-sew-on {
+  from { opacity: 0; transform: scale(0.82) rotate(-4deg); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes ps-stitch {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes ps-pin-a {
+  from { opacity: 0; transform: rotate(-28deg) translateY(-40px); }
+  to { opacity: 1; transform: rotate(-28deg); }
+}
+
+@keyframes ps-pin-b {
+  from { opacity: 0; transform: rotate(206deg) translateY(-40px); }
+  to { opacity: 1; transform: rotate(206deg); }
+}
+
+@keyframes ps-tag-in {
+  0% { opacity: 0; transform: rotate(40deg); }
+  35% { opacity: 1; transform: rotate(-6deg); }
+  60% { transform: rotate(12deg); }
+  80% { transform: rotate(6deg); }
+  100% { transform: rotate(8deg); }
+}
+
+@keyframes ps-tag-sway {
+  0%, 100% { transform: rotate(8deg); }
+  50% { transform: rotate(4.5deg); }
+}
+
+@keyframes ps-rise {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: none; }
+}
+
+.motion .swatch__stripes {
+  animation: ps-rule 1.5s var(--ps-ease-out) 0.15s both;
+}
+
+.motion .label {
+  animation: ps-sew-on 0.9s var(--ps-ease-spring) 0.45s both;
+}
+
+.motion .label__stitch-reveal {
+  animation: ps-stitch 1.6s ease-in-out 1s both;
+}
+
+.motion .pin--a {
+  animation: ps-pin-a 0.45s var(--ps-ease-spring) 2.1s both;
+}
+
+.motion .pin--b {
+  animation: ps-pin-b 0.45s var(--ps-ease-spring) 2.3s both;
+}
+
+.motion .tag {
+  animation:
+    ps-tag-in 1.6s ease-out 1.3s both,
+    ps-tag-sway 5s ease-in-out 2.9s infinite;
+}
+
+.motion .hero__art:hover .tag {
+  animation: ps-tag-in 1.2s ease-out both, ps-tag-sway 5s ease-in-out 1.2s infinite;
+}
+
+.motion .hero__copy > * {
+  animation: ps-rise 0.8s var(--ps-ease-out) both;
+}
+
+.motion .hero__copy > :nth-child(2) { animation-delay: 0.08s; }
+.motion .hero__copy > :nth-child(3) { animation-delay: 0.2s; }
+.motion .hero__copy > :nth-child(4) { animation-delay: 0.3s; }
+.motion .hero__copy > :nth-child(5) { animation-delay: 0.4s; }
+.motion .hero__copy > :nth-child(6) { animation-delay: 0.5s; }
+
+.motion .hero__chalk path {
+  stroke-dasharray: 1;
+  animation: ps-stitch 0.9s var(--ps-ease-out) 0.9s both;
+}
+
+/* The running stitch on the button travels while you hover. */
+@keyframes ps-run {
+  to { background-position: 16px 0; }
+}
+
+.motion .stitch-btn:hover::after {
+  animation: ps-run 0.6s linear infinite;
+}
+
+/* Scroll reveals. */
+.motion [data-reveal] {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 0.8s var(--ps-ease-out), transform 0.8s var(--ps-ease-out);
+}
+
+.motion [data-reveal].is-in {
+  opacity: 1;
+  transform: none;
+}
+
+.motion .patterns [data-reveal]:nth-child(2) { transition-delay: 0.1s; }
+.motion .patterns [data-reveal]:nth-child(3) { transition-delay: 0.2s; }
+
+.motion .rail .hanger {
+  opacity: 0;
+  transform: translateY(-12px) rotate(-2deg);
+  transform-origin: 50% 0;
+  transition: opacity 0.6s var(--ps-ease-out), transform 0.8s var(--ps-ease-spring);
+  transition-delay: calc(var(--i, 0) * 45ms);
+}
+
+.motion .rail.is-in .hanger {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---- The live fitting. The script adds .is-live (motion on, tall window).
+   The section grows tall, the stage sticks, and the two garments share one
+   place on the table: the iron's position decides which one you see. */
+
+.motion .fitting.is-live {
+  height: 330vh;
+}
+
+.motion .fitting.is-live .fitting__stage {
+  position: sticky;
+  top: 22px;
+  min-height: calc(100vh - 22px);
+  display: flex;
+  align-items: center;
+  padding-block: 1.5rem;
+}
+
+.motion .fitting.is-live .fitting__stage > .wsu-container {
+  width: 100%;
+}
+
+.motion .fitting.is-live .garments {
+  grid-template-columns: minmax(0, 1fr);
+  --press: 0;
+}
+
+.motion .fitting.is-live .garment {
+  grid-area: 1 / 1;
+}
+
+.motion .fitting.is-live .garment--before {
+  clip-path: inset(0 0 0 calc(var(--press) * 100%));
+}
+
+.motion .fitting.is-live .garment--after {
+  clip-path: inset(0 calc((1 - var(--press)) * 100%) 0 0);
+}
+
+.motion .fitting.is-live .chalk:not(.is-on)::after {
+  clip-path: inset(0 100% 0 0);
+}
+
+.motion .fitting.is-live .chalk:not(.is-on) > .chalk__n {
+  opacity: 0;
+  transform: scale(0.4);
+}
+
+.motion .fitting.is-live .ticket__list li:not(.is-on)::after {
+  clip-path: inset(0 100% 0 0);
+}
+
+.motion .fitting.is-live .ticket__list li {
+  transition: transform 0.3s var(--ps-ease-spring);
+}
+
+.motion .fitting.is-live .ticket__list li.is-now {
+  transform: translateX(4px);
+}
+
+.motion .fitting.is-live .ticket__done:not(.is-on) {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+/* The iron rides the seam between the two garments. */
+.motion .fitting.is-live .iron {
+  display: block;
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  left: calc(var(--press) * 100%);
+  width: clamp(70px, 12vw, 120px);
+  transform: translate(-30%, -50%);
+  opacity: 0;
+  transition: opacity 0.25s;
+  pointer-events: none;
+}
+
+.motion .fitting.is-live .garments.is-pressing .iron {
+  opacity: 1;
+}
+
+.motion .fitting.is-live .garments.is-pressing::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--press) * 100%);
+  width: 3px;
+  margin-left: -1.5px;
+  background: linear-gradient(180deg, transparent, rgba(255, 224, 138, 0.9) 20%, rgba(255, 224, 138, 0.9) 80%, transparent);
+  box-shadow: 0 0 18px 4px rgba(255, 224, 138, 0.35);
+}
+
+.iron svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 10px 10px rgba(0, 0, 0, 0.45));
+}
+
+.iron__handle { stroke: var(--ps-ink); }
+.iron__body { fill: var(--ps-cream); }
+.iron__sole { fill: var(--ps-silver); }
+.iron__dial { fill: var(--ps-gold); }
+
+.steam {
+  position: absolute;
+  left: 30%;
+  top: 20%;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: rgba(244, 241, 234, 0.5);
+  animation: ps-steam 1.6s ease-out infinite;
+}
+
+.steam--2 { left: 48%; animation-delay: 0.5s; }
+.steam--3 { left: 64%; animation-delay: 1s; }
+
+@keyframes ps-steam {
+  from { opacity: 0.7; transform: translateY(0) scale(0.6); }
+  to { opacity: 0; transform: translateY(-46px) scale(1.6); }
+}
+
+/* Tall wide screens: ticket beside the cloth. */
+@media (min-width: 900px) {
+  .motion .fitting.is-live .fitting__body {
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    align-items: center;
+  }
+}
+
+@media (min-width: 1100px) {
+  .fitting:not(.is-live) .fitting__body .ticket {
+    max-width: 44rem;
+  }
+}
+
+/* Narrow and live: tighten so cloth, steps and ticket all fit one screen. */
+@media (max-width: 899px) {
+  .motion .fitting.is-live .fitting__head {
+    margin-bottom: 0.9rem;
+  }
+
+  .motion .fitting.is-live .fitting__head h2 {
+    font-size: 2.25rem;
+  }
+
+  .motion .fitting.is-live .fitting__body {
+    gap: 0.9rem;
+  }
+
+  .motion .fitting.is-live .ticket {
+    padding: 0.9rem 1rem 0.8rem;
+  }
+
+  .motion .fitting.is-live .ticket__head {
+    display: none;
+  }
+
+  .motion .fitting.is-live .ticket__list {
+    gap: 0.3rem;
+  }
+
+  .motion .fitting.is-live .ticket__list li {
+    font-size: 0.8125rem;
+    line-height: 1.3;
+  }
+
+  .motion .fitting.is-live .ticket__done {
+    margin-top: 0.6rem;
+    padding-top: 0.5rem;
+    font-size: 0.8125rem;
+  }
+
+  .motion .fitting.is-live .fitting__foot {
+    margin-top: 0.75rem;
+    font-size: 0.75rem;
+  }
+}
