@@ -1,0 +1,27 @@
+{
+    "name": "waynestate/pinstripe",
+    "description": "The coding standard for the Wayne State app stack: shared Pint and PHPStan presets.",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": "^8.3",
+        "laravel/pint": "^1.32",
+        "phpstan/phpstan": "^2.1"
+    },
+    "suggest": {
+        "larastan/larastan": "^3.13 (Laravel apps: include phpstan/laravel.neon)"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^12"
+    },
+    "autoload-dev": {
+        "classmap": [
+            "tests/"
+        ]
+    },
+    "config": {
+        "platform": {
+            "php": "8.3.0"
+        }
+    }
+}

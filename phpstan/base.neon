@@ -1,0 +1,9 @@
+# Pinstripe base PHPStan config: level 8 for new code (ADR-0013).
+# The phpVersion range moves to CREED's PHP floor in a later step.
+parameters:
+    level: 8
+    reportIgnoresWithoutComments: true
+    reportUnmatchedIgnoredErrors: true
+    phpVersion:
+        min: 80300
+        max: 80599
