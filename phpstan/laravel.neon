@@ -1,0 +1,5 @@
+# Pinstripe PHPStan config for Laravel apps (Larastan).
+# Tested in the Laravel example step, not this one.
+includes:
+    - base.neon
+    - ../../../larastan/larastan/extension.neon

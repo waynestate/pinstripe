@@ -1,0 +1,3 @@
+# Pinstripe PHPStan config for raw PHP apps (no framework).
+includes:
+    - base.neon
