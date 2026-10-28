@@ -37,6 +37,6 @@
         "allow-plugins": {
             "phpstan/extension-installer": true
         },
-        "process-timeout": 1800
+        "process-timeout": 900
     }
 }
