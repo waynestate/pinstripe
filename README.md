@@ -4,15 +4,61 @@ The coding standard for the Wayne State app stack: shared presets for Pint, PHPS
 and ESLint with Prettier. Your app points at them and adds only its own exceptions. Pinstripe is to code what a good
 suit is to a job interview: nobody notices it, everybody notices when it's missing.
 
-Status: being scaffolded. The decisions it encodes are in the stack's ADR-0013:
+## Use it in a raw PHP app
 
-| | Laravel app | Raw PHP app |
-|---|---|---|
-| Pint preset | `laravel` | `per` (PER Coding Style 3.1) |
-| PHPStan | level 8, with Larastan | level 8 |
-| Existing apps | adopt with a baseline that may only shrink | same |
+Add Pinstripe as a dev dependency:
 
-Vue code is linted as JavaScript or TypeScript, and the stack's Vue starters use TypeScript.
+```bash
+composer require --dev waynestate/pinstripe
+```
 
-The same commands work on Windows, macOS and Linux: `vendor/bin/pint`, `vendor/bin/phpstan`, `vendor/bin/rector` and
-`npm run lint`. No bash required, no tailor either.
+Point PHPStan at the raw config. `phpstan.neon`:
+
+```neon
+includes:
+    - vendor/waynestate/pinstripe/phpstan/raw.neon
+
+parameters:
+    paths:
+        - app
+```
+
+Add Composer scripts that run on every OS:
+
+```json
+{
+    "scripts": {
+        "lint": "pint --test --config vendor/waynestate/pinstripe/pint/per.json",
+        "fix": "pint --config vendor/waynestate/pinstripe/pint/per.json",
+        "analyse": "phpstan analyse"
+    }
+}
+```
+
+`composer lint` fails on style. `composer fix` fixes it. `composer analyse` runs PHPStan at level 8.
+
+## Use it in a Laravel app
+
+Same, with the Laravel parts:
+
+```bash
+composer require --dev waynestate/pinstripe larastan/larastan
+```
+
+`phpstan.neon` includes `vendor/waynestate/pinstripe/phpstan/laravel.neon` instead, and the scripts point at
+`vendor/waynestate/pinstripe/pint/laravel.json`.
+
+## Adopting on an existing app
+
+Generate a baseline with `phpstan analyse --generate-baseline`, include it in your `phpstan.neon`, and only ever
+shrink it. New code gets no baseline. A baseline is a tailor's chalk line: it marks the fabric as it is, and every
+release you take it in, never let it out.
+
+## Tested with
+
+- Pint 1.32.1
+- PHPStan - PHP Static Analysis Tool 2.3.3
+
+## Coming next
+
+ESLint and Prettier for Vue (JavaScript and TypeScript), Rector, PREFLIGHT jobs, and reading the PHP floor from CREED.
