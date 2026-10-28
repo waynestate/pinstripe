@@ -6,6 +6,7 @@
     "require": {
         "php": "^8.3",
         "laravel/pint": "^1.32",
+        "phpstan/extension-installer": "^1.4",
         "phpstan/phpstan": "^2.1"
     },
     "suggest": {

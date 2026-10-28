@@ -45,8 +45,10 @@ Same, with the Laravel parts:
 composer require --dev waynestate/pinstripe larastan/larastan
 ```
 
-`phpstan.neon` includes `vendor/waynestate/pinstripe/phpstan/laravel.neon` instead, and the scripts point at
-`vendor/waynestate/pinstripe/pint/laravel.json`.
+Pinstripe pulls in `phpstan/extension-installer`, which registers Larastan for you. When Composer asks, allow the
+plugin (`config.allow-plugins` in your `composer.json`). Your `phpstan.neon` includes
+`vendor/waynestate/pinstripe/phpstan/laravel.neon` and nothing else: there is no Larastan line to add, and the
+scripts point at `vendor/waynestate/pinstripe/pint/laravel.json`.
 
 ## Use it for Vue
 
@@ -98,6 +100,8 @@ release you take it in, never let it out.
 
 - Pint 1.32.1
 - PHPStan 2.3.3
+- PHPStan extension-installer 1.4.3
+- Larastan 3.13.2
 - ESLint 10.13.0
 - Prettier 3.9.10
 - eslint-plugin-vue 10.12.0
