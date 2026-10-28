@@ -1,0 +1,9 @@
+# Pinstripe's pipeline, built from the PREFLIGHT components on this GitLab.
+# Pinned to PREFLIGHT 0.1.0. Never use ~latest.
+# Pinstripe requires PHP ^8.3, so the test matrix starts at 8.3. The tests run
+# Pint and PHPStan on fixtures, so a green php-test means the presets work.
+include:
+  - component: $CI_SERVER_FQDN/enterprise-apps/preflight/php-test@0.1.0
+    inputs:
+      php_versions: ["8.3", "8.4", "8.5"]
+  - component: $CI_SERVER_FQDN/enterprise-apps/preflight/composer-audit@0.1.0
