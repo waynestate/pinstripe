@@ -14,12 +14,15 @@
         "rector/rector": "^2.8 (apps: use rector/base.php from your rector.php)"
     },
     "require-dev": {
+        "larastan/larastan": "^3.13",
+        "laravel/framework": "^11 || ^12 || ^13",
         "phpunit/phpunit": "^12",
         "rector/rector": "^2.8"
     },
     "autoload-dev": {
         "psr-4": {
-            "WayneState\\Pinstripe\\Tests\\": "tests/"
+            "WayneState\\Pinstripe\\Tests\\": "tests/",
+            "Pinstripe\\Fixtures\\Laravel\\": "tests/fixtures/laravel/src/"
         }
     },
     "scripts": {
