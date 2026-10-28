@@ -2,3 +2,5 @@
 /tests export-ignore
 /.gitattributes export-ignore
 /phpunit.xml.dist export-ignore
+/docs/readme export-ignore
+/scripts/readme-art export-ignore
