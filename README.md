@@ -48,6 +48,46 @@ composer require --dev waynestate/pinstripe larastan/larastan
 `phpstan.neon` includes `vendor/waynestate/pinstripe/phpstan/laravel.neon` instead, and the scripts point at
 `vendor/waynestate/pinstripe/pint/laravel.json`.
 
+## Use it for Vue
+
+Add Pinstripe as a dev dependency:
+
+```
+npm install --save-dev @waynestate/pinstripe eslint prettier
+```
+
+Create `eslint.config.js` and spread the preset. For TypeScript:
+
+```js
+import pinstripe from '@waynestate/pinstripe/eslint/typescript'
+
+export default [...pinstripe]
+```
+
+For plain JavaScript, import `@waynestate/pinstripe/eslint/javascript` instead.
+
+Point Prettier at the preset in `package.json`:
+
+```json
+{
+    "prettier": "@waynestate/pinstripe/prettier"
+}
+```
+
+Add scripts that run on every OS:
+
+```json
+{
+    "scripts": {
+        "lint": "eslint .",
+        "format": "prettier --write ."
+    }
+}
+```
+
+`npm run lint` fails on style and accessibility. `npm run format` fixes the layout. The preset is the off-the-rack
+suit: it fits every app, and you only add your own cufflinks.
+
 ## Adopting on an existing app
 
 Generate a baseline with `phpstan analyse --generate-baseline`, include it in your `phpstan.neon`, and only ever
@@ -58,7 +98,13 @@ release you take it in, never let it out.
 
 - Pint 1.32.1
 - PHPStan 2.3.3
+- ESLint 10.13.0
+- Prettier 3.9.10
+- eslint-plugin-vue 10.12.0
+- eslint-plugin-vuejs-accessibility 2.6.3
+- typescript-eslint 8.72.1
+- Node 22.13 or newer
 
 ## Coming next
 
-ESLint and Prettier for Vue (JavaScript and TypeScript), Rector, PREFLIGHT jobs, and reading the PHP floor from CREED.
+Rector, PREFLIGHT jobs, and reading the PHP floor from CREED.
