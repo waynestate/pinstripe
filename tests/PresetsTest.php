@@ -23,6 +23,18 @@ final class PresetsTest extends TestCase
      */
     private function runCommand(array $command): array
     {
+        return $this->runInDir($command, $this->root());
+    }
+
+    /**
+     * Run a command in a directory and return [exit code, combined output].
+     *
+     * @param list<string> $command
+     *
+     * @return array{0: int, 1: string}
+     */
+    private function runInDir(array $command, string $dir): array
+    {
         $process = proc_open(
             $command,
             [
@@ -31,7 +43,7 @@ final class PresetsTest extends TestCase
                 2 => ['pipe', 'w'],
             ],
             $pipes,
-            $this->root()
+            $dir
         );
 
         $this->assertIsResource($process, 'proc_open failed for: ' . implode(' ', $command));
@@ -46,6 +58,34 @@ final class PresetsTest extends TestCase
         $exit = proc_close($process);
 
         return [$exit, $stdout . $stderr];
+    }
+
+    /**
+     * A command that runs Composer without a shell, on every OS.
+     *
+     * Linux and macOS ship `composer` as a plain executable. Windows ships a
+     * .bat wrapper, which proc_open cannot run, so there we run the phar with
+     * PHP, looking it up in COMPOSER_HOME.
+     *
+     * @return list<string>
+     */
+    private function composerCommand(): array
+    {
+        if (DIRECTORY_SEPARATOR !== '\\') {
+            return ['composer'];
+        }
+
+        $home = getenv('COMPOSER_HOME');
+        if ($home === false) {
+            $appData = getenv('APPDATA');
+            $home = $appData === false ? null : $appData . DIRECTORY_SEPARATOR . 'Composer';
+        }
+
+        if ($home !== null && is_file($home . DIRECTORY_SEPARATOR . 'composer.phar')) {
+            return [PHP_BINARY, $home . DIRECTORY_SEPARATOR . 'composer.phar'];
+        }
+
+        return ['composer'];
     }
 
     private function root(): string
@@ -112,6 +152,41 @@ final class PresetsTest extends TestCase
 
         $this->assertNotSame(0, $exit, $output);
         $this->assertStringContainsString('string|null', $output);
+    }
+
+    public function testLaravelPresetLoadsLarastanThroughTheExtensionInstaller(): void
+    {
+        $fixture = $this->root() . '/tests/fixtures/laravel-consumer';
+
+        if (!is_file($fixture . '/vendor/autoload.php')) {
+            // `update` (not `install`) because the fixture's composer.lock is
+            // gitignored, so a fresh checkout has no lock to install from.
+            [$installExit, $installOutput] = $this->runInDir(
+                array_merge($this->composerCommand(), ['update', '--no-interaction', '--no-progress']),
+                $fixture
+            );
+
+            $this->assertSame(0, $installExit, $installOutput);
+        }
+
+        [$exit, $output] = $this->runInDir([
+            PHP_BINARY,
+            'vendor/bin/phpstan',
+            'analyse',
+            '-c',
+            'phpstan.neon',
+            '--no-progress',
+            '--error-format=raw',
+            'src',
+        ], $fixture);
+
+        $this->assertNotSame(0, $exit, $output);
+        $this->assertStringContainsString('string|null', $output);
+        $this->assertStringNotContainsString('Function config not found', $output);
+
+        $generated = $fixture . '/vendor/phpstan/extension-installer/src/GeneratedConfig.php';
+        $this->assertFileExists($generated);
+        $this->assertStringContainsString('larastan/larastan', (string) file_get_contents($generated));
     }
 
     public function testPintConfigsDeclareTheirPresets(): void
