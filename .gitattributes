@@ -2,3 +2,6 @@
 /tests export-ignore
 /.gitattributes export-ignore
 /phpunit.xml.dist export-ignore
+/vendor export-ignore
+/.phpunit.cache export-ignore
+/node_modules export-ignore
