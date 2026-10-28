@@ -3,6 +3,14 @@
     "version": "0.1.0",
     "description": "The coding standard for the Wayne State app stack: shared ESLint and Prettier presets for Vue.",
     "license": "MIT",
+    "homepage": "https://pinstripe.apps.wayne.edu/",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/waynestate/pinstripe.git"
+    },
+    "publishConfig": {
+        "access": "public"
+    },
     "type": "module",
     "engines": {
         "node": ">=22.13"

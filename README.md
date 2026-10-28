@@ -19,6 +19,8 @@ suit is to a job interview: nobody notices it, everybody notices when it's missi
 
 Checks: `composer ci` (the same command runs on GitLab and GitHub).
 
+Development happens on Wayne State's GitLab; this repository is a release mirror. Changes land there first.
+
 Front page: [`site/index.html`](site/index.html), a static tailor's shop you can open in a browser or serve from `site/`.
 
 <div align="center">
