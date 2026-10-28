@@ -14,6 +14,18 @@ use PHPUnit\Framework\TestCase;
  */
 final class PresetsTest extends TestCase
 {
+    private static ?string $laravelAppDirectory = null;
+
+    public static function tearDownAfterClass(): void
+    {
+        if (self::$laravelAppDirectory !== null) {
+            self::removeTemporaryFixture(self::$laravelAppDirectory);
+            self::$laravelAppDirectory = null;
+        }
+
+        parent::tearDownAfterClass();
+    }
+
     /**
      * Run a command in the package root and return [exit code, combined output].
      *
@@ -176,7 +188,10 @@ final class PresetsTest extends TestCase
         ], $this->root() . '/tests/fixtures/laravel');
 
         $this->assertNotSame(0, $exit, $output);
-        $this->assertStringContainsString('deprecated', $output);
+        $this->assertStringContainsString(
+            'Call to deprecated method greet() of class Pinstripe\\Fixtures\\RawDeprecated\\LegacyGreeter',
+            $output
+        );
     }
 
     public function testRectorPresetReportsChangesOnTheOldFixture(): void
@@ -214,9 +229,9 @@ final class PresetsTest extends TestCase
 
     public function testLaravelPresetLoadsLarastanThroughTheExtensionInstaller(): void
     {
-        $fixture = $this->root() . '/tests/fixtures/laravel-consumer';
+        $fixture = $this->temporaryConsumerFixture('laravel-consumer');
 
-        if (!is_file($fixture . '/vendor/autoload.php')) {
+        try {
             // `update` (not `install`) because the fixture's composer.lock is
             // gitignored, so a fresh checkout has no lock to install from.
             [$installExit, $installOutput] = $this->runInDir(
@@ -225,26 +240,94 @@ final class PresetsTest extends TestCase
             );
 
             $this->assertSame(0, $installExit, $installOutput);
+
+            [$exit, $output] = $this->runInDir([
+                PHP_BINARY,
+                'vendor/bin/phpstan',
+                'analyse',
+                '-c',
+                'phpstan.neon',
+                '--no-progress',
+                '--error-format=raw',
+                'src',
+            ], $fixture);
+
+            $this->assertNotSame(0, $exit, $output);
+            $this->assertStringContainsString('string|null', $output);
+            $this->assertStringNotContainsString('Function config not found', $output);
+
+            $generated = $fixture . '/vendor/phpstan/extension-installer/src/GeneratedConfig.php';
+            $this->assertFileExists($generated);
+            $extensions = (string) file_get_contents($generated);
+            $this->assertStringContainsString('larastan/larastan', $extensions);
+            $this->assertStringContainsString('phpstan/phpstan-deprecation-rules', $extensions);
+        } finally {
+            self::removeTemporaryFixture($fixture);
+        }
+    }
+
+    private function temporaryConsumerFixture(string $name): string
+    {
+        // Composer cannot mirror a path repository inside its own source.
+        // Start outside the repo, without cached dependencies or a lockfile.
+        $fixture = sys_get_temp_dir() . '/pinstripe-' . $name . '-' . bin2hex(random_bytes(8));
+        $this->assertTrue(mkdir($fixture));
+
+        try {
+            $this->copyConsumerFixture($name, $fixture);
+            $composerFile = $fixture . '/composer.json';
+            $composer = json_decode((string) file_get_contents($composerFile), true, 512, JSON_THROW_ON_ERROR);
+            $composer['repositories'][0]['url'] = $this->root();
+            $this->assertNotFalse(file_put_contents(
+                $composerFile,
+                json_encode($composer, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR) . "\n"
+            ));
+        } catch (\Throwable $exception) {
+            self::removeTemporaryFixture($fixture);
+
+            throw $exception;
         }
 
-        [$exit, $output] = $this->runInDir([
-            PHP_BINARY,
-            'vendor/bin/phpstan',
-            'analyse',
-            '-c',
-            'phpstan.neon',
-            '--no-progress',
-            '--error-format=raw',
-            'src',
-        ], $fixture);
+        return $fixture;
+    }
 
-        $this->assertNotSame(0, $exit, $output);
-        $this->assertStringContainsString('string|null', $output);
-        $this->assertStringNotContainsString('Function config not found', $output);
+    private function copyConsumerFixture(string $name, string $destination): void
+    {
+        $source = $this->root() . '/tests/fixtures/' . $name;
+        $files = new \RecursiveIteratorIterator(
+            new \RecursiveCallbackFilterIterator(
+                new \RecursiveDirectoryIterator($source, \FilesystemIterator::SKIP_DOTS),
+                static fn (\SplFileInfo $file): bool => !in_array($file->getFilename(), ['vendor', 'composer.lock'], true)
+            ),
+            \RecursiveIteratorIterator::SELF_FIRST
+        );
 
-        $generated = $fixture . '/vendor/phpstan/extension-installer/src/GeneratedConfig.php';
-        $this->assertFileExists($generated);
-        $this->assertStringContainsString('larastan/larastan', (string) file_get_contents($generated));
+        foreach ($files as $file) {
+            $target = $destination . substr($file->getPathname(), strlen($source));
+            if ($file->isDir()) {
+                $this->assertTrue(mkdir($target));
+            } else {
+                $this->assertTrue(copy($file->getPathname(), $target));
+            }
+        }
+    }
+
+    private static function removeTemporaryFixture(string $fixture): void
+    {
+        $files = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($fixture, \FilesystemIterator::SKIP_DOTS),
+            \RecursiveIteratorIterator::CHILD_FIRST
+        );
+
+        foreach ($files as $file) {
+            if ($file->isDir() && !$file->isLink()) {
+                rmdir($file->getPathname());
+            } else {
+                unlink($file->getPathname());
+            }
+        }
+
+        rmdir($fixture);
     }
 
     public function testPintLaravelPresetAcceptsTheLaravelAppFixture(): void
@@ -351,16 +434,17 @@ final class PresetsTest extends TestCase
     }
 
     /**
-     * The Laravel app fixture, installed on first use.
+     * A temporary Laravel app fixture, installed on first use.
      *
      * `update` (not `install`) because the fixture's composer.lock is
      * gitignored, so a fresh checkout has no lock to install from. The
-     * vendor directory is kept between runs, so the install happens once
-     * per machine, not once per test.
+     * vendor directory is shared by this class's tests and removed by
+     * tearDownAfterClass, so each suite run starts from a fresh install.
      */
     private function laravelAppFixture(): string
     {
-        $fixture = $this->root() . '/tests/fixtures/laravel-app';
+        self::$laravelAppDirectory ??= $this->temporaryConsumerFixture('laravel-app');
+        $fixture = self::$laravelAppDirectory;
 
         if (!is_file($fixture . '/vendor/autoload.php')) {
             [$installExit, $installOutput] = $this->runInDir(
