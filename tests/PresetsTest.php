@@ -133,6 +133,34 @@ final class PresetsTest extends TestCase
         $this->assertNotSame(0, $exit, $output);
     }
 
+    public function testPintPerPresetAcceptsThePerCleanFixture(): void
+    {
+        [$exit, $output] = $this->runCommand([
+            PHP_BINARY,
+            'vendor/bin/pint',
+            '--test',
+            '--config',
+            'pint/per.json',
+            'tests/fixtures/per/clean',
+        ]);
+
+        $this->assertSame(0, $exit, $output);
+    }
+
+    public function testPintPerPresetRejectsThePerMessyFixture(): void
+    {
+        [$exit, $output] = $this->runCommand([
+            PHP_BINARY,
+            'vendor/bin/pint',
+            '--test',
+            '--config',
+            'pint/per.json',
+            'tests/fixtures/per/messy',
+        ]);
+
+        $this->assertNotSame(0, $exit, $output);
+    }
+
     public function testPhpStanRawConfigAcceptsTheCleanFixture(): void
     {
         // The package's own vendor carries Larastan (require-dev), which the
@@ -192,6 +220,56 @@ final class PresetsTest extends TestCase
             'Call to deprecated method greet() of class Pinstripe\\Fixtures\\RawDeprecated\\LegacyGreeter',
             $output
         );
+    }
+
+    public function testPhpStanRawConfigAcceptsTheLooseComparisonFixture(): void
+    {
+        // The base cut leaves `==` alone; only the strict preset calls it out.
+        [$exit, $output] = $this->runInDir([
+            PHP_BINARY,
+            $this->root() . '/vendor/bin/phpstan',
+            'analyse',
+            '-c',
+            $this->root() . '/phpstan/raw.neon',
+            '--no-progress',
+            '--error-format=raw',
+            $this->root() . '/tests/fixtures/raw-strict/src',
+        ], $this->root() . '/tests/fixtures/laravel');
+
+        $this->assertSame(0, $exit, $output);
+    }
+
+    public function testPhpStanStrictConfigAcceptsTheCleanFixture(): void
+    {
+        [$exit, $output] = $this->runInDir([
+            PHP_BINARY,
+            $this->root() . '/vendor/bin/phpstan',
+            'analyse',
+            '-c',
+            $this->root() . '/phpstan/strict.neon',
+            '--no-progress',
+            '--error-format=raw',
+            $this->root() . '/tests/fixtures/raw-clean/src',
+        ], $this->root() . '/tests/fixtures/laravel');
+
+        $this->assertSame(0, $exit, $output);
+    }
+
+    public function testPhpStanStrictConfigReportsTheLooseComparison(): void
+    {
+        [$exit, $output] = $this->runInDir([
+            PHP_BINARY,
+            $this->root() . '/vendor/bin/phpstan',
+            'analyse',
+            '-c',
+            $this->root() . '/phpstan/strict.neon',
+            '--no-progress',
+            '--error-format=raw',
+            $this->root() . '/tests/fixtures/raw-strict/src',
+        ], $this->root() . '/tests/fixtures/laravel');
+
+        $this->assertNotSame(0, $exit, $output);
+        $this->assertStringContainsString('Loose comparison via "==" is not allowed.', $output);
     }
 
     public function testRectorPresetReportsChangesOnTheOldFixture(): void

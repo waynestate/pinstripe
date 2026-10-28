@@ -71,7 +71,7 @@ Add Composer scripts that run on every OS:
 }
 ```
 
-`composer lint` fails on style. `composer fix` fixes it.
+`composer lint` fails on style. `composer fix` fixes it. Pint's `per` preset is the PER Coding Style, and `tests/fixtures/per` keeps a clean and a messy proof.
 `composer analyse` runs PHPStan at level 8, with deprecation checks too.
 Pinstripe ships `phpstan/phpstan-deprecation-rules`, loaded automatically by
 `phpstan/extension-installer`. Calling a `@deprecated` method fails the build.
@@ -160,6 +160,10 @@ Proven on fixtures: `composer ci` runs the preset against a modern app (`tests/f
 old-style one (`tests/fixtures/rector-old`) on every run, and fails if the clean one changes or the old one is left
 alone. Rector is the tailor's press: it smooths old code to the standard without changing the cut.
 
+## The strict cut
+
+New apps can include `vendor/waynestate/pinstripe/phpstan/strict.neon` instead of `raw.neon` or `laravel.neon`. It keeps the base cut and turns on `phpstan/phpstan-strict-rules`, so loose comparisons like `==` fail the build. Existing apps stay on the base cut and baseline their way over. Strict is the tailor's chalk line drawn before the first stitch.
+
 ## Adopting on an existing app
 
 Generate a baseline with `phpstan analyse --generate-baseline`, include it in your `phpstan.neon`, and only ever
@@ -171,6 +175,7 @@ release you take it in, never let it out.
 - Pint 1.32.1
 - PHPStan 2.3.3
 - PHPStan extension-installer 1.4.3
+- PHPStan strict-rules 2.1.0
 - Larastan 3.13.2
 - Rector 2.8.1
 - ESLint 10.13.0

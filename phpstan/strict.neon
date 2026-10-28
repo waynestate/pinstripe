@@ -1,0 +1,9 @@
+# Pinstripe PHPStan config for new apps that want the strict cut: everything
+# in base.neon, plus phpstan/phpstan-strict-rules. The extension installer
+# already loads the package; this preset simply turns its rules on.
+includes:
+    - base.neon
+
+parameters:
+    strictRules:
+        allRules: true
