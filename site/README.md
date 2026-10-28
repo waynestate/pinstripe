@@ -58,3 +58,12 @@ cushion; pick up a pattern piece and a pin pops in. Type `measure` anywhere.
 - Nothing flashes. The steam and the tag sway are slow.
 - No sideways scroll at 1440, 1024, 800, 390 and 320 px, including mid-fitting. The code on the cloth scales
   with its container, so the longest line always fits; the pattern-piece snippets scroll inside their own box.
+
+## Links between the stack sites
+
+Links to the other parts are committed as production URLs (`https://<project>.apps.wayne.edu/`), so crawlers and
+visitors without JavaScript always get production. `assets/stack-env.js` (the same file on every stack site) rewrites
+them to `http://127.0.0.1:18432/<project>/site/` in development, for a static server whose root is the
+`the stack` folder. Dev is picked automatically on `localhost` or `127.0.0.1`; `?env=dev` or `?env=production` forces
+one (remembered until `?env=auto`), `<meta name="stack-env">` sets the page default, and `?devBase=http://127.0.0.1:<port>`
+points at a server on another port. WayneUI links stay on production.
