@@ -2144,3 +2144,13 @@ h1, h2, h3 {
     font-size: 0.75rem;
   }
 }
+
+/* Part names in the stack list link to each part's own front page. They keep
+   this page's colours; the underline is the only new thing. */
+.part-link {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: .18em;
+}
+.part-link:hover { text-decoration-thickness: 2px; }
