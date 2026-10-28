@@ -160,6 +160,25 @@ final class PresetsTest extends TestCase
         $this->assertStringContainsString('string|null', $output);
     }
 
+    public function testPhpStanRawConfigReportsTheDeprecatedCall(): void
+    {
+        // See testPhpStanRawConfigAcceptsTheCleanFixture for why the raw
+        // preset runs from the laravel fixture's working directory.
+        [$exit, $output] = $this->runInDir([
+            PHP_BINARY,
+            $this->root() . '/vendor/bin/phpstan',
+            'analyse',
+            '-c',
+            $this->root() . '/phpstan/raw.neon',
+            '--no-progress',
+            '--error-format=raw',
+            $this->root() . '/tests/fixtures/raw-deprecated/src',
+        ], $this->root() . '/tests/fixtures/laravel');
+
+        $this->assertNotSame(0, $exit, $output);
+        $this->assertStringContainsString('deprecated', $output);
+    }
+
     public function testRectorPresetReportsChangesOnTheOldFixture(): void
     {
         [$exit, $output] = $this->runRectorDryRun('rector-old');
