@@ -9,6 +9,8 @@ suit is to a job interview: nobody notices it, everybody notices when it's missi
 
 Checks: `composer ci` (the same command runs on GitLab and GitHub).
 
+Front page: [`site/index.html`](site/index.html), a static tailor's shop you can open in a browser or serve from `site/`.
+
 ## Use it in a raw PHP app
 
 Add Pinstripe as a dev dependency:
