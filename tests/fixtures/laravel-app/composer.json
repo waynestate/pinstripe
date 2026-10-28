@@ -1,0 +1,35 @@
+{
+    "name": "waynestate/pinstripe-fixture-laravel-app",
+    "description": "A minimal Laravel 13 app that proves Pinstripe's laravel.neon and laravel.json on a real app.",
+    "type": "project",
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../../..",
+            "options": {
+                "symlink": false
+            }
+        }
+    ],
+    "require": {
+        "php": "^8.3",
+        "laravel/framework": "^13",
+        "larastan/larastan": "^3.13",
+        "waynestate/pinstripe": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "config": {
+        "platform": {
+            "php": "8.3.0"
+        },
+        "allow-plugins": {
+            "phpstan/extension-installer": true
+        }
+    }
+}
