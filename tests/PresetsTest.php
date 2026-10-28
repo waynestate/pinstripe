@@ -194,6 +194,56 @@ final class PresetsTest extends TestCase
         );
     }
 
+    public function testPhpStanRawConfigAcceptsTheLooseComparisonFixture(): void
+    {
+        // The base cut leaves `==` alone; only the strict preset calls it out.
+        [$exit, $output] = $this->runInDir([
+            PHP_BINARY,
+            $this->root() . '/vendor/bin/phpstan',
+            'analyse',
+            '-c',
+            $this->root() . '/phpstan/raw.neon',
+            '--no-progress',
+            '--error-format=raw',
+            $this->root() . '/tests/fixtures/raw-strict/src',
+        ], $this->root() . '/tests/fixtures/laravel');
+
+        $this->assertSame(0, $exit, $output);
+    }
+
+    public function testPhpStanStrictConfigAcceptsTheCleanFixture(): void
+    {
+        [$exit, $output] = $this->runInDir([
+            PHP_BINARY,
+            $this->root() . '/vendor/bin/phpstan',
+            'analyse',
+            '-c',
+            $this->root() . '/phpstan/strict.neon',
+            '--no-progress',
+            '--error-format=raw',
+            $this->root() . '/tests/fixtures/raw-clean/src',
+        ], $this->root() . '/tests/fixtures/laravel');
+
+        $this->assertSame(0, $exit, $output);
+    }
+
+    public function testPhpStanStrictConfigReportsTheLooseComparison(): void
+    {
+        [$exit, $output] = $this->runInDir([
+            PHP_BINARY,
+            $this->root() . '/vendor/bin/phpstan',
+            'analyse',
+            '-c',
+            $this->root() . '/phpstan/strict.neon',
+            '--no-progress',
+            '--error-format=raw',
+            $this->root() . '/tests/fixtures/raw-strict/src',
+        ], $this->root() . '/tests/fixtures/laravel');
+
+        $this->assertNotSame(0, $exit, $output);
+        $this->assertStringContainsString('Loose comparison via "==" is not allowed.', $output);
+    }
+
     public function testRectorPresetReportsChangesOnTheOldFixture(): void
     {
         [$exit, $output] = $this->runRectorDryRun('rector-old');

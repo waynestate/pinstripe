@@ -4,3 +4,8 @@ parameters:
     level: 8
     reportIgnoresWithoutComments: true
     reportUnmatchedIgnoredErrors: true
+    # phpstan/phpstan-strict-rules ships in `require`, so the extension
+    # installer loads it for every PHPStan run. The base cut keeps its rules
+    # off; phpstan/strict.neon turns them back on for apps that opt in.
+    strictRules:
+        allRules: false
