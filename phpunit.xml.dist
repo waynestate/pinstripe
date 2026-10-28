@@ -8,6 +8,7 @@
         <testsuite name="pinstripe">
             <directory>tests</directory>
             <exclude>tests/fixtures/laravel-consumer/vendor</exclude>
+            <exclude>tests/fixtures/laravel-app/vendor</exclude>
         </testsuite>
     </testsuites>
 </phpunit>
