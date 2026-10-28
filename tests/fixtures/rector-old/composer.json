@@ -1,0 +1,8 @@
+{
+    "name": "waynestate/pinstripe-fixture-rector-old",
+    "description": "An old-style PHP app that proves Pinstripe's rector/base.php reports changes.",
+    "type": "project",
+    "require": {
+        "php": "^8.3"
+    }
+}

@@ -7,7 +7,7 @@ namespace WayneState\Pinstripe\Tests;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Runs the real Pint and PHPStan binaries against the fixtures.
+ * Runs the real Pint, PHPStan and Rector binaries against the fixtures.
  *
  * Commands use the array form with proc_open and no shell, so the tests
  * behave the same on Windows, macOS and Linux.
@@ -152,6 +152,39 @@ final class PresetsTest extends TestCase
 
         $this->assertNotSame(0, $exit, $output);
         $this->assertStringContainsString('string|null', $output);
+    }
+
+    public function testRectorPresetReportsChangesOnTheOldFixture(): void
+    {
+        [$exit, $output] = $this->runRectorDryRun('rector-old');
+
+        $this->assertNotSame(0, $exit, $output);
+    }
+
+    public function testRectorPresetAcceptsTheCleanFixture(): void
+    {
+        [$exit, $output] = $this->runRectorDryRun('rector-clean');
+
+        $this->assertSame(0, $exit, $output);
+    }
+
+    /**
+     * Run `rector process --dry-run` on a fixture, with the fixture as the
+     * working directory so Rector reads the PHP floor from the fixture's own
+     * composer.json, exactly as it would from an app's.
+     *
+     * @return array{0: int, 1: string}
+     */
+    private function runRectorDryRun(string $fixture): array
+    {
+        return $this->runInDir([
+            PHP_BINARY,
+            $this->root() . '/vendor/bin/rector',
+            'process',
+            '--dry-run',
+            '-c',
+            'rector.php',
+        ], $this->root() . '/tests/fixtures/' . $fixture);
     }
 
     public function testLaravelPresetLoadsLarastanThroughTheExtensionInstaller(): void
