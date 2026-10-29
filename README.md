@@ -206,6 +206,8 @@ gets longer.
 
 ## Tested with
 
+Maintainers: how to build, test and release this project, and where its data comes from, is in [MAINTAINING.md](MAINTAINING.md).
+
 - Pint 1.32.1
 - PHPStan 2.3.3
 - PHPStan extension-installer 1.4.3
