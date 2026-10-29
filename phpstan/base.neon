@@ -9,3 +9,12 @@ parameters:
     # off; phpstan/strict.neon turns them back on for apps that opt in.
     strictRules:
         allRules: false
+    # The same package also sets these two parameters to true
+    # unconditionally, even while strictRules.allRules stays off. PHPStan
+    # checks phpdoc method signatures from level 3 up, so with the
+    # parameters leaked in, this cut would report maybe-mismatched
+    # overrides and inspect static method overrides as well, making it
+    # stricter than documented. Off here; phpstan/strict.neon turns them
+    # back on.
+    reportMaybesInMethodSignatures: false
+    reportStaticMethodSignatures: false

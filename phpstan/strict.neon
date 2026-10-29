@@ -7,3 +7,8 @@ includes:
 parameters:
     strictRules:
         allRules: true
+    # The strict cut keeps the two signature parameters that
+    # phpstan/phpstan-strict-rules forces on, so apps that opt in also get
+    # maybe-mismatched overrides and static method overrides reported.
+    reportMaybesInMethodSignatures: true
+    reportStaticMethodSignatures: true
