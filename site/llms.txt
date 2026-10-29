@@ -1,6 +1,6 @@
 # Pinstripe
 
-> Pinstripe is the coding standard for the Wayne State app stack: shared presets for Pint, PHPStan, Larastan, Rector, ESLint and Prettier, cut once and worn by every repo.
+> Pinstripe is the code style for the Wayne State app stack: shared presets for Pint, PHPStan with Larastan, Rector, ESLint and Prettier. Your app runs them locally, and Preflight runs them in CI.
 
 **Sharp code. Every line.**
 
@@ -23,14 +23,14 @@ Every page below is Markdown. The HTML pages send the same Markdown to a client 
 
 ## Pages
 
-- [Pinstripe: Sharp code. Every line.](https://pinstripe.apps.wayne.edu/index.md): Pinstripe is the coding standard for the Wayne State app stack: shared presets for Pint, PHPStan, Larastan, Rector, ESLint and Prettier, cut once and worn by every repo.
+- [Pinstripe: Sharp code. Every line.](https://pinstripe.apps.wayne.edu/index.md): Pinstripe is the code style for the Wayne State app stack: shared presets for Pint, PHPStan with Larastan, Rector, ESLint and Prettier. Your app runs them locally, and Preflight runs them in CI.
 
 ## Prompts
 
-- [Get started with Pinstripe](https://pinstripe.apps.wayne.edu/#prompt-get-started): Measure the app, say which pieces fit, and chalk out every file before a stitch goes in. The prompt itself is in https://pinstripe.apps.wayne.edu/index.md.
-- [Pinstripe in a raw PHP app](https://pinstripe.apps.wayne.edu/#prompt-raw-php): Pint with PER, PHPStan at level 8, the three Composer scripts, and a baseline if the old cloth needs one. The prompt itself is in https://pinstripe.apps.wayne.edu/index.md.
-- [Pinstripe in a Laravel app](https://pinstripe.apps.wayne.edu/#prompt-laravel): The Laravel Pint preset and PHPStan with the Larastan lining, for Blade and Inertia apps alike. The prompt itself is in https://pinstripe.apps.wayne.edu/index.md.
-- [Pinstripe on the Vue side](https://pinstripe.apps.wayne.edu/#prompt-vue): ESLint with vuejs-accessibility and Prettier for the layout, on whichever app the Vue front end lives in. The prompt itself is in https://pinstripe.apps.wayne.edu/index.md.
+- [Get started with Pinstripe](https://pinstripe.apps.wayne.edu/#prompt-get-started): Works out what kind of app this is and which presets fit, then lists every file it would add. It changes nothing yet. The prompt itself is in https://pinstripe.apps.wayne.edu/index.md.
+- [Pinstripe in a raw PHP app](https://pinstripe.apps.wayne.edu/#prompt-raw-php): Adds Pint with PER, PHPStan at level 8 and the Composer scripts, plus a baseline if existing code fails. The prompt itself is in https://pinstripe.apps.wayne.edu/index.md.
+- [Pinstripe in a Laravel app](https://pinstripe.apps.wayne.edu/#prompt-laravel): Adds Laravel's Pint preset and PHPStan with Larastan. It works for Blade apps and Inertia apps. The prompt itself is in https://pinstripe.apps.wayne.edu/index.md.
+- [Pinstripe on the Vue side](https://pinstripe.apps.wayne.edu/#prompt-vue): Adds the ESLint and Prettier presets to your Vue front end and reports the accessibility findings first. The prompt itself is in https://pinstripe.apps.wayne.edu/index.md.
 
 ## Source
 
