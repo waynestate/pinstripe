@@ -22,6 +22,7 @@ Checks: `composer ci` (the same command runs on GitLab and GitHub).
 Development happens on Wayne State's GitLab; this repository is a release mirror. Changes land there first.
 
 Front page: [`site/index.html`](site/index.html), a static tailor's shop you can open in a browser or serve from `site/`.
+On Citadel it is served by the raw-PHP deploy layer in [`deploy/`](deploy/): a SQUIRE kit whose front controller serves `site/` behind HELMET's security headers. For local development, keep serving `site/` directly.
 
 <div align="center">
   <img src="docs/readme/tape.svg" width="100%" alt="A yellow tape measure unrolls across a green card with seven marks, one per preset: The cut, Pint, presets per and laravel; The inseam, PHPStan, level 8; The lining, Larastan; The press, Rector, with dead code, code quality, type declarations and early return; The buttonholes, ESLint, javascript and typescript with vue and accessibility; The hem, Prettier, 100 columns, single quotes, semicolons, trailing commas; The chalk line, baseline.">
