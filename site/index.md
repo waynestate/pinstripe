@@ -16,6 +16,8 @@ Shared presets for **Pint**, **PHPStan** with Larastan, **Rector**, **ESLint** f
 
 [Book a fitting](https://pinstripe.apps.wayne.edu/#fitting) [Try it on today](https://pinstripe.apps.wayne.edu/#try)
 
+**Already included in [WELD](https://weld.apps.wayne.edu/).** Use Pinstripe on its own to give an app you already have the stack's Pint, PHPStan, ESLint and Prettier settings.
+
 On Packagist and npm now. The shop is open; walk-ins welcome.
 
 Scroll, and the tailor gets to work
