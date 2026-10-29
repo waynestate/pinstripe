@@ -45,8 +45,11 @@ Front page: [`site/index.html`](site/index.html), a static tailor's shop you can
 Add Pinstripe as a dev dependency:
 
 ```
-composer require --dev waynestate/pinstripe
+composer require --dev waynestate/pinstripe:dev-main
 ```
+
+Pinstripe is on Packagist with no tagged release yet, so ask for `dev-main` until 0.1.0 is tagged. The npm package,
+`@waynestate/pinstripe`, is at 0.1.0 already.
 
 Point PHPStan at the raw config. `phpstan.neon`:
 
@@ -82,7 +85,7 @@ The tailor flags the old cut before the fabric is retired.
 Same, with the Laravel parts:
 
 ```
-composer require --dev waynestate/pinstripe larastan/larastan
+composer require --dev waynestate/pinstripe:dev-main larastan/larastan
 ```
 
 Pinstripe pulls in `phpstan/extension-installer`, which registers Larastan for you. When Composer asks, allow the
