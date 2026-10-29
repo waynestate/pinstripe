@@ -1,0 +1,10 @@
+parameters:
+    ignoreErrors:
+        -
+            message: '#^Call to an undefined method Pinstripe\\Fixtures\\Baseline\\LegacyGreeter::retiredGreet\(\)\.$#'
+            count: 3
+            path: src/LegacyGreeter.php
+        -
+            message: '#^Parameter #1 \$name of method Pinstripe\\Fixtures\\Baseline\\LegacyGreeter::greet() expects string, null given\.$#'
+            count: 2
+        - 'Plain string error with no count'

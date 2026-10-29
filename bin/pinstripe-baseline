@@ -1,0 +1,114 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+/**
+ * pinstripe-baseline: count a PHPStan baseline's ignored errors, and fail
+ * when the baseline grows. One PHP command, every OS.
+ *
+ * A baseline is a tailor's chalk line: it marks the fabric as it is, and
+ * every release you take it in, never let it out. This command is the tape
+ * measure that notices when somebody lets it out.
+ *
+ * Usage:
+ *   pinstripe-baseline count [phpstan-baseline.neon]
+ *   pinstripe-baseline check [--max=<n>] [--against=<git-ref>] [phpstan-baseline.neon]
+ *
+ * Exit codes: 0 ok, 1 the baseline grew, 2 usage or baseline problem.
+ */
+
+foreach ([__DIR__ . '/../vendor/autoload.php', __DIR__ . '/../../../autoload.php'] as $autoload) {
+    if (is_file($autoload)) {
+        require $autoload;
+
+        break;
+    }
+}
+
+use WayneState\Pinstripe\Baseline;
+use WayneState\Pinstripe\BaselineException;
+
+function pinstripe_baseline_usage(): never
+{
+    fwrite(STDERR, "usage: pinstripe-baseline count [phpstan-baseline.neon]\n");
+    fwrite(STDERR, "       pinstripe-baseline check [--max=<n>] [--against=<git-ref>] [phpstan-baseline.neon]\n");
+    exit(2);
+}
+
+function pinstripe_baseline_fail(string $message): never
+{
+    fwrite(STDERR, $message . "\n");
+    exit(2);
+}
+
+$arguments = array_slice($argv, 1);
+if ($arguments === []) {
+    pinstripe_baseline_usage();
+}
+
+$command = $arguments[0];
+$rest = array_slice($arguments, 1);
+
+$path = 'phpstan-baseline.neon';
+$max = null;
+$against = null;
+
+foreach ($rest as $argument) {
+    if ($command === 'check' && str_starts_with($argument, '--max=')) {
+        $value = substr($argument, strlen('--max='));
+        if (!ctype_digit($value)) {
+            pinstripe_baseline_fail("error: --max expects a non-negative integer, got '{$value}'.");
+        }
+        $max = (int) $value;
+    } elseif ($command === 'check' && str_starts_with($argument, '--against=')) {
+        $value = substr($argument, strlen('--against='));
+        if ($value === '') {
+            pinstripe_baseline_fail('error: --against expects a git ref.');
+        }
+        $against = $value;
+    } elseif (str_starts_with($argument, '--')) {
+        pinstripe_baseline_usage();
+    } else {
+        $path = $argument;
+    }
+}
+
+switch ($command) {
+    case 'count':
+        try {
+            echo Baseline::countFile($path), "\n";
+        } catch (BaselineException $exception) {
+            pinstripe_baseline_fail($exception->getMessage());
+        }
+        exit(0);
+
+    case 'check':
+        if ($max === null && $against === null) {
+            pinstripe_baseline_usage();
+        }
+
+        try {
+            $count = Baseline::countFile($path);
+
+            if ($max !== null && $count > $max) {
+                fwrite(STDERR, "baseline grew: {$count} errors, the most allowed is {$max}\n");
+                exit(1);
+            }
+
+            if ($against !== null) {
+                $allowed = Baseline::countAtRef($path, $against);
+                if ($count > $allowed) {
+                    fwrite(STDERR, "baseline grew: {$count} errors, the most allowed is {$allowed}\n");
+                    exit(1);
+                }
+            }
+        } catch (BaselineException $exception) {
+            pinstripe_baseline_fail($exception->getMessage());
+        }
+
+        exit(0);
+
+    default:
+        pinstripe_baseline_usage();
+}
