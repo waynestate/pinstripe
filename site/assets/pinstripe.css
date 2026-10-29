@@ -383,6 +383,30 @@ h1, h2, h3 {
   color: var(--ps-mauve-deep);
 }
 
+/* Fine print sewn under the buttons: how this piece fits the whole suit. */
+.hero__weld {
+  max-width: 34rem;
+  margin: 1.25rem 0 0;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: var(--ps-ink-soft);
+}
+
+.hero__weld strong {
+  color: var(--ps-ink);
+}
+
+.hero__weld a {
+  color: var(--ps-green);
+  font-weight: 700;
+  text-underline-offset: 0.2em;
+}
+
+.hero__weld a:focus-visible {
+  outline: 3px solid var(--ps-green);
+  outline-offset: 3px;
+}
+
 .pin-dot {
   flex: none;
   width: 10px;
