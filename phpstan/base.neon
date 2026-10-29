@@ -9,3 +9,26 @@ parameters:
     # off; phpstan/strict.neon turns them back on for apps that opt in.
     strictRules:
         allRules: false
+    # The same package also sets these two parameters to true
+    # unconditionally, even while strictRules.allRules stays off. PHPStan
+    # checks phpdoc method signatures from level 3 up, so with the
+    # parameters leaked in, this cut would report maybe-mismatched
+    # overrides and inspect static method overrides as well, making it
+    # stricter than documented. Off here; phpstan/strict.neon turns them
+    # back on.
+    reportMaybesInMethodSignatures: false
+    reportStaticMethodSignatures: false
+    # phpstan/phpstan-strict-rules also forces eight more parameters on.
+    # Four are low noise and catch real bugs (wrong-case function and class
+    # names break on Linux, explicit mixed returns, printf placeholder
+    # types), so the base cut keeps them on. The other four are noisy on
+    # legacy code, so they stay off here and strict.neon turns them on.
+    # The README table records each decision.
+    checkExplicitMixedMissingReturn: true
+    checkFunctionNameCase: true
+    checkInternalClassCaseSensitivity: true
+    checkStrictPrintfPlaceholderTypes: true
+    checkDynamicProperties: false
+    reportMaybesInPropertyPhpDocTypes: false
+    reportWrongPhpDocTypeInVarTag: false
+    reportNonIntStringArrayKey: false
