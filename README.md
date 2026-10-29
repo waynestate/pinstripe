@@ -49,7 +49,7 @@ Add Pinstripe as a dev dependency:
 composer require --dev waynestate/pinstripe:^0.1
 ```
 
-Pinstripe 0.1.0 is on Packagist, and the npm package, `@waynestate/pinstripe`, is at 0.1.0 too.
+Pinstripe 0.1.1 is on Packagist, and the npm package, `@waynestate/pinstripe`, is at 0.1.0.
 
 Point PHPStan at the raw config. `phpstan.neon`:
 
