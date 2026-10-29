@@ -70,7 +70,7 @@
           <a class="wsu-btn wsu-btn--primary wsu-btn--lg stitch-btn" href="#fitting">Book a fitting</a>
           <a class="hero__link" href="#try">Try it on today</a>
         </p>
-        <p class="hero__note"><span class="pin-dot" aria-hidden="true"></span> Not on Packagist or npm yet. The cloth is cut; the shop opens soon.</p>
+        <p class="hero__note"><span class="pin-dot" aria-hidden="true"></span> On Packagist and npm now. The shop is open; walk-ins welcome.</p>
       </div>
 
       <!-- The hero is built from the mark: a swatch of green pinstripe cloth
@@ -315,7 +315,7 @@
       <div class="section__head" data-reveal>
         <p class="eyebrow">One bolt of cloth, three patterns</p>
         <h2 id="measure-title">Made to measure</h2>
-        <p>Raw PHP, Laravel and Vue each get their own pattern. These are the files your app keeps once Pinstripe is published; the install itself is coming soon.</p>
+        <p>Raw PHP, Laravel and Vue each get their own pattern. These are the files your app keeps; each pattern starts with its install line.</p>
       </div>
 
       <div class="patterns">
@@ -323,7 +323,10 @@
           <p class="pattern__mark">Piece A · cut 1</p>
           <h3 class="pattern__name">Raw PHP</h3>
           <p class="pattern__fit">No framework. Pint with PER, PHPStan at level 8.</p>
-          <p class="pattern__soon"><span class="chip-soon">Install: coming soon</span> Not on Packagist yet.</p>
+          <p class="pattern__file">Install</p>
+<pre class="pattern__code" tabindex="0"><code>composer require --dev waynestate/pinstripe:dev-main</code></pre>
+          <p class="pattern__fit">No version is tagged yet, so the line carries <code>:dev-main</code>; it drops off when the first tag ships.</p>
+          <p class="pattern__fit"><button class="copy-btn" type="button" data-copy="composer require --dev waynestate/pinstripe:dev-main"><span class="copy-btn__label">Copy</span></button></p>
           <p class="pattern__file">phpstan.neon</p>
 <pre class="pattern__code" tabindex="0"><code>includes:
     - vendor/waynestate/pinstripe/phpstan/raw.neon
@@ -343,7 +346,9 @@ parameters:
           <p class="pattern__mark">Piece B · cut 1</p>
           <h3 class="pattern__name">Laravel</h3>
           <p class="pattern__fit">The Laravel Pint preset, PHPStan with the Larastan lining.</p>
-          <p class="pattern__soon"><span class="chip-soon">Install: coming soon</span> Not on Packagist yet.</p>
+          <p class="pattern__file">Install</p>
+<pre class="pattern__code" tabindex="0"><code>composer require --dev waynestate/pinstripe:dev-main larastan/larastan</code></pre>
+          <p class="pattern__fit"><button class="copy-btn" type="button" data-copy="composer require --dev waynestate/pinstripe:dev-main larastan/larastan"><span class="copy-btn__label">Copy</span></button></p>
           <p class="pattern__file">phpstan.neon</p>
 <pre class="pattern__code" tabindex="0"><code>includes:
     - vendor/waynestate/pinstripe/phpstan/laravel.neon</code></pre>
@@ -356,7 +361,9 @@ parameters:
           <p class="pattern__mark">Piece C · cut 1</p>
           <h3 class="pattern__name">Vue</h3>
           <p class="pattern__fit">ESLint flat config with vuejs-accessibility, Prettier for the layout.</p>
-          <p class="pattern__soon"><span class="chip-soon">Install: coming soon</span> Not on npm yet.</p>
+          <p class="pattern__file">Install</p>
+<pre class="pattern__code" tabindex="0"><code>npm install --save-dev @waynestate/pinstripe eslint prettier</code></pre>
+          <p class="pattern__fit"><button class="copy-btn" type="button" data-copy="npm install --save-dev @waynestate/pinstripe eslint prettier"><span class="copy-btn__label">Copy</span></button></p>
           <p class="pattern__file">eslint.config.js</p>
 <pre class="pattern__code" tabindex="0"><code>import pinstripe from '@waynestate/pinstripe/eslint/typescript'
 
@@ -373,7 +380,9 @@ export default [...pinstripe]</code></pre>
           <p class="pattern__mark">Alterations · fits A and B</p>
           <h3 class="pattern__name">Rector</h3>
           <p class="pattern__fit">Rector modernises code for the PHP version your app already supports. It reads the floor from your own <code>composer.json</code>, so it can't drift out of step. The press smooths old code to the standard without changing the cut.</p>
-          <p class="pattern__soon"><span class="chip-soon">Install: coming soon</span> with Pinstripe.</p>
+          <p class="pattern__file">Install, alongside Pinstripe</p>
+<pre class="pattern__code" tabindex="0"><code>composer require --dev rector/rector</code></pre>
+          <p class="pattern__fit"><button class="copy-btn" type="button" data-copy="composer require --dev rector/rector"><span class="copy-btn__label">Copy</span></button></p>
         </div>
         <div>
           <p class="pattern__file">rector.php</p>
@@ -394,7 +403,7 @@ return $base-&gt;withPaths([__DIR__ . '/src']);</code></pre>
       <div class="try__copy" data-reveal>
         <p class="eyebrow">Real today</p>
         <h2 id="try-title">Try it on</h2>
-        <p>Before it's on the rack, you can try Pinstripe on in the shop: clone it and run its own checks. <code>composer ci</code> runs Pint, PHPStan, Larastan and Rector against the fixtures; <code>npm test</code> runs the ESLint presets.</p>
+        <p>It's on the rack now; you can still try Pinstripe on in the shop: clone it and run its own checks. <code>composer ci</code> runs Pint, PHPStan, Larastan and Rector against the fixtures; <code>npm test</code> runs the ESLint presets.</p>
         <p>The same commands on Windows, macOS and Linux. You need PHP 8.3 or newer, Composer, and Node 22.13 or newer.</p>
         <p class="try__next"><span class="try__next-k">On the cutting table next</span> PREFLIGHT jobs, and reading the PHP floor from CREED. <span class="chip-soon">coming soon</span></p>
       </div>
