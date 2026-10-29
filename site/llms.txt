@@ -8,6 +8,10 @@ The coding standard for the Wayne State app stack: shared presets for Pint, PHPS
 and ESLint with Prettier. Your app points at them and adds only its own exceptions. Pinstripe is to code what a good
 suit is to a job interview: nobody notices it, everybody notices when it's missing.
 
+**Not to be confused with:** Pinstripe is the code style settings you run locally; Preflight runs them, and PROCTOR, in CI.
+Pinstripe's Rector set modernises code within the app's current PHP version, while Booster upgrades the app to a newer
+PHP version.
+
 Checks: `composer ci` (the same command runs on GitLab and GitHub).
 
 Development happens on Wayne State's GitLab; this repository is a release mirror. Changes land there first.
