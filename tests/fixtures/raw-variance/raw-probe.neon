@@ -12,4 +12,4 @@ includes:
 
 parameters:
     ignoreErrors:
-        - '#PROBE_M_F%reportMaybesInMethodSignatures%_S_F%reportStaticMethodSignatures%#'
+        - '#PROBE_M_F%reportMaybesInMethodSignatures%_S_F%reportStaticMethodSignatures%_D%checkDynamicProperties%_E%checkExplicitMixedMissingReturn%_N%checkFunctionNameCase%_I%checkInternalClassCaseSensitivity%_P%reportMaybesInPropertyPhpDocTypes%_V%reportWrongPhpDocTypeInVarTag%_X%checkStrictPrintfPlaceholderTypes%_K%reportNonIntStringArrayKey%#'

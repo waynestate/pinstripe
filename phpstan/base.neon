@@ -18,3 +18,17 @@ parameters:
     # back on.
     reportMaybesInMethodSignatures: false
     reportStaticMethodSignatures: false
+    # phpstan/phpstan-strict-rules also forces eight more parameters on.
+    # Four are low noise and catch real bugs (wrong-case function and class
+    # names break on Linux, explicit mixed returns, printf placeholder
+    # types), so the base cut keeps them on. The other four are noisy on
+    # legacy code, so they stay off here and strict.neon turns them on.
+    # The README table records each decision.
+    checkExplicitMixedMissingReturn: true
+    checkFunctionNameCase: true
+    checkInternalClassCaseSensitivity: true
+    checkStrictPrintfPlaceholderTypes: true
+    checkDynamicProperties: false
+    reportMaybesInPropertyPhpDocTypes: false
+    reportWrongPhpDocTypeInVarTag: false
+    reportNonIntStringArrayKey: false

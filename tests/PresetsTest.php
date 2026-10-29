@@ -334,7 +334,7 @@ final class PresetsTest extends TestCase
         ], $this->root() . '/tests/fixtures/laravel');
 
         $this->assertNotSame(0, $exit, $output);
-        $this->assertStringContainsString('PROBE_M_F_S_F', $output);
+        $this->assertStringContainsString('PROBE_M_F_S_F_D_E1_N1_I1_P_V_X1_K', $output);
     }
 
     public function testPhpStanStrictConfigPinsTheLeakedSignatureParamsOn(): void
@@ -353,7 +353,7 @@ final class PresetsTest extends TestCase
         ], $this->root() . '/tests/fixtures/laravel');
 
         $this->assertNotSame(0, $exit, $output);
-        $this->assertStringContainsString('PROBE_M_F1_S_F1', $output);
+        $this->assertStringContainsString('PROBE_M_F1_S_F1_D1_E1_N1_I1_P1_V1_X1_K1', $output);
     }
 
     public function testRectorPresetReportsChangesOnTheOldFixture(): void

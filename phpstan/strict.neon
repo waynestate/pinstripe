@@ -12,3 +12,8 @@ parameters:
     # maybe-mismatched overrides and static method overrides reported.
     reportMaybesInMethodSignatures: true
     reportStaticMethodSignatures: true
+    # The four noisy parameters that base.neon pins off.
+    checkDynamicProperties: true
+    reportMaybesInPropertyPhpDocTypes: true
+    reportWrongPhpDocTypeInVarTag: true
+    reportNonIntStringArrayKey: true
