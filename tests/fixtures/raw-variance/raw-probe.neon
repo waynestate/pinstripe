@@ -1,0 +1,15 @@
+# Regression probe for the phpstan/phpstan-strict-rules parameter leak.
+# That package forces reportMaybesInMethodSignatures and
+# reportStaticMethodSignatures to true for every run it is installed for,
+# even while its rules stay off. PHPStan checks phpdoc method signatures
+# from level 3 up, so with the parameters leaked in, the base cut would
+# report signature issues it should not. This config includes the raw
+# preset and reads the effective parameter values out of the
+# unmatched-ignore error below: Nette renders a false parameter as an
+# empty string and true as 1, so PROBE_M_F_S_F means both are off.
+includes:
+    - ../../../phpstan/raw.neon
+
+parameters:
+    ignoreErrors:
+        - '#PROBE_M_F%reportMaybesInMethodSignatures%_S_F%reportStaticMethodSignatures%#'

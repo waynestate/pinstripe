@@ -1,0 +1,10 @@
+# Counterpart of raw-probe.neon for the strict cut, which keeps the two
+# signature parameters that phpstan/phpstan-strict-rules forces on. With
+# both on, the probe marker renders as PROBE_M_F1_S_F1 and the static
+# override in src/BorrowedShirt.php is reported alongside it.
+includes:
+    - ../../../phpstan/strict.neon
+
+parameters:
+    ignoreErrors:
+        - '#PROBE_M_F%reportMaybesInMethodSignatures%_S_F%reportStaticMethodSignatures%#'

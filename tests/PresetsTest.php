@@ -272,6 +272,90 @@ final class PresetsTest extends TestCase
         $this->assertStringContainsString('Loose comparison via "==" is not allowed.', $output);
     }
 
+    public function testPhpStanRawConfigAcceptsTheVarianceFixture(): void
+    {
+        // The base cut pins reportStaticMethodSignatures and
+        // reportMaybesInMethodSignatures to false, so the phpdoc-aware
+        // signature check (on from level 3 up) skips the static override
+        // in the fixture and leaves it alone.
+        [$exit, $output] = $this->runInDir([
+            PHP_BINARY,
+            $this->root() . '/vendor/bin/phpstan',
+            'analyse',
+            '-c',
+            $this->root() . '/phpstan/raw.neon',
+            '--no-progress',
+            '--error-format=raw',
+            $this->root() . '/tests/fixtures/raw-variance/src',
+        ], $this->root() . '/tests/fixtures/laravel');
+
+        $this->assertSame(0, $exit, $output);
+    }
+
+    public function testPhpStanStrictConfigReportsTheVarianceFixture(): void
+    {
+        // The strict cut keeps reportStaticMethodSignatures on, so the
+        // same fixture is called out for narrowing the static override's
+        // parameter from string to int.
+        [$exit, $output] = $this->runInDir([
+            PHP_BINARY,
+            $this->root() . '/vendor/bin/phpstan',
+            'analyse',
+            '-c',
+            $this->root() . '/phpstan/strict.neon',
+            '--no-progress',
+            '--error-format=raw',
+            $this->root() . '/tests/fixtures/raw-variance/src',
+        ], $this->root() . '/tests/fixtures/laravel');
+
+        $this->assertNotSame(0, $exit, $output);
+        $this->assertStringContainsString(
+            'Parameter #1 $item (int) of method Pinstripe\\Fixtures\\RawVariance\\BorrowedShirt::put() should be compatible with parameter $item (string) of method Pinstripe\\Fixtures\\RawVariance\\Shirt::put()',
+            $output
+        );
+    }
+
+    public function testPhpStanRawConfigPinsTheLeakedSignatureParamsOff(): void
+    {
+        // phpstan/phpstan-strict-rules forces both signature parameters to
+        // true for every run it is installed for. The probe config reads
+        // the effective values out of its unmatched-ignore error (Nette
+        // renders a false parameter as an empty string and true as 1), so
+        // PROBE_M_F_S_F proves the base cut keeps both pinned off.
+        [$exit, $output] = $this->runInDir([
+            PHP_BINARY,
+            $this->root() . '/vendor/bin/phpstan',
+            'analyse',
+            '-c',
+            $this->root() . '/tests/fixtures/raw-variance/raw-probe.neon',
+            '--no-progress',
+            '--error-format=raw',
+            $this->root() . '/tests/fixtures/raw-variance/src',
+        ], $this->root() . '/tests/fixtures/laravel');
+
+        $this->assertNotSame(0, $exit, $output);
+        $this->assertStringContainsString('PROBE_M_F_S_F', $output);
+    }
+
+    public function testPhpStanStrictConfigPinsTheLeakedSignatureParamsOn(): void
+    {
+        // Counterpart of the raw probe: the strict cut keeps both
+        // parameters on, so the marker renders PROBE_M_F1_S_F1.
+        [$exit, $output] = $this->runInDir([
+            PHP_BINARY,
+            $this->root() . '/vendor/bin/phpstan',
+            'analyse',
+            '-c',
+            $this->root() . '/tests/fixtures/raw-variance/strict-probe.neon',
+            '--no-progress',
+            '--error-format=raw',
+            $this->root() . '/tests/fixtures/raw-variance/src',
+        ], $this->root() . '/tests/fixtures/laravel');
+
+        $this->assertNotSame(0, $exit, $output);
+        $this->assertStringContainsString('PROBE_M_F1_S_F1', $output);
+    }
+
     public function testRectorPresetReportsChangesOnTheOldFixture(): void
     {
         [$exit, $output] = $this->runRectorDryRun('rector-old');
