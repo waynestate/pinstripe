@@ -4,6 +4,7 @@ All notable changes to Pinstripe are documented here.
 
 ## Unreleased
 
+- Added: agent-ready site (prompt blocks, Markdown twins, llms.txt), from Squire's kit.
 - Pinned symfony/mime v7.4.22 in composer.lock, the fixed version for CVE-2026-45070 (PKSA-wtxr-p26d-nn42, GHSA-vqc8-7275-q272), so the audit step of `composer ci` passes.
 - Changed: project names written as words except acronyms.
 - Fixed: stale capability claims in the site and README.
