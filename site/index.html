@@ -8,7 +8,7 @@
 <meta name="stack-env" content="auto">
 <script src="assets/stack-env.js" defer></script>
 <title>Pinstripe: Sharp code. Every line.</title>
-<meta name="description" content="Pinstripe is the coding standard for the Wayne State app stack: shared presets for Pint, PHPStan, Larastan, Rector, ESLint and Prettier, cut once and worn by every repo.">
+<meta name="description" content="Pinstripe is the code style for the Wayne State app stack: shared presets for Pint, PHPStan with Larastan, Rector, ESLint and Prettier. Your app runs them locally, and Preflight runs them in CI.">
 <meta name="theme-color" content="#0c5449">
 <link rel="canonical" href="https://pinstripe.apps.wayne.edu/">
 <!-- For agents (ADR-0019): this page as Markdown, written by bin/agent-ready.php from Squire's kit.
@@ -68,15 +68,15 @@
     <div class="wsu-container hero__grid">
 
       <div class="hero__copy">
-        <p class="eyebrow">Bespoke standards for the Wayne State app stack</p>
+        <p class="eyebrow">Code style for the Wayne State app stack</p>
         <h1 class="hero__title" id="hero-title">Pinstripe<svg class="hero__chalk" viewBox="0 0 400 24" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M4 16 C 90 8, 220 6, 396 12" pathLength="1"/></svg></h1>
         <p class="hero__tagline">Sharp code. Every line.</p>
-        <p class="hero__blurb">Shared presets for <strong>Pint</strong>, <strong>PHPStan</strong> with Larastan, <strong>Rector</strong>, <strong>ESLint</strong> for Vue and <strong>Prettier</strong>, cut once and worn by every repo in the stack and every app it generates. Your app points at them and adds only its own exceptions.</p>
+        <p class="hero__blurb">Shared presets for <strong>Pint</strong>, <strong>PHPStan</strong> with Larastan, <strong>Rector</strong>, <strong>ESLint</strong> for Vue and <strong>Prettier</strong>. Your app's config points at them and adds only its own exceptions. You run them on your machine, and Preflight runs the same config in CI on every push.</p>
         <p class="hero__cta">
           <a class="wsu-btn wsu-btn--primary wsu-btn--lg stitch-btn" href="#fitting">Book a fitting</a>
           <a class="hero__link" href="#try">Try it on today</a>
         </p>
-        <p class="hero__weld"><strong>Already included in <a href="https://weld.apps.wayne.edu/">WELD</a>.</strong> Use Pinstripe on its own to give an app you already have the stack's Pint, PHPStan, ESLint and Prettier settings.</p>
+        <p class="hero__weld"><strong><a href="https://weld.apps.wayne.edu/">WELD</a> already has it.</strong> WELD starts with a copy of the Laravel presets. Install Pinstripe yourself to bring the same settings to an app you already have.</p>
         <!-- The label inside the jacket: where an agent reads this page. The script adds Copy page
              as Markdown and Open in ChatGPT; without it, the plain links still work. -->
         <nav class="ar-page hero__agent" aria-labelledby="hero-agent-label" data-ar-page>
@@ -87,7 +87,7 @@
             <li><a class="ar-page__link" href="llms.txt">llms.txt</a></li>
           </ul>
         </nav>
-        <p class="hero__note"><span class="pin-dot" aria-hidden="true"></span> On Packagist and npm now. The shop is open; walk-ins welcome.</p>
+        <p class="hero__note"><span class="pin-dot" aria-hidden="true"></span> Version 0.1.1 is on Packagist and 0.1.0 is on npm. Walk-ins welcome.</p>
       </div>
 
       <!-- The hero is built from the mark: a swatch of green pinstripe cloth
@@ -207,9 +207,9 @@
               <li data-step="2"><span class="ticket__n" aria-hidden="true">2</span><span class="ticket__tool">Rector</span> <span class="ticket__what">Add the return type, <code>: string</code>.</span></li>
               <li data-step="3"><span class="ticket__n" aria-hidden="true">3</span><span class="ticket__tool">Pint</span> <span class="ticket__what">The method's brace goes on its own line (PER).</span></li>
               <li data-step="4"><span class="ticket__n" aria-hidden="true">4</span><span class="ticket__tool">Rector</span> <span class="ticket__what"><code>array()</code> becomes <code>[]</code>.</span></li>
-              <li data-step="5"><span class="ticket__n" aria-hidden="true">5</span><span class="ticket__tool ticket__tool--stan">PHPStan · level 8</span> <span class="ticket__what"><code>$nick</code> might be null. PHPStan points; you sew the fix.</span></li>
+              <li data-step="5"><span class="ticket__n" aria-hidden="true">5</span><span class="ticket__tool ticket__tool--stan">PHPStan · level 8</span> <span class="ticket__what"><code>$nick</code> might be null. PHPStan only reports this one; you write the fix.</span></li>
             </ol>
-            <p class="ticket__done"><span class="woven">Pressed</span> <span>0 errors at level 8. Nothing changed but the fit.</span></p>
+            <p class="ticket__done"><span class="woven">Pressed</span> <span>0 errors at level 8, and the class still does what it did.</span></p>
           </div>
         </div>
 
@@ -224,7 +224,7 @@
       <div class="section__head" data-reveal>
         <p class="eyebrow">Every preset is a piece of the suit</p>
         <h2 id="pieces-title">The pieces</h2>
-        <p>Seven measurements, one order card. Status comes straight from <code>BEST_PRACTICES.md</code>: a piece is <strong>Enforced</strong> when a test runs the real tool and checks both directions.</p>
+        <p>There are seven, each named for a part of the suit. The status comes from <code>BEST_PRACTICES.md</code>: a piece is <strong>Enforced</strong> when a test runs the real tool and checks that clean code passes and broken code fails.</p>
       </div>
 
       <div class="pieces__grid">
@@ -253,31 +253,31 @@
           <li class="order__row" data-pin="0">
             <div class="order__piece"><span class="order__name">The cut</span><span class="order__tool">Pint</span></div>
             <div class="order__files"><code>pint/per.json</code> <code>pint/laravel.json</code></div>
-            <p class="order__measure">PER for raw PHP, the Laravel preset for Laravel.</p>
+            <p class="order__measure">The PER Coding Style for raw PHP, and Laravel's own preset for Laravel apps.</p>
             <span class="woven woven--ok">Enforced</span>
           </li>
           <li class="order__row" data-pin="1">
             <div class="order__piece"><span class="order__name">The inseam</span><span class="order__tool">PHPStan</span></div>
             <div class="order__files"><code>phpstan/raw.neon</code> <code>phpstan/laravel.neon</code></div>
-            <p class="order__measure">Level 8 for new code. Every ignore needs a comment.</p>
+            <p class="order__measure">Level 8 for new code. An ignore without a comment is an error.</p>
             <span class="woven woven--ok">Enforced</span>
           </li>
           <li class="order__row" data-pin="2">
             <div class="order__piece"><span class="order__name">The lining</span><span class="order__tool">Larastan</span></div>
             <div class="order__files"><code>phpstan/laravel.neon</code></div>
-            <p class="order__measure">Sews itself in through the extension installer. No include line to keep.</p>
+            <p class="order__measure">Loaded by <code>phpstan/extension-installer</code>, so there's no include line to add.</p>
             <span class="woven woven--ok">Enforced</span>
           </li>
           <li class="order__row" data-pin="3">
             <div class="order__piece"><span class="order__name">The press</span><span class="order__tool">Rector</span></div>
             <div class="order__files"><code>rector/base.php</code></div>
-            <p class="order__measure">Reads your PHP floor from your own <code>composer.json</code>. Dead code, code quality, types, early returns.</p>
+            <p class="order__measure">Reads your PHP version from <code>composer.json</code>. It runs the dead code, code quality, type declaration and early return sets.</p>
             <span class="woven woven--ok">Enforced</span>
           </li>
           <li class="order__row" data-pin="4">
             <div class="order__piece"><span class="order__name">The buttonholes</span><span class="order__tool">ESLint</span></div>
             <div class="order__files"><code>eslint/javascript.js</code> <code>eslint/typescript.js</code></div>
-            <p class="order__measure">Vue 3 recommended plus vuejs-accessibility. Every image gets its alt.</p>
+            <p class="order__measure">Vue 3's recommended rules plus vuejs-accessibility, so an image with no alt fails the lint.</p>
             <span class="woven woven--ok">Enforced</span>
           </li>
           <li class="order__row" data-pin="5">
@@ -289,18 +289,18 @@
           <li class="order__row" data-pin="6">
             <div class="order__piece"><span class="order__name">The chalk line</span><span class="order__tool">Baseline</span></div>
             <div class="order__files"><code>phpstan analyse --generate-baseline</code></div>
-            <p class="order__measure">For an existing app: mark the fabric as it is, then take it in every release. Never let it out.</p>
+            <p class="order__measure">For an existing app: record today's errors, then shrink the list. <code>pinstripe-baseline</code> fails the build if it grows.</p>
             <span class="woven woven--yours">Yours</span>
           </li>
         </ol>
       </div>
-      <p class="pieces__draft">The hem is still a draft: no test runs Prettier yet, so it is tacked, not sewn.</p>
+      <p class="pieces__draft">The hem is still a draft because no test runs Prettier yet. Consider it tacked.</p>
 
       <!-- The mirror: every preset is checked from both sides. -->
       <div class="mirror" data-reveal>
         <div class="mirror__glass">
           <h3 class="mirror__title">Every piece has a mirror</h3>
-          <p class="mirror__lede">A preset without a test is a suit without a mirror: you can't tell when it has gone wrinkled. So each one is tried on twice.</p>
+          <p class="mirror__lede">Each preset is tested on code it should accept and code it should reject. If a preset stops catching the bad code, the tests fail.</p>
           <div class="mirror__sides">
             <div class="mirror__side">
               <p class="mirror__k">It fits</p>
@@ -330,9 +330,9 @@
   <section class="section measure" id="measure" aria-labelledby="measure-title">
     <div class="wsu-container">
       <div class="section__head" data-reveal>
-        <p class="eyebrow">One bolt of cloth, three patterns</p>
+        <p class="eyebrow">Pick your pattern</p>
         <h2 id="measure-title">Made to measure</h2>
-        <p>Raw PHP, Laravel and Vue each get their own pattern. These are the files your app keeps; each pattern starts with its install line.</p>
+        <p>Each pattern starts with its install line, then shows the config files your app keeps. A Laravel app with a Vue front end uses two of them.</p>
       </div>
 
       <div class="patterns">
@@ -342,7 +342,7 @@
           <p class="pattern__fit">No framework. Pint with PER, PHPStan at level 8.</p>
           <p class="pattern__file">Install</p>
 <pre class="pattern__code" tabindex="0"><code>composer require --dev waynestate/pinstripe:^0.1</code></pre>
-          <p class="pattern__fit">Pinstripe 0.1.1 is on Packagist, so the line carries <code>^0.1</code>; bump it when a newer version ships.</p>
+          <p class="pattern__fit"><code>^0.1</code> gets you 0.1.1, the current release. Change it when 0.2 ships.</p>
           <p class="pattern__fit"><button class="copy-btn" type="button" data-copy="composer require --dev waynestate/pinstripe:^0.1"><span class="copy-btn__label">Copy</span></button></p>
           <p class="pattern__file">phpstan.neon</p>
 <pre class="pattern__code" tabindex="0"><code>includes:
@@ -362,7 +362,7 @@ parameters:
         <article class="pattern" data-reveal>
           <p class="pattern__mark">Piece B · cut 1</p>
           <h3 class="pattern__name">Laravel</h3>
-          <p class="pattern__fit">The Laravel Pint preset, PHPStan with the Larastan lining.</p>
+          <p class="pattern__fit">Laravel's Pint preset, and PHPStan with Larastan.</p>
           <p class="pattern__file">Install</p>
 <pre class="pattern__code" tabindex="0"><code>composer require --dev waynestate/pinstripe:^0.1 larastan/larastan</code></pre>
           <p class="pattern__fit"><button class="copy-btn" type="button" data-copy="composer require --dev waynestate/pinstripe:^0.1 larastan/larastan"><span class="copy-btn__label">Copy</span></button></p>
@@ -370,14 +370,14 @@ parameters:
 <pre class="pattern__code" tabindex="0"><code>includes:
     - vendor/waynestate/pinstripe/phpstan/laravel.neon</code></pre>
           <p class="pattern__fit">That's the whole file. Larastan registers itself through <code>phpstan/extension-installer</code>; allow the plugin when Composer asks. Scripts point at <code>pint/laravel.json</code>.</p>
-          <p class="pattern__fit">Proven on a minimal Laravel 13 app in the fixtures, every run.</p>
+          <p class="pattern__fit">Every CI run checks these presets against a minimal Laravel 13 app in the fixtures.</p>
           <span class="pattern__grain" aria-hidden="true">grain</span>
         </article>
 
         <article class="pattern" data-reveal>
           <p class="pattern__mark">Piece C · cut 1</p>
           <h3 class="pattern__name">Vue</h3>
-          <p class="pattern__fit">ESLint flat config with vuejs-accessibility, Prettier for the layout.</p>
+          <p class="pattern__fit">An ESLint flat config with the accessibility rules, and Prettier for formatting.</p>
           <p class="pattern__file">Install</p>
 <pre class="pattern__code" tabindex="0"><code>npm install --save-dev @waynestate/pinstripe eslint prettier</code></pre>
           <p class="pattern__fit"><button class="copy-btn" type="button" data-copy="npm install --save-dev @waynestate/pinstripe eslint prettier"><span class="copy-btn__label">Copy</span></button></p>
@@ -396,7 +396,7 @@ export default [...pinstripe]</code></pre>
         <div>
           <p class="pattern__mark">Alterations · fits A and B</p>
           <h3 class="pattern__name">Rector</h3>
-          <p class="pattern__fit">Rector modernises code for the PHP version your app already supports. It reads the floor from your own <code>composer.json</code>, so it can't drift out of step. The press smooths old code to the standard without changing the cut.</p>
+          <p class="pattern__fit">Rector updates old code to use what your app's current PHP version allows. It reads that version from your <code>composer.json</code>, so there's no second copy to keep in step. Moving to a newer PHP is Booster's job.</p>
           <p class="pattern__file">Install, alongside Pinstripe</p>
 <pre class="pattern__code" tabindex="0"><code>composer require --dev rector/rector</code></pre>
           <p class="pattern__fit"><button class="copy-btn" type="button" data-copy="composer require --dev rector/rector"><span class="copy-btn__label">Copy</span></button></p>
@@ -426,7 +426,7 @@ return $base-&gt;withPaths([__DIR__ . '/src']);</code></pre>
       <div class="section__head" data-reveal>
         <p class="eyebrow">Hand it to your agent</p>
         <h2 id="agents-title">Fitted by your agent</h2>
-        <p>Order slips, ready for the coding agent you already use. Copy one, or run it straight in OpenCode, Claude Code, Codex or ChatGPT. Each one names the pattern, what the agent may not let out, and tells it to ask before it guesses.</p>
+        <p>Four prompts for whatever coding agent you use. Copy one, or open it in OpenCode, Claude Code, Codex or ChatGPT. Each one names the pattern and what the agent must leave alone, and tells it to ask you before it guesses.</p>
       </div>
 
       <div class="agents__slips">
@@ -436,7 +436,7 @@ return $base-&gt;withPaths([__DIR__ . '/src']);</code></pre>
             <div>
               <p class="ar-prompt__kicker">Order No. 1 · Any stack app</p>
               <h3 class="ar-prompt__title" id="prompt-get-started-title">Get started with Pinstripe</h3>
-              <p class="ar-prompt__desc">Measure the app, say which pieces fit, and chalk out every file before a stitch goes in.</p>
+              <p class="ar-prompt__desc">Works out what kind of app this is and which presets fit, then lists every file it would add. It changes nothing yet.</p>
             </div>
           </header>
           <pre class="ar-prompt__text"><code>You are a coding agent fitting Pinstripe to the app in this folder, at Wayne State University. Pinstripe is the coding standard of WELD, the Wayne State application stack: shared presets for Pint, PHPStan (with Larastan for Laravel), Rector, and ESLint with Prettier. The app points at them and adds only its own exceptions.
@@ -469,7 +469,7 @@ Output: the app kind, the pieces that fit, then the planned files as numbered st
             <div>
               <p class="ar-prompt__kicker">Order No. 2 · Piece A · Raw PHP</p>
               <h3 class="ar-prompt__title" id="prompt-raw-php-title">Pinstripe in a raw PHP app</h3>
-              <p class="ar-prompt__desc">Pint with PER, PHPStan at level 8, the three Composer scripts, and a baseline if the old cloth needs one.</p>
+              <p class="ar-prompt__desc">Adds Pint with PER, PHPStan at level 8 and the Composer scripts, plus a baseline if existing code fails.</p>
             </div>
           </header>
           <pre class="ar-prompt__text"><code>You are a coding agent adding Pinstripe to a raw PHP app (no framework) at Wayne State University. Pinstripe is the coding standard of WELD, the Wayne State application stack.
@@ -500,7 +500,7 @@ Output: the files you added or changed, the lint and analyse results (with the b
             <div>
               <p class="ar-prompt__kicker">Order No. 3 · Piece B · Laravel</p>
               <h3 class="ar-prompt__title" id="prompt-laravel-title">Pinstripe in a Laravel app</h3>
-              <p class="ar-prompt__desc">The Laravel Pint preset and PHPStan with the Larastan lining, for Blade and Inertia apps alike.</p>
+              <p class="ar-prompt__desc">Adds Laravel's Pint preset and PHPStan with Larastan. It works for Blade apps and Inertia apps.</p>
             </div>
           </header>
           <pre class="ar-prompt__text"><code>You are a coding agent adding Pinstripe to a Laravel app (with Blade, or with Inertia and Vue) at Wayne State University. Pinstripe is the coding standard of WELD, the Wayne State application stack.
@@ -531,7 +531,7 @@ Output: the files you added or changed, the lint and analyse results (with the b
             <div>
               <p class="ar-prompt__kicker">Order No. 4 · Piece C · Vue</p>
               <h3 class="ar-prompt__title" id="prompt-vue-title">Pinstripe on the Vue side</h3>
-              <p class="ar-prompt__desc">ESLint with vuejs-accessibility and Prettier for the layout, on whichever app the Vue front end lives in.</p>
+              <p class="ar-prompt__desc">Adds the ESLint and Prettier presets to your Vue front end and reports the accessibility findings first.</p>
             </div>
           </header>
           <pre class="ar-prompt__text"><code>You are a coding agent adding Pinstripe's ESLint and Prettier presets to the Vue front end of an app at Wayne State University: a Laravel app with Inertia or with Vue islands in Blade, or a raw PHP app with a Vue front end. Pinstripe is the coding standard of WELD, the Wayne State application stack.
@@ -556,7 +556,7 @@ Constraints:
 Output: the files you added or changed, the lint findings grouped by rule, then your questions.</code></pre>
         </section>
 
-        <p class="agents__fine">The agent reads the same pages you do: <a href="llms.txt">llms.txt</a> lists them, <a href="llms-full.txt">llms-full.txt</a> holds them all in one file, and this page has a <a href="index.md" type="text/markdown">Markdown twin</a>. Nothing here phones home; the buttons only copy text or open the tool you picked. Measure twice, prompt once.</p>
+        <p class="agents__fine">The agent reads the same pages you do: <a href="llms.txt">llms.txt</a> lists them, <a href="llms-full.txt">llms-full.txt</a> holds them all in one file, and this page has a <a href="index.md" type="text/markdown">Markdown twin</a>. Nothing here phones home. The buttons only copy text or open the tool you picked.</p>
       </div>
     </div>
   </section>
@@ -567,8 +567,8 @@ Output: the files you added or changed, the lint findings grouped by rule, then 
       <div class="try__copy" data-reveal>
         <p class="eyebrow">Real today</p>
         <h2 id="try-title">Try it on</h2>
-        <p>It's on the rack now; you can still try Pinstripe on in the shop: clone it and run its own checks. <code>composer ci</code> runs Pint, PHPStan, Larastan and Rector against the fixtures; <code>npm test</code> runs the ESLint presets.</p>
-        <p>The same commands on Windows, macOS and Linux. You need PHP 8.3 or newer, Composer, and Node 22.13 or newer.</p>
+        <p>To see the presets work before you add them to an app, clone Pinstripe and run its own checks. <code>composer ci</code> runs Pint, PHPStan, Larastan and Rector against the fixtures, and <code>npm test</code> runs the ESLint presets.</p>
+        <p>The commands are the same on Windows, macOS and Linux. You need PHP 8.3 or newer, Composer, and Node 22.13 or newer.</p>
         <p class="try__next"><span class="try__next-k">On the cutting table next</span> Reading the PHP floor from CREED. <span class="chip-soon">coming soon</span></p>
       </div>
 
@@ -586,7 +586,7 @@ composer install
 composer ci
 npm ci
 npm test"><span class="copy-btn__label">Copy</span></button>
-        <p class="receipt__foot">Expect green on PHP 8.3, 8.4 and 8.5.</p>
+        <p class="receipt__foot">CI runs this on PHP 8.3, 8.4 and 8.5.</p>
       </div>
     </div>
   </section>
@@ -599,7 +599,7 @@ npm test"><span class="copy-btn__label">Copy</span></button>
       <div class="section__head" data-reveal>
         <p class="eyebrow">The whole wardrobe</p>
         <h2 id="rail-title">Worn across the stack</h2>
-        <p>Every repo on this rail, and every app WELD and Sourdough turn out, is cut to Pinstripe.</p>
+        <p>Most of the stack's PHP projects check their own code with Pinstripe. WELD starts from a copy of its Laravel presets. Apps that Sourdough makes don't include it yet.</p>
       </div>
 
       <ul class="rail">
@@ -610,8 +610,8 @@ npm test"><span class="copy-btn__label">Copy</span></button>
         <li class="hanger"><span class="hanger__hook" aria-hidden="true"></span><div class="hanger__tag"><img class="hanger__mark" src="assets/marks/sesame.png" width="48" height="48" alt=""><p class="hanger__name"><a class="part-link" href="https://sesame.apps.wayne.edu/">SESAME</a></p><p class="hanger__role">Sign-in</p></div></li>
         <li class="hanger"><span class="hanger__hook" aria-hidden="true"></span><div class="hanger__tag"><img class="hanger__mark" src="assets/marks/helmet.png" width="48" height="48" alt=""><p class="hanger__name"><a class="part-link" href="https://helmet.apps.wayne.edu/">HELMET</a></p><p class="hanger__role">Security headers</p></div></li>
         <li class="hanger hanger--here"><span class="hanger__hook" aria-hidden="true"></span><div class="hanger__tag"><img class="hanger__mark" src="brand/pinstripe-avatar-256.png" width="48" height="48" alt=""><p class="hanger__name">Pinstripe</p><p class="hanger__role">The tailor (you are here)</p></div></li>
-        <li class="hanger"><span class="hanger__hook" aria-hidden="true"></span><div class="hanger__tag"><img class="hanger__mark" src="assets/marks/sourdough.png" width="48" height="48" alt=""><p class="hanger__name"><a class="part-link" href="https://sourdough.apps.wayne.edu/">Sourdough</a></p><p class="hanger__role">Starters you feed</p></div></li>
-        <li class="hanger"><span class="hanger__hook" aria-hidden="true"></span><div class="hanger__tag"><img class="hanger__mark" src="assets/marks/weld.png" width="48" height="48" alt=""><p class="hanger__name"><a class="part-link" href="https://weld.apps.wayne.edu/">WELD</a></p><p class="hanger__role">The whole app, joined</p></div></li>
+        <li class="hanger"><span class="hanger__hook" aria-hidden="true"></span><div class="hanger__tag"><img class="hanger__mark" src="assets/marks/sourdough.png" width="48" height="48" alt=""><p class="hanger__name"><a class="part-link" href="https://sourdough.apps.wayne.edu/">Sourdough</a></p><p class="hanger__role">Starts a raw PHP app</p></div></li>
+        <li class="hanger"><span class="hanger__hook" aria-hidden="true"></span><div class="hanger__tag"><img class="hanger__mark" src="assets/marks/weld.png" width="48" height="48" alt=""><p class="hanger__name"><a class="part-link" href="https://weld.apps.wayne.edu/">WELD</a></p><p class="hanger__role">The Laravel and Vue starter</p></div></li>
         <li class="hanger"><span class="hanger__hook" aria-hidden="true"></span><div class="hanger__tag"><img class="hanger__mark" src="assets/marks/squire.png" width="48" height="48" alt=""><p class="hanger__name"><a class="part-link" href="https://squire.apps.wayne.edu/">Squire</a></p><p class="hanger__role">Carries the release</p></div></li>
         <li class="hanger"><span class="hanger__hook" aria-hidden="true"></span><div class="hanger__tag"><img class="hanger__mark" src="assets/marks/rollcall.png" width="48" height="48" alt=""><p class="hanger__name"><a class="part-link" href="https://rollcall.apps.wayne.edu/">Rollcall</a></p><p class="hanger__role">Every app answers present</p></div></li>
         <li class="hanger"><span class="hanger__hook" aria-hidden="true"></span><div class="hanger__tag"><img class="hanger__mark" src="assets/marks/advisor.png" width="48" height="48" alt=""><p class="hanger__name"><a class="part-link" href="https://advisor.apps.wayne.edu/">ADVISOR</a></p><p class="hanger__role">What applies to your app</p></div></li>

@@ -1,6 +1,6 @@
 # Pinstripe: everything in one file
 
-> Pinstripe is the coding standard for the Wayne State app stack: shared presets for Pint, PHPStan, Larastan, Rector, ESLint and Prettier, cut once and worn by every repo.
+> Pinstripe is the code style for the Wayne State app stack: shared presets for Pint, PHPStan with Larastan, Rector, ESLint and Prettier. Your app runs them locally, and Preflight runs them in CI.
 
 The README and the Markdown twin of every page, joined. The index is https://pinstripe.apps.wayne.edu/llms.txt. Written by Squire's agent-ready kit; do not edit.
 
@@ -236,19 +236,19 @@ Reading the PHP floor from CREED. (Preflight's pint, phpstan and eslint jobs alr
 
 Source: https://pinstripe.apps.wayne.edu/
 
-Bespoke standards for the Wayne State app stack
+Code style for the Wayne State app stack
 
 ## Pinstripe
 
 Sharp code. Every line.
 
-Shared presets for **Pint**, **PHPStan** with Larastan, **Rector**, **ESLint** for Vue and **Prettier**, cut once and worn by every repo in the stack and every app it generates. Your app points at them and adds only its own exceptions.
+Shared presets for **Pint**, **PHPStan** with Larastan, **Rector**, **ESLint** for Vue and **Prettier**. Your app's config points at them and adds only its own exceptions. You run them on your machine, and Preflight runs the same config in CI on every push.
 
 [Book a fitting](https://pinstripe.apps.wayne.edu/#fitting) [Try it on today](https://pinstripe.apps.wayne.edu/#try)
 
-**Already included in [WELD](https://weld.apps.wayne.edu/).** Use Pinstripe on its own to give an app you already have the stack's Pint, PHPStan, ESLint and Prettier settings.
+**[WELD](https://weld.apps.wayne.edu/) already has it.** WELD starts with a copy of the Laravel presets. Install Pinstripe yourself to bring the same settings to an app you already have.
 
-On Packagist and npm now. The shop is open; walk-ins welcome.
+Version 0.1.1 is on Packagist and 0.1.0 is on npm. Walk-ins welcome.
 
 Scroll, and the tailor gets to work
 
@@ -308,9 +308,9 @@ Alterations No. 0.1
 2. Rector Add the return type, `: string`.
 3. Pint The method's brace goes on its own line (PER).
 4. Rector `array()` becomes `[]`.
-5. PHPStan · level 8 `$nick` might be null. PHPStan points; you sew the fix.
+5. PHPStan · level 8 `$nick` might be null. PHPStan only reports this one; you write the fix.
 
-Pressed 0 errors at level 8. Nothing changed but the fit.
+Pressed 0 errors at level 8, and the class still does what it did.
 
 Cut from Pinstripe's own test fixtures (`raw-messy`, `rector-old`, `raw-nullbug`), where the real tools run on every `composer ci`.
 
@@ -318,27 +318,27 @@ Every preset is a piece of the suit
 
 ### The pieces
 
-Seven measurements, one order card. Status comes straight from `BEST_PRACTICES.md`: a piece is **Enforced** when a test runs the real tool and checks both directions.
+There are seven, each named for a part of the suit. The status comes from `BEST_PRACTICES.md`: a piece is **Enforced** when a test runs the real tool and checks that clean code passes and broken code fails.
 
 1. The cut Pint
    `pint/per.json` `pint/laravel.json`
-   PER for raw PHP, the Laravel preset for Laravel.
+   The PER Coding Style for raw PHP, and Laravel's own preset for Laravel apps.
    Enforced
 2. The inseam PHPStan
    `phpstan/raw.neon` `phpstan/laravel.neon`
-   Level 8 for new code. Every ignore needs a comment.
+   Level 8 for new code. An ignore without a comment is an error.
    Enforced
 3. The lining Larastan
    `phpstan/laravel.neon`
-   Sews itself in through the extension installer. No include line to keep.
+   Loaded by `phpstan/extension-installer`, so there's no include line to add.
    Enforced
 4. The press Rector
    `rector/base.php`
-   Reads your PHP floor from your own `composer.json`. Dead code, code quality, types, early returns.
+   Reads your PHP version from `composer.json`. It runs the dead code, code quality, type declaration and early return sets.
    Enforced
 5. The buttonholes ESLint
    `eslint/javascript.js` `eslint/typescript.js`
-   Vue 3 recommended plus vuejs-accessibility. Every image gets its alt.
+   Vue 3's recommended rules plus vuejs-accessibility, so an image with no alt fails the lint.
    Enforced
 6. The hem Prettier
    `prettier/index.json`
@@ -346,14 +346,14 @@ Seven measurements, one order card. Status comes straight from `BEST_PRACTICES.m
    Draft
 7. The chalk line Baseline
    `phpstan analyse --generate-baseline`
-   For an existing app: mark the fabric as it is, then take it in every release. Never let it out.
+   For an existing app: record today's errors, then shrink the list. `pinstripe-baseline` fails the build if it grows.
    Yours
 
-The hem is still a draft: no test runs Prettier yet, so it is tacked, not sewn.
+The hem is still a draft because no test runs Prettier yet. Consider it tacked.
 
 #### Every piece has a mirror
 
-A preset without a test is a suit without a mirror: you can't tell when it has gone wrinkled. So each one is tried on twice.
+Each preset is tested on code it should accept and code it should reject. If a preset stops catching the bad code, the tests fail.
 
 It fits
 
@@ -369,11 +369,11 @@ It catches
 - `rector-old` gets altered
 - an `<img>` without alt, a `v-for` without `:key`
 
-One bolt of cloth, three patterns
+Pick your pattern
 
 ### Made to measure
 
-Raw PHP, Laravel and Vue each get their own pattern. These are the files your app keeps; each pattern starts with its install line.
+Each pattern starts with its install line, then shows the config files your app keeps. A Laravel app with a Vue front end uses two of them.
 
 Piece A · cut 1
 
@@ -387,7 +387,7 @@ Install
 composer require --dev waynestate/pinstripe:^0.1
 ```
 
-Pinstripe 0.1.1 is on Packagist, so the line carries `^0.1`; bump it when a newer version ships.
+`^0.1` gets you 0.1.1, the current release. Change it when 0.2 ships.
 
 phpstan.neon
 
@@ -414,7 +414,7 @@ Piece B · cut 1
 
 #### Laravel
 
-The Laravel Pint preset, PHPStan with the Larastan lining.
+Laravel's Pint preset, and PHPStan with Larastan.
 
 Install
 
@@ -431,13 +431,13 @@ includes:
 
 That's the whole file. Larastan registers itself through `phpstan/extension-installer`; allow the plugin when Composer asks. Scripts point at `pint/laravel.json`.
 
-Proven on a minimal Laravel 13 app in the fixtures, every run.
+Every CI run checks these presets against a minimal Laravel 13 app in the fixtures.
 
 Piece C · cut 1
 
 #### Vue
 
-ESLint flat config with vuejs-accessibility, Prettier for the layout.
+An ESLint flat config with the accessibility rules, and Prettier for formatting.
 
 Install
 
@@ -465,7 +465,7 @@ Alterations · fits A and B
 
 #### Rector
 
-Rector modernises code for the PHP version your app already supports. It reads the floor from your own `composer.json`, so it can't drift out of step. The press smooths old code to the standard without changing the cut.
+Rector updates old code to use what your app's current PHP version allows. It reads that version from your `composer.json`, so there's no second copy to keep in step. Moving to a newer PHP is Booster's job.
 
 Install, alongside Pinstripe
 
@@ -487,11 +487,11 @@ Hand it to your agent
 
 ### Fitted by your agent
 
-Order slips, ready for the coding agent you already use. Copy one, or run it straight in OpenCode, Claude Code, Codex or ChatGPT. Each one names the pattern, what the agent may not let out, and tells it to ask before it guesses.
+Four prompts for whatever coding agent you use. Copy one, or open it in OpenCode, Claude Code, Codex or ChatGPT. Each one names the pattern and what the agent must leave alone, and tells it to ask you before it guesses.
 
 #### Get started with Pinstripe
 
-Measure the app, say which pieces fit, and chalk out every file before a stitch goes in.
+Works out what kind of app this is and which presets fit, then lists every file it would add. It changes nothing yet.
 
 A prompt for your coding agent. Copy it as it stands:
 
@@ -522,7 +522,7 @@ Output: the app kind, the pieces that fit, then the planned files as numbered st
 
 #### Pinstripe in a raw PHP app
 
-Pint with PER, PHPStan at level 8, the three Composer scripts, and a baseline if the old cloth needs one.
+Adds Pint with PER, PHPStan at level 8 and the Composer scripts, plus a baseline if existing code fails.
 
 A prompt for your coding agent. Copy it as it stands:
 
@@ -551,7 +551,7 @@ Output: the files you added or changed, the lint and analyse results (with the b
 
 #### Pinstripe in a Laravel app
 
-The Laravel Pint preset and PHPStan with the Larastan lining, for Blade and Inertia apps alike.
+Adds Laravel's Pint preset and PHPStan with Larastan. It works for Blade apps and Inertia apps.
 
 A prompt for your coding agent. Copy it as it stands:
 
@@ -580,7 +580,7 @@ Output: the files you added or changed, the lint and analyse results (with the b
 
 #### Pinstripe on the Vue side
 
-ESLint with vuejs-accessibility and Prettier for the layout, on whichever app the Vue front end lives in.
+Adds the ESLint and Prettier presets to your Vue front end and reports the accessibility findings first.
 
 A prompt for your coding agent. Copy it as it stands:
 
@@ -607,15 +607,15 @@ Constraints:
 Output: the files you added or changed, the lint findings grouped by rule, then your questions.
 ```
 
-The agent reads the same pages you do: [llms.txt](https://pinstripe.apps.wayne.edu/llms.txt) lists them, [llms-full.txt](https://pinstripe.apps.wayne.edu/llms-full.txt) holds them all in one file, and this page has a [Markdown twin](https://pinstripe.apps.wayne.edu/index.md). Nothing here phones home; the buttons only copy text or open the tool you picked. Measure twice, prompt once.
+The agent reads the same pages you do: [llms.txt](https://pinstripe.apps.wayne.edu/llms.txt) lists them, [llms-full.txt](https://pinstripe.apps.wayne.edu/llms-full.txt) holds them all in one file, and this page has a [Markdown twin](https://pinstripe.apps.wayne.edu/index.md). Nothing here phones home. The buttons only copy text or open the tool you picked.
 
 Real today
 
 ### Try it on
 
-It's on the rack now; you can still try Pinstripe on in the shop: clone it and run its own checks. `composer ci` runs Pint, PHPStan, Larastan and Rector against the fixtures; `npm test` runs the ESLint presets.
+To see the presets work before you add them to an app, clone Pinstripe and run its own checks. `composer ci` runs Pint, PHPStan, Larastan and Rector against the fixtures, and `npm test` runs the ESLint presets.
 
-The same commands on Windows, macOS and Linux. You need PHP 8.3 or newer, Composer, and Node 22.13 or newer.
+The commands are the same on Windows, macOS and Linux. You need PHP 8.3 or newer, Composer, and Node 22.13 or newer.
 
 On the cutting table next Reading the PHP floor from CREED. coming soon
 
@@ -630,13 +630,13 @@ $ npm ci
 $ npm test
 ```
 
-Expect green on PHP 8.3, 8.4 and 8.5.
+CI runs this on PHP 8.3, 8.4 and 8.5.
 
 The whole wardrobe
 
 ### Worn across the stack
 
-Every repo on this rail, and every app WELD and Sourdough turn out, is cut to Pinstripe.
+Most of the stack's PHP projects check their own code with Pinstripe. WELD starts from a copy of its Laravel presets. Apps that Sourdough makes don't include it yet.
 
 - [WayneUI](https://wayneui.apps.wayne.edu/)
   The interface
@@ -653,9 +653,9 @@ Every repo on this rail, and every app WELD and Sourdough turn out, is cut to Pi
 - Pinstripe
   The tailor (you are here)
 - [Sourdough](https://sourdough.apps.wayne.edu/)
-  Starters you feed
+  Starts a raw PHP app
 - [WELD](https://weld.apps.wayne.edu/)
-  The whole app, joined
+  The Laravel and Vue starter
 - [Squire](https://squire.apps.wayne.edu/)
   Carries the release
 - [Rollcall](https://rollcall.apps.wayne.edu/)
