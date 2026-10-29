@@ -1,0 +1,8 @@
+parameters:
+    ignoreErrors:
+        -
+            message: '#^First ignored error\.$#'
+        -
+            message: '#^Second ignored error\.$#'
+            identifier: missingType.parameter
+        - 'Third plain string error'

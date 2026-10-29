@@ -47,7 +47,8 @@ if ($arguments === []) {
     pinstripe_baseline_usage();
 }
 
-[$command, ...$rest] = $arguments;
+$command = $arguments[0];
+$rest = array_slice($arguments, 1);
 
 $path = 'phpstan-baseline.neon';
 $max = null;
