@@ -63,5 +63,10 @@
             "phpstan/extension-installer": true
         },
         "process-timeout": 900
+    },
+    "extra": {
+        "proctor": {
+            "wayneui.copies": "fail"
+        }
     }
 }
