@@ -22,6 +22,8 @@ wayneui-copies:
     - composer install --working-dir=deploy --no-interaction --no-progress --prefer-dist
     - deploy/vendor/bin/proctor check --path=. --policy=deploy/vendor/waynestate/creed/policy/policy.json
 
+# On tag pipelines, composer ci runs PackageVersionTest, which fails when
+# package.json's version does not match the tag, so npm can publish from it.
 composer-ci:
   image: composer:2.10.3
   script:
