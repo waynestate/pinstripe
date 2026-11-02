@@ -9,7 +9,7 @@ files anywhere.
   display, the label in a good jacket; **Reenie Beanie** (SIL OFL 1.1, `assets/fonts/OFL-reenie-beanie.txt`) for
   the tailor's chalk notes; Lato from WayneUI for reading. Both are self-hosted in `assets/fonts/` from
   `@fontsource`.
-- colours: WSU green `#0C5449` and gold `#FFCC33`, cream `#F4F1EA` and the site-only mauve `#8B6372` from the
+- colors: WSU green `#0C5449` and gold `#FFCC33`, cream `#F4F1EA` and the site-only mauve `#8B6372` from the
   brand board. The deep green, the cloth green, the cutting-mat tan and the deep mauve for text (`#6E4A58`, 4.5:1
   or better on cream) are this page's own.
 - built on WayneUI 2.0.8, copied into `assets/wayne-ui/` from its documented static path (tokens, Lato,

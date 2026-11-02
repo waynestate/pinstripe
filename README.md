@@ -7,7 +7,7 @@
 <p>
   <img src="docs/readme/badges/php.svg" alt="php ^8.3">
   <img src="docs/readme/badges/phpstan.svg" alt="phpstan level 8">
-  <img src="docs/readme/badges/license.svg" alt="licence MIT">
+  <img src="docs/readme/badges/license.svg" alt="license MIT">
   <a href="https://github.com/waynestate/pinstripe/actions/workflows/ci.yml"><img src="https://github.com/waynestate/pinstripe/actions/workflows/ci.yml/badge.svg" alt="GitHub CI"></a>
 </p>
 
@@ -42,7 +42,7 @@ On Citadel it is served by the raw-PHP deploy layer in [`deploy/`](deploy/): a S
 <details>
 <summary><b>The pattern book</b>: the brand board</summary>
 <br>
-<div align="center"><img src="docs/readme/board.jpg" width="100%" alt="Pinstripe's brand board: the necktie mark in its green and gold, the pinstripe cloth, and the type and colours it is cut from."></div>
+<div align="center"><img src="docs/readme/board.jpg" width="100%" alt="Pinstripe's brand board: the necktie mark in its green and gold, the pinstripe cloth, and the type and colors it is cut from."></div>
 </details>
 
 ## Use it in a raw PHP app
@@ -98,7 +98,7 @@ plugin (`config.allow-plugins` in your `composer.json`). Your `phpstan.neon` inc
 scripts point at `vendor/waynestate/pinstripe/pint/laravel.json`.
 
 Proven on Laravel: `composer ci` lints a minimal Laravel 13 app (`tests/fixtures/laravel-app`) with
-`pint/laravel.json` and analyses it with `phpstan/laravel.neon` on every run, and fails if the app stops
+`pint/laravel.json` and analyzes it with `phpstan/laravel.neon` on every run, and fails if the app stops
 passing. A smaller fixture (`tests/fixtures/laravel`) proves the preset really loads Larastan: it plants an
 undefined Eloquent property that only Larastan reports, and a clean twin it leaves alone.
 

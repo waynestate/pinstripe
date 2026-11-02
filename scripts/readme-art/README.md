@@ -26,13 +26,13 @@ network) and is deterministic: same inputs, same outputs.
 
 - `docs/readme/hero.jpg`: the hero, with the site header and tape hidden.
 - `docs/readme/tape.svg`: a tailor's tape measure that unrolls, one mark per
-  preset, labelled with the real values (Pint presets, PHPStan level, Rector
+  preset, labeled with the real values (Pint presets, PHPStan level, Rector
   sets, ESLint flavours, Prettier settings). Under `prefers-reduced-motion` it
   stays unrolled.
 - `docs/readme/gallery.jpg`: a contact sheet of three mobile crops.
 - `docs/readme/board.jpg`: the brand board, re-encoded.
 - `docs/readme/cast/*.png`: one 96x96 mark per stack part.
-- `docs/readme/badges/*.svg`: `php`, `licence` and `phpstan`, made locally by
+- `docs/readme/badges/*.svg`: `php`, `license` and `phpstan`, made locally by
   `badge-maker`.
 
 Every file must stay at or under 300 KB, and no captured text may mention an

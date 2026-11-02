@@ -17,7 +17,7 @@
 
 ## The board
 
-`pinstripe-board.png` is the 11-panel brand board. It shows the mark as the hero symbol and the app icon, the horizontal and stacked lockups with the wordmark, the mark on light and dark backgrounds, the colour palette (deep green `#0C5449`, gold `#FFCC33`, cream `#F4F1EA`, and a site-accent-only mauve `#8B6372`), the Inter typography, the 64/32/16 px favicons, the clear space and 32 px minimum size, the do-and-don't rules, and the developer workflow from editor to terminal.
+`pinstripe-board.png` is the 11-panel brand board. It shows the mark as the hero symbol and the app icon, the horizontal and stacked lockups with the wordmark, the mark on light and dark backgrounds, the color palette (deep green `#0C5449`, gold `#FFCC33`, cream `#F4F1EA`, and a site-accent-only mauve `#8B6372`), the Inter typography, the 64/32/16 px favicons, the clear space and 32 px minimum size, the do-and-don't rules, and the developer workflow from editor to terminal.
 
 ## Rules
 
