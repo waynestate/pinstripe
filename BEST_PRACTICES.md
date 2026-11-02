@@ -17,4 +17,4 @@ Both run in CI on GitLab and GitHub, so a preset that stops working fails the pi
 | `rector/base.php` | Rector | Enforced | `PresetsTest::testRectorPresetAcceptsTheCleanFixture`, `PresetsTest::testRectorPresetReportsChangesOnTheOldFixture` |
 | `eslint/javascript.js` | ESLint | Enforced | `tests/js/presets.test.mjs` (`npm test`) |
 | `eslint/typescript.js` | ESLint | Enforced | `tests/js/presets.test.mjs` (`npm test`) |
-| `prettier/index.json` | Prettier | Draft | no test runs it yet |
+| `prettier/index.json` | Prettier | Enforced | `tests/js/prettier.test.mjs` (`npm test`) |
