@@ -113,13 +113,13 @@ There are seven, each named for a part of the suit. The status comes from `BEST_
 6. The hem Prettier
    `prettier/index.json`
    Single quotes, semicolons, 100 columns, trailing commas.
-   Draft
+   Enforced
 7. The chalk line Baseline
    `phpstan analyse --generate-baseline`
    For an existing app: record today's errors, then shrink the list. `pinstripe-baseline` fails the build if it grows.
    Yours
 
-The hem is still a draft because no test runs Prettier yet. Consider it tacked.
+The hem is pressed: `tests/js/prettier.test.mjs` runs the real Prettier on a clean and a messy cut in every `npm test`.
 
 ### Every piece has a mirror
 
@@ -131,6 +131,7 @@ It fits
 - `laravel-app` passes the Laravel presets
 - `rector-clean` is left alone by Rector
 - `clean-js` and `clean-ts` lint clean
+- a clean JS module and a clean Vue SFC pass Prettier
 
 It catches
 
@@ -138,6 +139,7 @@ It catches
 - `raw-nullbug`: PHPStan reports the null
 - `rector-old` gets altered
 - an `<img>` without alt, a `v-for` without `:key`
+- double quotes and a missing semicolon fail Prettier
 
 Pick your pattern
 
@@ -383,7 +385,7 @@ Real today
 
 ## Try it on
 
-To see the presets work before you add them to an app, clone Pinstripe and run its own checks. `composer ci` runs Pint, PHPStan, Larastan and Rector against the fixtures, and `npm test` runs the ESLint presets.
+To see the presets work before you add them to an app, clone Pinstripe and run its own checks. `composer ci` runs Pint, PHPStan, Larastan and Rector against the fixtures, and `npm test` runs the ESLint and Prettier presets.
 
 The commands are the same on Windows, macOS and Linux. You need PHP 8.3 or newer, Composer, and Node 22.13 or newer.
 

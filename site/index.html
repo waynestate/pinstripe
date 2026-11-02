@@ -284,7 +284,7 @@
             <div class="order__piece"><span class="order__name">The hem</span><span class="order__tool">Prettier</span></div>
             <div class="order__files"><code>prettier/index.json</code></div>
             <p class="order__measure">Single quotes, semicolons, 100 columns, trailing commas.</p>
-            <span class="woven woven--draft">Draft</span>
+            <span class="woven woven--ok">Enforced</span>
           </li>
           <li class="order__row" data-pin="6">
             <div class="order__piece"><span class="order__name">The chalk line</span><span class="order__tool">Baseline</span></div>
@@ -294,7 +294,7 @@
           </li>
         </ol>
       </div>
-      <p class="pieces__draft">The hem is still a draft because no test runs Prettier yet. Consider it tacked.</p>
+      <p class="pieces__draft">The hem is pressed: <code>tests/js/prettier.test.mjs</code> runs the real Prettier on a clean and a messy cut in every <code>npm test</code>.</p>
 
       <!-- The mirror: every preset is checked from both sides. -->
       <div class="mirror" data-reveal>
@@ -309,6 +309,7 @@
                 <li><code>laravel-app</code> passes the Laravel presets</li>
                 <li><code>rector-clean</code> is left alone by Rector</li>
                 <li><code>clean-js</code> and <code>clean-ts</code> lint clean</li>
+                <li>a clean JS module and a clean Vue SFC pass Prettier</li>
               </ul>
             </div>
             <div class="mirror__side">
@@ -318,6 +319,7 @@
                 <li><code>raw-nullbug</code>: PHPStan reports the null</li>
                 <li><code>rector-old</code> gets altered</li>
                 <li>an <code>&lt;img&gt;</code> without alt, a <code>v-for</code> without <code>:key</code></li>
+                <li>double quotes and a missing semicolon fail Prettier</li>
               </ul>
             </div>
           </div>
@@ -567,7 +569,7 @@ Output: the files you added or changed, the lint findings grouped by rule, then 
       <div class="try__copy" data-reveal>
         <p class="eyebrow">Real today</p>
         <h2 id="try-title">Try it on</h2>
-        <p>To see the presets work before you add them to an app, clone Pinstripe and run its own checks. <code>composer ci</code> runs Pint, PHPStan, Larastan and Rector against the fixtures, and <code>npm test</code> runs the ESLint presets.</p>
+        <p>To see the presets work before you add them to an app, clone Pinstripe and run its own checks. <code>composer ci</code> runs Pint, PHPStan, Larastan and Rector against the fixtures, and <code>npm test</code> runs the ESLint and Prettier presets.</p>
         <p>The commands are the same on Windows, macOS and Linux. You need PHP 8.3 or newer, Composer, and Node 22.13 or newer.</p>
         <p class="try__next"><span class="try__next-k">On the cutting table next</span> Reading the PHP floor from CREED. <span class="chip-soon">coming soon</span></p>
       </div>
