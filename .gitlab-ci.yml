@@ -27,3 +27,11 @@ composer-ci:
   script:
     - composer install --no-interaction --no-progress --prefer-dist
     - composer ci
+
+# The JS presets run under npm test on Node 22 (package.json engines: >=22.13),
+# so a broken ESLint or Prettier preset fails the pipeline, not just a dev box.
+npm-test:
+  image: node:22
+  script:
+    - npm ci
+    - npm test

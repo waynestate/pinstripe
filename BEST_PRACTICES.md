@@ -6,6 +6,7 @@ without a test is a suit without a mirror: you cannot tell when it has gone wrin
 
 A preset is **Enforced** when a test asserts both directions: a clean fixture passes, and a deliberately broken
 one is caught. The PHP presets run under `composer ci` (PHPUnit); the JavaScript presets run under `npm test`.
+Both run in CI on GitLab and GitHub, so a preset that stops working fails the pipeline before it reaches an app.
 
 | Preset | Tool | Status | Enforced by |
 | --- | --- | --- | --- |
