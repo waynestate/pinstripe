@@ -1,0 +1,2 @@
+includes:
+    - vendor/waynestate/pinstripe/phpstan/laravel.neon
