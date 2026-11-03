@@ -4,6 +4,7 @@ All notable changes to Pinstripe are documented here.
 
 ## Unreleased
 
+- Added: a Node matrix to the `npm-test` jobs on GitLab and GitHub (Node 22, 24 and 26), so the ESLint and Prettier presets are proven on all three majors; the floor stays 22.13.
 - Changed: the front-page deploy layer pins HELMET ^0.3, PROCTOR ^0.4 and CREED ^0.1 (lock: HELMET 0.3.0, PROCTOR 0.4.0, CREED 0.1.6).
 - Changed: CI pins Preflight 0.1.4 (GitLab component includes and the GitHub reusable workflow tag).
 
