@@ -5,6 +5,7 @@ All notable changes to Pinstripe are documented here.
 ## Unreleased
 
 - Added: `docs/adr/0001-phpstan-level-and-baseline-policy.md`, the ADR recording the PHPStan level 8 cut, the baseline policy (generated once for an existing app, never for new code, and only ever shrunk), and the `composer ci` / `composer-ci` pipeline enforcement point, plus a README note that apps adopting Oxlint keep ESLint for `.vue` files because the Vue and accessibility plugins run only in ESLint.
+- Changed: the install instructions now include `composer config allow-plugins.phpstan/extension-installer true`, so a non-interactive install works.
 - Added: a Node matrix to the `npm-test` jobs on GitLab and GitHub (Node 22, 24 and 26), so the ESLint and Prettier presets are proven on all three majors; the floor stays 22.13.
 - Changed: the front-page deploy layer pins HELMET ^0.3, PROCTOR ^0.4 and CREED ^0.1 (lock: HELMET 0.3.0, PROCTOR 0.4.0, CREED 0.1.6).
 - Changed: CI pins Preflight 0.1.4 (GitLab component includes and the GitHub reusable workflow tag).
