@@ -2,6 +2,8 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { readFile } from 'node:fs/promises'
+import * as prettier from 'prettier'
 import { ESLint } from 'eslint'
 
 // Runs the Pinstripe presets through ESLint's Node API (not a shell), so the
@@ -56,4 +58,41 @@ test('javascript preset: a v-for without :key is flagged', async () => {
         ids.includes('vue/require-v-for-key'),
         `expected vue/require-v-for-key, got: ${ids.join(', ')}`,
     )
+})
+
+// The laravel-vue fixture is one app tree with both PHP and Vue files, so the
+// PHP presets (Pint, PHPStan) and the JS presets (ESLint, Prettier) must agree
+// on the same code. These tests cover the Vue side under resources/js.
+test('laravel-vue fixture: the javascript preset accepts App.vue', async () => {
+    const [result] = await lint('eslint/javascript.js', ['tests/fixtures/laravel-vue/resources/js/App.vue'])
+    assert.deepEqual(result.messages, [], result.messages.map((m) => `${m.ruleId}: ${m.message}`).join('\n'))
+})
+
+test('laravel-vue fixture: the typescript preset accepts App.vue', async () => {
+    const [result] = await lint('eslint/typescript.js', ['tests/fixtures/laravel-vue/resources/js/App.vue'])
+    assert.deepEqual(result.messages, [], result.messages.map((m) => `${m.ruleId}: ${m.message}`).join('\n'))
+})
+
+test('laravel-vue fixture: the javascript preset flags bad/Broken.vue with vue/require-v-for-key', async () => {
+    const [result] = await lint('eslint/javascript.js', ['tests/fixtures/laravel-vue/resources/js/bad/Broken.vue'])
+    const ids = ruleIds(result)
+    assert.ok(
+        ids.includes('vue/require-v-for-key'),
+        `expected vue/require-v-for-key, got: ${ids.join(', ')}`,
+    )
+})
+
+test('laravel-vue fixture: the typescript preset flags bad/NoAlt.vue with vuejs-accessibility/alt-text', async () => {
+    const [result] = await lint('eslint/typescript.js', ['tests/fixtures/laravel-vue/resources/js/bad/NoAlt.vue'])
+    const ids = ruleIds(result)
+    assert.ok(
+        ids.includes('vuejs-accessibility/alt-text'),
+        `expected vuejs-accessibility/alt-text, got: ${ids.join(', ')}`,
+    )
+})
+
+test('laravel-vue fixture: App.vue is formatted to the Prettier preset', async () => {
+    const options = JSON.parse(await readFile(path.join(root, 'prettier', 'index.json'), 'utf8'))
+    const source = await readFile(path.join(root, 'tests/fixtures/laravel-vue/resources/js/App.vue'), 'utf8')
+    assert.equal(await prettier.check(source, { ...options, filepath: 'App.vue' }), true)
 })
