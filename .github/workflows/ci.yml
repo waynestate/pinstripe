@@ -20,10 +20,14 @@ jobs:
       php-versions: '["8.3","8.4","8.5"]'
       ci-command: composer ci
 
-  # The JS presets run under npm test on Node 22, the same job as on GitLab.
+  # The JS presets run under npm test on Node 22, 24 and 26, the same job as
+  # on GitLab (the floor stays 22.13, from package.json engines).
   npm-test:
     runs-on: ubuntu-latest
-    container: node:22
+    container: node:${{ matrix.node }}
+    strategy:
+      matrix:
+        node: ['22', '24', '26']
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - run: npm ci
