@@ -11,6 +11,7 @@ Both run in CI on GitLab and GitHub, so a preset that stops working fails the pi
 | Preset | Tool | Status | Enforced by |
 | --- | --- | --- | --- |
 | `pint/per.json` | Pint | Enforced | `PresetsTest::testPintPerPresetAcceptsTheCleanFixture`, `PresetsTest::testPintPerPresetRejectsTheMessyFixture` |
+| `Pint GitLab output` | Pint | Enforced | `PresetsTest::testPintGitlabFormatReportsTheMessyFixtureAsCodeQualityJson`, `PresetsTest::testPintGitlabFormatIsAnEmptyArrayForTheCleanFixture` |
 | `pint/laravel.json` | Pint | Enforced | `PresetsTest::testPintLaravelPresetAcceptsTheLaravelAppFixture` |
 | `pint/per-strict.json` | Pint | Enforced | `PresetsTest::testPintPerStrictPresetAcceptsTheStrictTypesCleanFixture`, `PresetsTest::testPintPerStrictPresetRejectsTheStrictTypesMissingFixture` |
 | `pint/laravel-strict.json` | Pint | Enforced | `PresetsTest::testPintLaravelStrictPresetRejectsTheStrictTypesMissingFixture` |

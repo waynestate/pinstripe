@@ -161,6 +161,67 @@ final class PresetsTest extends TestCase
         $this->assertNotSame(0, $exit, $output);
     }
 
+    public function testPintGitlabFormatReportsTheMessyFixtureAsCodeQualityJson(): void
+    {
+        [$exit, $output] = $this->runCommand([
+            PHP_BINARY,
+            'vendor/bin/pint',
+            '--test',
+            '--config',
+            'pint/per.json',
+            '--format=gitlab',
+            'tests/fixtures/per/messy',
+        ]);
+
+        $this->assertNotSame(0, $exit, $output);
+
+        $start = strpos($output, '[');
+        $end = strrpos($output, ']');
+        $this->assertNotFalse($start, $output);
+        $this->assertNotFalse($end, $output);
+
+        $json = substr($output, $start, $end - $start + 1);
+        $issues = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
+        $this->assertIsArray($issues);
+        $this->assertNotEmpty($issues);
+
+        foreach ($issues as $issue) {
+            $this->assertIsArray($issue);
+            $this->assertArrayHasKey('check_name', $issue);
+            $this->assertArrayHasKey('description', $issue);
+            $this->assertArrayHasKey('fingerprint', $issue);
+            $this->assertArrayHasKey('severity', $issue);
+            $this->assertArrayHasKey('location', $issue);
+            $this->assertIsArray($issue['location']);
+            $this->assertArrayHasKey('path', $issue['location']);
+            $this->assertStringStartsWith('PHP-CS-Fixer.', $issue['check_name']);
+            $this->assertStringEndsWith('Greeter.php', $issue['location']['path']);
+        }
+    }
+
+    public function testPintGitlabFormatIsAnEmptyArrayForTheCleanFixture(): void
+    {
+        [$exit, $output] = $this->runCommand([
+            PHP_BINARY,
+            'vendor/bin/pint',
+            '--test',
+            '--config',
+            'pint/per.json',
+            '--format=gitlab',
+            'tests/fixtures/per/clean',
+        ]);
+
+        $this->assertSame(0, $exit, $output);
+
+        $start = strpos($output, '[');
+        $end = strrpos($output, ']');
+        $this->assertNotFalse($start, $output);
+        $this->assertNotFalse($end, $output);
+
+        $json = substr($output, $start, $end - $start + 1);
+        $this->assertSame('[]', trim($json));
+    }
+
     public function testPintPerStrictPresetAcceptsTheStrictTypesCleanFixture(): void
     {
         [$exit, $output] = $this->runCommand([
