@@ -18,6 +18,7 @@ All notable changes to Pinstripe are documented here.
 - Added: `tests/PackageVersionTest.php`, which fails `composer ci` when the `version` in `package.json` does not match the newest `## X.Y.Z (date)` heading in `CHANGELOG.md` or, on a tag pipeline, the tag itself, so npm can always publish from the tag; `package.json` is now 0.1.1, the version the 0.1.1 tag shipped without.
 - Changed: CI pulls its Docker Hub images through the GitLab Dependency Proxy (the group's CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX), so pipelines no longer hit Docker Hub's anonymous pull limit.
 - Changed: `deploy/composer.json` drops `minimum-stability: dev` (every constraint resolves at stable), and the PROCTOR job for `deploy/` in `.gitlab-ci.yml` drops `allow_failure`, since PROCTOR now passes on `deploy/`.
+- Changed: docs and package metadata name nougat as the canonical repository, with git.wayne.edu and GitHub as read-only mirrors, until git.wayne.edu has CI runners.
 
 ## 0.1.1 (2026-10-29)
 
