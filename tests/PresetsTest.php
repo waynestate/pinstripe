@@ -651,6 +651,43 @@ final class PresetsTest extends TestCase
         $this->assertSame(0, $exit, $output);
     }
 
+    public function testLaravelPresetReportsAnEnvCallOutsideConfig(): void
+    {
+        $fixture = $this->root() . '/tests/fixtures/laravel';
+
+        [$exit, $output] = $this->runInDir([
+            PHP_BINARY,
+            $this->root() . '/vendor/bin/phpstan',
+            'analyse',
+            '-c',
+            'phpstan.neon',
+            '--no-progress',
+            '--error-format=raw',
+            'src/EnvLeak.php',
+        ], $fixture);
+
+        $this->assertNotSame(0, $exit, $output);
+        $this->assertStringContainsString('outside of the config directory', $output);
+    }
+
+    public function testLaravelPresetAcceptsAConfigCallOutsideConfig(): void
+    {
+        $fixture = $this->root() . '/tests/fixtures/laravel';
+
+        [$exit, $output] = $this->runInDir([
+            PHP_BINARY,
+            $this->root() . '/vendor/bin/phpstan',
+            'analyse',
+            '-c',
+            'phpstan.neon',
+            '--no-progress',
+            '--error-format=raw',
+            'src/ConfigRead.php',
+        ], $fixture);
+
+        $this->assertSame(0, $exit, $output);
+    }
+
     /**
      * A temporary Laravel app fixture, installed on first use.
      *
