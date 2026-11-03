@@ -339,6 +339,63 @@ final class PresetsTest extends TestCase
         );
     }
 
+    public function testPhpStanRawConfigReportsAnIgnoreWithoutAComment(): void
+    {
+        // The base cut sets reportIgnoresWithoutComments, so an
+        // @phpstan-ignore with no comment in parentheses fails the run.
+        [$exit, $output] = $this->runInDir([
+            PHP_BINARY,
+            $this->root() . '/vendor/bin/phpstan',
+            'analyse',
+            '-c',
+            $this->root() . '/phpstan/raw.neon',
+            '--no-progress',
+            '--error-format=raw',
+            $this->root() . '/tests/fixtures/raw-ignores/src/NoComment.php',
+        ], $this->root() . '/tests/fixtures/laravel');
+
+        $this->assertNotSame(0, $exit, $output);
+        $this->assertStringContainsString('Ignore with identifier return.type has no comment.', $output);
+    }
+
+    public function testPhpStanRawConfigReportsAnIgnoreThatMatchesNothing(): void
+    {
+        // The base cut sets reportUnmatchedIgnoredErrors, so an
+        // @phpstan-ignore whose identifier matches no error on that line
+        // fails the run.
+        [$exit, $output] = $this->runInDir([
+            PHP_BINARY,
+            $this->root() . '/vendor/bin/phpstan',
+            'analyse',
+            '-c',
+            $this->root() . '/phpstan/raw.neon',
+            '--no-progress',
+            '--error-format=raw',
+            $this->root() . '/tests/fixtures/raw-ignores/src/Unmatched.php',
+        ], $this->root() . '/tests/fixtures/laravel');
+
+        $this->assertNotSame(0, $exit, $output);
+        $this->assertStringContainsString('No error with identifier return.type is reported on line', $output);
+    }
+
+    public function testPhpStanRawConfigAcceptsAnIgnoreWithAComment(): void
+    {
+        // The same ignore with a comment in parentheses is accepted: the
+        // error stays suppressed and the run is clean.
+        [$exit, $output] = $this->runInDir([
+            PHP_BINARY,
+            $this->root() . '/vendor/bin/phpstan',
+            'analyse',
+            '-c',
+            $this->root() . '/phpstan/raw.neon',
+            '--no-progress',
+            '--error-format=raw',
+            $this->root() . '/tests/fixtures/raw-ignores/src/Commented.php',
+        ], $this->root() . '/tests/fixtures/laravel');
+
+        $this->assertSame(0, $exit, $output);
+    }
+
     public function testPhpStanRawConfigAcceptsTheLooseComparisonFixture(): void
     {
         // The base cut leaves `==` alone; only the strict preset calls it out.
