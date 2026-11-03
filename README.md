@@ -82,6 +82,28 @@ Add Composer scripts that run on every OS:
 }
 ```
 
+### Show Pint findings in the merge request
+
+Add a second script that writes the report to a file:
+
+```json
+{
+    "scripts": {
+        "lint:gitlab": "pint --test --config vendor/waynestate/pinstripe/pint/per.json --format=gitlab > pint-codequality.json"
+    }
+}
+```
+
+Point GitLab at the artifact:
+
+```yaml
+artifacts:
+    reports:
+        codequality: pint-codequality.json
+```
+
+`--format=gitlab` writes GitLab's Code Quality JSON and `[]` when the code is clean, and Pinstripe tests both. Chalk marks wash out; these findings stay pinned to the merge request.
+
 `composer lint` fails on style. `composer fix` fixes it. Pint's `per` preset is the PER Coding Style, and `tests/fixtures/per` keeps a clean and a messy proof.
 `composer analyse` runs PHPStan at level 8, with deprecation checks too.
 Pinstripe ships `phpstan/phpstan-deprecation-rules`, loaded automatically by
