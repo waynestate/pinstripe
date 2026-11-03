@@ -156,8 +156,11 @@ No framework. Pint with PER, PHPStan at level 8.
 Install
 
 ```
+composer config allow-plugins.phpstan/extension-installer true
 composer require --dev waynestate/pinstripe:^0.1
 ```
+
+Pinstripe loads its PHPStan rules through `phpstan/extension-installer`, and Composer will not ask when it cannot prompt.
 
 `^0.1` gets you 0.1.2, the current release. Change it when 0.2 ships.
 
@@ -191,8 +194,11 @@ Laravel's Pint preset, and PHPStan with Larastan.
 Install
 
 ```
+composer config allow-plugins.phpstan/extension-installer true
 composer require --dev waynestate/pinstripe:^0.1 larastan/larastan
 ```
+
+Pinstripe loads its PHPStan rules through `phpstan/extension-installer`, and Composer will not ask when it cannot prompt.
 
 phpstan.neon
 
