@@ -4,6 +4,8 @@ All notable changes to Pinstripe are documented here.
 
 ## Unreleased
 
+- Added: `tests/fixtures/laravel-vue`, a combined Laravel + Vue fixture with `resources/js` beside `app/`, so one app tree is linted by Pint and PHPStan (PHP side) and ESLint and Prettier (Vue side) on every run; it carries one planted PHP error (`bad/BrokenGreeting.php`) and two planted Vue defects (`resources/js/bad/Broken.vue` missing a `v-for` key, `resources/js/bad/NoAlt.vue` missing an `alt`), and `tests/js/presets.test.mjs` gains five tests for the Vue side.
+
 ## 0.1.2 (2026-11-03)
 
 - Added: PHPUnit tests for the PHPStan ignore rules in `phpstan/base.neon`, which run the raw preset against three one-class fixtures in `tests/fixtures/raw-ignores` and prove an `@phpstan-ignore` without a comment fails, an ignore that matches no error fails, and a commented ignore passes.
