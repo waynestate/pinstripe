@@ -161,6 +161,62 @@ final class PresetsTest extends TestCase
         $this->assertNotSame(0, $exit, $output);
     }
 
+    public function testPintPerStrictPresetAcceptsTheStrictTypesCleanFixture(): void
+    {
+        [$exit, $output] = $this->runCommand([
+            PHP_BINARY,
+            'vendor/bin/pint',
+            '--test',
+            '--config',
+            'pint/per-strict.json',
+            'tests/fixtures/strict-types/clean',
+        ]);
+
+        $this->assertSame(0, $exit, $output);
+    }
+
+    public function testPintPerStrictPresetRejectsTheStrictTypesMissingFixture(): void
+    {
+        [$exit, $output] = $this->runCommand([
+            PHP_BINARY,
+            'vendor/bin/pint',
+            '--test',
+            '--config',
+            'pint/per-strict.json',
+            'tests/fixtures/strict-types/missing',
+        ]);
+
+        $this->assertNotSame(0, $exit, $output);
+    }
+
+    public function testPintLaravelStrictPresetRejectsTheStrictTypesMissingFixture(): void
+    {
+        [$exit, $output] = $this->runCommand([
+            PHP_BINARY,
+            'vendor/bin/pint',
+            '--test',
+            '--config',
+            'pint/laravel-strict.json',
+            'tests/fixtures/strict-types/missing',
+        ]);
+
+        $this->assertNotSame(0, $exit, $output);
+    }
+
+    public function testPintPlainPerPresetStillAcceptsTheStrictTypesMissingFixture(): void
+    {
+        [$exit, $output] = $this->runCommand([
+            PHP_BINARY,
+            'vendor/bin/pint',
+            '--test',
+            '--config',
+            'pint/per.json',
+            'tests/fixtures/strict-types/missing',
+        ]);
+
+        $this->assertSame(0, $exit, $output);
+    }
+
     public function testPhpStanRawConfigAcceptsTheCleanFixture(): void
     {
         // The package's own vendor carries Larastan (require-dev), which the
@@ -629,5 +685,18 @@ final class PresetsTest extends TestCase
 
         $this->assertSame('per', $per['preset']);
         $this->assertSame('laravel', $laravel['preset']);
+    }
+
+    public function testPintStrictConfigsDeclareTheirPresetsAndTheRuleStrictTypes(): void
+    {
+        $root = $this->root();
+
+        $perStrict = json_decode((string) file_get_contents($root . '/pint/per-strict.json'), true, 512, JSON_THROW_ON_ERROR);
+        $laravelStrict = json_decode((string) file_get_contents($root . '/pint/laravel-strict.json'), true, 512, JSON_THROW_ON_ERROR);
+
+        $this->assertSame('per', $perStrict['preset']);
+        $this->assertSame('laravel', $laravelStrict['preset']);
+        $this->assertTrue($perStrict['rules']['declare_strict_types']);
+        $this->assertTrue($laravelStrict['rules']['declare_strict_types']);
     }
 }
