@@ -4,6 +4,7 @@ All notable changes to Pinstripe are documented here.
 
 ## Unreleased
 
+- Added: a "Tool floors" section in the README with the PHP or Node floor of each locked tool, read verbatim from `composer.lock` and `package-lock.json` and checked by `tests/ToolFloorsTest.php`, so a dependency bump fails `composer ci` until the table is re-cut.
 - Added: `phpstan/laravel.neon` pins Larastan's `noEnvCallsOutsideOfConfig` rule on, with `tests/fixtures/laravel/src/EnvLeak.php` and `tests/fixtures/laravel/src/ConfigRead.php` proving the Laravel preset reports an `env()` call outside `config/` and accepts a `config()` call there.
 - Added: PHPUnit tests for the opt-in strict-types Pint presets, which run the real Pint against clean and missing fixtures for `pint/per-strict.json` and `pint/laravel-strict.json` and assert each strict config declares its preset and the `declare_strict_types` rule.
 - Added: `tests/js/prettier.test.mjs`, which runs the Prettier preset through Prettier's Node API on clean and messy JS and Vue fixtures and on the preset's own options, so `npm test` enforces the preset like the ESLint ones.
