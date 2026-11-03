@@ -21,3 +21,4 @@ Both run in CI on GitLab and GitHub, so a preset that stops working fails the pi
 | `eslint/javascript.js` | ESLint | Enforced | `tests/js/presets.test.mjs` (`npm test`) |
 | `eslint/typescript.js` | ESLint | Enforced | `tests/js/presets.test.mjs` (`npm test`) |
 | `prettier/index.json` | Prettier | Enforced | `tests/js/prettier.test.mjs` (`npm test`) |
+| README "Tool floors" | composer.lock + package-lock.json | Enforced | `ToolFloorsTest::testToolFloorsMatchTheLockFiles` |
