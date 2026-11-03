@@ -287,7 +287,7 @@ Maintainers: how to build, test and release this project, and where its data com
 - eslint-plugin-vue 10.12.0
 - eslint-plugin-vuejs-accessibility 2.6.3
 - typescript-eslint 8.72.1
-- Node 22.13 or newer
+- Node 22, 24 and 26 (the JS presets run in CI on all three; the floor stays 22.13)
 
 ### Tool floors
 
