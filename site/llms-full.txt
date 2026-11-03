@@ -172,7 +172,7 @@ Add scripts that run on every OS:
 ```
 
 `npm run lint` fails on style and accessibility. `npm run format` fixes the layout. The preset is the off-the-rack
-suit: it fits every app, and you only add your own cufflinks.
+suit: it fits every app, and you only add your own cufflinks. If an app adopts Oxlint for speed, ESLint stays in the toolchain for `.vue` files, because Pinstripe's Vue and accessibility rules (eslint-plugin-vue and eslint-plugin-vuejs-accessibility) run only in ESLint.
 
 ### Use it for Rector
 
@@ -273,7 +273,7 @@ vendor/bin/pinstripe-baseline check --against=$CI_MERGE_REQUEST_DIFF_BASE_SHA ph
 ```
 
 A baseline is a tailor's chalk line, and this command is the tape measure: it fails the build the moment the line
-gets longer.
+gets longer. The policy behind this section is recorded in [docs/adr/0001-phpstan-level-and-baseline-policy.md](https://nougat.snu.gs/enterprise-apps/pinstripe/blob/HEAD/docs/adr/0001-phpstan-level-and-baseline-policy.md).
 
 ### Tested with
 
