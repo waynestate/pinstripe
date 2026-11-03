@@ -8,7 +8,7 @@ The README and the Markdown twin of every page, joined. The index is https://pin
 
 ## README
 
-Source: https://github.com/waynestate/pinstripe/blob/HEAD/README.md
+Source: https://nougat.snu.gs/enterprise-apps/pinstripe/blob/HEAD/README.md
 
 ## Pinstripe
 
@@ -24,10 +24,14 @@ PHP version.
 
 Checks: `composer ci` (the same command runs on GitLab and GitHub).
 
-Development happens on Wayne State's GitLab; this repository is a release mirror. Changes land there first.
+### Where the code lives
 
-Front page: [`site/index.html`](https://github.com/waynestate/pinstripe/blob/HEAD/site/index.html), a static tailor's shop you can open in a browser or serve from `site/`.
-On Citadel it is served by the raw-PHP deploy layer in [`deploy/`](https://github.com/waynestate/pinstripe/blob/HEAD/deploy/): a Squire kit whose front controller serves `site/` behind HELMET's security headers. For local development, keep serving `site/` directly.
+The canonical repository is on nougat: [enterprise-apps/pinstripe](https://nougat.snu.gs/enterprise-apps/pinstripe). git.wayne.edu and GitHub ([waynestate/pinstripe](https://github.com/waynestate/pinstripe)) are read-only mirrors of it.
+Open issues and merge requests on nougat, not on the mirrors.
+This moves to git.wayne.edu once it has CI runners. The pinstripes are sewn on nougat; the mirrors are off-the-rack copies.
+
+Front page: [`site/index.html`](https://nougat.snu.gs/enterprise-apps/pinstripe/blob/HEAD/site/index.html), a static tailor's shop you can open in a browser or serve from `site/`.
+On Citadel it is served by the raw-PHP deploy layer in [`deploy/`](https://nougat.snu.gs/enterprise-apps/pinstripe/blob/HEAD/deploy/): a Squire kit whose front controller serves `site/` behind HELMET's security headers. For local development, keep serving `site/` directly.
 
 ### Use it in a raw PHP app
 
@@ -95,6 +99,10 @@ Pinstripe pulls in `phpstan/extension-installer`, which registers Larastan for y
 plugin (`config.allow-plugins` in your `composer.json`). Your `phpstan.neon` includes
 `vendor/waynestate/pinstripe/phpstan/laravel.neon` and nothing else: there is no Larastan line to add, and the
 scripts point at `vendor/waynestate/pinstripe/pint/laravel.json`.
+
+The Laravel preset also rejects `env()` outside `config/`: once the config is cached, `env()` returns null, so
+read config with `config()` instead. The rule is Larastan's, and `phpstan/laravel.neon` pins it on. The
+environment is not a hand-me-down: take the config out of the wardrobe.
 
 Proven on Laravel: `composer ci` lints a minimal Laravel 13 app (`tests/fixtures/laravel-app`) with
 `pint/laravel.json` and analyzes it with `phpstan/laravel.neon` on every run, and fails if the app stops
@@ -226,7 +234,7 @@ gets longer.
 
 ### Tested with
 
-Maintainers: how to build, test and release this project, and where its data comes from, is in [MAINTAINING.md](https://github.com/waynestate/pinstripe/blob/HEAD/MAINTAINING.md).
+Maintainers: how to build, test and release this project, and where its data comes from, is in [MAINTAINING.md](https://nougat.snu.gs/enterprise-apps/pinstripe/blob/HEAD/MAINTAINING.md).
 
 - Pint 1.32.1
 - PHPStan 2.3.3

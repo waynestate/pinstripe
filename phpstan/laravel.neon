@@ -3,3 +3,7 @@
 # no Larastan include line to maintain here.
 includes:
     - base.neon
+parameters:
+    # Larastan ships this rule on by default; pinning it here keeps the
+    # preset reporting env() calls outside config/ if that changes.
+    noEnvCallsOutsideOfConfig: true
