@@ -4,6 +4,8 @@ All notable changes to Pinstripe are documented here.
 
 ## Unreleased
 
+## 0.1.2 (2026-11-03)
+
 - Added: PHPUnit tests for the PHPStan ignore rules in `phpstan/base.neon`, which run the raw preset against three one-class fixtures in `tests/fixtures/raw-ignores` and prove an `@phpstan-ignore` without a comment fails, an ignore that matches no error fails, and a commented ignore passes.
 - Added: PHPUnit tests for Pint's `--format=gitlab` output, which prove the messy `per` fixture becomes a non-empty GitLab Code Quality JSON array and the clean fixture becomes `[]`.
 - Added: a "Tool floors" section in the README with the PHP or Node floor of each locked tool, read verbatim from `composer.lock` and `package-lock.json` and checked by `tests/ToolFloorsTest.php`, so a dependency bump fails `composer ci` until the table is re-cut.
