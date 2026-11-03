@@ -4,6 +4,7 @@ All notable changes to Pinstripe are documented here.
 
 ## Unreleased
 
+- Added: PHPUnit tests for the opt-in strict-types Pint presets, which run the real Pint against clean and missing fixtures for `pint/per-strict.json` and `pint/laravel-strict.json` and assert each strict config declares its preset and the `declare_strict_types` rule.
 - Added: `tests/js/prettier.test.mjs`, which runs the Prettier preset through Prettier's Node API on clean and messy JS and Vue fixtures and on the preset's own options, so `npm test` enforces the preset like the ESLint ones.
 - Added: PHPUnit tests for `pinstripe-baseline check --against=<git-ref>`, which build a throwaway git repository in a temp dir and assert the count at the ref and the exit codes.
 - Added: `npm-test` CI jobs on GitLab and GitHub that run `npm ci` then `npm test` on Node 22, so the ESLint and Prettier presets are covered in CI.
