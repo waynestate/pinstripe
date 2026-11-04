@@ -5,6 +5,10 @@ All notable changes to Pinstripe are documented here.
 ## Unreleased
 
 - Added: a docs site (site/docs/) built by the shared docs builder from docs/, checked in composer ci.
+- Added: `eslint-formatter-gitlab` as a dependency and `tests/js/gitlab-formatter.test.mjs`, which lints the bad Vue fixture with the javascript preset, runs the results through ESLint's `gitlab` formatter, and asserts the Code Quality report is a non-empty JSON array whose findings each carry a description, fingerprint, severity and location, so `eslint --format gitlab` shows ESLint findings in GitLab merge requests; the README gains a "Show ESLint findings in the merge request" note for the Vue section.
+
+## 0.1.3 (2026-11-03)
+
 - Added: `docs/adr/0001-phpstan-level-and-baseline-policy.md`, the ADR recording the PHPStan level 8 cut, the baseline policy (generated once for an existing app, never for new code, and only ever shrunk), and the `composer ci` / `composer-ci` pipeline enforcement point, plus a README note that apps adopting Oxlint keep ESLint for `.vue` files because the Vue and accessibility plugins run only in ESLint.
 - Changed: the install instructions now include `composer config allow-plugins.phpstan/extension-installer true`, so a non-interactive install works.
 - Added: a Node matrix to the `npm-test` jobs on GitLab and GitHub (Node 22, 24 and 26), so the ESLint and Prettier presets are proven on all three majors; the floor stays 22.13.

@@ -61,7 +61,7 @@ composer require --dev waynestate/pinstripe:^0.1
 ```
 
 Pinstripe loads its PHPStan rules through `phpstan/extension-installer`, and Composer will not ask when it cannot prompt.
-Pinstripe 0.1.2 is on Packagist, and the npm package, `@waynestate/pinstripe`, is at 0.1.0.
+Pinstripe 0.1.3 is on Packagist, and the npm package, `@waynestate/pinstripe`, is at 0.1.2.
 
 Point PHPStan at the raw config. `phpstan.neon`:
 
@@ -195,6 +195,34 @@ Add scripts that run on every OS:
 
 `npm run lint` fails on style and accessibility. `npm run format` fixes the layout. The preset is the off-the-rack
 suit: it fits every app, and you only add your own cufflinks. If an app adopts Oxlint for speed, ESLint stays in the toolchain for `.vue` files, because Pinstripe's Vue and accessibility rules (eslint-plugin-vue and eslint-plugin-vuejs-accessibility) run only in ESLint.
+
+### Show ESLint findings in the merge request
+
+Add a second script that uses the gitlab formatter:
+
+```json
+{
+    "scripts": {
+        "lint:gitlab": "eslint . --format gitlab"
+    }
+}
+```
+
+Point GitLab at the artifact:
+
+```yaml
+artifacts:
+    reports:
+        codequality: gl-codequality.json
+```
+
+`--format gitlab` comes from `eslint-formatter-gitlab`, a dependency of Pinstripe, so it resolves from the app's own
+`node_modules` without anything extra to install. In GitLab CI the formatter reads the job's predefined variables:
+`CI_JOB_NAME` picks the job, `CI_PROJECT_DIR` keeps the report's paths relative to the project root, and the report
+path itself is read from that job's `artifacts: reports: codequality:` line in the CI config. When the config lives
+somewhere else (`CI_CONFIG_PATH` is empty or a URL), set `ESLINT_CODE_QUALITY_REPORT` to name the file instead.
+Pinstripe tests the formatter end to end: the bad Vue fixture becomes a non-empty Code Quality report. The chalk
+marks move into the merge request.
 
 ## Use it for Rector
 
