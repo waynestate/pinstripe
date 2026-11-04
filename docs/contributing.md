@@ -5,4 +5,44 @@ description: How to work on Pinstripe.
 
 # Contributing
 
-STUB: this page is written in a later batch.
+This page explains how to build, test and change Pinstripe, and the rules every change must keep.
+
+## Build and test
+
+| Task | Command |
+|---|---|
+| Install | `composer install` |
+| All PHP checks (what CI runs) | `composer ci` |
+| JS preset tests, Windows | `npm ci; npm test` |
+| JS preset tests, Linux and macOS | `npm ci && npm test` |
+
+With only Docker:
+
+```
+docker run --rm -v "${PWD}:/app" -w /app composer:2.10.3 sh -c "composer install --no-interaction && composer ci"
+```
+
+`composer ci` runs `composer validate --strict`, PHPUnit and `composer audit`. The PHPUnit suite is the real check: it installs fixture apps and runs Pint and PHPStan with each preset against planted code, so a preset that stops catching something fails a test. `npm test` (`node --test`) covers the JS presets, and both pipelines run it on Node 22, so a broken ESLint or Prettier preset fails the build too.
+
+## CI
+
+- **GitLab:** Preflight's `php-test` (PHP 8.3, 8.4, 8.5) and `composer-audit` components, plus `composer-ci` and `npm-test` (Node 22) jobs.
+- **GitHub:** `.github/workflows/ci.yml` calls Preflight's reusable workflow with `composer ci`, and runs `npm ci` then `npm test` in a `node:22` container.
+- Green means `composer ci` passed on all three PHP versions and `npm test` passed on Node 22, on both.
+
+## Changing a preset
+
+- A stricter preset breaks consumers' builds. Add the rule with a fixture that proves it, note it in the CHANGELOG, and ship it in a minor version so consumers opt in.
+- Keep the "Tested with" versions in the README in step with what the fixtures actually install.
+- When PHPStan, Pint, Larastan or Rector release a major version, bump the constraint here first and run the full suite.
+
+## Rules a change must keep
+
+Every preset is enforced by a test that runs the real tool against a fixture, so a preset that stops working fails `composer ci` here instead of failing a developer's app. A preset is **Enforced** when a test asserts both directions: a clean fixture passes, and a deliberately broken one is caught. The PHP presets run under `composer ci` (PHPUnit); the JavaScript presets run under `npm test`. Both run in CI on GitLab and GitHub, so a preset that stops working fails the pipeline before it reaches an app.
+
+## Related
+
+- [Best practices](reference/best-practices.md)
+- [Releasing](deploying/releasing.md)
+- [Upgrading](upgrading.md)
+- [Changelog](changelog.md)
