@@ -23,6 +23,8 @@ PHP version.
 
 Checks: `composer ci` (the same command runs on GitLab and GitHub).
 
+Documentation: the docs site is at [`site/docs/index.html`](site/docs/index.html), built from `docs/` by Squire's shared builder and kept current by `composer ci`.
+
 ## Where the code lives
 
 The canonical repository is on nougat: [enterprise-apps/pinstripe](https://nougat.snu.gs/enterprise-apps/pinstripe). git.wayne.edu and GitHub ([waynestate/pinstripe](https://github.com/waynestate/pinstripe)) are read-only mirrors of it.

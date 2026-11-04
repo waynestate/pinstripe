@@ -1,0 +1,97 @@
+{
+  "title": "Pinstripe",
+  "tagline": "Sharp code. Every line.",
+  "items": [
+    {
+      "title": "Getting started",
+      "items": [
+        {
+          "title": "Overview",
+          "path": "index"
+        }
+      ]
+    },
+    {
+      "title": "Guides",
+      "items": [
+        {
+          "title": "Raw PHP apps",
+          "path": "guides/raw-php"
+        },
+        {
+          "title": "Require strict types",
+          "path": "guides/strict-types"
+        },
+        {
+          "title": "Laravel apps",
+          "path": "guides/laravel"
+        },
+        {
+          "title": "Vue",
+          "path": "guides/vue"
+        },
+        {
+          "title": "Rector",
+          "path": "guides/rector"
+        },
+        {
+          "title": "The strict cut",
+          "path": "guides/strict-cut"
+        },
+        {
+          "title": "Adopting on an existing app",
+          "path": "guides/adopting"
+        },
+        {
+          "title": "Baselines only shrink",
+          "path": "guides/baselines"
+        }
+      ]
+    },
+    {
+      "title": "Reference",
+      "items": [
+        {
+          "title": "Tested with and tool floors",
+          "path": "reference/tested-with"
+        },
+        {
+          "title": "Best practices",
+          "path": "reference/best-practices"
+        }
+      ]
+    },
+    {
+      "title": "Deploying",
+      "items": [
+        {
+          "title": "Releasing",
+          "path": "deploying/releasing"
+        }
+      ]
+    },
+    {
+      "title": "Upgrading",
+      "path": "upgrading"
+    },
+    {
+      "title": "Contributing",
+      "path": "contributing"
+    },
+    {
+      "title": "Changelog",
+      "path": "changelog"
+    }
+  ],
+  "source": "https://nougat.snu.gs/enterprise-apps/pinstripe",
+  "mirrors": [
+    {
+      "title": "git.wayne.edu",
+      "url": "https://git.wayne.edu/enterprise-apps/pinstripe"
+    },
+    {
+      "title": "GitHub",
+      "url": "https://github.com/waynestate/pinstripe"
+    }
+  ]
+}
