@@ -58,6 +58,10 @@
         {
           "title": "Best practices",
           "path": "reference/best-practices"
+        },
+        {
+          "title": "ADR-0001: PHPStan level 8 and baselines",
+          "path": "adr/0001-phpstan-level-and-baseline-policy"
         }
       ]
     },
