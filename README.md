@@ -59,7 +59,7 @@ composer require --dev waynestate/pinstripe:^0.1
 ```
 
 Pinstripe loads its PHPStan rules through `phpstan/extension-installer`, and Composer will not ask when it cannot prompt.
-Pinstripe 0.1.2 is on Packagist, and the npm package, `@waynestate/pinstripe`, is at 0.1.0.
+Pinstripe 0.1.3 is on Packagist, and the npm package, `@waynestate/pinstripe`, is at 0.1.2.
 
 Point PHPStan at the raw config. `phpstan.neon`:
 
