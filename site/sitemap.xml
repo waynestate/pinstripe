@@ -2,4 +2,20 @@
 <!-- Written by Squire's agent-ready kit from the pages in the site folder; do not edit. -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://pinstripe.apps.wayne.edu/</loc></url>
+  <url><loc>https://pinstripe.apps.wayne.edu/docs/adr/0001-phpstan-level-and-baseline-policy.html</loc></url>
+  <url><loc>https://pinstripe.apps.wayne.edu/docs/changelog.html</loc></url>
+  <url><loc>https://pinstripe.apps.wayne.edu/docs/contributing.html</loc></url>
+  <url><loc>https://pinstripe.apps.wayne.edu/docs/deploying/releasing.html</loc></url>
+  <url><loc>https://pinstripe.apps.wayne.edu/docs/guides/adopting.html</loc></url>
+  <url><loc>https://pinstripe.apps.wayne.edu/docs/guides/baselines.html</loc></url>
+  <url><loc>https://pinstripe.apps.wayne.edu/docs/guides/laravel.html</loc></url>
+  <url><loc>https://pinstripe.apps.wayne.edu/docs/guides/raw-php.html</loc></url>
+  <url><loc>https://pinstripe.apps.wayne.edu/docs/guides/rector.html</loc></url>
+  <url><loc>https://pinstripe.apps.wayne.edu/docs/guides/strict-cut.html</loc></url>
+  <url><loc>https://pinstripe.apps.wayne.edu/docs/guides/strict-types.html</loc></url>
+  <url><loc>https://pinstripe.apps.wayne.edu/docs/guides/vue.html</loc></url>
+  <url><loc>https://pinstripe.apps.wayne.edu/docs/</loc></url>
+  <url><loc>https://pinstripe.apps.wayne.edu/docs/reference/best-practices.html</loc></url>
+  <url><loc>https://pinstripe.apps.wayne.edu/docs/reference/tested-with.html</loc></url>
+  <url><loc>https://pinstripe.apps.wayne.edu/docs/upgrading.html</loc></url>
 </urlset>

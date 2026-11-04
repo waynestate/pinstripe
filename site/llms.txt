@@ -14,11 +14,29 @@ PHP version.
 
 Checks: `composer ci` (the same command runs on GitLab and GitHub).
 
+Documentation: the docs site is at [`site/docs/index.html`](https://nougat.snu.gs/enterprise-apps/pinstripe/blob/HEAD/site/docs/index.html), built from `docs/` by Squire's shared builder and kept current by `composer ci`.
+
 Every page below is Markdown. The HTML pages send the same Markdown to a client that asks for `text/markdown`. Written by Squire's agent-ready kit from the README and the pages; do not edit.
 
 ## Pages
 
 - [Pinstripe: Sharp code. Every line.](https://pinstripe.apps.wayne.edu/index.md): Pinstripe is the code style for the Wayne State app stack: shared presets for Pint, PHPStan with Larastan, Rector, ESLint and Prettier. Your app runs them locally, and Preflight runs them in CI.
+- [ADR-0001: PHPStan level 8 and baselines that only shrink | Pinstripe docs](https://pinstripe.apps.wayne.edu/docs/adr/0001-phpstan-level-and-baseline-policy.md)
+- [Changelog | Pinstripe docs](https://pinstripe.apps.wayne.edu/docs/changelog.md): All notable changes to this project.
+- [Contributing | Pinstripe docs](https://pinstripe.apps.wayne.edu/docs/contributing.md): How to work on Pinstripe.
+- [Releasing | Pinstripe docs](https://pinstripe.apps.wayne.edu/docs/deploying/releasing.md): How Pinstripe is released.
+- [Adopting on an existing app | Pinstripe docs](https://pinstripe.apps.wayne.edu/docs/guides/adopting.md): How to adopt Pinstripe on an existing app, and why ignore comments must say why.
+- [Baselines only shrink | Pinstripe docs](https://pinstripe.apps.wayne.edu/docs/guides/baselines.md): How baselines work in Pinstripe, and why they only shrink.
+- [Laravel apps | Pinstripe docs](https://pinstripe.apps.wayne.edu/docs/guides/laravel.md): Use the Pinstripe presets in a Laravel app.
+- [Raw PHP apps | Pinstripe docs](https://pinstripe.apps.wayne.edu/docs/guides/raw-php.md): Use the Pinstripe presets in a raw PHP app, including Pint findings in the merge request.
+- [Rector | Pinstripe docs](https://pinstripe.apps.wayne.edu/docs/guides/rector.md): Use the Pinstripe Rector set to modernize code within the current PHP version.
+- [The strict cut | Pinstripe docs](https://pinstripe.apps.wayne.edu/docs/guides/strict-cut.md): What the strict cut adds on top of the base presets.
+- [Require strict types | Pinstripe docs](https://pinstripe.apps.wayne.edu/docs/guides/strict-types.md): How to require declare(strict_types=1) with the Pinstripe presets.
+- [Vue | Pinstripe docs](https://pinstripe.apps.wayne.edu/docs/guides/vue.md): Use the Pinstripe ESLint and Prettier presets for Vue.
+- [Overview | Pinstripe docs](https://pinstripe.apps.wayne.edu/docs/index.md): Pinstripe in one page: what it is, who it is for, and where to go next.
+- [Best practices | Pinstripe docs](https://pinstripe.apps.wayne.edu/docs/reference/best-practices.md): The rules Pinstripe holds itself to, and the tests that prove them.
+- [Tested with and tool floors | Pinstripe docs](https://pinstripe.apps.wayne.edu/docs/reference/tested-with.md): The tool versions Pinstripe is tested with, and the floors each tool needs.
+- [Upgrading | Pinstripe docs](https://pinstripe.apps.wayne.edu/docs/upgrading.md): How to upgrade Pinstripe, version by version.
 
 ## Prompts
 
