@@ -58,6 +58,11 @@ it on Node 22, so a broken ESLint or Prettier preset fails the build too.
 - Keep the "Tested with" versions in the README in step with what the fixtures actually install.
 - When PHPStan, Pint, Larastan or Rector release a major version, bump the constraint here first and run the full
   suite.
+- To update the pinned `prettier-plugin-blade` version, bump the exact version in `package.json` (no caret), run
+  `npm install` so `package-lock.json` follows, and re-run `npm test`; the Blade fixture in `tests/js/blade.test.mjs`
+  proves the new version still formats the clean twin and rejects the messy one. The plugin has a single maintainer,
+  so treat it as a soft dependency: if it breaks or is abandoned, delete the `*.blade.php` entry from `overrides` and
+  the `plugins` line in `prettier/index.json` (Blade files then go back to unformatted) and release a patch.
 
 ## Releasing
 

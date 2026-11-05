@@ -9,6 +9,8 @@ All notable changes to Pinstripe are documented here.
 - Added: `--composer=<path>` to `pinstripe-baseline count` and `check` (default `composer.json` in the current working directory), so tests and monorepos can point at another composer.json.
 - Added: a docs site (site/docs/) built by the shared docs builder from docs/, checked in composer ci.
 - Added: `eslint-formatter-gitlab` as a dependency and `tests/js/gitlab-formatter.test.mjs`, which lints the bad Vue fixture with the javascript preset, runs the results through ESLint's `gitlab` formatter, and asserts the Code Quality report is a non-empty JSON array whose findings each carry a description, fingerprint, severity and location, so `eslint --format gitlab` shows ESLint findings in GitLab merge requests; the README gains a "Show ESLint findings in the merge request" note for the Vue section.
+- Added: `prettier-plugin-blade` (pinned to 3.3.3, no caret) as a dependency and a `*.blade.php` override in `prettier/index.json` (parser `blade`, 4-space tab width), so the Prettier preset formats Blade views; `tests/js/blade.test.mjs` checks a clean and a messy Blade fixture through Prettier's Node API, and the README gains a "Format Blade views" section with the one-time reformat command and an adopting note.
+- Changed: Blade files now format with prettier-plugin-blade; the first run rewrites every Blade file (4-space indent, a space after directive names such as `@vite (`, void tags self-closed), so reformat in its own commit.
 
 ## 0.1.3 (2026-11-03)
 
