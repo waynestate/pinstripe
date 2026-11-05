@@ -21,6 +21,8 @@
     "exports": {
         "./eslint/javascript": "./eslint/javascript.js",
         "./eslint/typescript": "./eslint/typescript.js",
+        "./eslint/javascript-warn": "./eslint/javascript-warn.js",
+        "./eslint/typescript-warn": "./eslint/typescript-warn.js",
         "./prettier": "./prettier/index.json"
     },
     "files": [
