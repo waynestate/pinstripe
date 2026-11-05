@@ -943,7 +943,7 @@ The chalk line stays on the suit, and we take it in every release: nobody in thi
 
 Source: https://pinstripe.apps.wayne.edu/docs/changelog.html
 
-## Changelog | Pinstripe docs
+## Changelog[#](https://pinstripe.apps.wayne.edu/docs/changelog.html#changelog)
 
 All notable changes to Pinstripe are documented here.
 

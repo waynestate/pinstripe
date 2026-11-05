@@ -6,7 +6,7 @@ llms: https://pinstripe.apps.wayne.edu/llms.txt
 generator: Squire agent-ready
 ---
 
-# Changelog | Pinstripe docs
+# Changelog[#](https://pinstripe.apps.wayne.edu/docs/changelog.html#changelog)
 
 All notable changes to Pinstripe are documented here.
 
