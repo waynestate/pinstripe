@@ -388,6 +388,26 @@ final class BaselineTest extends TestCase
         Baseline::requireLegacyFlag($composer);
     }
 
+    public function testAPinstripeExtraWithoutALegacyKeyIsRefusedWithoutAWarning(): void
+    {
+        $dir = $this->tempDir();
+        $composer = $dir . '/composer.json';
+        $this->assertNotFalse(file_put_contents($composer, '{"extra":{"pinstripe":{"other":1}}}'));
+
+        $this->expectException(BaselineException::class);
+        $this->expectExceptionMessage('a baseline is only for apps adopting Pinstripe late');
+
+        set_error_handler(static function (int $severity, string $message, string $file, int $line): bool {
+            throw new \ErrorException($message, 0, $severity, $file, $line);
+        });
+
+        try {
+            Baseline::requireLegacyFlag($composer);
+        } finally {
+            restore_error_handler();
+        }
+    }
+
     public function testRequireLegacyFlagRejectsAMissingComposerFile(): void
     {
         $missing = $this->tempDir() . '/composer.json';
