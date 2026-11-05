@@ -4,6 +4,8 @@ All notable changes to Pinstripe are documented here.
 
 ## Unreleased
 
+- Changed: the ESLint presets (`eslint/javascript.js` and `eslint/typescript.js`) fail lint on every Vue and accessibility finding: rules the plugins' recommended configs report as warnings are raised to errors, so the editor, a local `npm run lint` and CI agree on what fails. Pre-1.0 break: apps that keep the old behavior (those findings as warnings) spread the new `-warn` export instead.
+- Added: `eslint/javascript-warn.js` and `eslint/typescript-warn.js`, exported as `@waynestate/pinstripe/eslint/javascript-warn` and `@waynestate/pinstripe/eslint/typescript-warn`, which keep the exact previous behavior (the plugins' plain recommended configs, warnings stay warnings) for apps adopting the stricter presets gradually; `tests/js/presets.test.mjs` gains four tests around a `tests/js/warn-tier` fixture whose only findings (`vue/attributes-order`, `vue/no-v-html`) were warnings before, proving the strict presets report them as errors and the `-warn` presets keep them as warnings.
 - Added: a docs site (site/docs/) built by the shared docs builder from docs/, checked in composer ci.
 - Added: `eslint-formatter-gitlab` as a dependency and `tests/js/gitlab-formatter.test.mjs`, which lints the bad Vue fixture with the javascript preset, runs the results through ESLint's `gitlab` formatter, and asserts the Code Quality report is a non-empty JSON array whose findings each carry a description, fingerprint, severity and location, so `eslint --format gitlab` shows ESLint findings in GitLab merge requests; the README gains a "Show ESLint findings in the merge request" note for the Vue section.
 

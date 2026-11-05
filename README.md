@@ -193,8 +193,26 @@ Add scripts that run on every OS:
 }
 ```
 
-`npm run lint` fails on style and accessibility. `npm run format` fixes the layout. The preset is the off-the-rack
-suit: it fits every app, and you only add your own cufflinks. If an app adopts Oxlint for speed, ESLint stays in the toolchain for `.vue` files, because Pinstripe's Vue and accessibility rules (eslint-plugin-vue and eslint-plugin-vuejs-accessibility) run only in ESLint.
+`npm run lint` fails on style and accessibility, and on every Vue and accessibility finding: where the plugins'
+recommended configs report a rule as a warning, Pinstripe reports it as an error, so the editor, a local run and CI
+all agree on what fails. `npm run format` fixes the layout. The preset is the off-the-rack suit: it fits every app,
+and you only add your own cufflinks. If an app adopts Oxlint for speed, ESLint stays in the toolchain for `.vue`
+files, because Pinstripe's Vue and accessibility rules (eslint-plugin-vue and eslint-plugin-vuejs-accessibility) run
+only in ESLint.
+
+### Adopt gradually with the -warn presets
+
+An app that cannot fix every finding in one cut keeps the old behavior with the `-warn` twin of the preset: the same
+rules with the plugins' original severities, so findings that were warnings stay warnings.
+
+```js
+import pinstripe from '@waynestate/pinstripe/eslint/javascript-warn'
+
+export default [...pinstripe]
+```
+
+For TypeScript, import `@waynestate/pinstripe/eslint/typescript-warn` instead. Once the codebase is clean, switch
+the import back to the strict preset, and every Vue and accessibility finding fails lint.
 
 ### Show ESLint findings in the merge request
 
