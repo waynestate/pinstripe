@@ -104,7 +104,7 @@ final class Baseline
 
         $extra = is_array($decoded) ? ($decoded['extra'] ?? null) : null;
         $pinstripe = is_array($extra) ? ($extra['pinstripe'] ?? null) : null;
-        if (!is_array($pinstripe) || $pinstripe['legacy'] !== true) {
+        if (!is_array($pinstripe) || ($pinstripe['legacy'] ?? null) !== true) {
             throw new BaselineException(
                 $composerJsonPath
                 . ': a baseline is only for apps adopting Pinstripe late.'
