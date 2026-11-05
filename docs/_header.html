@@ -1,0 +1,24 @@
+<!--
+  The docs pages wear the front page's header (site/index.html, .site-header). The docs builder puts the header
+  element below in place of its generic one on every page, rewrites the relative links (written as if from site/)
+  to the page's depth, fills {{version}} and marks the Docs link aria-current. Styles: docs/theme/pinstripe.css.
+  Keep the links in step with the front page's nav. The brand goes home here (on the front page it goes to #main).
+  The tape is drawn by the theme CSS, not here: a tailor never sews the tape onto the suit.
+-->
+<header class="site-header">
+  <div class="site-header__row">
+    <a class="brand" href="index.html">
+      <img src="brand/pinstripe-avatar-256.png" width="34" height="34" alt="">
+      <span class="brand__name">Pinstripe</span>
+    </a>
+    <nav class="site-nav" aria-label="Site">
+      <a href="index.html#fitting">The fitting</a>
+      <a href="index.html#pieces">The pieces</a>
+      <a href="index.html#measure">Made to measure</a>
+      <a href="index.html#agents">Agents</a>
+      <a href="index.html#try">Try it on</a>
+      <a href="docs/index.html">Docs</a>
+    </nav>
+    <span class="size-label"><span class="size-label__k">size</span> {{version}}</span>
+  </div>
+</header>
