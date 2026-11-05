@@ -4,6 +4,8 @@ All notable changes to Pinstripe are documented here.
 
 ## Unreleased
 
+- Changed: `pinstripe-baseline` now requires the app's composer.json to carry `"extra": { "pinstripe": { "legacy": true } }` before it counts or checks a baseline; this is breaking for existing baseline users, who must add the flag, because a baseline is only for apps adopting Pinstripe late and new apps never set it.
+- Added: `--composer=<path>` to `pinstripe-baseline count` and `check` (default `composer.json` in the current working directory), so tests and monorepos can point at another composer.json.
 - Added: a docs site (site/docs/) built by the shared docs builder from docs/, checked in composer ci.
 - Added: `eslint-formatter-gitlab` as a dependency and `tests/js/gitlab-formatter.test.mjs`, which lints the bad Vue fixture with the javascript preset, runs the results through ESLint's `gitlab` formatter, and asserts the Code Quality report is a non-empty JSON array whose findings each carry a description, fingerprint, severity and location, so `eslint --format gitlab` shows ESLint findings in GitLab merge requests; the README gains a "Show ESLint findings in the merge request" note for the Vue section.
 

@@ -74,6 +74,47 @@ final class Baseline
     }
 
     /**
+     * Require the app to have opted in to a PHPStan baseline.
+     *
+     * A baseline is only for apps adopting Pinstripe late, and they say so
+     * in their composer.json: "extra": { "pinstripe": { "legacy": true } }.
+     * The flag must be boolean true; the string "true" does not count.
+     */
+    public static function requireLegacyFlag(string $composerJsonPath): void
+    {
+        if (!is_file($composerJsonPath)) {
+            throw new BaselineException(
+                'no composer.json at ' . $composerJsonPath
+                . '; run pinstripe-baseline from the app root so it can find the legacy flag.'
+            );
+        }
+
+        $contents = file_get_contents($composerJsonPath);
+        if ($contents === false) {
+            throw new BaselineException(
+                'no composer.json at ' . $composerJsonPath
+                . '; run pinstripe-baseline from the app root so it can find the legacy flag.'
+            );
+        }
+
+        $decoded = json_decode($contents, true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            throw new BaselineException($composerJsonPath . ' is not valid JSON.');
+        }
+
+        $extra = is_array($decoded) ? ($decoded['extra'] ?? null) : null;
+        $pinstripe = is_array($extra) ? ($extra['pinstripe'] ?? null) : null;
+        if (!is_array($pinstripe) || $pinstripe['legacy'] !== true) {
+            throw new BaselineException(
+                $composerJsonPath
+                . ': a baseline is only for apps adopting Pinstripe late.'
+                . ' Add "extra": { "pinstripe": { "legacy": true } } to composer.json to opt in;'
+                . ' new apps never set it.'
+            );
+        }
+    }
+
+    /**
      * @return array<string, mixed>
      */
     private static function decode(string $contents, string $label): array

@@ -11,9 +11,14 @@ declare(strict_types=1);
  * every release you take it in, never let it out. This command is the tape
  * measure that notices when somebody lets it out.
  *
+ * A baseline is only for apps adopting Pinstripe late, and they say so in
+ * their composer.json: "extra": { "pinstripe": { "legacy": true } }. Every
+ * command checks that flag before it reads the baseline; new apps never set
+ * it, and a missing flag is a usage error.
+ *
  * Usage:
- *   pinstripe-baseline count [phpstan-baseline.neon]
- *   pinstripe-baseline check [--max=<n>] [--against=<git-ref>] [phpstan-baseline.neon]
+ *   pinstripe-baseline count [--composer=<path>] [phpstan-baseline.neon]
+ *   pinstripe-baseline check [--max=<n>] [--against=<git-ref>] [--composer=<path>] [phpstan-baseline.neon]
  *
  * Exit codes: 0 ok, 1 the baseline grew, 2 usage or baseline problem.
  */
@@ -31,8 +36,8 @@ use WayneState\Pinstripe\BaselineException;
 
 function pinstripe_baseline_usage(): never
 {
-    fwrite(STDERR, "usage: pinstripe-baseline count [phpstan-baseline.neon]\n");
-    fwrite(STDERR, "       pinstripe-baseline check [--max=<n>] [--against=<git-ref>] [phpstan-baseline.neon]\n");
+    fwrite(STDERR, "usage: pinstripe-baseline count [--composer=<path>] [phpstan-baseline.neon]\n");
+    fwrite(STDERR, "       pinstripe-baseline check [--max=<n>] [--against=<git-ref>] [--composer=<path>] [phpstan-baseline.neon]\n");
     exit(2);
 }
 
@@ -53,6 +58,7 @@ $rest = array_slice($arguments, 1);
 $path = 'phpstan-baseline.neon';
 $max = null;
 $against = null;
+$composer = 'composer.json';
 
 foreach ($rest as $argument) {
     if ($command === 'check' && str_starts_with($argument, '--max=')) {
@@ -67,6 +73,12 @@ foreach ($rest as $argument) {
             pinstripe_baseline_fail('error: --against expects a git ref.');
         }
         $against = $value;
+    } elseif (str_starts_with($argument, '--composer=')) {
+        $value = substr($argument, strlen('--composer='));
+        if ($value === '') {
+            pinstripe_baseline_fail('error: --composer expects a path to composer.json.');
+        }
+        $composer = $value;
     } elseif (str_starts_with($argument, '--')) {
         pinstripe_baseline_usage();
     } else {
@@ -77,6 +89,7 @@ foreach ($rest as $argument) {
 switch ($command) {
     case 'count':
         try {
+            Baseline::requireLegacyFlag($composer);
             echo Baseline::countFile($path), "\n";
         } catch (BaselineException $exception) {
             pinstripe_baseline_fail($exception->getMessage());
@@ -89,6 +102,7 @@ switch ($command) {
         }
 
         try {
+            Baseline::requireLegacyFlag($composer);
             $count = Baseline::countFile($path);
 
             if ($max !== null && $count > $max) {

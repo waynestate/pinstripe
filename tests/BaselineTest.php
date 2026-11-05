@@ -9,6 +9,7 @@ use PHPUnit\Framework\TestCase;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use WayneState\Pinstripe\Baseline;
+use WayneState\Pinstripe\BaselineException;
 use WayneState\Pinstripe\BaselineNotFoundException;
 
 /**
@@ -118,15 +119,58 @@ final class BaselineTest extends TestCase
     }
 
     /**
-     * Create a throwaway git repository in a temp dir and return its path.
-     * The repository is local only: no remote, no network.
+     * Create a temp dir under sys_get_temp_dir(), tracked for removal in
+     * tearDown, and return its path.
      */
-    private function createRepo(): string
+    private function tempDir(): string
     {
         $dir = sys_get_temp_dir() . '/pinstripe-baseline-' . bin2hex(random_bytes(4));
         $this->assertTrue(mkdir($dir), 'could not create the temp dir ' . $dir);
 
         $this->tempDirs[] = $dir;
+
+        return $dir;
+    }
+
+    /**
+     * Write a composer.json into $dir with extra.pinstripe.legacy set to
+     * $legacy, and return its path. A null $legacy omits the extra key.
+     */
+    private function writeComposer(string $dir, mixed $legacy): string
+    {
+        $composer = ['name' => 'wayne-state/test-app'];
+        if ($legacy !== null) {
+            $composer['extra'] = [
+                'pinstripe' => [
+                    'legacy' => $legacy,
+                ],
+            ];
+        }
+
+        $path = $dir . '/composer.json';
+        $this->assertNotFalse(
+            file_put_contents($path, json_encode($composer, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . "\n")
+        );
+
+        return $path;
+    }
+
+    /**
+     * Write a composer.json with the Pinstripe legacy flag into $dir and
+     * return its path.
+     */
+    private function writeLegacyComposer(string $dir): string
+    {
+        return $this->writeComposer($dir, true);
+    }
+
+    /**
+     * Create a throwaway git repository in a temp dir and return its path.
+     * The repository is local only: no remote, no network.
+     */
+    private function createRepo(): string
+    {
+        $dir = $this->tempDir();
 
         $this->gitRun($dir, ['init', '-q']);
         $this->gitRun($dir, ['config', 'user.name', 'Pinstripe test']);
@@ -207,7 +251,9 @@ final class BaselineTest extends TestCase
 
     public function testScriptPrintsTheCount(): void
     {
-        [$exit, $output] = $this->runScript(['count', 'tests/fixtures/baseline/phpstan-baseline.neon']);
+        $composer = $this->writeLegacyComposer($this->tempDir());
+
+        [$exit, $output] = $this->runScript(['count', '--composer=' . $composer, 'tests/fixtures/baseline/phpstan-baseline.neon']);
 
         $this->assertSame(0, $exit, $output);
         $this->assertSame("6\n", $output);
@@ -215,7 +261,9 @@ final class BaselineTest extends TestCase
 
     public function testScriptExitsTwoWhenTheBaselineIsMissing(): void
     {
-        [$exit, $output] = $this->runScript(['count', 'tests/fixtures/baseline/nope.neon']);
+        $composer = $this->writeLegacyComposer($this->tempDir());
+
+        [$exit, $output] = $this->runScript(['count', '--composer=' . $composer, 'tests/fixtures/baseline/nope.neon']);
 
         $this->assertSame(2, $exit, $output);
         $this->assertStringContainsString('baseline file not found', $output);
@@ -223,14 +271,18 @@ final class BaselineTest extends TestCase
 
     public function testCheckPassesWhenTheCountIsWithinTheLimit(): void
     {
-        [$exit, $output] = $this->runScript(['check', '--max=6', 'tests/fixtures/baseline/phpstan-baseline.neon']);
+        $composer = $this->writeLegacyComposer($this->tempDir());
+
+        [$exit, $output] = $this->runScript(['check', '--max=6', '--composer=' . $composer, 'tests/fixtures/baseline/phpstan-baseline.neon']);
 
         $this->assertSame(0, $exit, $output);
     }
 
     public function testCheckFailsWhenTheCountExceedsTheLimit(): void
     {
-        [$exit, $output] = $this->runScript(['check', '--max=5', 'tests/fixtures/baseline/phpstan-baseline.neon']);
+        $composer = $this->writeLegacyComposer($this->tempDir());
+
+        [$exit, $output] = $this->runScript(['check', '--max=5', '--composer=' . $composer, 'tests/fixtures/baseline/phpstan-baseline.neon']);
 
         $this->assertSame(1, $exit, $output);
         $this->assertSame("baseline grew: 6 errors, the most allowed is 5\n", $output);
@@ -265,6 +317,7 @@ final class BaselineTest extends TestCase
         $rewritten = "parameters:\n    ignoreErrors:\n        - message: '#^Pinstripe test error one$#'\n"
             . "        - message: '#^Pinstripe test error two$#'\n";
         $this->assertNotFalse(file_put_contents($dir . '/phpstan-baseline.neon', $rewritten));
+        $this->writeLegacyComposer($dir);
 
         [$exit, $output] = $this->runScript(['check', '--against=' . $sha, 'phpstan-baseline.neon'], $dir);
 
@@ -276,6 +329,7 @@ final class BaselineTest extends TestCase
         $dir = $this->createRepo();
         $sha = $this->commitFile($dir, 'phpstan-baseline.neon', $this->neonBaseline(2));
         $this->assertNotFalse(file_put_contents($dir . '/phpstan-baseline.neon', $this->neonBaseline(5)));
+        $this->writeLegacyComposer($dir);
 
         [$exit, $output] = $this->runScript(['check', '--against=' . $sha, 'phpstan-baseline.neon'], $dir);
 
@@ -287,10 +341,103 @@ final class BaselineTest extends TestCase
     {
         $dir = $this->createRepo();
         $this->commitFile($dir, 'phpstan-baseline.neon', $this->neonBaseline(2));
+        $this->writeLegacyComposer($dir);
 
         [$exit, $output] = $this->runScript(['check', '--against=no-such-ref', 'phpstan-baseline.neon'], $dir);
 
         $this->assertSame(2, $exit, $output);
         $this->assertStringContainsString('could not read phpstan-baseline.neon at no-such-ref', $output);
+    }
+
+    public function testRequireLegacyFlagPassesWhenTheFlagIsTrue(): void
+    {
+        $composer = $this->writeLegacyComposer($this->tempDir());
+
+        Baseline::requireLegacyFlag($composer);
+
+        $this->addToAssertionCount(1);
+    }
+
+    public function testRequireLegacyFlagRejectsAFalsyFlag(): void
+    {
+        $composer = $this->writeComposer($this->tempDir(), false);
+
+        $this->expectException(BaselineException::class);
+        $this->expectExceptionMessage('a baseline is only for apps adopting Pinstripe late');
+
+        Baseline::requireLegacyFlag($composer);
+    }
+
+    public function testRequireLegacyFlagRejectsTheStringTrue(): void
+    {
+        $composer = $this->writeComposer($this->tempDir(), 'true');
+
+        $this->expectException(BaselineException::class);
+        $this->expectExceptionMessage('a baseline is only for apps adopting Pinstripe late');
+
+        Baseline::requireLegacyFlag($composer);
+    }
+
+    public function testRequireLegacyFlagRejectsAMissingExtraKey(): void
+    {
+        $composer = $this->writeComposer($this->tempDir(), null);
+
+        $this->expectException(BaselineException::class);
+        $this->expectExceptionMessage('a baseline is only for apps adopting Pinstripe late');
+
+        Baseline::requireLegacyFlag($composer);
+    }
+
+    public function testRequireLegacyFlagRejectsAMissingComposerFile(): void
+    {
+        $missing = $this->tempDir() . '/composer.json';
+
+        $this->expectException(BaselineException::class);
+        $this->expectExceptionMessage('no composer.json at ' . $missing . '; run pinstripe-baseline from the app root so it can find the legacy flag.');
+
+        Baseline::requireLegacyFlag($missing);
+    }
+
+    public function testRequireLegacyFlagRejectsInvalidJson(): void
+    {
+        $composer = $this->tempDir() . '/composer.json';
+        $this->assertNotFalse(file_put_contents($composer, 'not json at all'));
+
+        $this->expectException(BaselineException::class);
+        $this->expectExceptionMessage($composer . ' is not valid JSON.');
+
+        Baseline::requireLegacyFlag($composer);
+    }
+
+    public function testScriptCountExitsTwoWithoutTheLegacyFlag(): void
+    {
+        $dir = $this->tempDir();
+        $composer = $this->writeComposer($dir, false);
+
+        [$exit, $output] = $this->runScript(['count', '--composer=' . $composer, 'tests/fixtures/baseline/phpstan-baseline.neon']);
+
+        $this->assertSame(2, $exit, $output);
+        $this->assertStringContainsString('"legacy": true', $output);
+    }
+
+    public function testScriptCountExitsTwoWhenTheComposerFileIsMissing(): void
+    {
+        $missing = $this->tempDir() . '/composer.json';
+
+        [$exit, $output] = $this->runScript(['count', '--composer=' . $missing, 'tests/fixtures/baseline/phpstan-baseline.neon']);
+
+        $this->assertSame(2, $exit, $output);
+        $this->assertStringContainsString('no composer.json at ' . $missing, $output);
+    }
+
+    public function testScriptCheckExitsTwoWithoutTheLegacyFlag(): void
+    {
+        $dir = $this->tempDir();
+        $composer = $this->writeComposer($dir, false);
+
+        [$exit, $output] = $this->runScript(['check', '--max=6', '--composer=' . $composer, 'tests/fixtures/baseline/phpstan-baseline.neon']);
+
+        $this->assertSame(2, $exit, $output);
+        $this->assertStringContainsString('"legacy": true', $output);
     }
 }
