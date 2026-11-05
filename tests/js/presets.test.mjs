@@ -96,3 +96,47 @@ test('laravel-vue fixture: App.vue is formatted to the Prettier preset', async (
     const source = await readFile(path.join(root, 'tests/fixtures/laravel-vue/resources/js/App.vue'), 'utf8')
     assert.equal(await prettier.check(source, { ...options, filepath: 'App.vue' }), true)
 })
+
+// The warn-tier fixture violates only rules that the plugins' plain
+// recommended configs reported as warnings: vue/attributes-order and
+// vue/no-v-html. The strict presets must raise them to errors; the -warn
+// presets must keep them as warnings.
+const warnTierFixture = 'tests/js/warn-tier/App.vue'
+const warnTierRules = ['vue/attributes-order', 'vue/no-v-html']
+
+/** @param {import('eslint').ESLintResult} result */
+function describeMessages(result) {
+    return result.messages.map((m) => `${m.ruleId} (severity ${m.severity}): ${m.message}`).join('\n')
+}
+
+test('javascript preset: the warn-tier fixture is flagged, every message an error', async () => {
+    const [result] = await lint('eslint/javascript.js', [warnTierFixture])
+    assert.deepEqual(ruleIds(result).sort(), warnTierRules, describeMessages(result))
+    for (const message of result.messages) {
+        assert.equal(message.severity, 2, `${message.ruleId} should be an error: ${message.message}`)
+    }
+    assert.ok(result.errorCount > 0, describeMessages(result))
+})
+
+test('typescript preset: the warn-tier fixture is flagged, every message an error', async () => {
+    const [result] = await lint('eslint/typescript.js', [warnTierFixture])
+    assert.deepEqual(ruleIds(result).sort(), warnTierRules, describeMessages(result))
+    for (const message of result.messages) {
+        assert.equal(message.severity, 2, `${message.ruleId} should be an error: ${message.message}`)
+    }
+    assert.ok(result.errorCount > 0, describeMessages(result))
+})
+
+test('javascript-warn preset: the warn-tier fixture stays all warnings', async () => {
+    const [result] = await lint('eslint/javascript-warn.js', [warnTierFixture])
+    assert.deepEqual(ruleIds(result).sort(), warnTierRules, describeMessages(result))
+    assert.equal(result.errorCount, 0, describeMessages(result))
+    assert.ok(result.warningCount > 0, describeMessages(result))
+})
+
+test('typescript-warn preset: the warn-tier fixture stays all warnings', async () => {
+    const [result] = await lint('eslint/typescript-warn.js', [warnTierFixture])
+    assert.deepEqual(ruleIds(result).sort(), warnTierRules, describeMessages(result))
+    assert.equal(result.errorCount, 0, describeMessages(result))
+    assert.ok(result.warningCount > 0, describeMessages(result))
+})
