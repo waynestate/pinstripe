@@ -9,6 +9,7 @@ All notable changes to Pinstripe are documented here.
 
 ## Unreleased
 
+- Changed: the docs pages wear the front page's look: its header and main menu (Docs marked current), Bodoni titles with the gold chalk line, pattern-piece callouts and pager, the gold Copy pill and the green footer, plus a dark mode cut from the green cloth. The theme lives in `docs/_header.html` and `docs/theme/pinstripe.css`, named by the `theme` key in `docs/docs.json`; the vendored docs builder and kit are synced from Squire's unified builder (theme hook, callouts, copy button and keyboard fixes).
 - Added: `min-release-age=3` to the repo `.npmrc` beside the existing `ignore-scripts=true`, with a comment naming the unit (days) and the agreeing Renovate `minimumReleaseAge` rule, so npm waits 3 days before installing a freshly published release and never runs dependency lifecycle scripts; the README gains a "Supply chain" section that explains both settings and tells apps to copy both lines into their own `.npmrc`.
 - Changed: `pinstripe-baseline` now requires the app's composer.json to carry `"extra": { "pinstripe": { "legacy": true } }` before it counts or checks a baseline; this is breaking for existing baseline users, who must add the flag, because a baseline is only for apps adopting Pinstripe late and new apps never set it.
 - Added: `--composer=<path>` to `pinstripe-baseline count` and `check` (default `composer.json` in the current working directory), so tests and monorepos can point at another composer.json.
