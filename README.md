@@ -23,7 +23,7 @@ PHP version.
 
 Checks: `composer ci` (the same command runs on GitLab and GitHub).
 
-Documentation: the docs site is at [`site/docs/index.html`](site/docs/index.html), built from `docs/` by Squire's shared builder and kept current by `composer ci`.
+Documentation: the docs site is at [`site/docs/index.html`](site/docs/index.html), built from `docs/` by Squire's shared builder and kept current by `composer ci`. The pages wear the front page's look through `docs/_header.html` and `docs/theme/pinstripe.css`: edit those two files, never the vendored kit.
 
 ## Where the code lives
 
