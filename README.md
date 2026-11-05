@@ -299,6 +299,28 @@ tailor.
 Pinstripe ships `pinstripe-baseline`, one PHP command that runs on every OS, to keep that promise. It reads both
 the NEON baseline and the PHP format (`phpstan-baseline.php`).
 
+A baseline is only for apps adopting Pinstripe late; new apps never set it. The app opts in from its own
+`composer.json`:
+
+```json
+{
+    "extra": {
+        "pinstripe": {
+            "legacy": true
+        }
+    }
+}
+```
+
+Every command checks the flag before it reads the baseline. Without it, `pinstripe-baseline` exits 2 with:
+
+```
+composer.json: a baseline is only for apps adopting Pinstripe late. Add "extra": { "pinstripe": { "legacy": true } } to composer.json to opt in; new apps never set it.
+```
+
+In a monorepo, point the command at another composer.json with `--composer=<path>` (default: `composer.json` in the
+current working directory).
+
 ```
 vendor/bin/pinstripe-baseline count phpstan-baseline.neon
 ```
