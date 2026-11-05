@@ -224,6 +224,44 @@ somewhere else (`CI_CONFIG_PATH` is empty or a URL), set `ESLINT_CODE_QUALITY_RE
 Pinstripe tests the formatter end to end: the bad Vue fixture becomes a non-empty Code Quality report. The chalk
 marks move into the merge request.
 
+## Format Blade views
+
+Pinstripe's Prettier preset formats Blade templates too. It loads `prettier-plugin-blade`, a third-party Prettier
+plugin that Pinstripe depends on and pins to an exact version (3.3.3 today), so the Blade rules travel with the preset
+and cannot drift. An app that points Prettier at the preset gets Blade formatting with no extra install: Prettier
+resolves the `plugins` entry relative to the config file's package, and the plugin is a dependency of
+`@waynestate/pinstripe`, so the bare name resolves from any app that extends this config.
+
+The preset adds an override for `*.blade.php` that sets the `blade` parser and a 4-space tab width. The first time you
+run Prettier over an app, every Blade file changes once: the indent becomes 4 spaces, a space goes after directive
+names (`@vite (` instead of `@vite(`), and void tags self-close (`<input>` becomes `<input />`). That is a one-time
+reformat, not a recurring change.
+
+To reformat an existing app's views in one go:
+
+```
+npx prettier --write "resources/views/**/*.blade.php"
+```
+
+### Adopting
+
+Do the reformat as its own commit, with nothing else in it, so the churn is easy to review and easy to back out. Then
+list that commit's hash in `.git-blame-ignore-revs` so `git blame` skips the reformat and stays useful:
+
+```
+# .git-blame-ignore-revs
+# One hash per line; blank lines and # comments are ignored.
+a1b2c3d4e5f60718293a4b5c6d7e8f9012345678
+```
+
+and tell git to read it:
+
+```
+git config blame.ignoreRevsFile .git-blame-ignore-revs
+```
+
+With that in place, blame points at the person who last changed a line's meaning, not at the reformat.
+
 ## Use it for Rector
 
 Rector modernises code for the PHP version your app already supports. Add it as a dev dependency:
