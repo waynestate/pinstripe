@@ -4,6 +4,7 @@ All notable changes to Pinstripe are documented here.
 
 ## Unreleased
 
+- Added: `min-release-age=3` to the repo `.npmrc` beside the existing `ignore-scripts=true`, with a comment naming the unit (days) and the agreeing Renovate `minimumReleaseAge` rule, so npm waits 3 days before installing a freshly published release and never runs dependency lifecycle scripts; the README gains a "Supply chain" section that explains both settings and tells apps to copy both lines into their own `.npmrc`.
 - Added: a docs site (site/docs/) built by the shared docs builder from docs/, checked in composer ci.
 - Added: `eslint-formatter-gitlab` as a dependency and `tests/js/gitlab-formatter.test.mjs`, which lints the bad Vue fixture with the javascript preset, runs the results through ESLint's `gitlab` formatter, and asserts the Code Quality report is a non-empty JSON array whose findings each carry a description, fingerprint, severity and location, so `eslint --format gitlab` shows ESLint findings in GitLab merge requests; the README gains a "Show ESLint findings in the merge request" note for the Vue section.
 

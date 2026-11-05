@@ -372,6 +372,17 @@ Node tools:
 
 Measure twice, cut once: these floors are cut from the lock files, and the test keeps the hem honest.
 
+## Supply chain
+
+Pinstripe's own installs are hardened in the repo's `.npmrc`, and apps should copy both lines into their own `.npmrc`:
+
+```
+ignore-scripts=true
+min-release-age=3
+```
+
+`ignore-scripts=true` stops npm from running any lifecycle script (`preinstall`, `install`, `postinstall`) while installing dependencies, so a package cannot execute code merely by being installed. `min-release-age=3` makes npm refuse to install a release published fewer than 3 days ago, leaving time to pull a compromised publish before it reaches a lockfile. The stack's Renovate `minimumReleaseAge` rule waits the same 3 days before updating, so the two guards agree. New cloth rests on the rail for three days before it is cut.
+
 ## Coming next
 
 Reading the PHP floor from CREED. (Preflight's pint, phpstan and eslint jobs already run your app's Pinstripe config.)
