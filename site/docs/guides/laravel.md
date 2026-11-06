@@ -23,6 +23,8 @@ Note
 
 Pinstripe loads its PHPStan rules through `phpstan/extension-installer`, and Composer will not ask when it cannot prompt. Pinstripe pulls in `phpstan/extension-installer`, which registers Larastan for you. When Composer asks, allow the plugin (`config.allow-plugins` in your `composer.json`).
 
+If Composer stops because a package your app already locks (often an older PHPStan) does not fit, run the same `composer require` again with `-W`, as Composer suggests, so it may update that package too.
+
 ## Configure[#](https://pinstripe.apps.wayne.edu/docs/guides/laravel.html#configure)
 
 Your `phpstan.neon` includes `vendor/waynestate/pinstripe/phpstan/laravel.neon` and nothing else: there is no Larastan line to add, and the scripts point at `vendor/waynestate/pinstripe/pint/laravel.json`.

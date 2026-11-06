@@ -12,6 +12,9 @@ All notable changes to Pinstripe are documented here.
 
 ## Unreleased[#](https://pinstripe.apps.wayne.edu/docs/changelog.html#unreleased)
 
+- Fixed: `pinstripe-baseline` mutes deprecations while it loads the app's autoloader, so an old package in the app no longer prints PHP warnings ahead of the count a script reads (found by the 2026-11-05 proof run; new test in tests/BaselineTest.php).
+- Added: a public Proof page (`docs/reference/proof.md`, under Reference): the presets run against 82 Wayne State applications, what held, what the run caught in Pinstripe, and what it does not prove.
+- Docs: the install steps say to rerun `composer require` with `-W` when a package the app already locks blocks it; Adopting on an existing app covers errors PHPStan cannot baseline and keeping Pint off bundled third-party code.
 - Security: the front-page deploy layer moves to Symfony 7.4.23 (symfony/http-foundation and symfony/yaml advisories, including CVE-2026-118514).
 - Changed: the docs, README and front page say the npm package, `@waynestate/pinstripe`, is at 0.1.3 (published); the docs pages' dark mode is now charcoal suiting instead of the green cloth, and wide tables shade the edge they scroll toward.
 - Changed: the docs pages wear the front page's look: its header and main menu (Docs marked current), Bodoni titles with the gold chalk line, pattern-piece callouts and pager, the gold Copy pill and the green footer, plus a dark mode cut from the green cloth. The theme lives in `docs/_header.html` and `docs/theme/pinstripe.css`, named by the `theme` key in `docs/docs.json`; the vendored docs builder and kit are synced from Squire's unified builder (theme hook, callouts, copy button and keyboard fixes).

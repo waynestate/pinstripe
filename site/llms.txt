@@ -35,6 +35,7 @@ Every page below is Markdown. The HTML pages send the same Markdown to a client 
 - [Vue | Pinstripe docs](https://pinstripe.apps.wayne.edu/docs/guides/vue.md): Use the Pinstripe ESLint and Prettier presets for Vue.
 - [Overview | Pinstripe docs](https://pinstripe.apps.wayne.edu/docs/index.md): Pinstripe in one page: what it is, who it is for, and where to go next.
 - [Best practices | Pinstripe docs](https://pinstripe.apps.wayne.edu/docs/reference/best-practices.md): The rules Pinstripe holds itself to, and the tests that prove them.
+- [Proof | Pinstripe docs](https://pinstripe.apps.wayne.edu/docs/reference/proof.md): Pinstripe's presets run against 82 Wayne State applications on 2026-11-05: what ran, what held, what it caught in Pinstripe itself, what it does not prove, and how to run the same on your app.
 - [Tested with and tool floors | Pinstripe docs](https://pinstripe.apps.wayne.edu/docs/reference/tested-with.md): The tool versions Pinstripe is tested with, and the floors each tool needs.
 - [Upgrading | Pinstripe docs](https://pinstripe.apps.wayne.edu/docs/upgrading.md): How to upgrade Pinstripe, version by version.
 

@@ -60,6 +60,10 @@
           "path": "reference/best-practices"
         },
         {
+          "title": "Proof",
+          "path": "reference/proof"
+        },
+        {
           "title": "ADR-0001: PHPStan level 8 and baselines",
           "path": "adr/0001-phpstan-level-and-baseline-policy"
         }

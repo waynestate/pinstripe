@@ -259,6 +259,34 @@ final class BaselineTest extends TestCase
         $this->assertSame("6\n", $output);
     }
 
+    /**
+     * Installed in an app, the script loads the app's vendor/autoload.php. On
+     * the 2026-11-05 proof run an app's old Guzzle printed deprecations there
+     * on PHP 8.4, in front of the count; the count must stay the only output.
+     */
+    public function testScriptPrintsOnlyTheCountWhenTheAppAutoloaderIsNoisy(): void
+    {
+        $app = $this->tempDir();
+        $composer = $this->writeLegacyComposer($app);
+        $bin = $app . '/vendor/waynestate/pinstripe/bin';
+        $this->assertTrue(mkdir($bin, 0777, true));
+        $this->assertTrue(copy($this->root() . '/bin/pinstripe-baseline', $bin . '/pinstripe-baseline'));
+        $this->assertNotFalse(file_put_contents(
+            $app . '/vendor/autoload.php',
+            "<?php\ntrigger_error('an old package on a new PHP', E_USER_DEPRECATED);\nrequire "
+                . var_export($this->root() . '/vendor/autoload.php', true) . ";\n"
+        ));
+
+        [$exit, $output] = $this->runCommand([
+            PHP_BINARY, '-d', 'display_errors=stdout', '-d', 'error_reporting=-1',
+            $bin . '/pinstripe-baseline', 'count', '--composer=' . $composer,
+            $this->fixture('phpstan-baseline.neon'),
+        ]);
+
+        $this->assertSame(0, $exit, $output);
+        $this->assertSame("6\n", $output);
+    }
+
     public function testScriptExitsTwoWhenTheBaselineIsMissing(): void
     {
         $composer = $this->writeLegacyComposer($this->tempDir());

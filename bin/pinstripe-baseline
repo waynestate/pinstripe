@@ -23,6 +23,11 @@ declare(strict_types=1);
  * Exit codes: 0 ok, 1 the baseline grew, 2 usage or baseline problem.
  */
 
+// Installed in an app, this loads the app's autoloader, whose "files" entries
+// run on require. An old package there prints deprecations on a new PHP, and
+// they would land in front of the count a script reads. They are the app's
+// to fix, not this command's to print, so they are muted while it loads.
+$pinstripeErrorLevel = error_reporting(error_reporting() & ~E_DEPRECATED & ~E_USER_DEPRECATED);
 foreach ([__DIR__ . '/../vendor/autoload.php', __DIR__ . '/../../../autoload.php'] as $autoload) {
     if (is_file($autoload)) {
         require $autoload;
@@ -30,6 +35,7 @@ foreach ([__DIR__ . '/../vendor/autoload.php', __DIR__ . '/../../../autoload.php
         break;
     }
 }
+error_reporting($pinstripeErrorLevel);
 
 use WayneState\Pinstripe\Baseline;
 use WayneState\Pinstripe\BaselineException;
