@@ -15,9 +15,11 @@
    --dk-* tokens and the rules below win without !important. The kit's docs.css
    stays byte for byte Squire's. Fonts load from ../../assets/fonts/.
 
-   The front page has no dark mode, so the dark set is derived from its "Try it
-   on" section: the suit itself, green cloth with a faint cream pinstripe, cream
-   text, gold chalk where the paper uses green.
+   The front page has no dark mode, so the dark set is derived from the board's
+   "on dark" tile and the cloth the shop is named for: a charcoal suiting with a
+   faint cream chalk stripe, cream text, gold chalk where the paper uses green,
+   a pale mauve for the tailor's marks. Green stays where the front page puts
+   it on any ground: the woven labels, the size tag and the footer.
 
    File map: 1. fonts and tokens  2. frame  3. header and tape  4. sidebar,
              menu  5. article  6. code  7. callouts, tables, quotes
@@ -32,6 +34,7 @@
 @font-face { font-family: "Bodoni Moda"; font-style: normal; font-weight: 800; font-display: swap; src: url("../../assets/fonts/bodoni-moda-latin-800-normal.woff2") format("woff2"); }
 @font-face { font-family: "Bodoni Moda"; font-style: italic; font-weight: 400; font-display: swap; src: url("../../assets/fonts/bodoni-moda-latin-400-italic.woff2") format("woff2"); }
 @font-face { font-family: "Bodoni Moda"; font-style: italic; font-weight: 600; font-display: swap; src: url("../../assets/fonts/bodoni-moda-latin-600-italic.woff2") format("woff2"); }
+@font-face { font-family: "Reenie Beanie"; font-style: normal; font-weight: 400; font-display: swap; src: url("../../assets/fonts/reenie-beanie-latin-400-normal.woff2") format("woff2"); }
 
 :root {
   /* The front page's palette, under the same names. */
@@ -48,6 +51,7 @@
   --ps-line: rgba(12, 84, 73, 0.1);
   --ps-line-strong: rgba(12, 84, 73, 0.2);
   --ps-display: "Bodoni Moda", "Didot", "Bodoni 72", Georgia, serif;
+  --ps-chalk: "Reenie Beanie", "Bradley Hand", cursive;   /* the front page's tailor's notes */
   --ps-body: var(--wsu-font-family-body, Lato, Calibri, "Helvetica Neue", Arial, sans-serif);
   --ps-mono: var(--wsu-font-family-mono, ui-monospace, SFMono-Regular, Menlo, Consolas, monospace);
   --ps-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
@@ -68,6 +72,24 @@
   --ps-woven-ink: var(--ps-cream);
   --ps-grid-strong: rgba(12, 84, 73, 0.085);
   --ps-grid: rgba(12, 84, 73, 0.045);
+  /* Pattern paper: the front page's printed grid, a heavier line every fifth. */
+  --ps-paper:
+    linear-gradient(var(--ps-grid-strong) 1px, transparent 1px),
+    linear-gradient(90deg, var(--ps-grid-strong) 1px, transparent 1px),
+    linear-gradient(var(--ps-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--ps-grid) 1px, transparent 1px);
+  --ps-paper-size: 120px 120px, 120px 120px, 24px 24px, 24px 24px;
+  --ps-footer: var(--ps-green-deep);
+  --ps-scroll: var(--ps-mauve);
+  --ps-shade: rgba(7, 58, 50, 0.22);   /* the edge a wide table scrolls toward */
+  --ps-warn-line: var(--ps-mauve-deep);
+  --ps-warn-label: var(--ps-mauve-deep);
+  --ps-warn-label-ink: var(--ps-cream);
+  --ps-warn-label-seam: rgba(244, 241, 234, 0.6);
+  --ps-danger-line: var(--ps-ink);
+  --ps-danger-label: var(--ps-ink);
+  --ps-danger-label-ink: var(--ps-cream);
+  --ps-danger-label-seam: rgba(255, 204, 51, 0.6);
   --ps-header-h: 72px;
 
   /* The kit's tokens, set from the palette above. */
@@ -102,18 +124,14 @@ html {
   scroll-padding-top: calc(var(--ps-header-h) + 1rem);
 }
 
-/* Pattern paper: the front page's printed grid, a heavier line every fifth,
-   printed lighter here so it sits behind long reading. */
+/* Pattern paper in light (printed lighter than the front page so it sits
+   behind long reading), chalk-striped charcoal in dark: tokens above and in 9. */
 body {
   margin: 0;
   color: var(--dk-ink);
   background-color: var(--dk-bg);
-  background-image:
-    linear-gradient(var(--ps-grid-strong) 1px, transparent 1px),
-    linear-gradient(90deg, var(--ps-grid-strong) 1px, transparent 1px),
-    linear-gradient(var(--ps-grid) 1px, transparent 1px),
-    linear-gradient(90deg, var(--ps-grid) 1px, transparent 1px);
-  background-size: 120px 120px, 120px 120px, 24px 24px, 24px 24px;
+  background-image: var(--ps-paper);
+  background-size: var(--ps-paper-size);
   background-position: -1px -1px;
   font-family: var(--ps-body);
   overflow-x: clip;
@@ -481,7 +499,7 @@ body {
   border-radius: 2px;
   tab-size: 4;
   scrollbar-width: thin;
-  scrollbar-color: var(--ps-mauve) transparent;
+  scrollbar-color: var(--ps-scroll) transparent;
 }
 
 .docs-article pre code {
@@ -601,30 +619,64 @@ body {
 
 /* A warning is chalked: the mauve label and a mauve edge. */
 .docs-callout--warning {
-  border-color: var(--ps-mauve-deep);
+  border-color: var(--ps-warn-line);
 }
 
 .docs-callout--warning .docs-callout__label {
-  color: var(--ps-cream);
-  background: var(--ps-mauve-deep);
+  color: var(--ps-warn-label-ink);
+  background: var(--ps-warn-label);
+  outline-color: var(--ps-warn-label-seam);
 }
 
 .docs-callout--danger {
-  border-color: var(--ps-ink);
+  border-color: var(--ps-danger-line);
 }
 
 .docs-callout--danger .docs-callout__label {
-  color: var(--ps-cream);
-  background: var(--ps-ink);
-  outline-color: rgba(255, 204, 51, 0.6);
+  color: var(--ps-danger-label-ink);
+  background: var(--ps-danger-label);
+  outline-color: var(--ps-danger-label-seam);
 }
 
-/* Tables are the order of pieces: tissue, eyebrow headings, dashed rows. */
+/* Every pattern piece is pinned, as the hero's cloth is: a gold pin head over
+   the top corner, its shaft running in under the tissue. */
+.docs-callout::before {
+  content: "";
+  position: absolute;
+  inset-block-start: -8px;
+  inset-inline-end: 2.4rem;
+  inline-size: 14px;
+  block-size: 28px;
+  background:
+    radial-gradient(circle at 5px 5px, #fff3c9 0, rgba(255, 243, 201, 0) 3px),
+    radial-gradient(circle at 7px 7px, var(--ps-gold) 0 5px, #b98c0c 6.5px, transparent 7px),
+    linear-gradient(90deg, transparent 6.25px, #9aa4a1 6.25px 7.75px, transparent 7.75px) 0 10px / 100% 18px no-repeat;
+  rotate: 24deg;
+  transform-origin: 7px 7px;
+  filter: drop-shadow(0 1.5px 1.5px rgba(0, 0, 0, 0.3));
+  pointer-events: none;
+}
+
+/* Tables are the order of pieces: tissue, eyebrow headings, dashed rows. When
+   one is wider than the page, the edge it scrolls toward carries a soft shade
+   (the covers ride with the content and hide the shade at either end). */
 .docs-table {
   margin: 1.25rem 0 1.6rem;
-  background: var(--ps-piece);
+  background:
+    linear-gradient(90deg, var(--ps-piece) 35%, transparent) 0 0 / 2.5rem 100% no-repeat local,
+    linear-gradient(270deg, var(--ps-piece) 35%, transparent) 100% 0 / 2.5rem 100% no-repeat local,
+    linear-gradient(90deg, var(--ps-shade), transparent) 0 0 / 0.9rem 100% no-repeat scroll,
+    linear-gradient(270deg, var(--ps-shade), transparent) 100% 0 / 0.9rem 100% no-repeat scroll,
+    var(--ps-piece);
   border: 1px solid var(--ps-line-strong);
   border-radius: var(--dk-radius);
+  scrollbar-width: thin;
+  scrollbar-color: var(--ps-scroll) transparent;
+}
+
+.docs-table:focus-visible {
+  outline: var(--dk-focus-w) solid var(--dk-focus);
+  outline-offset: var(--dk-focus-o);
 }
 
 .docs-article table {
@@ -680,13 +732,19 @@ body {
 
 /* ------------------------------------------------ 8. toc, pager, footer */
 
+/* "On this page" is a tailor's note in chalk, the hand the front page writes
+   its swing tag and cushion caption in. */
 .docs-toc__title {
-  font-family: var(--ps-body);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  margin-block-end: 0.3rem;
+  font-family: var(--ps-chalk);
+  font-size: 1.9rem;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  text-transform: none;
   color: var(--ps-label);
+  rotate: -1.5deg;
+  transform-origin: 0 100%;
 }
 
 .docs-toc__list {
@@ -777,11 +835,11 @@ body {
   gap: 0.4rem 1.25rem;
   padding: 2.25rem var(--dk-gap);
   color: var(--ps-cream);
-  background: var(--ps-green-deep);
+  background: var(--ps-footer);
   border-top: 0;
   text-align: center;
   /* Full-bleed green under a centered row. */
-  box-shadow: 0 0 0 100vmax var(--ps-green-deep);
+  box-shadow: 0 0 0 100vmax var(--ps-footer);
   clip-path: inset(0 -100vmax);
 }
 
@@ -806,31 +864,52 @@ body {
 
 /* ---------------------------------------------------------------- 9. dark */
 
-/* Derived: the front page has no dark mode. The suit itself, as in its
-   "Try it on" section: deep green cloth with a faint cream pinstripe, cream
-   text, gold where the paper uses green, a lightened mauve for the lines. */
+/* Derived: the front page has no dark mode, and green is WSU's color, not a
+   wallpaper. So dark is the cloth the shop is named for: charcoal suiting (the
+   board's "on dark" tile, a hair warmer) with a faint cream chalk stripe every
+   32px, the same stripe the front page lays on its green sections. Cream type,
+   gold where the paper uses green, a pale mauve for the tailor's marks. The
+   green stays where the front page keeps it on any ground: the woven labels,
+   the size tag and the footer band. Only tokens change here, and both blocks
+   restate the kit's --dk-* set, so its WayneUI dark surface never shows. */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --ps-header-bg: rgba(7, 58, 50, 0.94);
+    --ps-header-bg: rgba(27, 31, 30, 0.94);
     --ps-title: var(--ps-cream);
-    --ps-label: var(--ps-gold);
-    --ps-piece: #0b4a40;
-    --ps-piece-line: #c9a3b2;
-    --ps-seam: rgba(201, 163, 178, 0.5);
-    --ps-code: rgba(244, 241, 234, 0.07);
+    --ps-label: #dcbfca;
+    --ps-piece: #232826;
+    --ps-piece-line: #b48f9d;
+    --ps-seam: rgba(201, 163, 178, 0.45);
+    --ps-code: rgba(244, 241, 234, 0.06);
     --ps-code-ink: var(--ps-cream);
     --ps-code-rule: var(--ps-gold);
     --ps-inline-ink: var(--ps-gold-soft);
-    --ps-line-strong: rgba(244, 241, 234, 0.22);
-    --ps-grid-strong: rgba(244, 241, 234, 0.05);
-    --ps-grid: transparent;
+    --ps-line-strong: rgba(244, 241, 234, 0.2);
+    --ps-paper: repeating-linear-gradient(90deg, transparent 0 31px, rgba(244, 241, 234, 0.05) 31px 32px);
+    --ps-paper-size: auto;
+    --ps-footer: var(--ps-green-deep);
+    --ps-scroll: #b48f9d;
+    --ps-shade: rgba(0, 0, 0, 0.5);
+    --ps-warn-line: #b48f9d;
+    --ps-warn-label: #e3c9d3;
+    --ps-warn-label-ink: #3b2530;
+    --ps-warn-label-seam: rgba(59, 37, 48, 0.45);
+    --ps-danger-line: var(--ps-gold);
+    --ps-danger-label: var(--ps-gold);
+    --ps-danger-label-ink: var(--ps-ink);
+    --ps-danger-label-seam: rgba(27, 38, 35, 0.45);
 
-    --dk-bg: var(--ps-green-deep);
+    --dk-bg: #1b1f1e;
     --dk-ink: var(--ps-cream);
-    --dk-muted: #c8d3ce;
-    --dk-rule: #3b6159;
+    --dk-muted: #c3c9c6;
+    --dk-rule: #3a403e;
     --dk-accent: var(--ps-gold);
-    --dk-on-accent: var(--ps-green-deep);
+    --dk-on-accent: var(--ps-ink);
+    --dk-note: #9fd3c7;
+    --dk-tip: var(--ps-gold);
+    --dk-warning: #e3c9d3;
+    --dk-danger: #f4b4a8;
+    --dk-code-bg: rgba(244, 241, 234, 0.06);
     --dk-focus: var(--ps-gold);
 
     color-scheme: dark;
@@ -838,124 +917,45 @@ body {
 }
 
 :root[data-theme="dark"] {
-  --ps-header-bg: rgba(7, 58, 50, 0.94);
+  --ps-header-bg: rgba(27, 31, 30, 0.94);
   --ps-title: var(--ps-cream);
-  --ps-label: var(--ps-gold);
-  --ps-piece: #0b4a40;
-  --ps-piece-line: #c9a3b2;
-  --ps-seam: rgba(201, 163, 178, 0.5);
-  --ps-code: rgba(244, 241, 234, 0.07);
+  --ps-label: #dcbfca;
+  --ps-piece: #232826;
+  --ps-piece-line: #b48f9d;
+  --ps-seam: rgba(201, 163, 178, 0.45);
+  --ps-code: rgba(244, 241, 234, 0.06);
   --ps-code-ink: var(--ps-cream);
   --ps-code-rule: var(--ps-gold);
   --ps-inline-ink: var(--ps-gold-soft);
-  --ps-line-strong: rgba(244, 241, 234, 0.22);
-  --ps-grid-strong: rgba(244, 241, 234, 0.05);
-  --ps-grid: transparent;
+  --ps-line-strong: rgba(244, 241, 234, 0.2);
+  --ps-paper: repeating-linear-gradient(90deg, transparent 0 31px, rgba(244, 241, 234, 0.05) 31px 32px);
+  --ps-paper-size: auto;
+  --ps-footer: var(--ps-green-deep);
+  --ps-scroll: #b48f9d;
+  --ps-shade: rgba(0, 0, 0, 0.5);
+  --ps-warn-line: #b48f9d;
+  --ps-warn-label: #e3c9d3;
+  --ps-warn-label-ink: #3b2530;
+  --ps-warn-label-seam: rgba(59, 37, 48, 0.45);
+  --ps-danger-line: var(--ps-gold);
+  --ps-danger-label: var(--ps-gold);
+  --ps-danger-label-ink: var(--ps-ink);
+  --ps-danger-label-seam: rgba(27, 38, 35, 0.45);
 
-  --dk-bg: var(--ps-green-deep);
+  --dk-bg: #1b1f1e;
   --dk-ink: var(--ps-cream);
-  --dk-muted: #c8d3ce;
-  --dk-rule: #3b6159;
+  --dk-muted: #c3c9c6;
+  --dk-rule: #3a403e;
   --dk-accent: var(--ps-gold);
-  --dk-on-accent: var(--ps-green-deep);
+  --dk-on-accent: var(--ps-ink);
+  --dk-note: #9fd3c7;
+  --dk-tip: var(--ps-gold);
+  --dk-warning: #e3c9d3;
+  --dk-danger: #f4b4a8;
+  --dk-code-bg: rgba(244, 241, 234, 0.06);
   --dk-focus: var(--ps-gold);
 
   color-scheme: dark;
-}
-
-/* In the dark the paper grid gives way to pinstripes, one every 32px, as on
-   the front page's green sections. The footer and the woven labels already
-   sit on green; they get the darker cloth and a cream label. */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) body {
-    background-image: repeating-linear-gradient(90deg, transparent 0 31px, rgba(244, 241, 234, 0.05) 31px 32px);
-    background-size: auto;
-  }
-
-  :root:not([data-theme="light"]) .size-label,
-  :root:not([data-theme="light"]) .docs-callout--note .docs-callout__label {
-    color: var(--ps-green-deep);
-    background: var(--ps-cream);
-    outline-color: rgba(7, 58, 50, 0.45);
-  }
-
-  :root:not([data-theme="light"]) .size-label__k {
-    color: var(--ps-mauve-deep);
-  }
-
-  :root:not([data-theme="light"]) .docs-callout--warning {
-    border-color: var(--ps-piece-line);
-  }
-
-  :root:not([data-theme="light"]) .docs-callout--warning .docs-callout__label {
-    color: #3b2530;
-    background: #e3c9d3;
-    outline-color: rgba(59, 37, 48, 0.45);
-  }
-
-  :root:not([data-theme="light"]) .docs-callout--danger {
-    border-color: var(--ps-gold);
-  }
-
-  :root:not([data-theme="light"]) .docs-callout--danger .docs-callout__label {
-    color: var(--ps-green-deep);
-    background: var(--ps-gold);
-    outline-color: rgba(7, 58, 50, 0.45);
-  }
-
-  :root:not([data-theme="light"]) .docs-footer {
-    background: #052b25;
-    box-shadow: 0 0 0 100vmax #052b25;
-  }
-
-  :root:not([data-theme="light"]) .docs-article pre {
-    scrollbar-color: var(--ps-piece-line) transparent;
-  }
-}
-
-:root[data-theme="dark"] body {
-  background-image: repeating-linear-gradient(90deg, transparent 0 31px, rgba(244, 241, 234, 0.05) 31px 32px);
-  background-size: auto;
-}
-
-:root[data-theme="dark"] .size-label,
-:root[data-theme="dark"] .docs-callout--note .docs-callout__label {
-  color: var(--ps-green-deep);
-  background: var(--ps-cream);
-  outline-color: rgba(7, 58, 50, 0.45);
-}
-
-:root[data-theme="dark"] .size-label__k {
-  color: var(--ps-mauve-deep);
-}
-
-:root[data-theme="dark"] .docs-callout--warning {
-  border-color: var(--ps-piece-line);
-}
-
-:root[data-theme="dark"] .docs-callout--warning .docs-callout__label {
-  color: #3b2530;
-  background: #e3c9d3;
-  outline-color: rgba(59, 37, 48, 0.45);
-}
-
-:root[data-theme="dark"] .docs-callout--danger {
-  border-color: var(--ps-gold);
-}
-
-:root[data-theme="dark"] .docs-callout--danger .docs-callout__label {
-  color: var(--ps-green-deep);
-  background: var(--ps-gold);
-  outline-color: rgba(7, 58, 50, 0.45);
-}
-
-:root[data-theme="dark"] .docs-footer {
-  background: #052b25;
-  box-shadow: 0 0 0 100vmax #052b25;
-}
-
-:root[data-theme="dark"] .docs-article pre {
-  scrollbar-color: var(--ps-piece-line) transparent;
 }
 
 /* --------------------------------------------------------- 10. responsive */
@@ -1028,6 +1028,12 @@ body {
   .docs-pager__link {
     max-width: none;
   }
+
+  /* A table of three columns or more keeps its shape and scrolls in its frame
+     (with the edge shade) instead of breaking every cell into one word a line. */
+  .docs-table table:has(th:nth-child(3)) {
+    min-inline-size: 34rem;
+  }
 }
 
 /* ------------------------------------------- 11. motion (no-preference) */
@@ -1066,6 +1072,11 @@ body {
 
   .docs-copy__button:active {
     transform: scale(0.96);
+  }
+
+  /* A callout's pin goes in once as the page lands, as the hero pins its cloth. */
+  .docs-callout::before {
+    animation: ps-pin-in 0.45s var(--ps-ease-spring) 0.5s both;
   }
 
   /* Pick a pattern piece up: it lifts, tilts a hair, and a pin pops in. */
@@ -1127,6 +1138,11 @@ body {
 @keyframes ps-chalk {
   from { clip-path: inset(0 100% 0 0); }
   to { clip-path: inset(0 0 0 0); }
+}
+
+@keyframes ps-pin-in {
+  from { opacity: 0; transform: translateY(-10px) scale(0.6); }
+  to { opacity: 1; transform: none; }
 }
 
 @keyframes ps-tape {
