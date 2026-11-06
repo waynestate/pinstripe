@@ -46,7 +46,7 @@ composer analyse
 
 ## Status[#](https://pinstripe.apps.wayne.edu/docs/#status)
 
-The newest release is 0.1.2 (2026-11-03). The canonical repository is on nougat; git.wayne.edu and GitHub are read-only mirrors of it. The agent-ready site ships a plain-text twin for machines: [llms.txt](https://pinstripe.apps.wayne.edu/llms.txt).
+The repository is at version 0.1.3. The npm package, `@waynestate/pinstripe`, has not been published at 0.1.3 yet. The canonical repository is on nougat; git.wayne.edu and GitHub are read-only mirrors of it. The agent-ready site ships a plain-text twin for machines: [llms.txt](https://pinstripe.apps.wayne.edu/llms.txt).
 
 ## Related[#](https://pinstripe.apps.wayne.edu/docs/#related)
 
