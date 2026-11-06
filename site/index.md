@@ -18,7 +18,7 @@ Shared presets for **Pint**, **PHPStan** with Larastan, **Rector**, **ESLint** f
 
 **[WELD](https://weld.apps.wayne.edu/) already has it.** WELD starts with a copy of the Laravel presets. Install Pinstripe yourself to bring the same settings to an app you already have.
 
-Version 0.1.3 is on Packagist and 0.1.2 is on npm. Walk-ins welcome.
+Version 0.1.3 is on Packagist and npm. Walk-ins welcome.
 
 Scroll, and the tailor gets to work
 
