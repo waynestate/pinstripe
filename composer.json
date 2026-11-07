@@ -3,8 +3,8 @@
     "description": "The coding standard for the Wayne State app stack: shared Pint and PHPStan presets.",
     "homepage": "https://pinstripe.apps.wayne.edu/",
     "support": {
-        "source": "https://nougat.snu.gs/enterprise-apps/pinstripe",
-        "issues": "https://nougat.snu.gs/enterprise-apps/pinstripe/-/issues"
+        "source": "https://github.com/waynestate/pinstripe",
+        "issues": "https://git.wayne.edu/enterprise-apps/pinstripe/-/issues"
     },
     "type": "library",
     "license": "MIT",

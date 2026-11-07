@@ -6,10 +6,10 @@
     "homepage": "https://pinstripe.apps.wayne.edu/",
     "repository": {
         "type": "git",
-        "url": "git+https://nougat.snu.gs/enterprise-apps/pinstripe.git"
+        "url": "git+https://github.com/waynestate/pinstripe.git"
     },
     "bugs": {
-        "url": "https://nougat.snu.gs/enterprise-apps/pinstripe/-/issues"
+        "url": "https://git.wayne.edu/enterprise-apps/pinstripe/-/issues"
     },
     "publishConfig": {
         "access": "public"

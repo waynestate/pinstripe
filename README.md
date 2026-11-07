@@ -27,9 +27,9 @@ Documentation: the docs site is at [`site/docs/index.html`](site/docs/index.html
 
 ## Where the code lives
 
-The canonical repository is on nougat: [enterprise-apps/pinstripe](https://nougat.snu.gs/enterprise-apps/pinstripe). git.wayne.edu and GitHub ([waynestate/pinstripe](https://github.com/waynestate/pinstripe)) are read-only mirrors of it.
-Open issues and merge requests on nougat, not on the mirrors.
-This moves to git.wayne.edu once it has CI runners. The pinstripes are sewn on nougat; the mirrors are off-the-rack copies.
+The canonical repository is [enterprise-apps/pinstripe](https://git.wayne.edu/enterprise-apps/pinstripe) on git.wayne.edu: clone over SSH (`git@git.wayne.edu:enterprise-apps/pinstripe.git`) or HTTPS (`https://git.wayne.edu/enterprise-apps/pinstripe.git`). Open issues and merge requests there, and tags are made there, by the maintainer, with an approver.
+GitHub ([waynestate/pinstripe](https://github.com/waynestate/pinstripe)) is a read-only push mirror of it, for the published packages only: nobody pushes to it, and Packagist and npm read from it.
+The pinstripes are sewn on git.wayne.edu; the GitHub mirror is the off-the-rack copy.
 
 Front page: [`site/index.html`](site/index.html), a static tailor's shop you can open in a browser or serve from `site/`.
 On Citadel it is served by the raw-PHP deploy layer in [`deploy/`](deploy/): a Squire kit whose front controller serves `site/` behind HELMET's security headers. For local development, keep serving `site/` directly.
@@ -485,7 +485,7 @@ Reading the PHP floor from CREED. (Preflight's pint, phpstan and eslint jobs alr
   <a href="https://github.com/waynestate/pinstripe" title="Pinstripe"><img src="docs/readme/cast/pinstripe.png" width="48" alt="Pinstripe"></a>
   <a href="https://github.com/waynestate/booster" title="Booster"><img src="docs/readme/cast/booster.png" width="48" alt="Booster"></a>
   <a href="https://github.com/waynestate/rollcall" title="Rollcall"><img src="docs/readme/cast/rollcall.png" width="48" alt="Rollcall"></a>
-  <a href="https://nougat.snu.gs/enterprise-apps/drawbridge" title="Drawbridge"><img src="docs/readme/cast/drawbridge.png" width="48" alt="Drawbridge"></a>
+  <a href="https://git.wayne.edu/enterprise-apps/drawbridge" title="Drawbridge"><img src="docs/readme/cast/drawbridge.png" width="48" alt="Drawbridge"></a>
   <a href="https://github.com/waynestate/advisor" title="ADVISOR"><img src="docs/readme/cast/advisor.png" width="48" alt="ADVISOR"></a>
   <a href="https://github.com/waynestate/weld" title="WELD"><img src="docs/readme/cast/weld.png" width="48" alt="WELD"></a>
 </div>
