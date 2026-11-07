@@ -18,7 +18,7 @@ Shared presets for **Pint**, **PHPStan** with Larastan, **Rector**, **ESLint** f
 
 **[WELD](https://weld.apps.wayne.edu/) already has it.** WELD starts with a copy of the Laravel presets. Install Pinstripe yourself to bring the same settings to an app you already have.
 
-Version 0.1.3 is on Packagist and npm. Walk-ins welcome.
+Version 0.1.4 is on Packagist and npm. Walk-ins welcome.
 
 Scroll, and the tailor gets to work
 
@@ -162,7 +162,7 @@ composer require --dev waynestate/pinstripe:^0.1
 
 Pinstripe loads its PHPStan rules through `phpstan/extension-installer`, and Composer will not ask when it cannot prompt.
 
-`^0.1` gets you 0.1.3, the current release. Change it when 0.2 ships.
+`^0.1` gets you 0.1.4, the current release. Change it when 0.2 ships.
 
 phpstan.neon
 

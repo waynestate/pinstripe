@@ -46,7 +46,7 @@ composer require --dev waynestate/pinstripe:^0.1
 
 Pinstripe loads its PHPStan rules through `phpstan/extension-installer`, and Composer will not ask when it cannot prompt.
 If Composer stops because a package your app already locks (often an older PHPStan) does not fit, run the same `composer require` again with `-W`, as Composer suggests, so it may update that package too.
-Pinstripe 0.1.3 is on Packagist, and the npm package, `@waynestate/pinstripe`, is at 0.1.3.
+Pinstripe 0.1.4 is on Packagist. The npm package, `@waynestate/pinstripe`, is published by hand after each tag; `npm view @waynestate/pinstripe version` shows where it is.
 
 Point PHPStan at the raw config. `phpstan.neon`:
 
@@ -473,7 +473,7 @@ Shared presets for **Pint**, **PHPStan** with Larastan, **Rector**, **ESLint** f
 
 **[WELD](https://weld.apps.wayne.edu/) already has it.** WELD starts with a copy of the Laravel presets. Install Pinstripe yourself to bring the same settings to an app you already have.
 
-Version 0.1.3 is on Packagist and npm. Walk-ins welcome.
+Version 0.1.4 is on Packagist and npm. Walk-ins welcome.
 
 Scroll, and the tailor gets to work
 
@@ -617,7 +617,7 @@ composer require --dev waynestate/pinstripe:^0.1
 
 Pinstripe loads its PHPStan rules through `phpstan/extension-installer`, and Composer will not ask when it cannot prompt.
 
-`^0.1` gets you 0.1.3, the current release. Change it when 0.2 ships.
+`^0.1` gets you 0.1.4, the current release. Change it when 0.2 ships.
 
 phpstan.neon
 
@@ -955,6 +955,8 @@ All notable changes to Pinstripe are documented here.
 
 ### Unreleased[#](https://pinstripe.apps.wayne.edu/docs/changelog.html#unreleased)
 
+### 0.1.4 (2026-11-06)[#](https://pinstripe.apps.wayne.edu/docs/changelog.html#0-1-4-2026-11-06)
+
 - Fixed: `pinstripe-baseline` mutes deprecations while it loads the app's autoloader, so an old package in the app no longer prints PHP warnings ahead of the count a script reads (found by the 2026-11-05 proof run; new test in tests/BaselineTest.php).
 - Added: a public Proof page (`docs/reference/proof.md`, under Reference): the presets run against 82 Wayne State applications, what held, what the run caught in Pinstripe, and what it does not prove.
 - Docs: the install steps say to rerun `composer require` with `-W` when a package the app already locks blocks it; Adopting on an existing app covers errors PHPStan cannot baseline and keeping Pint off bundled third-party code.
@@ -1253,7 +1255,7 @@ composer config allow-plugins.phpstan/extension-installer true
 composer require --dev waynestate/pinstripe:^0.1
 ```
 
-Pinstripe loads its PHPStan rules through `phpstan/extension-installer`, and Composer will not ask when it cannot prompt. If Composer stops because a package your app already locks (often an older PHPStan) does not fit, run the same `composer require` again with `-W`, as Composer suggests, so it may update that package too. Pinstripe 0.1.3 is on Packagist, and the npm package, `@waynestate/pinstripe`, is at 0.1.3.
+Pinstripe loads its PHPStan rules through `phpstan/extension-installer`, and Composer will not ask when it cannot prompt. If Composer stops because a package your app already locks (often an older PHPStan) does not fit, run the same `composer require` again with `-W`, as Composer suggests, so it may update that package too. Pinstripe 0.1.4 is on Packagist. The npm package, `@waynestate/pinstripe`, is published by hand after each tag; `npm view @waynestate/pinstripe version` shows where it is.
 
 ### Point PHPStan at the raw config[#](https://pinstripe.apps.wayne.edu/docs/guides/raw-php.html#point-phpstan-at-the-raw-config)
 
@@ -1547,7 +1549,7 @@ composer analyse
 
 ### Status[#](https://pinstripe.apps.wayne.edu/docs/#status)
 
-The repository is at version 0.1.3. The npm package, `@waynestate/pinstripe`, is at 0.1.3 too. The canonical repository is on nougat; git.wayne.edu and GitHub are read-only mirrors of it. The agent-ready site ships a plain-text twin for machines: [llms.txt](https://pinstripe.apps.wayne.edu/llms.txt).
+The repository is at version 0.1.4. The npm package, `@waynestate/pinstripe`, follows each tag at the same version, published by hand. The canonical repository is on nougat; git.wayne.edu and GitHub are read-only mirrors of it. The agent-ready site ships a plain-text twin for machines: [llms.txt](https://pinstripe.apps.wayne.edu/llms.txt).
 
 ### Related[#](https://pinstripe.apps.wayne.edu/docs/#related)
 
@@ -1815,9 +1817,21 @@ This page walks through each released version of Pinstripe, what changed for con
 
 A stricter preset breaks consumers' builds. Pinstripe ships such a change in a minor version, not a major one, so you opt in by updating the package. When a version below marks a change as breaking, it is a stricter preset taking effect in your app the moment you update to it; hold the current version until you are ready.
 
-### Unreleased[#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#unreleased)
+### 0.1.4 (2026-11-06)[#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#0-1-4-2026-11-06)
 
-Nothing is released yet. The one change that touches your app is that the install instructions now include `composer config allow-plugins.phpstan/extension-installer true`, so a non-interactive install works. The remaining items (the docs site, the ADR, the Node 22, 24 and 26 test matrix, the `laravel-vue` fixture, and the CI and deploy pins) are internal to Pinstripe.
+**Breaking (three tailoring changes, each a stricter fit):**
+
+- `pinstripe-baseline` counts or checks a baseline only when the app's `composer.json` carries `"extra": { "pinstripe": { "legacy": true } }`. A baseline is for apps adopting Pinstripe late; new apps never set the flag.
+- The ESLint presets (`@waynestate/pinstripe/eslint/javascript` and `/typescript`) fail lint on every Vue and accessibility finding: rules the plugins' recommended configs report as warnings are now errors, so the editor, a local `npm run lint` and CI agree. Apps that need the old behavior for a while spread `@waynestate/pinstripe/eslint/javascript-warn` or `/typescript-warn` instead.
+- The Prettier preset formats Blade views with `prettier-plugin-blade` (pinned to 3.3.3). The first run rewrites every `*.blade.php` file (4-space indent, a space after directive names such as `@vite (`, void tags self-closed), so reformat in a commit of its own.
+
+**Steps:** Your constraint is `^0.1`, which already allows 0.1.4, so update the locked version of `waynestate/pinstripe` to 0.1.4 (and `@waynestate/pinstripe` to 0.1.4 once it is on npm; check with `npm view @waynestate/pinstripe version`). If you use `pinstripe-baseline`, add the `legacy` flag first. Copy the two `.npmrc` lines from the README's "Supply chain" section into your app. To see ESLint findings in merge requests, run `eslint --format gitlab`.
+
+**How to verify:** `composer analyse` and `npm run lint` pass (or list the findings you now own), `pinstripe-baseline check` still counts your baseline, and `npx prettier --check "resources/views/**/*.blade.php"` passes after the one-time reformat.
+
+### 0.1.3 (2026-11-03)[#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#0-1-3-2026-11-03)
+
+No breaking change. The one change that touches your app is that the install instructions now include `composer config allow-plugins.phpstan/extension-installer true`, so a non-interactive install works. The remaining items (the docs site, the ADR, the Node 22, 24 and 26 test matrix, the `laravel-vue` fixture, and the CI and deploy pins) are internal to Pinstripe.
 
 ### 0.1.2[#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#0-1-2)
 

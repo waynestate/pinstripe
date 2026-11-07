@@ -19,7 +19,7 @@ composer config allow-plugins.phpstan/extension-installer true
 composer require --dev waynestate/pinstripe:^0.1
 ```
 
-Pinstripe loads its PHPStan rules through `phpstan/extension-installer`, and Composer will not ask when it cannot prompt. If Composer stops because a package your app already locks (often an older PHPStan) does not fit, run the same `composer require` again with `-W`, as Composer suggests, so it may update that package too. Pinstripe 0.1.3 is on Packagist, and the npm package, `@waynestate/pinstripe`, is at 0.1.3.
+Pinstripe loads its PHPStan rules through `phpstan/extension-installer`, and Composer will not ask when it cannot prompt. If Composer stops because a package your app already locks (often an older PHPStan) does not fit, run the same `composer require` again with `-W`, as Composer suggests, so it may update that package too. Pinstripe 0.1.4 is on Packagist. The npm package, `@waynestate/pinstripe`, is published by hand after each tag; `npm view @waynestate/pinstripe version` shows where it is.
 
 ## Point PHPStan at the raw config[#](https://pinstripe.apps.wayne.edu/docs/guides/raw-php.html#point-phpstan-at-the-raw-config)
 

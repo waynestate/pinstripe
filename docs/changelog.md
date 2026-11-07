@@ -11,6 +11,8 @@ All notable changes to Pinstripe are documented here.
 
 ## Unreleased
 
+## 0.1.4 (2026-11-06)
+
 - Fixed: `pinstripe-baseline` mutes deprecations while it loads the app's autoloader, so an old package in the app no longer prints PHP warnings ahead of the count a script reads (found by the 2026-11-05 proof run; new test in tests/BaselineTest.php).
 - Added: a public Proof page (`docs/reference/proof.md`, under Reference): the presets run against 82 Wayne State applications, what held, what the run caught in Pinstripe, and what it does not prove.
 - Docs: the install steps say to rerun `composer require` with `-W` when a package the app already locks blocks it; Adopting on an existing app covers errors PHPStan cannot baseline and keeping Pint off bundled third-party code.

@@ -11,9 +11,21 @@ This page walks through each released version of Pinstripe, what changed for con
 
 A stricter preset breaks consumers' builds. Pinstripe ships such a change in a minor version, not a major one, so you opt in by updating the package. When a version below marks a change as breaking, it is a stricter preset taking effect in your app the moment you update to it; hold the current version until you are ready.
 
-## Unreleased
+## 0.1.4 (2026-11-06)
 
-Nothing is released yet. The one change that touches your app is that the install instructions now include `composer config allow-plugins.phpstan/extension-installer true`, so a non-interactive install works. The remaining items (the docs site, the ADR, the Node 22, 24 and 26 test matrix, the `laravel-vue` fixture, and the CI and deploy pins) are internal to Pinstripe.
+**Breaking (three tailoring changes, each a stricter fit):**
+
+- `pinstripe-baseline` counts or checks a baseline only when the app's `composer.json` carries `"extra": { "pinstripe": { "legacy": true } }`. A baseline is for apps adopting Pinstripe late; new apps never set the flag.
+- The ESLint presets (`@waynestate/pinstripe/eslint/javascript` and `/typescript`) fail lint on every Vue and accessibility finding: rules the plugins' recommended configs report as warnings are now errors, so the editor, a local `npm run lint` and CI agree. Apps that need the old behavior for a while spread `@waynestate/pinstripe/eslint/javascript-warn` or `/typescript-warn` instead.
+- The Prettier preset formats Blade views with `prettier-plugin-blade` (pinned to 3.3.3). The first run rewrites every `*.blade.php` file (4-space indent, a space after directive names such as `@vite (`, void tags self-closed), so reformat in a commit of its own.
+
+**Steps:** Your constraint is `^0.1`, which already allows 0.1.4, so update the locked version of `waynestate/pinstripe` to 0.1.4 (and `@waynestate/pinstripe` to 0.1.4 once it is on npm; check with `npm view @waynestate/pinstripe version`). If you use `pinstripe-baseline`, add the `legacy` flag first. Copy the two `.npmrc` lines from the README's "Supply chain" section into your app. To see ESLint findings in merge requests, run `eslint --format gitlab`.
+
+**How to verify:** `composer analyse` and `npm run lint` pass (or list the findings you now own), `pinstripe-baseline check` still counts your baseline, and `npx prettier --check "resources/views/**/*.blade.php"` passes after the one-time reformat.
+
+## 0.1.3 (2026-11-03)
+
+No breaking change. The one change that touches your app is that the install instructions now include `composer config allow-plugins.phpstan/extension-installer true`, so a non-interactive install works. The remaining items (the docs site, the ADR, the Node 22, 24 and 26 test matrix, the `laravel-vue` fixture, and the CI and deploy pins) are internal to Pinstripe.
 
 ## 0.1.2
 
