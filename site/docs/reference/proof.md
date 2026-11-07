@@ -12,6 +12,18 @@ This page says how Pinstripe was proven on real Wayne State applications: what r
 
 A suit is proven at the fitting, not on the hanger. So on 2026-11-05 the presets were fitted to every PHP application in the stack's shared proof corpus, the same set PROCTOR, Squire and Preflight are measured on.
 
+## Last run[#](https://pinstripe.apps.wayne.edu/docs/reference/proof.html#last-run)
+
+| Check | Date | Commit | Result | Duration |
+| --- | --- | --- | --- | --- |
+| `composer ci` (all five) | 2026-11-07 | bf8a2c3 | pass: 67 tests, 382 assertions, 1 skipped, exit 0 | 744 s |
+| `composer validate --strict` | 2026-11-07 | bf8a2c3 | pass: composer.json is valid | under 1 s |
+| `php bin/agent-ready.php --check` | 2026-11-07 | bf8a2c3 | pass: 22 agent-ready files current | 1 s |
+| `composer audit` | 2026-11-07 | bf8a2c3 | pass: no security vulnerability advisories found | 1 s |
+| `php bin/docs-site.php --check` | 2026-11-07 | bf8a2c3 | pass: 17 docs pages current | 3 s |
+
+To refresh this table, regenerate the site with `composer docs` and `composer site:agent-ready`, rerun `composer ci`, and rewrite the rows with the new counts and the commit you ran on. The 82-application proof run described below did not run here: its corpus of internal application repositories is not reachable from this machine, and the npm side (ESLint and Prettier for Vue) runs in the npm-test CI job, not in `composer ci`.
+
 ## What ran[#](https://pinstripe.apps.wayne.edu/docs/reference/proof.html#what-ran)
 
 Pinstripe 0.1.3, the presets as they are on `main`, with PHP 8.4. The 82 applications are 64 raw PHP apps (33 with a `composer.json`, 31 without one), 17 Laravel apps from 5.8 to 13, and 1 Slim 2 app. Laravel apps got the `laravel` presets; every other app got `per` and `raw`.

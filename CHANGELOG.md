@@ -5,6 +5,7 @@ All notable changes to Pinstripe are documented here.
 ## Unreleased
 
 - Changed: The canonical repository is git.wayne.edu (ADR-0021); docs, links and package metadata no longer point at the archived nougat copy.
+- Added: The Proof page records its last run.
 
 ## 0.1.4 (2026-11-06)
 
