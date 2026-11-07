@@ -69,7 +69,7 @@
 </tbody>
 </table></div>
 <p>With only Docker:</p>
-<pre><code>docker run --rm -v &quot;${PWD}:/app&quot; -w /app composer:2.10.3 sh -c &quot;composer install --no-interaction &amp;&amp; composer ci&quot;
+<pre tabindex="0"><code>docker run --rm -v &quot;${PWD}:/app&quot; -w /app composer:2.10.3 sh -c &quot;composer install --no-interaction &amp;&amp; composer ci&quot;
 </code></pre>
 <p><code>composer ci</code> runs <code>composer validate --strict</code>, PHPUnit and <code>composer audit</code>. The PHPUnit suite is the real check: it installs fixture apps and runs Pint and PHPStan with each preset against planted code, so a preset that stops catching something fails a test. <code>npm test</code> (<code>node --test</code>) covers the JS presets, and both pipelines run it on Node 22, so a broken ESLint or Prettier preset fails the build too.</p>
 <h2 id="ci">CI<a class="docs-heading-link" aria-label="Link to this section" href="#ci">#</a></h2>

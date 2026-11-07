@@ -43,24 +43,24 @@
 <p>This guide shows how to point a Vue app at Pinstripe's ESLint and Prettier presets.</p>
 <h2 id="install">Install<a class="docs-heading-link" aria-label="Link to this section" href="#install">#</a></h2>
 <p>Add Pinstripe as a dev dependency:</p>
-<pre><code>npm install --save-dev @waynestate/pinstripe eslint prettier
+<pre tabindex="0"><code>npm install --save-dev @waynestate/pinstripe eslint prettier
 </code></pre>
 <h2 id="configure-eslint">Configure ESLint<a class="docs-heading-link" aria-label="Link to this section" href="#configure-eslint">#</a></h2>
 <p>Create <code>eslint.config.js</code> and spread the preset. For TypeScript:</p>
-<pre><code class="language-js">import pinstripe from '@waynestate/pinstripe/eslint/typescript'
+<pre tabindex="0"><code class="language-js">import pinstripe from '@waynestate/pinstripe/eslint/typescript'
 
 export default [...pinstripe]
 </code></pre>
 <p>For plain JavaScript, import <code>@waynestate/pinstripe/eslint/javascript</code> instead.</p>
 <h2 id="configure-prettier">Configure Prettier<a class="docs-heading-link" aria-label="Link to this section" href="#configure-prettier">#</a></h2>
 <p>Point Prettier at the preset in <code>package.json</code>:</p>
-<pre><code class="language-json">{
+<pre tabindex="0"><code class="language-json">{
     &quot;prettier&quot;: &quot;@waynestate/pinstripe/prettier&quot;
 }
 </code></pre>
 <h2 id="add-scripts">Add scripts<a class="docs-heading-link" aria-label="Link to this section" href="#add-scripts">#</a></h2>
 <p>Add scripts that run on every OS:</p>
-<pre><code class="language-json">{
+<pre tabindex="0"><code class="language-json">{
     &quot;scripts&quot;: {
         &quot;lint&quot;: &quot;eslint .&quot;,
         &quot;format&quot;: &quot;prettier --write .&quot;

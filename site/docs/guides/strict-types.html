@@ -43,7 +43,7 @@
 <p>Opt in to <code>declare(strict_types=1)</code> so every file Pint touches carries the declaration.</p>
 <h2 id="point-the-scripts-at-the-strict-preset">Point the scripts at the strict preset<a class="docs-heading-link" aria-label="Link to this section" href="#point-the-scripts-at-the-strict-preset">#</a></h2>
 <p>Opt-in. Point <code>composer lint</code> and <code>composer fix</code> at the strict preset instead of <code>per.json</code>:</p>
-<pre><code class="language-json">{
+<pre tabindex="0"><code class="language-json">{
     &quot;scripts&quot;: {
         &quot;lint&quot;: &quot;pint --test --config vendor/waynestate/pinstripe/pint/per-strict.json&quot;,
         &quot;fix&quot;: &quot;pint --config vendor/waynestate/pinstripe/pint/per-strict.json&quot;

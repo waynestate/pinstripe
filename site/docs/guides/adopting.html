@@ -48,7 +48,7 @@
 <p>When the app bundles a third-party library in its own tree (a PDF or spreadsheet library copied in years ago), point Pint at your own folders instead of the whole app, for example <code>pint --test --config vendor/waynestate/pinstripe/pint/per.json src public</code>. Restyling a library you do not maintain makes every later update of it a conflict, and very large generated files, such as a PDF library's font maps, can keep Pint busy for many minutes.</p>
 <h2 id="ignore-comments-must-say-why">Ignore comments must say why<a class="docs-heading-link" aria-label="Link to this section" href="#ignore-comments-must-say-why">#</a></h2>
 <p>Every cut sets <code>reportIgnoresWithoutComments</code> and <code>reportUnmatchedIgnoredErrors</code>, so the preset reports an <code>@phpstan-ignore</code> that has no comment in parentheses and one whose identifier no longer matches an error on that line. The correct form keeps the reason and the exit plan on the same line:</p>
-<pre><code class="language-php">public function name(?string $v): string
+<pre tabindex="0"><code class="language-php">public function name(?string $v): string
 {
     // @phpstan-ignore return.type (why this is safe, and the plan to remove it)
     return $v;

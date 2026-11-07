@@ -44,7 +44,7 @@
 <h2 id="add-the-dependency">Add the dependency<a class="docs-heading-link" aria-label="Link to this section" href="#add-the-dependency">#</a></h2>
 <p>Add Pinstripe as a dev dependency:</p>
 <!-- docs-test: skip runs in the app, not in this repo -->
-<pre><code class="language-bash">composer config allow-plugins.phpstan/extension-installer true
+<pre tabindex="0"><code class="language-bash">composer config allow-plugins.phpstan/extension-installer true
 composer require --dev waynestate/pinstripe:^0.1
 </code></pre>
 <p>Pinstripe loads its PHPStan rules through <code>phpstan/extension-installer</code>, and Composer will not ask when it cannot prompt.
@@ -52,7 +52,7 @@ If Composer stops because a package your app already locks (often an older PHPSt
 Pinstripe 0.1.3 is on Packagist, and the npm package, <code>@waynestate/pinstripe</code>, is at 0.1.3.</p>
 <h2 id="point-phpstan-at-the-raw-config">Point PHPStan at the raw config<a class="docs-heading-link" aria-label="Link to this section" href="#point-phpstan-at-the-raw-config">#</a></h2>
 <p><code>phpstan.neon</code>:</p>
-<pre><code class="language-neon">includes:
+<pre tabindex="0"><code class="language-neon">includes:
     - vendor/waynestate/pinstripe/phpstan/raw.neon
 
 parameters:
@@ -61,7 +61,7 @@ parameters:
 </code></pre>
 <h2 id="add-composer-scripts">Add Composer scripts<a class="docs-heading-link" aria-label="Link to this section" href="#add-composer-scripts">#</a></h2>
 <p>Add Composer scripts that run on every OS:</p>
-<pre><code class="language-json">{
+<pre tabindex="0"><code class="language-json">{
     &quot;scripts&quot;: {
         &quot;lint&quot;: &quot;pint --test --config vendor/waynestate/pinstripe/pint/per.json&quot;,
         &quot;fix&quot;: &quot;pint --config vendor/waynestate/pinstripe/pint/per.json&quot;,
@@ -76,14 +76,14 @@ Pinstripe ships <code>phpstan/phpstan-deprecation-rules</code>, loaded automatic
 The tailor flags the old cut before the fabric is retired.</p>
 <h2 id="show-pint-findings-in-the-merge-request">Show Pint findings in the merge request<a class="docs-heading-link" aria-label="Link to this section" href="#show-pint-findings-in-the-merge-request">#</a></h2>
 <p>Add a second script that writes the report to a file:</p>
-<pre><code class="language-json">{
+<pre tabindex="0"><code class="language-json">{
     &quot;scripts&quot;: {
         &quot;lint:gitlab&quot;: &quot;pint --test --config vendor/waynestate/pinstripe/pint/per.json --format=gitlab &gt; pint-codequality.json&quot;
     }
 }
 </code></pre>
 <p>Point GitLab at the artifact:</p>
-<pre><code class="language-yaml">artifacts:
+<pre tabindex="0"><code class="language-yaml">artifacts:
     reports:
         codequality: pint-codequality.json
 </code></pre>

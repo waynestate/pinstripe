@@ -43,19 +43,19 @@
 <p>Keep a PHPStan baseline from growing by counting it and failing the build the moment it does.</p>
 <p>Pinstripe ships <code>pinstripe-baseline</code>, one PHP command that runs on every OS, to keep that promise. It reads both the NEON baseline and the PHP format (<code>phpstan-baseline.php</code>).</p>
 <h2 id="count-the-baseline">Count the baseline<a class="docs-heading-link" aria-label="Link to this section" href="#count-the-baseline">#</a></h2>
-<pre><code>vendor/bin/pinstripe-baseline count phpstan-baseline.neon
+<pre tabindex="0"><code>vendor/bin/pinstripe-baseline count phpstan-baseline.neon
 </code></pre>
 <p>prints how many errors the baseline ignores: the sum of each entry's <code>count</code>, 1 when <code>count</code> is absent.</p>
 <h2 id="check-against-a-limit">Check against a limit<a class="docs-heading-link" aria-label="Link to this section" href="#check-against-a-limit">#</a></h2>
-<pre><code>vendor/bin/pinstripe-baseline check --max=42 phpstan-baseline.neon
+<pre tabindex="0"><code>vendor/bin/pinstripe-baseline check --max=42 phpstan-baseline.neon
 </code></pre>
 <p>exits 1 with <code>baseline grew: N errors, the most allowed is M</code> when the count is above the limit, 0 otherwise.</p>
 <h2 id="check-against-the-target-branch">Check against the target branch<a class="docs-heading-link" aria-label="Link to this section" href="#check-against-the-target-branch">#</a></h2>
 <p>To compare with the target branch instead of a fixed number, pass a git ref:</p>
-<pre><code>vendor/bin/pinstripe-baseline check --against=origin/main phpstan-baseline.neon
+<pre tabindex="0"><code>vendor/bin/pinstripe-baseline check --against=origin/main phpstan-baseline.neon
 </code></pre>
 <p>In GitLab CI the merge request's base SHA is already in the environment:</p>
-<pre><code>vendor/bin/pinstripe-baseline check --against=$CI_MERGE_REQUEST_DIFF_BASE_SHA phpstan-baseline.neon
+<pre tabindex="0"><code>vendor/bin/pinstripe-baseline check --against=$CI_MERGE_REQUEST_DIFF_BASE_SHA phpstan-baseline.neon
 </code></pre>
 <h2 id="the-policy">The policy<a class="docs-heading-link" aria-label="Link to this section" href="#the-policy">#</a></h2>
 <p>An existing app may generate a baseline once with <code>phpstan analyse --generate-baseline</code> and include it in its <code>phpstan.neon</code>; new code gets no baseline. The count a baseline holds is the sum of each entry's <code>count</code>, 1 when <code>count</code> is absent, and <code>pinstripe-baseline count</code> prints it. <code>bin/pinstripe-baseline check</code> fails the build (exit 1) when the baseline grows, either against a fixed limit with <code>--max=&lt;n&gt;</code> or against a git ref with <code>--against=&lt;git-ref&gt;</code>; in GitLab CI the merge request's base SHA is already in the environment as <code>$CI_MERGE_REQUEST_DIFF_BASE_SHA</code>. Exit codes: 0 ok, 1 the baseline grew, 2 usage or baseline problem.</p>
