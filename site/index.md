@@ -414,7 +414,7 @@ The whole wardrobe
 
 ## Worn across the stack
 
-Most of the stack's PHP projects check their own code with Pinstripe. WELD starts from a copy of its Laravel presets. Apps that Sourdough makes don't include it yet.
+Most of the stack's PHP projects check their own code with Pinstripe. WELD starts from a copy of its Laravel presets, and every app Sourdough makes comes with it already on, measured for all five shapes.
 
 - [WayneUI](https://wayneui.apps.wayne.edu/)
   The interface
@@ -431,7 +431,7 @@ Most of the stack's PHP projects check their own code with Pinstripe. WELD start
 - Pinstripe
   The tailor (you are here)
 - [Sourdough](https://sourdough.apps.wayne.edu/)
-  Starts a raw PHP app
+  Starts an app in any of the five shapes
 - [WELD](https://weld.apps.wayne.edu/)
   The Laravel and Vue starter
 - [Squire](https://squire.apps.wayne.edu/)
