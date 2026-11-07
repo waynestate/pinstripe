@@ -12,6 +12,8 @@ All notable changes to Pinstripe are documented here.
 
 ## Unreleased[#](https://pinstripe.apps.wayne.edu/docs/changelog.html#unreleased)
 
+- Changed: The canonical repository is git.wayne.edu (ADR-0021); docs, links and package metadata no longer point at the archived nougat copy.
+
 ## 0.1.4 (2026-11-06)[#](https://pinstripe.apps.wayne.edu/docs/changelog.html#0-1-4-2026-11-06)
 
 - Fixed: `pinstripe-baseline` mutes deprecations while it loads the app's autoloader, so an old package in the app no longer prints PHP warnings ahead of the count a script reads (found by the 2026-11-05 proof run; new test in tests/BaselineTest.php).

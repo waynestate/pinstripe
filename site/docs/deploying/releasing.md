@@ -14,7 +14,7 @@ This page sets out the steps to release Pinstripe, from the CHANGELOG to the npm
 2. Set the same version in `package.json`.
 3. `composer ci` and `npm test` green locally, then both pipelines green for that commit.
 4. Run a secrets scan of the history and check that nothing internal is in the tree.
-5. Tag `X.Y.Z` (no `v`) on nougat. The mirror carries the tag to GitHub, and Packagist picks it up from there.
+5. Tag `X.Y.Z` (no `v`) on git.wayne.edu. The push mirror carries the tag to GitHub, and Packagist picks it up from there.
 6. **npm is published by hand,** after the tag, from a clean checkout of the tagged commit, by an owner of the `@waynestate` npm scope with two-factor auth:
    ```
    npm ci --ignore-scripts
