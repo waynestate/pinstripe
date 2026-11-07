@@ -13,12 +13,11 @@ A suit is proven at the fitting, not on the hanger. So on 2026-11-05 the presets
 
 | Check | Date | Commit | Result | Duration |
 |---|---|---|---|---|
-| `composer validate --strict` | 2026-11-07 | eb03078 | pass: composer.json is valid | 1 s |
-| `vendor/bin/phpunit` | 2026-11-07 | eb03078 | pass: 67 tests, 382 assertions, 1 skipped (the tag-pipeline version test) | 836 s |
-| `php bin/agent-ready.php --check` | 2026-11-07 | eb03078 | pass: 22 agent-ready files current | 1 s |
-| `composer audit` | 2026-11-07 | eb03078 | pass: no security vulnerability advisories found | under 1 s |
-| `php bin/docs-site.php --check` | 2026-11-07 | eb03078 | pass: 17 docs pages current | 4 s |
-| `composer ci` (all five) | 2026-11-07 | eb03078 | pass: exit 0 | 690 s |
+| `composer ci` (all five) | 2026-11-07 | bf8a2c3 | pass: 67 tests, 382 assertions, 1 skipped, exit 0 | 744 s |
+| `composer validate --strict` | 2026-11-07 | bf8a2c3 | pass: composer.json is valid | under 1 s |
+| `php bin/agent-ready.php --check` | 2026-11-07 | bf8a2c3 | pass: 22 agent-ready files current | 1 s |
+| `composer audit` | 2026-11-07 | bf8a2c3 | pass: no security vulnerability advisories found | 1 s |
+| `php bin/docs-site.php --check` | 2026-11-07 | bf8a2c3 | pass: 17 docs pages current | 3 s |
 
 To refresh this table, regenerate the site with `composer docs` and `composer site:agent-ready`, rerun `composer ci`, and rewrite the rows with the new counts and the commit you ran on. The 82-application proof run described below did not run here: its corpus of internal application repositories is not reachable from this machine, and the npm side (ESLint and Prettier for Vue) runs in the npm-test CI job, not in `composer ci`.
 
