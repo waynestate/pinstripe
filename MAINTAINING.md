@@ -19,9 +19,9 @@ changes here are small, tested, and announced.
 
 ## Where it lives
 
-Development happens on nougat (the canonical repo, [enterprise-apps/pinstripe](https://nougat.snu.gs/enterprise-apps/pinstripe)).
-This GitHub repository and git.wayne.edu are read-only mirrors: `main` and tags are copied automatically, and changes,
-issues and merge requests go to nougat. Nobody pushes to the mirrors.
+Development happens on git.wayne.edu (the canonical repo, [enterprise-apps/pinstripe](https://git.wayne.edu/enterprise-apps/pinstripe); clone over SSH: `git@git.wayne.edu:enterprise-apps/pinstripe.git`).
+This GitHub repository is a read-only push mirror of it: `main` and tags are copied automatically, nobody pushes to it,
+and Packagist and npm read from it. Changes, issues and merge requests go to git.wayne.edu, where tags are made by the maintainer with an approver.
 
 ## Build and test
 
@@ -70,7 +70,7 @@ it on Node 22, so a broken ESLint or Prettier preset fails the build too.
 2. Set the same version in `package.json`.
 3. `composer ci` and `npm test` green locally, then both pipelines green for that commit.
 4. Run a secrets scan of the history and check that nothing internal is in the tree.
-5. Tag `X.Y.Z` (no `v`) on nougat. The mirror carries the tag to GitHub, and Packagist picks it up from there.
+5. Tag `X.Y.Z` (no `v`) on git.wayne.edu. The push mirror carries the tag to GitHub, and Packagist picks it up from there.
 6. **npm is published by hand,** after the tag, from a clean checkout of the tagged commit, by an owner of the
    `@waynestate` npm scope with two-factor auth:
    ```
