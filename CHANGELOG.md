@@ -4,6 +4,7 @@ All notable changes to Pinstripe are documented here.
 
 ## Unreleased
 
+- Changed: the GitLab pipeline pins the Preflight components to 0.2.0 (was 0.1.4).
 - Fixed: the front page says Sourdough starts all five app shapes and that every app it makes comes with Pinstripe on; it said raw PHP only, and that Sourdough apps did not include Pinstripe yet.
 
 - Changed: CI caches Composer and npm downloads per lock file (`.composer-cache`, keyed on `composer.lock` and `deploy/composer.lock`, and `.npm-cache`), so a pipeline stops fetching every package from Packagist and npm on every run. Images already come through the Dependency Proxy.
