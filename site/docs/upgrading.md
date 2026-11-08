@@ -14,6 +14,14 @@ This page walks through each released version of Pinstripe, what changed for con
 
 A stricter preset breaks consumers' builds. Pinstripe ships such a change in a minor version, not a major one, so you opt in by updating the package. When a version below marks a change as breaking, it is a stricter preset taking effect in your app the moment you update to it; hold the current version until you are ready.
 
+## Unreleased[#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#unreleased)
+
+**Breaking (a stricter fit):** every cut bans `eval()`, `extract()`, `var_dump()`, `dd()`, `dump()` and Laravel's `PendingRequest::withoutVerifying()` (including `Http::withoutVerifying()`), through `spaze/phpstan-disallowed-calls`, which Pinstripe now requires. An app with one of these left in fails `composer analyse` once it updates.
+
+**Steps:** Update the locked version of `waynestate/pinstripe` when this ships; Composer pulls in `spaze/phpstan-disallowed-calls` and the extension installer registers it, so `phpstan.neon` needs no new line. Fix each reported call as the message says, or keep one on purpose with `@phpstan-ignore pinstripe.banned.<name> (why)`. See [Banned calls](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html).
+
+**How to verify:** `composer analyse` passes, or lists only the banned calls you now own.
+
 ## 0.1.4 (2026-11-06)[#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#0-1-4-2026-11-06)
 
 **Breaking (three tailoring changes, each a stricter fit):**

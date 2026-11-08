@@ -56,6 +56,10 @@
           "path": "reference/tested-with"
         },
         {
+          "title": "Banned calls",
+          "path": "reference/banned-calls"
+        },
+        {
           "title": "Best practices",
           "path": "reference/best-practices"
         },

@@ -29,6 +29,10 @@ Your `phpstan.neon` includes `vendor/waynestate/pinstripe/phpstan/laravel.neon` 
 
 The Laravel preset also rejects `env()` outside `config/`: once the config is cached, `env()` returns null, so read config with `config()` instead. The rule is Larastan's, and `phpstan/laravel.neon` pins it on. The environment is not a hand-me-down: take the config out of the wardrobe.
 
+## Banned calls
+
+Every cut also fails on `eval()`, `extract()`, `var_dump()`, `dd()`, `dump()` and the HTTP client's `withoutVerifying()`, whether you call it as `Http::withoutVerifying()` or partway down a chain. The [Banned calls](../reference/banned-calls.md) page says why and what to use instead.
+
 ## Proven on Laravel
 
 `composer ci` lints a minimal Laravel 13 app (`tests/fixtures/laravel-app`) with `pint/laravel.json` and analyzes it with `phpstan/laravel.neon` on every run, and fails if the app stops passing. A smaller fixture (`tests/fixtures/laravel`) proves the preset really loads Larastan: it plants an undefined Eloquent property that only Larastan reports, and a clean twin it leaves alone. The combined fixture `tests/fixtures/laravel-vue` is one app tree with both PHP and Vue files, with `resources/js` beside `app/`. `composer ci` lints its PHP side with Pint and PHPStan and its Vue side with ESLint and Prettier on every run, with one planted PHP error and two planted Vue defects that each preset must report.

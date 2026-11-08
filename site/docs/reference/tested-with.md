@@ -18,6 +18,7 @@ This page records the tool versions Pinstripe is tested with and the PHP or Node
 - PHPStan strict-rules 2.1.0
 - Larastan 3.13.2
 - Rector 2.8.2
+- PHPStan disallowed-calls 4.15.0
 - ESLint 10.13.0
 - Prettier 3.9.10
 - eslint-plugin-vue 10.12.0
@@ -39,6 +40,7 @@ PHP tools:
 | `phpstan/phpstan-deprecation-rules` | 2.0.5 | `^7.4 \|\| ^8.0` |
 | `larastan/larastan` | v3.13.2 | `^8.2` |
 | `rector/rector` | 2.8.2 | `^7.4\|^8.0` |
+| `spaze/phpstan-disallowed-calls` | v4.15.0 | `^7.4 \|\| ^8.0` |
 
 Node tools:
 

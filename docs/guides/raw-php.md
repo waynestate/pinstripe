@@ -54,6 +54,8 @@ Add Composer scripts that run on every OS:
 Pinstripe ships `phpstan/phpstan-deprecation-rules`, loaded automatically by
 `phpstan/extension-installer`. Calling a `@deprecated` method fails the build.
 The tailor flags the old cut before the fabric is retired.
+It also fails on `eval()`, `extract()`, `var_dump()`, `dd()` and `dump()`: the
+[Banned calls](../reference/banned-calls.md) page says why and what to use instead.
 
 ## Show Pint findings in the merge request
 
