@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Changelog | Pinstripe docs</title>
 <meta name="description" content="All notable changes to this project.">
-<meta name="docs-version" content="0.1.4">
+<meta name="docs-version" content="0.2.0">
 <link rel="stylesheet" href="../assets/wayne-ui/wayne-ui.css">
 <link rel="stylesheet" href="../assets/docs.css">
 <link rel="stylesheet" href="../docs/theme/pinstripe.css">
@@ -29,7 +29,7 @@
       <a href="../index.html#try">Try it on</a>
       <a href="../docs/index.html" aria-current="page">Docs</a>
     </nav>
-    <span class="size-label"><span class="size-label__k">size</span> 0.1.4</span>
+    <span class="size-label"><span class="size-label__k">size</span> 0.2.0</span>
   </div>
 </header><div class="docs-layout docs-layout--toc">
   <details class="docs-menu">
@@ -43,79 +43,32 @@
 <h1 id="changelog">Changelog<a class="docs-heading-link" aria-label="Link to this section" href="#changelog">#</a></h1>
 <p>All notable changes to Pinstripe are documented here.</p>
 <h2 id="unreleased">Unreleased<a class="docs-heading-link" aria-label="Link to this section" href="#unreleased">#</a></h2>
+<h2 id="0-2-0-2026-11-08">0.2.0 (2026-11-08)<a class="docs-heading-link" aria-label="Link to this section" href="#0-2-0-2026-11-08">#</a></h2>
 <ul>
-<li>
-<p>Changed: every banned call's tip links to the CREED rule it enforces (code handbook, Banned patterns) as well as to Pinstripe's banned-calls page; <code>tests/BannedCallLinksTest.php</code> keeps it that way.</p>
-</li>
-<li>
-<p>Docs: the README says how CREED's PHP floor reaches the tools (PROCTOR's php-floor check, then Booster; the presets keep reading composer.json), and &quot;Coming next&quot; names the handbook-linked custom rules instead of a policy.json reader.</p>
-</li>
-<li>
-<p>Changed: the deploy layer runs Squire's kit 0.7.1 (was 0.6.0): <code>.squire/php.ini</code> no longer sets the deprecated <code>session.sid_*</code> lines, web requests get a <code>disable_functions</code> list and Apache hardening (<code>.squire/php-web.ini</code>, <code>.squire/apache-hardening.conf</code>), and opcache gets production settings with <code>SQUIRE_OPCACHE_VALIDATE</code> as the one switch.</p>
-</li>
-<li>
-<p>Added: CI runs Preflight's a11y component (0.3.1) on site/, every page in light and dark at 320 and 1280 px with the WCAG 1.4.10 reflow check, blocking.</p>
-</li>
-<li>
-<p>Changed: CI pins the Preflight components to 0.3.1 (fixed cache keys, and caches saved even when a job fails; D-072).</p>
-</li>
-<li>
-<p>Changed: CI saves its Composer and npm caches even when a job fails, so a retry after a dropped download fetches only what is missing (D-072).</p>
-</li>
-<li>
-<p>Changed: CI caches Composer and npm downloads under a fixed key, so a lock change downloads only what changed (D-072).</p>
-</li>
-<li>
-<p>Changed: HELMET moves to <code>^1.0</code>, its first stable release, wherever this repo requires it.</p>
-</li>
-<li>
-<p>Fixed: the docs menu closes with Escape and hands focus back to its button (docs kit synced from Squire).</p>
-</li>
-<li>
-<p>Fixed: the docs kit's copy button no longer covers the first line of code when it says Copied or Failed: over the code it keeps its resting width and shows a check or a cross when the word does not fit (docs kit synced from Squire).</p>
-</li>
-<li>
-<p>Fixed: the front page's version chip shows the full version the docs show (size 0.1.4, was size 0.1). It carries <code>data-docs-version</code> now, so the docs builder (synced from Squire) rewrites it at every release and <code>composer docs:check</code> fails while it is stale.</p>
-</li>
-<li>
-<p>Changed: the deploy layer requires PROCTOR ^0.8 (locked 0.8.0).</p>
-</li>
-<li>
-<p>Changed: the pipeline pins every Preflight CI component to 0.3.0 (<a rel="noopener" href="mailto:preflight@0.3.0">preflight@0.3.0</a>); component image inputs are plain image names, since Preflight adds the Dependency Proxy prefix itself.</p>
-</li>
-<li>
-<p>Added: a test that proves <code>npm install --ignore-scripts</code> stops a postinstall script, and the eslint-config-prettier floor is ^10.1.8, past the releases hit by CVE-2025-54313.</p>
-</li>
-<li>
-<p>Added: banned calls. Every PHPStan cut includes the new <code>phpstan/disallowed.neon</code>, which bans <code>eval()</code>, <code>extract()</code>, <code>var_dump()</code>, <code>dd()</code>, <code>dump()</code> and Laravel's <code>PendingRequest::withoutVerifying()</code> (the <code>Http::withoutVerifying()</code> facade call too) through <code>spaze/phpstan-disallowed-calls</code> <code>^4.15</code> (now in <code>require</code>, locked 4.15.0, loaded by the extension installer). Each message says why and what to use instead, ends with its OWASP Top 10:2025 tag (A05 Injection or A02 Security Misconfiguration), and has a stable identifier (<code>pinstripe.banned.*</code>) for a reasoned ignore. Breaking for apps with one left in: a leftover <code>dd()</code> now fails the pipeline. <code>md5()</code>, <code>sha1()</code>, <code>rand()</code> and <code>mt_rand()</code> are not banned; that call is open. New README section and docs page, Banned calls; new fixtures <code>tests/fixtures/raw-disallowed</code>, <code>tests/fixtures/laravel/src/InsecureHttp.php</code> and <code>tests/fixtures/laravel-app/banned</code>.</p>
-</li>
-<li>
-<p>Added: the Rector preset turns on the composer-based Laravel sets (<code>withComposerBased(laravel: true)</code>); apps that install driftingly/rector-laravel get the Laravel upgrade rules for their installed version, and apps without it see no change.</p>
-</li>
-<li>
-<p>Changed: the front page's <code>deploy/build.sh</code> revision marker is 2, for a Citadel build-cache test (does a full Update run the edited <code>build.sh</code>?).</p>
-</li>
-<li>
-<p>Fixed: the pipeline's PROCTOR jobs no longer pass <code>--policy</code>, which PROCTOR 0.7 refuses in CI; PROCTOR checks against the CREED policy it bundles.</p>
-</li>
-<li>
-<p>Changed: the front page's deploy layer (<code>deploy/</code>) runs Squire's kit 0.6.0 (was 0.5.0): <code>scripts/release.sh</code> asks PROCTOR's deploy gate for a go or no-go on each release (a report, not a stop, unless <code>SQUIRE_PROCTOR=enforce</code>), and <code>.env.squire.example</code> lists the new setting. The layer's pins move to HELMET <code>^0.4</code> (locked 0.4.0) and PROCTOR <code>^0.7</code> (locked 0.7.0).</p>
-</li>
-<li>
-<p>Fixed: the front page says Sourdough starts all five app shapes and that every app it makes comes with Pinstripe on; it said raw PHP only, and that Sourdough apps did not include Pinstripe yet.</p>
-</li>
-<li>
-<p>Changed: CI caches Composer and npm downloads per lock file (<code>.composer-cache</code>, keyed on <code>composer.lock</code> and <code>deploy/composer.lock</code>, and <code>.npm-cache</code>), so a pipeline stops fetching every package from Packagist and npm on every run. Images already come through the Dependency Proxy.</p>
-</li>
-<li>
-<p>Changed: the front page's deploy layer (<code>deploy/</code>) runs Squire's kit 0.5.0 (was 0.3.4): <code>oracle-check.php</code> arrives, <code>scripts/release.sh</code>, <code>scripts/parity.ps1</code> and <code>.squire/base-fallback.Dockerfile</code> take the new templates, and <code>docker-compose.squire.yml</code>, which Renovate had edited, is Squire's template again, so <code>squire init --check</code> passes. <code>site/assets/stack-env.js</code> takes the stack's one copy, with bindingless catch blocks.</p>
-</li>
-<li>
-<p>Changed: The canonical repository is git.wayne.edu (ADR-0021); docs, links and package metadata no longer point at the archived nougat copy.</p>
-</li>
-<li>
-<p>Added: The Proof page records its last run.</p>
-</li>
+<li>Changed: every banned call's tip links to the CREED rule it enforces (code handbook, Banned patterns) as well as to Pinstripe's banned-calls page; <code>tests/BannedCallLinksTest.php</code> keeps it that way.</li>
+<li>Docs: the README says how CREED's PHP floor reaches the tools (PROCTOR's php-floor check, then Booster; the presets keep reading composer.json); &quot;Coming next&quot; is empty for now, since both items it named are built.</li>
+<li>Changed: the deploy layer runs Squire's kit 0.7.1 (was 0.6.0): <code>.squire/php.ini</code> no longer sets the deprecated <code>session.sid_*</code> lines, web requests get a <code>disable_functions</code> list and Apache hardening (<code>.squire/php-web.ini</code>, <code>.squire/apache-hardening.conf</code>), and opcache gets production settings with <code>SQUIRE_OPCACHE_VALIDATE</code> as the one switch.</li>
+<li>Added: CI runs Preflight's a11y component (0.3.1) on site/, every page in light and dark at 320 and 1280 px with the WCAG 1.4.10 reflow check, blocking.</li>
+<li>Changed: CI pins the Preflight components to 0.3.1 (fixed cache keys, and caches saved even when a job fails; D-072).</li>
+<li>Changed: CI saves its Composer and npm caches even when a job fails, so a retry after a dropped download fetches only what is missing (D-072).</li>
+<li>Changed: CI caches Composer and npm downloads under a fixed key, so a lock change downloads only what changed (D-072).</li>
+<li>Changed: HELMET moves to <code>^1.0</code>, its first stable release, wherever this repo requires it.</li>
+<li>Fixed: the docs menu closes with Escape and hands focus back to its button (docs kit synced from Squire).</li>
+<li>Fixed: the docs kit's copy button no longer covers the first line of code when it says Copied or Failed: over the code it keeps its resting width and shows a check or a cross when the word does not fit (docs kit synced from Squire).</li>
+<li>Fixed: the front page's version chip shows the full version the docs show (size 0.1.4, was size 0.1). It carries <code>data-docs-version</code> now, so the docs builder (synced from Squire) rewrites it at every release and <code>composer docs:check</code> fails while it is stale.</li>
+<li>Changed: the deploy layer requires PROCTOR ^0.8 (locked 0.8.0).</li>
+<li>Changed: the pipeline pins every Preflight CI component to 0.3.0 (<a rel="noopener" href="mailto:preflight@0.3.0">preflight@0.3.0</a>); component image inputs are plain image names, since Preflight adds the Dependency Proxy prefix itself.</li>
+<li>Added: a test that proves <code>npm install --ignore-scripts</code> stops a postinstall script, and the eslint-config-prettier floor is ^10.1.8, past the releases hit by CVE-2025-54313.</li>
+<li>Added: banned calls. Every PHPStan cut includes the new <code>phpstan/disallowed.neon</code>, which bans <code>eval()</code>, <code>extract()</code>, <code>var_dump()</code>, <code>dd()</code>, <code>dump()</code> and Laravel's <code>PendingRequest::withoutVerifying()</code> (the <code>Http::withoutVerifying()</code> facade call too) through <code>spaze/phpstan-disallowed-calls</code> <code>^4.15</code> (now in <code>require</code>, locked 4.15.0, loaded by the extension installer). Each message says why and what to use instead, ends with its OWASP Top 10:2025 tag (A05 Injection or A02 Security Misconfiguration), and has a stable identifier (<code>pinstripe.banned.*</code>) for a reasoned ignore. Breaking for apps with one left in: a leftover <code>dd()</code> now fails the pipeline. <code>md5()</code>, <code>sha1()</code>, <code>rand()</code> and <code>mt_rand()</code> are not banned; that call is open. New README section and docs page, Banned calls; new fixtures <code>tests/fixtures/raw-disallowed</code>, <code>tests/fixtures/laravel/src/InsecureHttp.php</code> and <code>tests/fixtures/laravel-app/banned</code>.</li>
+<li>Added: the Rector preset turns on the composer-based Laravel sets (<code>withComposerBased(laravel: true)</code>); apps that install driftingly/rector-laravel get the Laravel upgrade rules for their installed version, and apps without it see no change.</li>
+<li>Changed: the front page's <code>deploy/build.sh</code> revision marker is 2, for a Citadel build-cache test (does a full Update run the edited <code>build.sh</code>?).</li>
+<li>Fixed: the pipeline's PROCTOR jobs no longer pass <code>--policy</code>, which PROCTOR 0.7 refuses in CI; PROCTOR checks against the CREED policy it bundles.</li>
+<li>Changed: the front page's deploy layer (<code>deploy/</code>) runs Squire's kit 0.6.0 (was 0.5.0): <code>scripts/release.sh</code> asks PROCTOR's deploy gate for a go or no-go on each release (a report, not a stop, unless <code>SQUIRE_PROCTOR=enforce</code>), and <code>.env.squire.example</code> lists the new setting. The layer's pins move to HELMET <code>^0.4</code> (locked 0.4.0) and PROCTOR <code>^0.7</code> (locked 0.7.0).</li>
+<li>Fixed: the front page says Sourdough starts all five app shapes and that every app it makes comes with Pinstripe on; it said raw PHP only, and that Sourdough apps did not include Pinstripe yet.</li>
+<li>Changed: CI caches Composer and npm downloads per lock file (<code>.composer-cache</code>, keyed on <code>composer.lock</code> and <code>deploy/composer.lock</code>, and <code>.npm-cache</code>), so a pipeline stops fetching every package from Packagist and npm on every run. Images already come through the Dependency Proxy.</li>
+<li>Changed: the front page's deploy layer (<code>deploy/</code>) runs Squire's kit 0.5.0 (was 0.3.4): <code>oracle-check.php</code> arrives, <code>scripts/release.sh</code>, <code>scripts/parity.ps1</code> and <code>.squire/base-fallback.Dockerfile</code> take the new templates, and <code>docker-compose.squire.yml</code>, which Renovate had edited, is Squire's template again, so <code>squire init --check</code> passes. <code>site/assets/stack-env.js</code> takes the stack's one copy, with bindingless catch blocks.</li>
+<li>Changed: The canonical repository is git.wayne.edu (ADR-0021); docs, links and package metadata no longer point at the archived nougat copy.</li>
+<li>Added: The Proof page records its last run.</li>
 </ul>
 <h2 id="0-1-4-2026-11-06">0.1.4 (2026-11-06)<a class="docs-heading-link" aria-label="Link to this section" href="#0-1-4-2026-11-06">#</a></h2>
 <ul>
@@ -181,10 +134,10 @@
     </main>
     <nav class="docs-pager" aria-label="Pages"><a class="docs-pager__link" href="../docs/contributing.html"><span class="docs-pager__dir">Previous</span><span class="docs-pager__title">Contributing</span></a></nav>
   </div>
-  <nav class="docs-toc" aria-label="On this page"><h2 class="docs-toc__title">On this page</h2><ul class="docs-toc__list"><li class="docs-toc__item"><a href="#unreleased">Unreleased</a></li><li class="docs-toc__item"><a href="#0-1-4-2026-11-06">0.1.4 (2026-11-06)</a></li><li class="docs-toc__item"><a href="#0-1-3-2026-11-03">0.1.3 (2026-11-03)</a></li><li class="docs-toc__item"><a href="#0-1-2-2026-11-03">0.1.2 (2026-11-03)</a></li><li class="docs-toc__item"><a href="#0-1-1-2026-10-29">0.1.1 (2026-10-29)</a></li><li class="docs-toc__item"><a href="#0-1-0-2026-10-29">0.1.0 (2026-10-29)</a></li></ul></nav>
+  <nav class="docs-toc" aria-label="On this page"><h2 class="docs-toc__title">On this page</h2><ul class="docs-toc__list"><li class="docs-toc__item"><a href="#unreleased">Unreleased</a></li><li class="docs-toc__item"><a href="#0-2-0-2026-11-08">0.2.0 (2026-11-08)</a></li><li class="docs-toc__item"><a href="#0-1-4-2026-11-06">0.1.4 (2026-11-06)</a></li><li class="docs-toc__item"><a href="#0-1-3-2026-11-03">0.1.3 (2026-11-03)</a></li><li class="docs-toc__item"><a href="#0-1-2-2026-11-03">0.1.2 (2026-11-03)</a></li><li class="docs-toc__item"><a href="#0-1-1-2026-10-29">0.1.1 (2026-10-29)</a></li><li class="docs-toc__item"><a href="#0-1-0-2026-10-29">0.1.0 (2026-10-29)</a></li></ul></nav>
 </div>
 <footer class="docs-footer">
-  <span>Documents Pinstripe <span data-docs-version>0.1.4</span></span>
+  <span>Documents Pinstripe <span data-docs-version>0.2.0</span></span>
   <span><a rel="noopener" href="https://github.com/waynestate/pinstripe">Source</a> <a href="changelog.md">Markdown</a></span>
 </footer>
 </body>

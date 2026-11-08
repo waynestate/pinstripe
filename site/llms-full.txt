@@ -1017,8 +1017,10 @@ All notable changes to Pinstripe are documented here.
 
 ### Unreleased[#](https://pinstripe.apps.wayne.edu/docs/changelog.html#unreleased)
 
+### 0.2.0 (2026-11-08)[#](https://pinstripe.apps.wayne.edu/docs/changelog.html#0-2-0-2026-11-08)
+
 - Changed: every banned call's tip links to the CREED rule it enforces (code handbook, Banned patterns) as well as to Pinstripe's banned-calls page; `tests/BannedCallLinksTest.php` keeps it that way.
-- Docs: the README says how CREED's PHP floor reaches the tools (PROCTOR's php-floor check, then Booster; the presets keep reading composer.json), and "Coming next" names the handbook-linked custom rules instead of a policy.json reader.
+- Docs: the README says how CREED's PHP floor reaches the tools (PROCTOR's php-floor check, then Booster; the presets keep reading composer.json); "Coming next" is empty for now, since both items it named are built.
 - Changed: the deploy layer runs Squire's kit 0.7.1 (was 0.6.0): `.squire/php.ini` no longer sets the deprecated `session.sid_*` lines, web requests get a `disable_functions` list and Apache hardening (`.squire/php-web.ini`, `.squire/apache-hardening.conf`), and opcache gets production settings with `SQUIRE_OPCACHE_VALIDATE` as the one switch.
 - Added: CI runs Preflight's a11y component (0.3.1) on site/, every page in light and dark at 320 and 1280 px with the WCAG 1.4.10 reflow check, blocking.
 - Changed: CI pins the Preflight components to 0.3.1 (fixed cache keys, and caches saved even when a job fails; D-072).
@@ -1650,7 +1652,7 @@ composer analyse
 
 ### Status[#](https://pinstripe.apps.wayne.edu/docs/#status)
 
-The repository is at version 0.1.4. The npm package, `@waynestate/pinstripe`, follows each tag at the same version, published by hand. The canonical repository is on git.wayne.edu; GitHub is a read-only push mirror of it, and Packagist and npm read from it. The agent-ready site ships a plain-text twin for machines: [llms.txt](https://pinstripe.apps.wayne.edu/llms.txt).
+The repository is at version 0.2.0. The npm package, `@waynestate/pinstripe`, follows each tag at the same version, published by hand. The canonical repository is on git.wayne.edu; GitHub is a read-only push mirror of it, and Packagist and npm read from it. The agent-ready site ships a plain-text twin for machines: [llms.txt](https://pinstripe.apps.wayne.edu/llms.txt).
 
 ### Related[#](https://pinstripe.apps.wayne.edu/docs/#related)
 
@@ -2006,13 +2008,15 @@ This page walks through each released version of Pinstripe, what changed for con
 
 A stricter preset breaks consumers' builds. Pinstripe ships such a change in a minor version, not a major one, so you opt in by updating the package. When a version below marks a change as breaking, it is a stricter preset taking effect in your app the moment you update to it; hold the current version until you are ready.
 
-### Unreleased[#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#unreleased)
+### 0.2.0 (2026-11-08)[#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#0-2-0-2026-11-08)
 
-**Breaking (a stricter fit):** every cut bans `eval()`, `extract()`, `var_dump()`, `dd()`, `dump()` and Laravel's `PendingRequest::withoutVerifying()` (including `Http::withoutVerifying()`), through `spaze/phpstan-disallowed-calls`, which Pinstripe now requires. An app with one of these left in fails `composer analyse` once it updates.
+**Breaking (a stricter fit):** every cut bans `eval()`, `extract()`, `var_dump()`, `dd()`, `dump()` and Laravel's `PendingRequest::withoutVerifying()` (including `Http::withoutVerifying()`), through `spaze/phpstan-disallowed-calls`, which Pinstripe now requires. An app with one of these left in fails `composer analyse` once it updates. Each finding's tip links to [Banned calls](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html) and to the [CREED rule](https://creed.apps.wayne.edu/handbook/code.html#banned-patterns) it enforces.
 
-**Steps:** Update the locked version of `waynestate/pinstripe` when this ships; Composer pulls in `spaze/phpstan-disallowed-calls` and the extension installer registers it, so `phpstan.neon` needs no new line. Fix each reported call as the message says, or keep one on purpose with `@phpstan-ignore pinstripe.banned.<name> (why)`. See [Banned calls](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html).
+**Also new for you:** the Rector preset turns on the composer-based Laravel sets, so an app that installs `driftingly/rector-laravel` sees the Laravel upgrade rules for its installed Laravel version in a dry-run; apps without it see no change.
 
-**How to verify:** `composer analyse` passes, or lists only the banned calls you now own.
+**Steps:** Your constraint is `^0.1`, which does not allow 0.2.0, so nothing changes until you move. When you are ready, run `composer require --dev waynestate/pinstripe:^0.2` (and `npm install --save-dev @waynestate/pinstripe@^0.2` once 0.2.0 is on npm; check with `npm view @waynestate/pinstripe version`). Composer pulls in `spaze/phpstan-disallowed-calls` and the extension installer registers it, so `phpstan.neon` needs no new line. Fix each reported call as the message says, or keep one on purpose with `@phpstan-ignore pinstripe.banned.<name> (why)`.
+
+**How to verify:** `composer analyse` passes, or lists only the banned calls you now own, and `vendor/bin/rector process --dry-run` shows only changes you expect.
 
 ### 0.1.4 (2026-11-06)[#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#0-1-4-2026-11-06)
 

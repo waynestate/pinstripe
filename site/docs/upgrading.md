@@ -14,13 +14,15 @@ This page walks through each released version of Pinstripe, what changed for con
 
 A stricter preset breaks consumers' builds. Pinstripe ships such a change in a minor version, not a major one, so you opt in by updating the package. When a version below marks a change as breaking, it is a stricter preset taking effect in your app the moment you update to it; hold the current version until you are ready.
 
-## Unreleased[#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#unreleased)
+## 0.2.0 (2026-11-08)[#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#0-2-0-2026-11-08)
 
-**Breaking (a stricter fit):** every cut bans `eval()`, `extract()`, `var_dump()`, `dd()`, `dump()` and Laravel's `PendingRequest::withoutVerifying()` (including `Http::withoutVerifying()`), through `spaze/phpstan-disallowed-calls`, which Pinstripe now requires. An app with one of these left in fails `composer analyse` once it updates.
+**Breaking (a stricter fit):** every cut bans `eval()`, `extract()`, `var_dump()`, `dd()`, `dump()` and Laravel's `PendingRequest::withoutVerifying()` (including `Http::withoutVerifying()`), through `spaze/phpstan-disallowed-calls`, which Pinstripe now requires. An app with one of these left in fails `composer analyse` once it updates. Each finding's tip links to [Banned calls](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html) and to the [CREED rule](https://creed.apps.wayne.edu/handbook/code.html#banned-patterns) it enforces.
 
-**Steps:** Update the locked version of `waynestate/pinstripe` when this ships; Composer pulls in `spaze/phpstan-disallowed-calls` and the extension installer registers it, so `phpstan.neon` needs no new line. Fix each reported call as the message says, or keep one on purpose with `@phpstan-ignore pinstripe.banned.<name> (why)`. See [Banned calls](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html).
+**Also new for you:** the Rector preset turns on the composer-based Laravel sets, so an app that installs `driftingly/rector-laravel` sees the Laravel upgrade rules for its installed Laravel version in a dry-run; apps without it see no change.
 
-**How to verify:** `composer analyse` passes, or lists only the banned calls you now own.
+**Steps:** Your constraint is `^0.1`, which does not allow 0.2.0, so nothing changes until you move. When you are ready, run `composer require --dev waynestate/pinstripe:^0.2` (and `npm install --save-dev @waynestate/pinstripe@^0.2` once 0.2.0 is on npm; check with `npm view @waynestate/pinstripe version`). Composer pulls in `spaze/phpstan-disallowed-calls` and the extension installer registers it, so `phpstan.neon` needs no new line. Fix each reported call as the message says, or keep one on purpose with `@phpstan-ignore pinstripe.banned.<name> (why)`.
+
+**How to verify:** `composer analyse` passes, or lists only the banned calls you now own, and `vendor/bin/rector process --dry-run` shows only changes you expect.
 
 ## 0.1.4 (2026-11-06)[#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#0-1-4-2026-11-06)
 
