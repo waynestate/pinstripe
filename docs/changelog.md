@@ -11,6 +11,7 @@ All notable changes to Pinstripe are documented here.
 
 ## Unreleased
 
+- Fixed: the docs menu closes with Escape and hands focus back to its button (docs kit synced from Squire).
 - Changed: the deploy layer requires PROCTOR ^0.8 (locked 0.8.0).
 - Changed: the pipeline pins every Preflight CI component to 0.3.0 (preflight@0.3.0); component image inputs are plain image names, since Preflight adds the Dependency Proxy prefix itself.
 - Added: a test that proves `npm install --ignore-scripts` stops a postinstall script, and the eslint-config-prettier floor is ^10.1.8, past the releases hit by CVE-2025-54313.
