@@ -57,13 +57,13 @@
 <p>Added: banned calls. Every PHPStan cut includes the new <code>phpstan/disallowed.neon</code>, which bans <code>eval()</code>, <code>extract()</code>, <code>var_dump()</code>, <code>dd()</code>, <code>dump()</code> and Laravel's <code>PendingRequest::withoutVerifying()</code> (the <code>Http::withoutVerifying()</code> facade call too) through <code>spaze/phpstan-disallowed-calls</code> <code>^4.15</code> (now in <code>require</code>, locked 4.15.0, loaded by the extension installer). Each message says why and what to use instead, ends with its OWASP Top 10:2025 tag (A05 Injection or A02 Security Misconfiguration), and has a stable identifier (<code>pinstripe.banned.*</code>) for a reasoned ignore. Breaking for apps with one left in: a leftover <code>dd()</code> now fails the pipeline. <code>md5()</code>, <code>sha1()</code>, <code>rand()</code> and <code>mt_rand()</code> are not banned; that call is open. New README section and docs page, Banned calls; new fixtures <code>tests/fixtures/raw-disallowed</code>, <code>tests/fixtures/laravel/src/InsecureHttp.php</code> and <code>tests/fixtures/laravel-app/banned</code>.</p>
 </li>
 <li>
+<p>Added: the Rector preset turns on the composer-based Laravel sets (<code>withComposerBased(laravel: true)</code>); apps that install driftingly/rector-laravel get the Laravel upgrade rules for their installed version, and apps without it see no change.</p>
+</li>
+<li>
 <p>Changed: the front page's <code>deploy/build.sh</code> revision marker is 2, for a Citadel build-cache test (does a full Update run the edited <code>build.sh</code>?).</p>
 </li>
 <li>
 <p>Fixed: the pipeline's PROCTOR jobs no longer pass <code>--policy</code>, which PROCTOR 0.7 refuses in CI; PROCTOR checks against the CREED policy it bundles.</p>
-</li>
-<li>
-<p>Changed: the GitLab pipeline pins the Preflight components to 0.2.0 (was 0.1.4).</p>
 </li>
 <li>
 <p>Changed: the front page's deploy layer (<code>deploy/</code>) runs Squire's kit 0.6.0 (was 0.5.0): <code>scripts/release.sh</code> asks PROCTOR's deploy gate for a go or no-go on each release (a report, not a stop, unless <code>SQUIRE_PROCTOR=enforce</code>), and <code>.env.squire.example</code> lists the new setting. The layer's pins move to HELMET <code>^0.4</code> (locked 0.4.0) and PROCTOR <code>^0.7</code> (locked 0.7.0).</p>
