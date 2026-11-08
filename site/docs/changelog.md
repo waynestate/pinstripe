@@ -12,6 +12,7 @@ All notable changes to Pinstripe are documented here.
 
 ## Unreleased[#](https://pinstripe.apps.wayne.edu/docs/changelog.html#unreleased)
 
+- Fixed: the pipeline's PROCTOR jobs no longer pass `--policy`, which PROCTOR 0.7 refuses in CI; PROCTOR checks against the CREED policy it bundles.
 - Changed: the GitLab pipeline pins the Preflight components to 0.2.0 (was 0.1.4).
 - Changed: the front page's deploy layer (`deploy/`) runs Squire's kit 0.6.0 (was 0.5.0): `scripts/release.sh` asks PROCTOR's deploy gate for a go or no-go on each release (a report, not a stop, unless `SQUIRE_PROCTOR=enforce`), and `.env.squire.example` lists the new setting. The layer's pins move to HELMET `^0.4` (locked 0.4.0) and PROCTOR `^0.7` (locked 0.7.0).
 - Fixed: the front page says Sourdough starts all five app shapes and that every app it makes comes with Pinstripe on; it said raw PHP only, and that Sourdough apps did not include Pinstripe yet.
