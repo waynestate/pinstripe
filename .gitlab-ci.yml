@@ -19,7 +19,29 @@ include:
       working_dir: deploy
       proctor_command: vendor/bin/proctor check --policy=vendor/waynestate/creed/policy/policy.json --format=codequality
 
+# Dependency caching: images already come through the Dependency Proxy, and
+# every job that installs packages extends a cache keyed on its lock files,
+# so a pipeline downloads only what changed instead of everything, every run.
+variables:
+  COMPOSER_CACHE_DIR: "$CI_PROJECT_DIR/.cache/composer"
+  npm_config_cache: "$CI_PROJECT_DIR/.cache/npm"
+
+.composer-cache:
+  cache:
+    key:
+      files: [composer.lock, deploy/composer.lock]
+      prefix: composer
+    paths: [.cache/composer/]
+
+.npm-cache:
+  cache:
+    key:
+      files: [package-lock.json]
+      prefix: npm
+    paths: [.cache/npm/]
+
 wayneui-copies:
+  extends: .composer-cache
   image: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/composer:2.10.3
   script:
     - composer install --working-dir=deploy --no-interaction --no-progress --prefer-dist
@@ -28,6 +50,7 @@ wayneui-copies:
 # On tag pipelines, composer ci runs PackageVersionTest, which fails when
 # package.json's version does not match the tag, so npm can publish from it.
 composer-ci:
+  extends: .composer-cache
   image: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/composer:2.10.3
   script:
     - composer install --no-interaction --no-progress --prefer-dist
@@ -37,6 +60,7 @@ composer-ci:
 # 22.13, from package.json engines), so a broken ESLint or Prettier preset
 # fails the pipeline, not just a dev box.
 npm-test:
+  extends: .npm-cache
   image: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/node:${NODE_MAJOR}
   parallel:
     matrix:

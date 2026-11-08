@@ -48,6 +48,9 @@
 <p>Fixed: the front page says Sourdough starts all five app shapes and that every app it makes comes with Pinstripe on; it said raw PHP only, and that Sourdough apps did not include Pinstripe yet.</p>
 </li>
 <li>
+<p>Changed: CI caches Composer and npm downloads per lock file (<code>.composer-cache</code>, keyed on <code>composer.lock</code> and <code>deploy/composer.lock</code>, and <code>.npm-cache</code>), so a pipeline stops fetching every package from Packagist and npm on every run. Images already come through the Dependency Proxy.</p>
+</li>
+<li>
 <p>Changed: the front page's deploy layer (<code>deploy/</code>) runs Squire's kit 0.5.0 (was 0.3.4): <code>oracle-check.php</code> arrives, <code>scripts/release.sh</code>, <code>scripts/parity.ps1</code> and <code>.squire/base-fallback.Dockerfile</code> take the new templates, and <code>docker-compose.squire.yml</code>, which Renovate had edited, is Squire's template again, so <code>squire init --check</code> passes. <code>site/assets/stack-env.js</code> takes the stack's one copy, with bindingless catch blocks.</p>
 </li>
 <li>
