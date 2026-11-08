@@ -531,7 +531,7 @@ The guard is proven, not claimed: `tests/js/npm-hardening.test.mjs` installs a l
 
 ## Coming next
 
-Custom PHPStan rules whose findings link to the CREED handbook line they enforce. (Preflight's pint, phpstan and eslint jobs already run your app's Pinstripe config.)
+Nothing on the cutting table right now: the banned calls link to their CREED rule, and the PHP floor comes from CREED through PROCTOR (D-073). Preflight's pint, phpstan and eslint jobs already run your app's Pinstripe config.
 
 ## The cast
 

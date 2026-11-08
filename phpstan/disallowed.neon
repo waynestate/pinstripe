@@ -8,6 +8,8 @@
 # truly needs one call keeps it with a reasoned ignore on that line, e.g.
 # `@phpstan-ignore pinstripe.banned.eval (why this one is safe)`.
 #
+# Each tip links to the Pinstripe page and to the CREED handbook rule.
+#
 # The list is deliberately short. md5(), sha1(), rand() and mt_rand() are not
 # banned: they are fine for cache keys and other non-security uses, and the
 # call on them is still open (README, "Not banned yet").
@@ -20,27 +22,27 @@ parameters:
             function: 'eval()'
             message: 'it runs a string as PHP code, so one untrusted value becomes remote code execution; write the code out, or pick a callable with match (OWASP A05:2025 Injection)'
             errorIdentifier: 'pinstripe.banned.eval'
-            errorTip: 'See https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html'
+            errorTip: 'See https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html and the CREED rule at https://creed.apps.wayne.edu/handbook/code.html#banned-patterns'
         -
             function: 'extract()'
             message: 'it turns array keys into local variables, so request data can overwrite any variable in scope; read the keys you need by name, or destructure the array (OWASP A05:2025 Injection)'
             errorIdentifier: 'pinstripe.banned.extract'
-            errorTip: 'See https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html'
+            errorTip: 'See https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html and the CREED rule at https://creed.apps.wayne.edu/handbook/code.html#banned-patterns'
         -
             function: 'var_dump()'
             message: 'debug output left in ships paths, config and secrets straight to the browser; log it with a PSR-3 logger (Log::debug() in Laravel), or step through with Xdebug (OWASP A02:2025 Security Misconfiguration)'
             errorIdentifier: 'pinstripe.banned.varDump'
-            errorTip: 'See https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html'
+            errorTip: 'See https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html and the CREED rule at https://creed.apps.wayne.edu/handbook/code.html#banned-patterns'
         -
             function: 'dd()'
             message: 'a dd() left in dumps internals to the browser and halts the request in production; log it with a PSR-3 logger (Log::debug() in Laravel), or step through with Xdebug (OWASP A02:2025 Security Misconfiguration)'
             errorIdentifier: 'pinstripe.banned.dd'
-            errorTip: 'See https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html'
+            errorTip: 'See https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html and the CREED rule at https://creed.apps.wayne.edu/handbook/code.html#banned-patterns'
         -
             function: 'dump()'
             message: 'a dump() left in ships paths, config and secrets straight to the browser; log it with a PSR-3 logger (Log::debug() in Laravel), or step through with Xdebug (OWASP A02:2025 Security Misconfiguration)'
             errorIdentifier: 'pinstripe.banned.dump'
-            errorTip: 'See https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html'
+            errorTip: 'See https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html and the CREED rule at https://creed.apps.wayne.edu/handbook/code.html#banned-patterns'
 
     # Laravel's HTTP client. The method entry covers chains such as
     # Http::acceptJson()->withoutVerifying(). The facade call
@@ -52,10 +54,9 @@ parameters:
             method: 'Illuminate\Http\Client\PendingRequest::withoutVerifying()'
             message: 'it turns off TLS certificate checks, so anyone on the network path can read or change the traffic; keep verification on, and for a private CA pass its bundle with withOptions and the verify option (OWASP A02:2025 Security Misconfiguration)'
             errorIdentifier: 'pinstripe.banned.withoutVerifying'
-            errorTip: 'See https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html'
+            errorTip: 'See https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html and the CREED rule at https://creed.apps.wayne.edu/handbook/code.html#banned-patterns'
     disallowedStaticCalls:
         -
             method: 'Illuminate\Http\Client\PendingRequest::withoutVerifying()'
             message: 'it turns off TLS certificate checks, so anyone on the network path can read or change the traffic; keep verification on, and for a private CA pass its bundle with withOptions and the verify option (OWASP A02:2025 Security Misconfiguration)'
             errorIdentifier: 'pinstripe.banned.withoutVerifying'
-            errorTip: 'See https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html'
