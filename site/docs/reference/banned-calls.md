@@ -27,7 +27,7 @@ Each ban has a stable identifier: `pinstripe.banned.eval`, `pinstripe.banned.ext
 
 The `withoutVerifying()` ban catches both `Http::withoutVerifying()` and the method partway down a chain such as `Http::acceptJson()->withoutVerifying()`. Raw PHP apps never match it.
 
-A report reads like this (wrapped here), with the reason, the fix and the OWASP tag in one message and a link back to this page as its tip:
+A report reads like this (wrapped here), with the reason, the fix and the OWASP tag in one message. Its tip links to this page and to the [CREED rule](https://creed.apps.wayne.edu/handbook/code.html#banned-patterns):
 
 ```text
 Calling dd() is forbidden, a dd() left in dumps internals to the browser and halts the request in production;

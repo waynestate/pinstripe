@@ -515,7 +515,7 @@ The guard is proven, not claimed: `tests/js/npm-hardening.test.mjs` installs a l
 
 ### Coming next
 
-Custom PHPStan rules whose findings link to the CREED handbook line they enforce. (Preflight's pint, phpstan and eslint jobs already run your app's Pinstripe config.)
+Nothing on the cutting table right now: the banned calls link to their CREED rule, and the PHP floor comes from CREED through PROCTOR (D-073). Preflight's pint, phpstan and eslint jobs already run your app's Pinstripe config.
 
 ### The cast
 
@@ -1017,6 +1017,7 @@ All notable changes to Pinstripe are documented here.
 
 ### Unreleased[#](https://pinstripe.apps.wayne.edu/docs/changelog.html#unreleased)
 
+- Changed: every banned call's tip links to the CREED rule it enforces (code handbook, Banned patterns) as well as to Pinstripe's banned-calls page; `tests/BannedCallLinksTest.php` keeps it that way.
 - Docs: the README says how CREED's PHP floor reaches the tools (PROCTOR's php-floor check, then Booster; the presets keep reading composer.json), and "Coming next" names the handbook-linked custom rules instead of a policy.json reader.
 - Changed: the deploy layer runs Squire's kit 0.7.1 (was 0.6.0): `.squire/php.ini` no longer sets the deprecated `session.sid_*` lines, web requests get a `disable_functions` list and Apache hardening (`.squire/php-web.ini`, `.squire/apache-hardening.conf`), and opcache gets production settings with `SQUIRE_OPCACHE_VALIDATE` as the one switch.
 - Added: CI runs Preflight's a11y component (0.3.1) on site/, every page in light and dark at 320 and 1280 px with the WCAG 1.4.10 reflow check, blocking.
@@ -1682,7 +1683,7 @@ Each ban has a stable identifier: `pinstripe.banned.eval`, `pinstripe.banned.ext
 
 The `withoutVerifying()` ban catches both `Http::withoutVerifying()` and the method partway down a chain such as `Http::acceptJson()->withoutVerifying()`. Raw PHP apps never match it.
 
-A report reads like this (wrapped here), with the reason, the fix and the OWASP tag in one message and a link back to this page as its tip:
+A report reads like this (wrapped here), with the reason, the fix and the OWASP tag in one message. Its tip links to this page and to the [CREED rule](https://creed.apps.wayne.edu/handbook/code.html#banned-patterns):
 
 ```text
 Calling dd() is forbidden, a dd() left in dumps internals to the browser and halts the request in production;

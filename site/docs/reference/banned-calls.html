@@ -94,7 +94,7 @@
 <p>Each ban has a stable identifier: <code>pinstripe.banned.eval</code>, <code>pinstripe.banned.extract</code>, <code>pinstripe.banned.varDump</code>,
 <code>pinstripe.banned.dd</code>, <code>pinstripe.banned.dump</code> and <code>pinstripe.banned.withoutVerifying</code>.</p>
 <p>The <code>withoutVerifying()</code> ban catches both <code>Http::withoutVerifying()</code> and the method partway down a chain such as <code>Http::acceptJson()-&gt;withoutVerifying()</code>. Raw PHP apps never match it.</p>
-<p>A report reads like this (wrapped here), with the reason, the fix and the OWASP tag in one message and a link back to this page as its tip:</p>
+<p>A report reads like this (wrapped here), with the reason, the fix and the OWASP tag in one message. Its tip links to this page and to the <a rel="noopener" href="https://creed.apps.wayne.edu/handbook/code.html#banned-patterns">CREED rule</a>:</p>
 <pre tabindex="0"><code class="language-text">Calling dd() is forbidden, a dd() left in dumps internals to the browser and halts the request in production;
 log it with a PSR-3 logger (Log::debug() in Laravel), or step through with Xdebug (OWASP A02:2025 Security Misconfiguration).
 </code></pre>
