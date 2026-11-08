@@ -4,6 +4,7 @@ All notable changes to Pinstripe are documented here.
 
 ## Unreleased
 
+- Changed: CI saves its Composer and npm caches even when a job fails, so a retry after a dropped download fetches only what is missing (D-072).
 - Changed: CI caches Composer and npm downloads under a fixed key, so a lock change downloads only what changed (D-072).
 - Changed: HELMET moves to `^1.0`, its first stable release, wherever this repo requires it.
 - Fixed: the docs menu closes with Escape and hands focus back to its button (docs kit synced from Squire).
