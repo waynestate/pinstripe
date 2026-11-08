@@ -12,6 +12,7 @@ All notable changes to Pinstripe are documented here.
 
 ## Unreleased[#](https://pinstripe.apps.wayne.edu/docs/changelog.html#unreleased)
 
+- Added: a test that proves `npm install --ignore-scripts` stops a postinstall script, and the eslint-config-prettier floor is ^10.1.8, past the releases hit by CVE-2025-54313.
 - Changed: the front page's `deploy/build.sh` revision marker is 2, for a Citadel build-cache test (does a full Update run the edited `build.sh`?).
 - Fixed: the pipeline's PROCTOR jobs no longer pass `--policy`, which PROCTOR 0.7 refuses in CI; PROCTOR checks against the CREED policy it bundles.
 - Changed: the GitLab pipeline pins the Preflight components to 0.2.0 (was 0.1.4).
