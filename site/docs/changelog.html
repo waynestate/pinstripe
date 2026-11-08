@@ -48,6 +48,12 @@
 <p>Fixed: the docs menu closes with Escape and hands focus back to its button (docs kit synced from Squire).</p>
 </li>
 <li>
+<p>Fixed: the docs kit's copy button no longer covers the first line of code when it says Copied or Failed: over the code it keeps its resting width and shows a check or a cross when the word does not fit (docs kit synced from Squire).</p>
+</li>
+<li>
+<p>Fixed: the front page's version chip shows the full version the docs show (size 0.1.4, was size 0.1). It carries <code>data-docs-version</code> now, so the docs builder (synced from Squire) rewrites it at every release and <code>composer docs:check</code> fails while it is stale.</p>
+</li>
+<li>
 <p>Changed: the deploy layer requires PROCTOR ^0.8 (locked 0.8.0).</p>
 </li>
 <li>

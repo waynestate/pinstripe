@@ -13,6 +13,8 @@ All notable changes to Pinstripe are documented here.
 ## Unreleased[#](https://pinstripe.apps.wayne.edu/docs/changelog.html#unreleased)
 
 - Fixed: the docs menu closes with Escape and hands focus back to its button (docs kit synced from Squire).
+- Fixed: the docs kit's copy button no longer covers the first line of code when it says Copied or Failed: over the code it keeps its resting width and shows a check or a cross when the word does not fit (docs kit synced from Squire).
+- Fixed: the front page's version chip shows the full version the docs show (size 0.1.4, was size 0.1). It carries `data-docs-version` now, so the docs builder (synced from Squire) rewrites it at every release and `composer docs:check` fails while it is stale.
 - Changed: the deploy layer requires PROCTOR ^0.8 (locked 0.8.0).
 - Changed: the pipeline pins every Preflight CI component to 0.3.0 ([preflight@0.3.0](mailto:preflight@0.3.0)); component image inputs are plain image names, since Preflight adds the Dependency Proxy prefix itself.
 - Added: a test that proves `npm install --ignore-scripts` stops a postinstall script, and the eslint-config-prettier floor is ^10.1.8, past the releases hit by CVE-2025-54313.
