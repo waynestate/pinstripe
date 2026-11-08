@@ -717,6 +717,41 @@ final class PresetsTest extends TestCase
         }
     }
 
+    public function testRectorPresetAppliesTheComposerBasedLaravelSet(): void
+    {
+        $fixture = $this->temporaryConsumerFixture('laravel-consumer');
+
+        try {
+            // Same install story as the Larastan test: the fixture's
+            // composer.lock is gitignored, so a fresh checkout needs an
+            // `update`. The fixture carries rector/rector and
+            // driftingly/rector-laravel as its own dev dependencies, exactly
+            // as a consuming app would, so the Laravel sets are autoloadable
+            // when its rector binary runs.
+            [$installExit, $installOutput] = $this->runInDir(
+                array_merge($this->composerCommand(), ['update', '--no-interaction', '--no-progress']),
+                $fixture
+            );
+
+            $this->assertSame(0, $installExit, $installOutput);
+
+            // A dry run exits non-zero when it proposes changes.
+            [$exit, $output] = $this->runInDir([
+                PHP_BINARY,
+                'vendor/bin/rector',
+                'process',
+                '--dry-run',
+                '-c',
+                'rector.php',
+            ], $fixture);
+
+            $this->assertNotSame(0, $exit, $output);
+            $this->assertStringContainsString('$request->input(', $output);
+        } finally {
+            self::removeTemporaryFixture($fixture);
+        }
+    }
+
     private function temporaryConsumerFixture(string $name): string
     {
         // Composer cannot mirror a path repository inside its own source.

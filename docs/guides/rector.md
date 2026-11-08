@@ -29,6 +29,16 @@ return $base->withPaths([__DIR__ . '/src']);
 
 The preset reads the PHP floor from your app's own `composer.json`, so it cannot drift out of step with the version the app actually runs on.
 
+## Laravel upgrade rules
+
+The preset turns on Rector's composer-based Laravel sets with `withComposerBased(laravel: true)`. Add `driftingly/rector-laravel` as a dev dependency and the preset applies the Laravel upgrade rules that match your app's installed `laravel/framework` version:
+
+```
+composer require --dev driftingly/rector-laravel
+```
+
+Without the package the call is a no-op, so an app that does not want Laravel rules sees no change.
+
 ## Run
 
 Check with `vendor/bin/rector process --dry-run` and apply with `vendor/bin/rector process`.

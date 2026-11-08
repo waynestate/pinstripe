@@ -31,11 +31,15 @@ use Rector\Config\RectorConfig;
  *   early returns.
  * - withImportNames(removeUnusedImports: true): drop imports that are no
  *   longer used, so a file stays tidy after a refactor removes the last use.
+ * - withComposerBased(laravel: true): apply the Laravel upgrade rules for the
+ *   app's installed laravel/framework version. A no-op unless the app also
+ *   installs driftingly/rector-laravel, so apps without it see no change.
  * - No withPaths(): the app decides which directories to process; the preset
  *   only decides how. Keeping paths out of the preset is what lets one config
  *   fit every app.
  */
 return RectorConfig::configure()
     ->withPhpSets()
+    ->withComposerBased(laravel: true)
     ->withPreparedSets(deadCode: true, codeQuality: true, typeDeclarations: true, earlyReturn: true)
     ->withImportNames(removeUnusedImports: true);

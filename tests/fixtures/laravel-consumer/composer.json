@@ -17,6 +17,10 @@
         "laravel/framework": "^11 || ^12 || ^13",
         "larastan/larastan": "^3.13"
     },
+    "require-dev": {
+        "rector/rector": "^2.8",
+        "driftingly/rector-laravel": "^2.7"
+    },
     "minimum-stability": "dev",
     "prefer-stable": true,
     "config": {

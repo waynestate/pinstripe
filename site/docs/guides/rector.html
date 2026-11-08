@@ -54,6 +54,11 @@ $base = require __DIR__ . '/vendor/waynestate/pinstripe/rector/base.php';
 return $base-&gt;withPaths([__DIR__ . '/src']);
 </code></pre>
 <p>The preset reads the PHP floor from your app's own <code>composer.json</code>, so it cannot drift out of step with the version the app actually runs on.</p>
+<h2 id="laravel-upgrade-rules">Laravel upgrade rules<a class="docs-heading-link" aria-label="Link to this section" href="#laravel-upgrade-rules">#</a></h2>
+<p>The preset turns on Rector's composer-based Laravel sets with <code>withComposerBased(laravel: true)</code>. Add <code>driftingly/rector-laravel</code> as a dev dependency and the preset applies the Laravel upgrade rules that match your app's installed <code>laravel/framework</code> version:</p>
+<pre tabindex="0"><code>composer require --dev driftingly/rector-laravel
+</code></pre>
+<p>Without the package the call is a no-op, so an app that does not want Laravel rules sees no change.</p>
 <h2 id="run">Run<a class="docs-heading-link" aria-label="Link to this section" href="#run">#</a></h2>
 <p>Check with <code>vendor/bin/rector process --dry-run</code> and apply with <code>vendor/bin/rector process</code>.</p>
 <h2 id="proven-on-fixtures">Proven on fixtures<a class="docs-heading-link" aria-label="Link to this section" href="#proven-on-fixtures">#</a></h2>
@@ -69,7 +74,7 @@ return $base-&gt;withPaths([__DIR__ . '/src']);
     </main>
     <nav class="docs-pager" aria-label="Pages"><a class="docs-pager__link" href="../../docs/guides/vue.html"><span class="docs-pager__dir">Previous</span><span class="docs-pager__title">Vue</span></a><a class="docs-pager__link docs-pager__link--next" href="../../docs/guides/strict-cut.html"><span class="docs-pager__dir">Next</span><span class="docs-pager__title">The strict cut</span></a></nav>
   </div>
-  <nav class="docs-toc" aria-label="On this page"><h2 class="docs-toc__title">On this page</h2><ul class="docs-toc__list"><li class="docs-toc__item"><a href="#install">Install</a></li><li class="docs-toc__item"><a href="#configure">Configure</a></li><li class="docs-toc__item"><a href="#run">Run</a></li><li class="docs-toc__item"><a href="#proven-on-fixtures">Proven on fixtures</a></li><li class="docs-toc__item"><a href="#related">Related</a></li></ul></nav>
+  <nav class="docs-toc" aria-label="On this page"><h2 class="docs-toc__title">On this page</h2><ul class="docs-toc__list"><li class="docs-toc__item"><a href="#install">Install</a></li><li class="docs-toc__item"><a href="#configure">Configure</a></li><li class="docs-toc__item"><a href="#laravel-upgrade-rules">Laravel upgrade rules</a></li><li class="docs-toc__item"><a href="#run">Run</a></li><li class="docs-toc__item"><a href="#proven-on-fixtures">Proven on fixtures</a></li><li class="docs-toc__item"><a href="#related">Related</a></li></ul></nav>
 </div>
 <footer class="docs-footer">
   <span>Documents Pinstripe <span data-docs-version>0.1.4</span></span>
