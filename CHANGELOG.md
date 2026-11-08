@@ -4,8 +4,10 @@ All notable changes to Pinstripe are documented here.
 
 ## Unreleased
 
+## 0.2.0 (2026-11-08)
+
 - Changed: every banned call's tip links to the CREED rule it enforces (code handbook, Banned patterns) as well as to Pinstripe's banned-calls page; `tests/BannedCallLinksTest.php` keeps it that way.
-- Docs: the README says how CREED's PHP floor reaches the tools (PROCTOR's php-floor check, then Booster; the presets keep reading composer.json), and "Coming next" names the handbook-linked custom rules instead of a policy.json reader.
+- Docs: the README says how CREED's PHP floor reaches the tools (PROCTOR's php-floor check, then Booster; the presets keep reading composer.json); "Coming next" is empty for now, since both items it named are built.
 - Changed: the deploy layer runs Squire's kit 0.7.1 (was 0.6.0): `.squire/php.ini` no longer sets the deprecated `session.sid_*` lines, web requests get a `disable_functions` list and Apache hardening (`.squire/php-web.ini`, `.squire/apache-hardening.conf`), and opcache gets production settings with `SQUIRE_OPCACHE_VALIDATE` as the one switch.
 - Added: CI runs Preflight's a11y component (0.3.1) on site/, every page in light and dark at 320 and 1280 px with the WCAG 1.4.10 reflow check, blocking.
 - Changed: CI pins the Preflight components to 0.3.1 (fixed cache keys, and caches saved even when a job fails; D-072).
@@ -24,7 +26,6 @@ All notable changes to Pinstripe are documented here.
 - Fixed: the pipeline's PROCTOR jobs no longer pass `--policy`, which PROCTOR 0.7 refuses in CI; PROCTOR checks against the CREED policy it bundles.
 - Changed: the front page's deploy layer (`deploy/`) runs Squire's kit 0.6.0 (was 0.5.0): `scripts/release.sh` asks PROCTOR's deploy gate for a go or no-go on each release (a report, not a stop, unless `SQUIRE_PROCTOR=enforce`), and `.env.squire.example` lists the new setting. The layer's pins move to HELMET `^0.4` (locked 0.4.0) and PROCTOR `^0.7` (locked 0.7.0).
 - Fixed: the front page says Sourdough starts all five app shapes and that every app it makes comes with Pinstripe on; it said raw PHP only, and that Sourdough apps did not include Pinstripe yet.
-
 - Changed: CI caches Composer and npm downloads per lock file (`.composer-cache`, keyed on `composer.lock` and `deploy/composer.lock`, and `.npm-cache`), so a pipeline stops fetching every package from Packagist and npm on every run. Images already come through the Dependency Proxy.
 - Changed: the front page's deploy layer (`deploy/`) runs Squire's kit 0.5.0 (was 0.3.4): `oracle-check.php` arrives, `scripts/release.sh`, `scripts/parity.ps1` and `.squire/base-fallback.Dockerfile` take the new templates, and `docker-compose.squire.yml`, which Renovate had edited, is Squire's template again, so `squire init --check` passes. `site/assets/stack-env.js` takes the stack's one copy, with bindingless catch blocks.
 - Changed: The canonical repository is git.wayne.edu (ADR-0021); docs, links and package metadata no longer point at the archived nougat copy.
