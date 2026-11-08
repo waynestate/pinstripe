@@ -16,7 +16,7 @@ use PHPUnit\Framework\TestCase;
 final class ToolFloorsTest extends TestCase
 {
     /**
-     * The ten tools the README lists: the six PHP tools from composer.lock
+     * The eleven tools the README lists: the seven PHP tools from composer.lock
      * and the four Node tools from package-lock.json.
      */
     private const TOOLS = [
@@ -26,6 +26,7 @@ final class ToolFloorsTest extends TestCase
         'phpstan/phpstan-deprecation-rules',
         'larastan/larastan',
         'rector/rector',
+        'spaze/phpstan-disallowed-calls',
         'eslint',
         'eslint-plugin-vue',
         'typescript-eslint',

@@ -18,7 +18,8 @@
         "phpstan/phpstan": "^2.3",
         "phpstan/phpstan-deprecation-rules": "^2.0",
         "phpstan/phpstan-strict-rules": "^2.0",
-        "nette/neon": "^3.4"
+        "nette/neon": "^3.4",
+        "spaze/phpstan-disallowed-calls": "^4.15"
     },
     "suggest": {
         "larastan/larastan": "^3.13 (Laravel apps: include phpstan/laravel.neon)",

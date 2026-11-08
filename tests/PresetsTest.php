@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace WayneState\Pinstripe\Tests;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -537,6 +538,113 @@ final class PresetsTest extends TestCase
         $this->assertStringContainsString('PROBE_M_F1_S_F1_D1_E1_N1_I1_P1_V1_X1_K1', $output);
     }
 
+    /**
+     * The banned calls in phpstan/disallowed.neon: identifier => the start
+     * of the message and the OWASP Top 10:2025 tag it must carry.
+     */
+    private const BANNED_CALLS = [
+        'pinstripe.banned.eval' => ['Calling eval() is forbidden, it runs a string as PHP code', 'OWASP A05:2025 Injection'],
+        'pinstripe.banned.extract' => ['Calling extract() is forbidden, it turns array keys into local variables', 'OWASP A05:2025 Injection'],
+        'pinstripe.banned.varDump' => ['Calling var_dump() is forbidden, debug output left in', 'OWASP A02:2025 Security Misconfiguration'],
+        'pinstripe.banned.dd' => ['Calling dd() is forbidden, a dd() left in', 'OWASP A02:2025 Security Misconfiguration'],
+        'pinstripe.banned.dump' => ['Calling dump() is forbidden, a dump() left in', 'OWASP A02:2025 Security Misconfiguration'],
+    ];
+
+    /**
+     * @return array<string, array{0: string}>
+     */
+    public static function bannedCallConfigs(): array
+    {
+        return ['raw cut' => ['raw.neon'], 'strict cut' => ['strict.neon']];
+    }
+
+    /**
+     * Run PHPStan with JSON output and return [exit code, raw output, the
+     * reported messages as [identifier, message, line] triples].
+     *
+     * @param list<string> $command
+     *
+     * @return array{0: int, 1: string, 2: list<array{0: string, 1: string, 2: int}>}
+     */
+    private function runPhpStanJson(array $command, string $dir): array
+    {
+        [$exit, $output] = $this->runInDir(array_merge($command, ['--error-format=json']), $dir);
+
+        $start = strpos($output, '{');
+        $this->assertNotFalse($start, $output);
+        $report = json_decode(substr($output, $start), true, 512, JSON_THROW_ON_ERROR);
+        $this->assertIsArray($report, $output);
+        $this->assertSame([], $report['errors'], $output);
+
+        $messages = [];
+        foreach ($report['files'] as $file) {
+            foreach ($file['messages'] as $message) {
+                $messages[] = [(string) ($message['identifier'] ?? ''), (string) $message['message'], (int) $message['line']];
+            }
+        }
+
+        return [$exit, $output, $messages];
+    }
+
+    #[DataProvider('bannedCallConfigs')]
+    public function testPhpStanReportsEveryBannedCall(string $config): void
+    {
+        // Every cut includes disallowed.neon through base.neon, so the raw
+        // and strict cuts report each banned call, and nothing else.
+        [$exit, $output, $messages] = $this->runPhpStanJson([
+            PHP_BINARY,
+            $this->root() . '/vendor/bin/phpstan',
+            'analyse',
+            '-c',
+            $this->root() . '/phpstan/' . $config,
+            '--no-progress',
+            $this->root() . '/tests/fixtures/raw-disallowed/src/Leftovers.php',
+        ], $this->root() . '/tests/fixtures/laravel');
+
+        $this->assertNotSame(0, $exit, $output);
+        $this->assertSame(array_keys(self::BANNED_CALLS), array_column($messages, 0), $output);
+
+        foreach ($messages as [$identifier, $message]) {
+            [$start, $owasp] = self::BANNED_CALLS[$identifier];
+            $this->assertStringStartsWith($start, $message);
+            $this->assertStringEndsWith('(' . $owasp . ').', $message);
+            $this->assertStringContainsString('; ', $message, 'a ban message says what to use instead after the reason');
+        }
+    }
+
+    #[DataProvider('bannedCallConfigs')]
+    public function testPhpStanAcceptsMethodsThatShareTheBannedNames(string $config): void
+    {
+        [$exit, $output] = $this->runInDir([
+            PHP_BINARY,
+            $this->root() . '/vendor/bin/phpstan',
+            'analyse',
+            '-c',
+            $this->root() . '/phpstan/' . $config,
+            '--no-progress',
+            '--error-format=raw',
+            $this->root() . '/tests/fixtures/raw-disallowed/src/LookAlikes.php',
+        ], $this->root() . '/tests/fixtures/laravel');
+
+        $this->assertSame(0, $exit, $output);
+    }
+
+    public function testPhpStanRawConfigAcceptsABannedCallKeptWithAReason(): void
+    {
+        [$exit, $output] = $this->runInDir([
+            PHP_BINARY,
+            $this->root() . '/vendor/bin/phpstan',
+            'analyse',
+            '-c',
+            $this->root() . '/phpstan/raw.neon',
+            '--no-progress',
+            '--error-format=raw',
+            $this->root() . '/tests/fixtures/raw-disallowed/src/Excused.php',
+        ], $this->root() . '/tests/fixtures/laravel');
+
+        $this->assertSame(0, $exit, $output);
+    }
+
     public function testRectorPresetReportsChangesOnTheOldFixture(): void
     {
         [$exit, $output] = $this->runRectorDryRun('rector-old');
@@ -737,6 +845,33 @@ final class PresetsTest extends TestCase
         $this->assertStringContainsString('Access to an undefined property App\Models\Greeting::$audience', $output);
     }
 
+    public function testPhpStanLaravelConfigReportsALeftoverDdInTheLaravelAppFixture(): void
+    {
+        // An app that installs Pinstripe from Composer gets the bans with
+        // no new config line: spaze/phpstan-disallowed-calls arrives through
+        // Pinstripe's `require` and registers itself through the extension
+        // installer, and laravel.neon pulls in disallowed.neon.
+        $fixture = $this->laravelAppFixture();
+
+        [$exit, $output] = $this->runInDir([
+            PHP_BINARY,
+            'vendor/bin/phpstan',
+            'analyse',
+            '-c',
+            'phpstan.neon',
+            '--no-progress',
+            '--error-format=raw',
+            'banned',
+        ], $fixture);
+
+        $this->assertNotSame(0, $exit, $output);
+        $this->assertStringContainsString('Calling dd() is forbidden, a dd() left in', $output);
+
+        $generated = $fixture . '/vendor/phpstan/extension-installer/src/GeneratedConfig.php';
+        $this->assertFileExists($generated);
+        $this->assertStringContainsString('spaze/phpstan-disallowed-calls', (string) file_get_contents($generated));
+    }
+
     public function testPintLaravelPresetAcceptsTheLaravelVueFixture(): void
     {
         $fixture = $this->laravelVueFixture();
@@ -870,6 +1005,34 @@ final class PresetsTest extends TestCase
         ], $fixture);
 
         $this->assertSame(0, $exit, $output);
+    }
+
+    public function testLaravelPresetReportsTlsVerificationTurnedOff(): void
+    {
+        // Both spellings: the facade call (a static call Larastan resolves
+        // to PendingRequest) and the method partway down a chain.
+        [$exit, $output, $messages] = $this->runPhpStanJson([
+            PHP_BINARY,
+            $this->root() . '/vendor/bin/phpstan',
+            'analyse',
+            '-c',
+            'phpstan.neon',
+            '--no-progress',
+            'src/InsecureHttp.php',
+        ], $this->root() . '/tests/fixtures/laravel');
+
+        $this->assertNotSame(0, $exit, $output);
+        $this->assertSame(
+            [['pinstripe.banned.withoutVerifying', 19], ['pinstripe.banned.withoutVerifying', 24]],
+            array_map(static fn (array $message): array => [$message[0], $message[2]], $messages),
+            $output
+        );
+
+        foreach ($messages as [, $message]) {
+            $this->assertStringContainsString('Illuminate\\Http\\Client\\PendingRequest::withoutVerifying()', $message);
+            $this->assertStringContainsString('it turns off TLS certificate checks', $message);
+            $this->assertStringEndsWith('(OWASP A02:2025 Security Misconfiguration).', $message);
+        }
     }
 
     /**

@@ -1,0 +1,61 @@
+# Pinstripe banned calls: the handful of calls no Wayne State app should ship.
+# spaze/phpstan-disallowed-calls does the work; it ships in `require`, so the
+# extension installer loads it for every PHPStan run, and this file only
+# lists what it bans. Every cut includes it through base.neon.
+#
+# Each message says why and what to use instead, and ends with its OWASP Top
+# 10:2025 category. Each ban has its own stable identifier, so an app that
+# truly needs one call keeps it with a reasoned ignore on that line, e.g.
+# `@phpstan-ignore pinstripe.banned.eval (why this one is safe)`.
+#
+# The list is deliberately short. md5(), sha1(), rand() and mt_rand() are not
+# banned: they are fine for cache keys and other non-security uses, and the
+# call on them is still open (README, "Not banned yet").
+#
+# Apps add their own bans to the same parameters in their phpstan.neon; NEON
+# appends lists, so the app's entries join these rather than replacing them.
+parameters:
+    disallowedFunctionCalls:
+        -
+            function: 'eval()'
+            message: 'it runs a string as PHP code, so one untrusted value becomes remote code execution; write the code out, or pick a callable with match (OWASP A05:2025 Injection)'
+            errorIdentifier: 'pinstripe.banned.eval'
+            errorTip: 'See https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html'
+        -
+            function: 'extract()'
+            message: 'it turns array keys into local variables, so request data can overwrite any variable in scope; read the keys you need by name, or destructure the array (OWASP A05:2025 Injection)'
+            errorIdentifier: 'pinstripe.banned.extract'
+            errorTip: 'See https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html'
+        -
+            function: 'var_dump()'
+            message: 'debug output left in ships paths, config and secrets straight to the browser; log it with a PSR-3 logger (Log::debug() in Laravel), or step through with Xdebug (OWASP A02:2025 Security Misconfiguration)'
+            errorIdentifier: 'pinstripe.banned.varDump'
+            errorTip: 'See https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html'
+        -
+            function: 'dd()'
+            message: 'a dd() left in dumps internals to the browser and halts the request in production; log it with a PSR-3 logger (Log::debug() in Laravel), or step through with Xdebug (OWASP A02:2025 Security Misconfiguration)'
+            errorIdentifier: 'pinstripe.banned.dd'
+            errorTip: 'See https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html'
+        -
+            function: 'dump()'
+            message: 'a dump() left in ships paths, config and secrets straight to the browser; log it with a PSR-3 logger (Log::debug() in Laravel), or step through with Xdebug (OWASP A02:2025 Security Misconfiguration)'
+            errorIdentifier: 'pinstripe.banned.dump'
+            errorTip: 'See https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html'
+
+    # Laravel's HTTP client. The method entry covers chains such as
+    # Http::acceptJson()->withoutVerifying(). The facade call
+    # Http::withoutVerifying() is a static call, so it needs the static
+    # entry; Larastan resolves it to the same PendingRequest method, which is
+    # why both entries name PendingRequest. Raw apps never match either one.
+    disallowedMethodCalls:
+        -
+            method: 'Illuminate\Http\Client\PendingRequest::withoutVerifying()'
+            message: 'it turns off TLS certificate checks, so anyone on the network path can read or change the traffic; keep verification on, and for a private CA pass its bundle with withOptions and the verify option (OWASP A02:2025 Security Misconfiguration)'
+            errorIdentifier: 'pinstripe.banned.withoutVerifying'
+            errorTip: 'See https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html'
+    disallowedStaticCalls:
+        -
+            method: 'Illuminate\Http\Client\PendingRequest::withoutVerifying()'
+            message: 'it turns off TLS certificate checks, so anyone on the network path can read or change the traffic; keep verification on, and for a private CA pass its bundle with withOptions and the verify option (OWASP A02:2025 Security Misconfiguration)'
+            errorIdentifier: 'pinstripe.banned.withoutVerifying'
+            errorTip: 'See https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html'
