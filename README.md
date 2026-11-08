@@ -467,6 +467,8 @@ min-release-age=3
 
 `ignore-scripts=true` stops npm from running any lifecycle script (`preinstall`, `install`, `postinstall`) while installing dependencies, so a package cannot execute code merely by being installed. `min-release-age=3` makes npm refuse to install a release published fewer than 3 days ago, leaving time to pull a compromised publish before it reaches a lockfile. The stack's Renovate `minimumReleaseAge` rule waits the same 3 days before updating, so the two guards agree. New cloth rests on the rail for three days before it is cut.
 
+The guard is proven, not claimed: `tests/js/npm-hardening.test.mjs` installs a local package whose `postinstall` drops a marker file, once with the flag and once without, and the marker appears only without it. The lock gets the same care: `eslint-config-prettier` is floored at `^10.1.8`, past the releases hit by CVE-2025-54313.
+
 ## Coming next
 
 Reading the PHP floor from CREED. (Preflight's pint, phpstan and eslint jobs already run your app's Pinstripe config.)
