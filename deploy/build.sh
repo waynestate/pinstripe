@@ -15,7 +15,7 @@ set -eu
 # shellcheck disable=SC3040
 (set -o pipefail) 2>/dev/null && set -o pipefail
 
-SQUIRE_BUILD_REVISION="1"
+SQUIRE_BUILD_REVISION="2"
 
 step() {
     printf '[squire-build] ==> %s\n' "$*"
