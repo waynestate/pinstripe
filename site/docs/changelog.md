@@ -12,6 +12,7 @@ All notable changes to Pinstripe are documented here.
 
 ## Unreleased[#](https://pinstripe.apps.wayne.edu/docs/changelog.html#unreleased)
 
+- Added: a test that proves `npm install --ignore-scripts` stops a postinstall script, and the eslint-config-prettier floor is ^10.1.8, past the releases hit by CVE-2025-54313.
 - Added: banned calls. Every PHPStan cut includes the new `phpstan/disallowed.neon`, which bans `eval()`, `extract()`, `var_dump()`, `dd()`, `dump()` and Laravel's `PendingRequest::withoutVerifying()` (the `Http::withoutVerifying()` facade call too) through `spaze/phpstan-disallowed-calls` `^4.15` (now in `require`, locked 4.15.0, loaded by the extension installer). Each message says why and what to use instead, ends with its OWASP Top 10:2025 tag (A05 Injection or A02 Security Misconfiguration), and has a stable identifier (`pinstripe.banned.*`) for a reasoned ignore. Breaking for apps with one left in: a leftover `dd()` now fails the pipeline. `md5()`, `sha1()`, `rand()` and `mt_rand()` are not banned; that call is open. New README section and docs page, Banned calls; new fixtures `tests/fixtures/raw-disallowed`, `tests/fixtures/laravel/src/InsecureHttp.php` and `tests/fixtures/laravel-app/banned`.
 - Changed: the front page's `deploy/build.sh` revision marker is 2, for a Citadel build-cache test (does a full Update run the edited `build.sh`?).
 - Fixed: the pipeline's PROCTOR jobs no longer pass `--policy`, which PROCTOR 0.7 refuses in CI; PROCTOR checks against the CREED policy it bundles.
