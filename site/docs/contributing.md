@@ -22,7 +22,7 @@ This page explains how to build, test and change Pinstripe, and the rules every 
 With only Docker:
 
 ```
-docker run --rm -v "${PWD}:/app" -w /app composer:2.10.3 sh -c "composer install --no-interaction && composer ci"
+docker run --rm -v "${PWD}:/app" -w /app composer:2.11.1@sha256:8de2184c6de224f4689e8f80ed5f5edaf0030b6b8b7839a22a2bcb6722ac87d0 sh -c "composer install --no-interaction && composer ci"
 ```
 
 `composer ci` runs `composer validate --strict`, PHPUnit, the agent-ready check (`php bin/agent-ready.php --check`), `composer audit` and the docs check (`php bin/docs-site.php --check`). The PHPUnit suite is the real check: it installs fixture apps and runs Pint, PHPStan and Rector with each preset against planted code, so a preset that stops catching something fails a test. `npm test` (`node --test`) covers the JS presets, and both pipelines run it on Node 22, 24 and 26, so a broken ESLint or Prettier preset fails the build too.
