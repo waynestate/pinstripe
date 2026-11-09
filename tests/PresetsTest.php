@@ -708,9 +708,7 @@ final class PresetsTest extends TestCase
             ['pinstripe.banned.joinedSql', 'oci_parse()', 29],
             ['pinstripe.banned.joinedSql', 'ociparse()', 30],
         ];
-        if (PHP_VERSION_ID >= 80400) {
-            $expected[] = ['function.deprecated', 'ociparse()', 30];
-        }
+        $expected[] = ['function.deprecated', 'ociparse()', 30];
 
         [$exit, $output, $messages] = $this->runPhpStanJson([
             PHP_BINARY,
