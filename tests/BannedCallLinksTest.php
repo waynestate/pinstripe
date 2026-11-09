@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace WayneState\Pinstripe\Tests;
 
 use PHPUnit\Framework\TestCase;
+use WayneState\Pinstripe\PHPStan\CurlVerifyOffRule;
 
 /**
  * Keeps every banned call's errorTip pointing at both the Pinstripe page
@@ -35,6 +36,16 @@ final class BannedCallLinksTest extends TestCase
         foreach ($this->errorIdentifierValues() as $identifier) {
             $this->assertStringStartsWith('pinstripe.banned.', $identifier);
         }
+    }
+
+    public function testTheCurlRuleKeepsTheSameLinksAndNamespace(): void
+    {
+        // The one ban that is a PHP rule, not a NEON entry, holds to the
+        // same promises as the rest of the file.
+        $this->assertStringContainsString(self::PINSTRIPE_PAGE, CurlVerifyOffRule::TIP);
+        $this->assertStringContainsString(self::CREED_RULE, CurlVerifyOffRule::TIP);
+        $this->assertStringStartsWith('pinstripe.banned.', CurlVerifyOffRule::IDENTIFIER);
+        $this->assertStringContainsString('- ' . CurlVerifyOffRule::class, (string) file_get_contents(dirname(__DIR__) . '/phpstan/disallowed.neon'));
     }
 
     /**

@@ -629,6 +629,65 @@ final class PresetsTest extends TestCase
         $this->assertSame(0, $exit, $output);
     }
 
+    #[DataProvider('bannedCallConfigs')]
+    public function testPhpStanReportsTlsChecksTurnedOffInRawPhp(string $config): void
+    {
+        // curl_setopt() is Pinstripe's own rule (two parameters at once);
+        // curl_setopt_array() and stream_context_create() are array shapes
+        // in disallowed.neon. All of them read alike.
+        [$exit, $output, $messages] = $this->runPhpStanJson([
+            PHP_BINARY,
+            $this->root() . '/vendor/bin/phpstan',
+            'analyse',
+            '-c',
+            $this->root() . '/phpstan/' . $config,
+            '--no-progress',
+            $this->root() . '/tests/fixtures/raw-disallowed/src/InsecureTransport.php',
+        ], $this->root() . '/tests/fixtures/laravel');
+
+        $this->assertNotSame(0, $exit, $output);
+        $this->assertSame(
+            [
+                ['pinstripe.banned.curlVerifyOff', 'curl_setopt()', 18],
+                ['pinstripe.banned.curlVerifyOff', 'curl_setopt()', 23],
+                ['pinstripe.banned.curlVerifyOff', 'curl_setopt()', 28],
+                ['pinstripe.banned.curlVerifyOff', 'curl_setopt_array()', 33],
+                ['pinstripe.banned.curlVerifyOff', 'curl_setopt_array()', 38],
+                ['pinstripe.banned.streamVerifyOff', 'stream_context_create()', 46],
+                ['pinstripe.banned.streamVerifyOff', 'stream_context_create()', 54],
+                ['pinstripe.banned.streamVerifyOff', 'stream_context_create()', 62],
+            ],
+            array_map(
+                static fn (array $message): array => [$message[0], (string) preg_replace('/^Calling (\S+) is forbidden.*$/s', '$1', $message[1]), $message[2]],
+                $messages
+            ),
+            $output
+        );
+
+        foreach ($messages as [, $message]) {
+            $this->assertMatchesRegularExpression('/^Calling \S+ is forbidden, it (turns off TLS|accepts self-signed)/', $message);
+            $this->assertStringContainsString('; ', $message, 'a ban message says what to use instead after the reason');
+            $this->assertStringEndsWith('(OWASP A02:2025 Security Misconfiguration).', $message);
+        }
+    }
+
+    #[DataProvider('bannedCallConfigs')]
+    public function testPhpStanAcceptsTlsChecksLeftOnInRawPhp(string $config): void
+    {
+        [$exit, $output] = $this->runInDir([
+            PHP_BINARY,
+            $this->root() . '/vendor/bin/phpstan',
+            'analyse',
+            '-c',
+            $this->root() . '/phpstan/' . $config,
+            '--no-progress',
+            '--error-format=raw',
+            $this->root() . '/tests/fixtures/raw-disallowed/src/SecureTransport.php',
+        ], $this->root() . '/tests/fixtures/laravel');
+
+        $this->assertSame(0, $exit, $output);
+    }
+
     public function testPhpStanRawConfigAcceptsABannedCallKeptWithAReason(): void
     {
         [$exit, $output] = $this->runInDir([
@@ -907,6 +966,30 @@ final class PresetsTest extends TestCase
         $this->assertStringContainsString('spaze/phpstan-disallowed-calls', (string) file_get_contents($generated));
     }
 
+    public function testPhpStanLaravelConfigReportsCurlVerifyOffInTheLaravelAppFixture(): void
+    {
+        // The curl_setopt() ban is Pinstripe's own rule class, registered in
+        // disallowed.neon. An app that installs Pinstripe from Composer must
+        // load it from vendor/ through its own autoloader.
+        $fixture = $this->laravelAppFixture();
+
+        [$exit, $output, $messages] = $this->runPhpStanJson([
+            PHP_BINARY,
+            'vendor/bin/phpstan',
+            'analyse',
+            '-c',
+            'phpstan.neon',
+            '--no-progress',
+            'banned/InsecureCurl.php',
+        ], $fixture);
+
+        $this->assertNotSame(0, $exit, $output);
+        $this->assertSame([['pinstripe.banned.curlVerifyOff', 19]], array_map(
+            static fn (array $message): array => [$message[0], $message[2]],
+            $messages
+        ), $output);
+    }
+
     public function testPintLaravelPresetAcceptsTheLaravelVueFixture(): void
     {
         $fixture = $this->laravelVueFixture();
@@ -1068,6 +1151,56 @@ final class PresetsTest extends TestCase
             $this->assertStringContainsString('it turns off TLS certificate checks', $message);
             $this->assertStringEndsWith('(OWASP A02:2025 Security Misconfiguration).', $message);
         }
+    }
+
+    public function testLaravelPresetReportsTheVerifyOptionSetToFalse(): void
+    {
+        [$exit, $output, $messages] = $this->runPhpStanJson([
+            PHP_BINARY,
+            $this->root() . '/vendor/bin/phpstan',
+            'analyse',
+            '-c',
+            'phpstan.neon',
+            '--no-progress',
+            'src/VerifyFalse.php',
+        ], $this->root() . '/tests/fixtures/laravel');
+
+        $this->assertNotSame(0, $exit, $output);
+        $this->assertSame(
+            [
+                ['pinstripe.banned.verifyFalse', 'Illuminate\\Http\\Client\\PendingRequest::withOptions()', 22],
+                ['pinstripe.banned.verifyFalse', 'Illuminate\\Http\\Client\\PendingRequest::withOptions()', 27],
+                ['pinstripe.banned.verifyFalse', 'GuzzleHttp\\Client::__construct()', 32],
+                ['pinstripe.banned.verifyFalse', 'GuzzleHttp\\ClientInterface::request()', 37],
+                ['pinstripe.banned.verifyFalse', 'GuzzleHttp\\Client::get()', 42],
+            ],
+            array_map(
+                static fn (array $message): array => [$message[0], (string) preg_replace('/^Calling (\S+).*$/s', '$1', $message[1]), $message[2]],
+                $messages
+            ),
+            $output
+        );
+
+        foreach ($messages as [, $message]) {
+            $this->assertStringContainsString('it turns off TLS certificate checks (the verify option set to false)', $message);
+            $this->assertStringContainsString('(OWASP A02:2025 Security Misconfiguration).', $message);
+        }
+    }
+
+    public function testLaravelPresetAcceptsVerifyPointedAtACaBundle(): void
+    {
+        [$exit, $output] = $this->runInDir([
+            PHP_BINARY,
+            $this->root() . '/vendor/bin/phpstan',
+            'analyse',
+            '-c',
+            'phpstan.neon',
+            '--no-progress',
+            '--error-format=raw',
+            'src/VerifiedHttp.php',
+        ], $this->root() . '/tests/fixtures/laravel');
+
+        $this->assertSame(0, $exit, $output);
     }
 
     public function testLaravelPresetReportsDdAndDumpMethodsLeftIn(): void

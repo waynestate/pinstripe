@@ -16,6 +16,14 @@
 #
 # Apps add their own bans to the same parameters in their phpstan.neon; NEON
 # appends lists, so the app's entries join these rather than replacing them.
+#
+# One ban needs a rule of its own: curl_setopt() with a verify option set to
+# false is two parameters at once, which the package cannot match (see
+# src/PHPStan/CurlVerifyOffRule.php). It shares this file's message style,
+# tip and identifier namespace.
+rules:
+    - WayneState\Pinstripe\PHPStan\CurlVerifyOffRule
+
 parameters:
     disallowedFunctionCalls:
         -
@@ -44,6 +52,67 @@ parameters:
             errorIdentifier: 'pinstripe.banned.dump'
             errorTip: 'See https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html and the CREED rule at https://creed.apps.wayne.edu/handbook/code.html#banned-patterns'
 
+        # TLS checks turned off in raw PHP. curl_setopt_array() takes one
+        # array, so a shape says it: the option's key (64 is
+        # CURLOPT_SSL_VERIFYPEER, 81 is CURLOPT_SSL_VERIFYHOST) with a false
+        # or 0 value, whatever else the array holds. A union of two shapes
+        # matches far too much, so each key gets its own entry.
+        # curl_setopt() itself is the custom rule named above.
+        -
+            function: 'curl_setopt_array()'
+            message: 'it turns off TLS certificate checks (CURLOPT_SSL_VERIFYPEER false), so anyone on the network path can read or change the traffic; keep verification on, and for a private CA point CURLOPT_CAINFO at its bundle (OWASP A02:2025 Security Misconfiguration)'
+            errorIdentifier: 'pinstripe.banned.curlVerifyOff'
+            errorTip: 'See https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html and the CREED rule at https://creed.apps.wayne.edu/handbook/code.html#banned-patterns'
+            allowExceptParamsAnywhere:
+                -
+                    position: 2
+                    name: 'options'
+                    typeString: 'array{64: 0|false}'
+        -
+            function: 'curl_setopt_array()'
+            message: 'it turns off TLS certificate checks (CURLOPT_SSL_VERIFYHOST 0), so anyone on the network path can read or change the traffic; keep verification on, and for a private CA point CURLOPT_CAINFO at its bundle (OWASP A02:2025 Security Misconfiguration)'
+            errorIdentifier: 'pinstripe.banned.curlVerifyOff'
+            errorTip: 'See https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html and the CREED rule at https://creed.apps.wayne.edu/handbook/code.html#banned-patterns'
+            allowExceptParamsAnywhere:
+                -
+                    position: 2
+                    name: 'options'
+                    typeString: 'array{81: 0|false}'
+
+        # The same for PHP streams (file_get_contents() and friends): the ssl
+        # context's verify_peer or verify_peer_name set to false, or
+        # allow_self_signed set to true.
+        -
+            function: 'stream_context_create()'
+            message: 'it turns off TLS certificate checks (ssl verify_peer false), so anyone on the network path can read or change the traffic; keep verification on, and for a private CA set the ssl cafile option to its bundle (OWASP A02:2025 Security Misconfiguration)'
+            errorIdentifier: 'pinstripe.banned.streamVerifyOff'
+            errorTip: 'See https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html and the CREED rule at https://creed.apps.wayne.edu/handbook/code.html#banned-patterns'
+            allowExceptParamsAnywhere:
+                -
+                    position: 1
+                    name: 'options'
+                    typeString: 'array{ssl: array{verify_peer: false}}'
+        -
+            function: 'stream_context_create()'
+            message: 'it turns off TLS host name checks (ssl verify_peer_name false), so anyone on the network path can read or change the traffic; keep verification on, and for a private CA set the ssl cafile option to its bundle (OWASP A02:2025 Security Misconfiguration)'
+            errorIdentifier: 'pinstripe.banned.streamVerifyOff'
+            errorTip: 'See https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html and the CREED rule at https://creed.apps.wayne.edu/handbook/code.html#banned-patterns'
+            allowExceptParamsAnywhere:
+                -
+                    position: 1
+                    name: 'options'
+                    typeString: 'array{ssl: array{verify_peer_name: false}}'
+        -
+            function: 'stream_context_create()'
+            message: 'it accepts self-signed certificates (ssl allow_self_signed true), so anyone on the network path can stand in for the server; keep it off, and for a private CA set the ssl cafile option to its bundle (OWASP A02:2025 Security Misconfiguration)'
+            errorIdentifier: 'pinstripe.banned.streamVerifyOff'
+            errorTip: 'See https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html and the CREED rule at https://creed.apps.wayne.edu/handbook/code.html#banned-patterns'
+            allowExceptParamsAnywhere:
+                -
+                    position: 1
+                    name: 'options'
+                    typeString: 'array{ssl: array{allow_self_signed: true}}'
+
     # Laravel's HTTP client. The method entry covers chains such as
     # Http::acceptJson()->withoutVerifying(). The facade call
     # Http::withoutVerifying() is a static call, so it needs the static
@@ -55,6 +124,68 @@ parameters:
             message: 'it turns off TLS certificate checks, so anyone on the network path can read or change the traffic; keep verification on, and for a private CA pass its bundle with withOptions and the verify option (OWASP A02:2025 Security Misconfiguration)'
             errorIdentifier: 'pinstripe.banned.withoutVerifying'
             errorTip: 'See https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html and the CREED rule at https://creed.apps.wayne.edu/handbook/code.html#banned-patterns'
+
+        # The long way round to the same hole: Guzzle's verify option set to
+        # false, through Laravel's withOptions() or Guzzle itself (the
+        # client's config, and the options of each request). The shape
+        # matches any options array whose verify key is false; a CA bundle
+        # path in verify is the fix, and passes.
+        -
+            method: 'Illuminate\Http\Client\PendingRequest::withOptions()'
+            message: 'it turns off TLS certificate checks (the verify option set to false), so anyone on the network path can read or change the traffic; keep verification on, and for a private CA set verify to the path of its bundle (OWASP A02:2025 Security Misconfiguration)'
+            errorIdentifier: 'pinstripe.banned.verifyFalse'
+            errorTip: 'See https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html and the CREED rule at https://creed.apps.wayne.edu/handbook/code.html#banned-patterns'
+            allowExceptParamsAnywhere:
+                -
+                    position: 1
+                    name: 'options'
+                    typeString: 'array{verify: false}'
+        -
+            method: 'GuzzleHttp\Client::__construct()'
+            message: 'it turns off TLS certificate checks (the verify option set to false), so anyone on the network path can read or change the traffic; keep verification on, and for a private CA set verify to the path of its bundle (OWASP A02:2025 Security Misconfiguration)'
+            errorIdentifier: 'pinstripe.banned.verifyFalse'
+            errorTip: 'See https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html and the CREED rule at https://creed.apps.wayne.edu/handbook/code.html#banned-patterns'
+            allowExceptParamsAnywhere:
+                -
+                    position: 1
+                    name: 'config'
+                    typeString: 'array{verify: false}'
+        -
+            method:
+                - 'GuzzleHttp\ClientInterface::request()'
+                - 'GuzzleHttp\ClientInterface::requestAsync()'
+            message: 'it turns off TLS certificate checks (the verify option set to false), so anyone on the network path can read or change the traffic; keep verification on, and for a private CA set verify to the path of its bundle (OWASP A02:2025 Security Misconfiguration)'
+            errorIdentifier: 'pinstripe.banned.verifyFalse'
+            errorTip: 'See https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html and the CREED rule at https://creed.apps.wayne.edu/handbook/code.html#banned-patterns'
+            allowExceptParamsAnywhere:
+                -
+                    position: 3
+                    name: 'options'
+                    typeString: 'array{verify: false}'
+        -
+            method:
+                - 'GuzzleHttp\ClientInterface::send()'
+                - 'GuzzleHttp\ClientInterface::sendAsync()'
+                - 'GuzzleHttp\Client::get()'
+                - 'GuzzleHttp\Client::head()'
+                - 'GuzzleHttp\Client::put()'
+                - 'GuzzleHttp\Client::post()'
+                - 'GuzzleHttp\Client::patch()'
+                - 'GuzzleHttp\Client::delete()'
+                - 'GuzzleHttp\Client::getAsync()'
+                - 'GuzzleHttp\Client::headAsync()'
+                - 'GuzzleHttp\Client::putAsync()'
+                - 'GuzzleHttp\Client::postAsync()'
+                - 'GuzzleHttp\Client::patchAsync()'
+                - 'GuzzleHttp\Client::deleteAsync()'
+            message: 'it turns off TLS certificate checks (the verify option set to false), so anyone on the network path can read or change the traffic; keep verification on, and for a private CA set verify to the path of its bundle (OWASP A02:2025 Security Misconfiguration)'
+            errorIdentifier: 'pinstripe.banned.verifyFalse'
+            errorTip: 'See https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html and the CREED rule at https://creed.apps.wayne.edu/handbook/code.html#banned-patterns'
+            allowExceptParamsAnywhere:
+                -
+                    position: 2
+                    name: 'options'
+                    typeString: 'array{verify: false}'
 
         # Laravel's own dd() and dump() methods: $users->dd(),
         # DB::table('users')->dumpRawSql(), $request->dump(), Http::get()->dd()
@@ -92,6 +223,16 @@ parameters:
             method: 'Illuminate\Http\Client\PendingRequest::withoutVerifying()'
             message: 'it turns off TLS certificate checks, so anyone on the network path can read or change the traffic; keep verification on, and for a private CA pass its bundle with withOptions and the verify option (OWASP A02:2025 Security Misconfiguration)'
             errorIdentifier: 'pinstripe.banned.withoutVerifying'
+        -
+            method: 'Illuminate\Http\Client\PendingRequest::withOptions()'
+            message: 'it turns off TLS certificate checks (the verify option set to false), so anyone on the network path can read or change the traffic; keep verification on, and for a private CA set verify to the path of its bundle (OWASP A02:2025 Security Misconfiguration)'
+            errorIdentifier: 'pinstripe.banned.verifyFalse'
+            errorTip: 'See https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html and the CREED rule at https://creed.apps.wayne.edu/handbook/code.html#banned-patterns'
+            allowExceptParamsAnywhere:
+                -
+                    position: 1
+                    name: 'options'
+                    typeString: 'array{verify: false}'
 
         # The same dd() and dump() methods called off a facade, such as
         # Http::dd(); Larastan resolves the facade to the class behind it.

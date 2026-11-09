@@ -13,9 +13,11 @@ A stricter preset breaks consumers' builds. Pinstripe ships such a change in a m
 
 ## Unreleased
 
+**Breaking (a stricter fit):** every cut fails on TLS checks turned off: `curl_setopt()` or `curl_setopt_array()` with `CURLOPT_SSL_VERIFYPEER` false or `CURLOPT_SSL_VERIFYHOST` 0 (`pinstripe.banned.curlVerifyOff`), `stream_context_create()` with `ssl` `verify_peer` or `verify_peer_name` false or `allow_self_signed` true (`pinstripe.banned.streamVerifyOff`), and Guzzle's `verify` option set to false, through Laravel's `withOptions()` or Guzzle itself (`pinstripe.banned.verifyFalse`). Setting verification on, or pointing it at a CA bundle, passes.
+
 **Breaking (a stricter fit):** in Laravel apps, Laravel's own `dd()` and `dump()` methods fail `composer analyse` too, not only the functions: `$users->dd()`, `DB::table('users')->dumpRawSql()`, `$request->dump()`, `Http::get($url)->dd()` and the rest of the family (`ddRawSql()`, `ddHeaders()`, `ddBody()`, `ddJson()`, `ddSession()`, `dumpHeaders()`, `dumpSession()`). They report as `pinstripe.banned.dd` and `pinstripe.banned.dump`, the same identifiers as the functions. Your own methods named `dump()` and the schema dump behind `php artisan schema:dump` are not affected.
 
-**Steps:** Delete each reported call, or keep one on purpose with `@phpstan-ignore pinstripe.banned.dd (why)`.
+**Steps:** Delete each reported leftover. For a TLS finding, turn verification back on, and if the server uses a private CA, point the client at its bundle (`CURLOPT_CAINFO`, the `ssl` `cafile` option, or `verify` set to the bundle's path). Keep one on purpose with `@phpstan-ignore pinstripe.banned.<name> (why)`.
 
 **How to verify:** `composer analyse` passes, or lists only the leftovers you now own.
 
