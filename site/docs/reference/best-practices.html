@@ -40,92 +40,155 @@
   <div class="docs-content">
     <main id="main">
       <article class="docs-article"><h1 id="best-practices">Best practices<a class="docs-heading-link" aria-label="Link to this section" href="#best-practices">#</a></h1>
-<p>This page lists every rule Pinstripe holds itself to and the tests that prove each one.</p>
-<p>How Pinstripe keeps its own promises: every preset is enforced by a test that runs the real tool against a fixture, so a preset that stops working fails <code>composer ci</code> here instead of failing a developer's app. A preset without a test is a suit without a mirror: you cannot tell when it has gone wrinkled.</p>
-<p>A preset is <strong>Enforced</strong> when a test asserts both directions: a clean fixture passes, and a deliberately broken one is caught. The PHP presets run under <code>composer ci</code> (PHPUnit); the JavaScript presets run under <code>npm test</code>. Both run in CI on GitLab and GitHub, so a preset that stops working fails the pipeline before it reaches an app.</p>
-<h2 id="pint-per-json"><code>pint/per.json</code><a class="docs-heading-link" aria-label="Link to this section" href="#pint-per-json">#</a></h2>
-<p>Pint, Enforced.</p>
-<ul>
-<li><code>PresetsTest::testPintPerPresetAcceptsTheCleanFixture</code></li>
-<li><code>PresetsTest::testPintPerPresetRejectsTheMessyFixture</code></li>
-</ul>
-<h2 id="pint-gitlab-output">Pint GitLab output<a class="docs-heading-link" aria-label="Link to this section" href="#pint-gitlab-output">#</a></h2>
-<p>Pint, Enforced.</p>
-<ul>
-<li><code>PresetsTest::testPintGitlabFormatReportsTheMessyFixtureAsCodeQualityJson</code></li>
-<li><code>PresetsTest::testPintGitlabFormatIsAnEmptyArrayForTheCleanFixture</code></li>
-</ul>
-<h2 id="pint-laravel-json"><code>pint/laravel.json</code><a class="docs-heading-link" aria-label="Link to this section" href="#pint-laravel-json">#</a></h2>
-<p>Pint, Enforced.</p>
-<ul>
-<li><code>PresetsTest::testPintLaravelPresetAcceptsTheLaravelAppFixture</code></li>
-</ul>
-<h2 id="pint-per-strict-json"><code>pint/per-strict.json</code><a class="docs-heading-link" aria-label="Link to this section" href="#pint-per-strict-json">#</a></h2>
-<p>Pint, Enforced.</p>
-<ul>
-<li><code>PresetsTest::testPintPerStrictPresetAcceptsTheStrictTypesCleanFixture</code></li>
-<li><code>PresetsTest::testPintPerStrictPresetRejectsTheStrictTypesMissingFixture</code></li>
-</ul>
-<h2 id="pint-laravel-strict-json"><code>pint/laravel-strict.json</code><a class="docs-heading-link" aria-label="Link to this section" href="#pint-laravel-strict-json">#</a></h2>
-<p>Pint, Enforced.</p>
-<ul>
-<li><code>PresetsTest::testPintLaravelStrictPresetRejectsTheStrictTypesMissingFixture</code></li>
-</ul>
-<h2 id="phpstan-raw-neon"><code>phpstan/raw.neon</code><a class="docs-heading-link" aria-label="Link to this section" href="#phpstan-raw-neon">#</a></h2>
-<p>PHPStan, Enforced.</p>
-<ul>
-<li><code>PresetsTest::testPhpStanRawConfigAcceptsTheCleanFixture</code></li>
-<li><code>PresetsTest::testPhpStanRawConfigReportsTheNullBug</code></li>
-</ul>
-<h2 id="phpstan-laravel-neon"><code>phpstan/laravel.neon</code><a class="docs-heading-link" aria-label="Link to this section" href="#phpstan-laravel-neon">#</a></h2>
-<p>PHPStan + Larastan, Enforced.</p>
-<ul>
-<li><code>PresetsTest::testLaravelPresetLoadsLarastanThroughTheExtensionInstaller</code></li>
-<li><code>PresetsTest::testPhpStanLaravelConfigAcceptsTheLaravelAppFixture</code></li>
-<li><code>PresetsTest::testPhpStanLaravelConfigReportsTheUndefinedEloquentProperty</code></li>
-</ul>
-<h2 id="larastan-env-rule">Larastan env() rule<a class="docs-heading-link" aria-label="Link to this section" href="#larastan-env-rule">#</a></h2>
-<p>PHPStan + Larastan, Enforced.</p>
-<ul>
-<li><code>PresetsTest::testLaravelPresetReportsAnEnvCallOutsideConfig</code></li>
-<li><code>PresetsTest::testLaravelPresetAcceptsAConfigCallOutsideConfig</code></li>
-</ul>
-<h2 id="phpstan-ignore-comments">PHPStan ignore comments<a class="docs-heading-link" aria-label="Link to this section" href="#phpstan-ignore-comments">#</a></h2>
-<p>PHPStan, Enforced.</p>
-<ul>
-<li><code>PresetsTest::testPhpStanRawConfigReportsAnIgnoreWithoutAComment</code></li>
-<li><code>PresetsTest::testPhpStanRawConfigReportsAnIgnoreThatMatchesNothing</code></li>
-<li><code>PresetsTest::testPhpStanRawConfigAcceptsAnIgnoreWithAComment</code></li>
-</ul>
-<h2 id="rector-base-php"><code>rector/base.php</code><a class="docs-heading-link" aria-label="Link to this section" href="#rector-base-php">#</a></h2>
-<p>Rector, Enforced.</p>
-<ul>
-<li><code>PresetsTest::testRectorPresetAcceptsTheCleanFixture</code></li>
-<li><code>PresetsTest::testRectorPresetReportsChangesOnTheOldFixture</code></li>
-</ul>
-<h2 id="eslint-javascript-js"><code>eslint/javascript.js</code><a class="docs-heading-link" aria-label="Link to this section" href="#eslint-javascript-js">#</a></h2>
-<p>ESLint, Enforced.</p>
-<ul>
-<li><code>tests/js/presets.test.mjs</code> (<code>npm test</code>)</li>
-</ul>
-<h2 id="eslint-typescript-js"><code>eslint/typescript.js</code><a class="docs-heading-link" aria-label="Link to this section" href="#eslint-typescript-js">#</a></h2>
-<p>ESLint, Enforced.</p>
-<ul>
-<li><code>tests/js/presets.test.mjs</code> (<code>npm test</code>)</li>
-</ul>
-<h2 id="prettier-index-json"><code>prettier/index.json</code><a class="docs-heading-link" aria-label="Link to this section" href="#prettier-index-json">#</a></h2>
-<p>Prettier, Enforced.</p>
-<ul>
-<li><code>tests/js/prettier.test.mjs</code> (<code>npm test</code>)</li>
-</ul>
-<h2 id="readme-tool-floors">README &quot;Tool floors&quot;<a class="docs-heading-link" aria-label="Link to this section" href="#readme-tool-floors">#</a></h2>
-<p>composer.lock + package-lock.json, Enforced.</p>
-<ul>
-<li><code>ToolFloorsTest::testToolFloorsMatchTheLockFiles</code></li>
-</ul>
+<p>This page lists every rule Pinstripe holds itself to and the tests that prove each one. It carries BEST_PRACTICES.md word for word, and <code>BestPracticesTest</code> fails the build when the two drift apart.</p>
+<p>How Pinstripe keeps its own promises: every preset is enforced by a test that runs the real tool against a
+fixture, so a preset that stops working fails <code>composer ci</code> here instead of failing a developer's app. A preset
+without a test is a suit without a mirror: you cannot tell when it has gone wrinkled.</p>
+<p>A preset is <strong>Enforced</strong> when a test asserts both directions: a clean fixture passes, and a deliberately broken
+one is caught. The PHP presets run under <code>composer ci</code> (PHPUnit); the JavaScript presets run under <code>npm test</code>.
+Both run in CI on GitLab and GitHub, so a preset that stops working fails the pipeline before it reaches an app.</p>
+<div class="docs-table" role="region" aria-label="Table" tabindex="0"><table>
+<thead>
+<tr>
+<th>Preset</th>
+<th>Tool</th>
+<th>Status</th>
+<th>Enforced by</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pint/per.json</code></td>
+<td>Pint</td>
+<td>Enforced</td>
+<td><code>PresetsTest::testPintPerPresetAcceptsTheCleanFixture</code>, <code>PresetsTest::testPintPerPresetRejectsTheMessyFixture</code></td>
+</tr>
+<tr>
+<td><code>Pint GitLab output</code></td>
+<td>Pint</td>
+<td>Enforced</td>
+<td><code>PresetsTest::testPintGitlabFormatReportsTheMessyFixtureAsCodeQualityJson</code>, <code>PresetsTest::testPintGitlabFormatIsAnEmptyArrayForTheCleanFixture</code></td>
+</tr>
+<tr>
+<td><code>ESLint GitLab output</code></td>
+<td>ESLint</td>
+<td>Enforced</td>
+<td><code>tests/js/gitlab-formatter.test.mjs</code></td>
+</tr>
+<tr>
+<td><code>pint/laravel.json</code></td>
+<td>Pint</td>
+<td>Enforced</td>
+<td><code>PresetsTest::testPintLaravelPresetAcceptsTheLaravelAppFixture</code></td>
+</tr>
+<tr>
+<td><code>pint/per-strict.json</code></td>
+<td>Pint</td>
+<td>Enforced</td>
+<td><code>PresetsTest::testPintPerStrictPresetAcceptsTheStrictTypesCleanFixture</code>, <code>PresetsTest::testPintPerStrictPresetRejectsTheStrictTypesMissingFixture</code></td>
+</tr>
+<tr>
+<td><code>pint/laravel-strict.json</code></td>
+<td>Pint</td>
+<td>Enforced</td>
+<td><code>PresetsTest::testPintLaravelStrictPresetRejectsTheStrictTypesMissingFixture</code></td>
+</tr>
+<tr>
+<td><code>phpstan/raw.neon</code></td>
+<td>PHPStan</td>
+<td>Enforced</td>
+<td><code>PresetsTest::testPhpStanRawConfigAcceptsTheCleanFixture</code>, <code>PresetsTest::testPhpStanRawConfigReportsTheNullBug</code></td>
+</tr>
+<tr>
+<td><code>phpstan/strict.neon</code></td>
+<td>PHPStan + strict-rules</td>
+<td>Enforced</td>
+<td><code>PresetsTest::testPhpStanStrictConfigAcceptsTheCleanFixture</code>, <code>PresetsTest::testPhpStanStrictConfigReportsTheLooseComparison</code></td>
+</tr>
+<tr>
+<td><code>phpstan/disallowed.neon</code> (banned calls)</td>
+<td>PHPStan + disallowed-calls</td>
+<td>Enforced</td>
+<td><code>PresetsTest::testPhpStanReportsEveryBannedCall</code>, <code>PresetsTest::testPhpStanAcceptsMethodsThatShareTheBannedNames</code>, <code>PresetsTest::testPhpStanRawConfigAcceptsABannedCallKeptWithAReason</code>, <code>PresetsTest::testLaravelPresetReportsTlsVerificationTurnedOff</code></td>
+</tr>
+<tr>
+<td><code>phpstan/laravel.neon</code></td>
+<td>PHPStan + Larastan</td>
+<td>Enforced</td>
+<td><code>PresetsTest::testLaravelPresetLoadsLarastanThroughTheExtensionInstaller</code>, <code>PresetsTest::testPhpStanLaravelConfigAcceptsTheLaravelAppFixture</code>, <code>PresetsTest::testPhpStanLaravelConfigReportsTheUndefinedEloquentProperty</code></td>
+</tr>
+<tr>
+<td><code>Larastan env() rule</code></td>
+<td>PHPStan + Larastan</td>
+<td>Enforced</td>
+<td><code>PresetsTest::testLaravelPresetReportsAnEnvCallOutsideConfig</code>, <code>PresetsTest::testLaravelPresetAcceptsAConfigCallOutsideConfig</code></td>
+</tr>
+<tr>
+<td><code>PHPStan ignore comments</code></td>
+<td>PHPStan</td>
+<td>Enforced</td>
+<td><code>PresetsTest::testPhpStanRawConfigReportsAnIgnoreWithoutAComment</code>, <code>PresetsTest::testPhpStanRawConfigReportsAnIgnoreThatMatchesNothing</code>, <code>PresetsTest::testPhpStanRawConfigAcceptsAnIgnoreWithAComment</code></td>
+</tr>
+<tr>
+<td><code>Laravel dd() and dump() methods banned</code></td>
+<td>PHPStan + Larastan</td>
+<td>Enforced</td>
+<td><code>PresetsTest::testLaravelPresetReportsDdAndDumpMethodsLeftIn</code>, <code>PresetsTest::testLaravelPresetAcceptsASchemaDump</code></td>
+</tr>
+<tr>
+<td><code>TLS checks turned off banned</code></td>
+<td>PHPStan (+ Pinstripe's curl rule)</td>
+<td>Enforced</td>
+<td><code>PresetsTest::testPhpStanReportsTlsChecksTurnedOffInRawPhp</code>, <code>PresetsTest::testPhpStanAcceptsTlsChecksLeftOnInRawPhp</code>, <code>PresetsTest::testLaravelPresetReportsTheVerifyOptionSetToFalse</code>, <code>PresetsTest::testLaravelPresetAcceptsVerifyPointedAtACaBundle</code>, <code>PresetsTest::testPhpStanLaravelConfigReportsCurlVerifyOffInTheLaravelAppFixture</code></td>
+</tr>
+<tr>
+<td><code>Banned call tips link to the CREED rule</code></td>
+<td>PHPStan</td>
+<td>Enforced</td>
+<td><code>tests/BannedCallLinksTest.php</code> (<code>BannedCallLinksTest::testEveryBanCarriesAnIdentifierAndATip</code> makes sure no entry goes without)</td>
+</tr>
+<tr>
+<td><code>rector/base.php</code></td>
+<td>Rector</td>
+<td>Enforced</td>
+<td><code>PresetsTest::testRectorPresetAcceptsTheCleanFixture</code>, <code>PresetsTest::testRectorPresetReportsChangesOnTheOldFixture</code></td>
+</tr>
+<tr>
+<td><code>eslint/javascript.js</code></td>
+<td>ESLint</td>
+<td>Enforced</td>
+<td><code>tests/js/presets.test.mjs</code> (<code>npm test</code>)</td>
+</tr>
+<tr>
+<td><code>eslint/typescript.js</code></td>
+<td>ESLint</td>
+<td>Enforced</td>
+<td><code>tests/js/presets.test.mjs</code> (<code>npm test</code>)</td>
+</tr>
+<tr>
+<td><code>prettier/index.json</code></td>
+<td>Prettier</td>
+<td>Enforced</td>
+<td><code>tests/js/prettier.test.mjs</code> (<code>npm test</code>)</td>
+</tr>
+<tr>
+<td>README &quot;Tool floors&quot;</td>
+<td>composer.lock + package-lock.json</td>
+<td>Enforced</td>
+<td><code>ToolFloorsTest::testToolFloorsMatchTheLockFiles</code></td>
+</tr>
+<tr>
+<td>This page</td>
+<td>PHPUnit</td>
+<td>Enforced</td>
+<td><code>BestPracticesTest::testEveryTestNamedHereExists</code>, <code>BestPracticesTest::testEveryFileNamedHereExists</code>, <code>BestPracticesTest::testEveryRowHasAKnownStatusAndAnEnforcedRowNamesItsTests</code>, <code>BestPracticesTest::testTheDocsPageCarriesTheSameTable</code></td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="related">Related<a class="docs-heading-link" aria-label="Link to this section" href="#related">#</a></h2>
 <ul>
 <li><a href="tested-with.html">Tested with and tool floors</a></li>
+<li><a href="banned-calls.html">Banned calls</a></li>
 <li><a href="../adr/0001-phpstan-level-and-baseline-policy.html">ADR-0001: PHPStan level 8 and baselines</a></li>
 <li><a href="../guides/baselines.html">Baselines only shrink</a></li>
 <li><a href="../changelog.html">Changelog</a></li>
@@ -134,7 +197,7 @@
     </main>
     <nav class="docs-pager" aria-label="Pages"><a class="docs-pager__link" href="../../docs/reference/banned-calls.html"><span class="docs-pager__dir">Previous</span><span class="docs-pager__title">Banned calls</span></a><a class="docs-pager__link docs-pager__link--next" href="../../docs/reference/proof.html"><span class="docs-pager__dir">Next</span><span class="docs-pager__title">Proof</span></a></nav>
   </div>
-  <nav class="docs-toc" aria-label="On this page"><h2 class="docs-toc__title">On this page</h2><ul class="docs-toc__list"><li class="docs-toc__item"><a href="#pint-per-json">pint/per.json</a></li><li class="docs-toc__item"><a href="#pint-gitlab-output">Pint GitLab output</a></li><li class="docs-toc__item"><a href="#pint-laravel-json">pint/laravel.json</a></li><li class="docs-toc__item"><a href="#pint-per-strict-json">pint/per-strict.json</a></li><li class="docs-toc__item"><a href="#pint-laravel-strict-json">pint/laravel-strict.json</a></li><li class="docs-toc__item"><a href="#phpstan-raw-neon">phpstan/raw.neon</a></li><li class="docs-toc__item"><a href="#phpstan-laravel-neon">phpstan/laravel.neon</a></li><li class="docs-toc__item"><a href="#larastan-env-rule">Larastan env() rule</a></li><li class="docs-toc__item"><a href="#phpstan-ignore-comments">PHPStan ignore comments</a></li><li class="docs-toc__item"><a href="#rector-base-php">rector/base.php</a></li><li class="docs-toc__item"><a href="#eslint-javascript-js">eslint/javascript.js</a></li><li class="docs-toc__item"><a href="#eslint-typescript-js">eslint/typescript.js</a></li><li class="docs-toc__item"><a href="#prettier-index-json">prettier/index.json</a></li><li class="docs-toc__item"><a href="#readme-tool-floors">README &quot;Tool floors&quot;</a></li><li class="docs-toc__item"><a href="#related">Related</a></li></ul></nav>
+  <nav class="docs-toc" aria-label="On this page"><h2 class="docs-toc__title">On this page</h2><ul class="docs-toc__list"><li class="docs-toc__item"><a href="#related">Related</a></li></ul></nav>
 </div>
 <footer class="docs-footer">
   <span>Documents Pinstripe <span data-docs-version>0.2.0</span></span>

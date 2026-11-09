@@ -1037,6 +1037,8 @@ All notable changes to Pinstripe are documented here.
 
 ### Unreleased[#](https://pinstripe.apps.wayne.edu/docs/changelog.html#unreleased)
 
+- Docs: the Best practices docs page carries BEST_PRACTICES.md word for word again (it had fallen behind: no ESLint GitLab output row, no banned-call rows), and BEST_PRACTICES.md gains rows for `phpstan/strict.neon` and `phpstan/disallowed.neon`. New `tests/BestPracticesTest.php` keeps them in step: every test and file the table names exists, each row has one known status, an Enforced row names its proof, and the docs page matches.
+- Fixed: the `Http::withoutVerifying()` ban (the static entry) carries the same tip as the others, linking to the Banned calls page and the CREED rule; `BannedCallLinksTest::testEveryBanCarriesAnIdentifierAndATip` now reads `phpstan/disallowed.neon` and fails on any entry without a message, identifier or tip.
 - Added: every cut bans TLS checks turned off: `curl_setopt()` and `curl_setopt_array()` with `CURLOPT_SSL_VERIFYPEER` false or `CURLOPT_SSL_VERIFYHOST` 0 (`pinstripe.banned.curlVerifyOff`), `stream_context_create()` with `ssl` `verify_peer` or `verify_peer_name` false or `allow_self_signed` true (`pinstripe.banned.streamVerifyOff`), and Guzzle's `verify` option set to false through Laravel's `withOptions()`, `new GuzzleHttp\Client()` or a request's options (`pinstripe.banned.verifyFalse`), each tagged OWASP A02:2025. The `curl_setopt()` ban is Pinstripe's first PHPStan rule of its own (`src/PHPStan/CurlVerifyOffRule.php`), since it needs the option and the value together; the rest are spaze/phpstan-disallowed-calls entries. Breaking for apps that skip the certificate check. New fixtures `InsecureTransport.php`, `SecureTransport.php`, `VerifyFalse.php`, `VerifiedHttp.php` and the Laravel app's `banned/InsecureCurl.php`.
 - Added: Laravel's own `dd()` and `dump()` methods are banned too (`$users->dd()`, `DB::table('users')->dumpRawSql()`, `$request->dump()`, `Http::get($url)->dd()`, `Http::dump()` and the rest of the family), under the functions' identifiers `pinstripe.banned.dd` and `pinstripe.banned.dump`; only methods Laravel declares match, so an app's own `dump()` and the schema dump behind `php artisan schema:dump` pass. Breaking for Laravel apps with one left in. New fixtures `tests/fixtures/laravel/src/LeftoverDebugMethods.php` and `SchemaDump.php`.
 - Changed: CI pins the Preflight components to 0.4.0 (the proctor job clones the full history, so the override-approver check can read git blame).
@@ -1776,109 +1778,40 @@ Source: https://pinstripe.apps.wayne.edu/docs/reference/best-practices.html
 
 ## Best practices[#](https://pinstripe.apps.wayne.edu/docs/reference/best-practices.html#best-practices)
 
-This page lists every rule Pinstripe holds itself to and the tests that prove each one.
+This page lists every rule Pinstripe holds itself to and the tests that prove each one. It carries BEST_PRACTICES.md word for word, and `BestPracticesTest` fails the build when the two drift apart.
 
 How Pinstripe keeps its own promises: every preset is enforced by a test that runs the real tool against a fixture, so a preset that stops working fails `composer ci` here instead of failing a developer's app. A preset without a test is a suit without a mirror: you cannot tell when it has gone wrinkled.
 
 A preset is **Enforced** when a test asserts both directions: a clean fixture passes, and a deliberately broken one is caught. The PHP presets run under `composer ci` (PHPUnit); the JavaScript presets run under `npm test`. Both run in CI on GitLab and GitHub, so a preset that stops working fails the pipeline before it reaches an app.
 
-### `pint/per.json` [#](https://pinstripe.apps.wayne.edu/docs/reference/best-practices.html#pint-per-json)
-
-Pint, Enforced.
-
-- `PresetsTest::testPintPerPresetAcceptsTheCleanFixture`
-- `PresetsTest::testPintPerPresetRejectsTheMessyFixture`
-
-### Pint GitLab output[#](https://pinstripe.apps.wayne.edu/docs/reference/best-practices.html#pint-gitlab-output)
-
-Pint, Enforced.
-
-- `PresetsTest::testPintGitlabFormatReportsTheMessyFixtureAsCodeQualityJson`
-- `PresetsTest::testPintGitlabFormatIsAnEmptyArrayForTheCleanFixture`
-
-### `pint/laravel.json` [#](https://pinstripe.apps.wayne.edu/docs/reference/best-practices.html#pint-laravel-json)
-
-Pint, Enforced.
-
-- `PresetsTest::testPintLaravelPresetAcceptsTheLaravelAppFixture`
-
-### `pint/per-strict.json` [#](https://pinstripe.apps.wayne.edu/docs/reference/best-practices.html#pint-per-strict-json)
-
-Pint, Enforced.
-
-- `PresetsTest::testPintPerStrictPresetAcceptsTheStrictTypesCleanFixture`
-- `PresetsTest::testPintPerStrictPresetRejectsTheStrictTypesMissingFixture`
-
-### `pint/laravel-strict.json` [#](https://pinstripe.apps.wayne.edu/docs/reference/best-practices.html#pint-laravel-strict-json)
-
-Pint, Enforced.
-
-- `PresetsTest::testPintLaravelStrictPresetRejectsTheStrictTypesMissingFixture`
-
-### `phpstan/raw.neon` [#](https://pinstripe.apps.wayne.edu/docs/reference/best-practices.html#phpstan-raw-neon)
-
-PHPStan, Enforced.
-
-- `PresetsTest::testPhpStanRawConfigAcceptsTheCleanFixture`
-- `PresetsTest::testPhpStanRawConfigReportsTheNullBug`
-
-### `phpstan/laravel.neon` [#](https://pinstripe.apps.wayne.edu/docs/reference/best-practices.html#phpstan-laravel-neon)
-
-PHPStan + Larastan, Enforced.
-
-- `PresetsTest::testLaravelPresetLoadsLarastanThroughTheExtensionInstaller`
-- `PresetsTest::testPhpStanLaravelConfigAcceptsTheLaravelAppFixture`
-- `PresetsTest::testPhpStanLaravelConfigReportsTheUndefinedEloquentProperty`
-
-### Larastan env() rule[#](https://pinstripe.apps.wayne.edu/docs/reference/best-practices.html#larastan-env-rule)
-
-PHPStan + Larastan, Enforced.
-
-- `PresetsTest::testLaravelPresetReportsAnEnvCallOutsideConfig`
-- `PresetsTest::testLaravelPresetAcceptsAConfigCallOutsideConfig`
-
-### PHPStan ignore comments[#](https://pinstripe.apps.wayne.edu/docs/reference/best-practices.html#phpstan-ignore-comments)
-
-PHPStan, Enforced.
-
-- `PresetsTest::testPhpStanRawConfigReportsAnIgnoreWithoutAComment`
-- `PresetsTest::testPhpStanRawConfigReportsAnIgnoreThatMatchesNothing`
-- `PresetsTest::testPhpStanRawConfigAcceptsAnIgnoreWithAComment`
-
-### `rector/base.php` [#](https://pinstripe.apps.wayne.edu/docs/reference/best-practices.html#rector-base-php)
-
-Rector, Enforced.
-
-- `PresetsTest::testRectorPresetAcceptsTheCleanFixture`
-- `PresetsTest::testRectorPresetReportsChangesOnTheOldFixture`
-
-### `eslint/javascript.js` [#](https://pinstripe.apps.wayne.edu/docs/reference/best-practices.html#eslint-javascript-js)
-
-ESLint, Enforced.
-
-- `tests/js/presets.test.mjs` (`npm test`)
-
-### `eslint/typescript.js` [#](https://pinstripe.apps.wayne.edu/docs/reference/best-practices.html#eslint-typescript-js)
-
-ESLint, Enforced.
-
-- `tests/js/presets.test.mjs` (`npm test`)
-
-### `prettier/index.json` [#](https://pinstripe.apps.wayne.edu/docs/reference/best-practices.html#prettier-index-json)
-
-Prettier, Enforced.
-
-- `tests/js/prettier.test.mjs` (`npm test`)
-
-### README "Tool floors"[#](https://pinstripe.apps.wayne.edu/docs/reference/best-practices.html#readme-tool-floors)
-
-composer.lock + package-lock.json, Enforced.
-
-- `ToolFloorsTest::testToolFloorsMatchTheLockFiles`
+| Preset | Tool | Status | Enforced by |
+| --- | --- | --- | --- |
+| `pint/per.json` | Pint | Enforced | `PresetsTest::testPintPerPresetAcceptsTheCleanFixture`, `PresetsTest::testPintPerPresetRejectsTheMessyFixture` |
+| `Pint GitLab output` | Pint | Enforced | `PresetsTest::testPintGitlabFormatReportsTheMessyFixtureAsCodeQualityJson`, `PresetsTest::testPintGitlabFormatIsAnEmptyArrayForTheCleanFixture` |
+| `ESLint GitLab output` | ESLint | Enforced | `tests/js/gitlab-formatter.test.mjs` |
+| `pint/laravel.json` | Pint | Enforced | `PresetsTest::testPintLaravelPresetAcceptsTheLaravelAppFixture` |
+| `pint/per-strict.json` | Pint | Enforced | `PresetsTest::testPintPerStrictPresetAcceptsTheStrictTypesCleanFixture`, `PresetsTest::testPintPerStrictPresetRejectsTheStrictTypesMissingFixture` |
+| `pint/laravel-strict.json` | Pint | Enforced | `PresetsTest::testPintLaravelStrictPresetRejectsTheStrictTypesMissingFixture` |
+| `phpstan/raw.neon` | PHPStan | Enforced | `PresetsTest::testPhpStanRawConfigAcceptsTheCleanFixture`, `PresetsTest::testPhpStanRawConfigReportsTheNullBug` |
+| `phpstan/strict.neon` | PHPStan + strict-rules | Enforced | `PresetsTest::testPhpStanStrictConfigAcceptsTheCleanFixture`, `PresetsTest::testPhpStanStrictConfigReportsTheLooseComparison` |
+| `phpstan/disallowed.neon` (banned calls) | PHPStan + disallowed-calls | Enforced | `PresetsTest::testPhpStanReportsEveryBannedCall`, `PresetsTest::testPhpStanAcceptsMethodsThatShareTheBannedNames`, `PresetsTest::testPhpStanRawConfigAcceptsABannedCallKeptWithAReason`, `PresetsTest::testLaravelPresetReportsTlsVerificationTurnedOff` |
+| `phpstan/laravel.neon` | PHPStan + Larastan | Enforced | `PresetsTest::testLaravelPresetLoadsLarastanThroughTheExtensionInstaller`, `PresetsTest::testPhpStanLaravelConfigAcceptsTheLaravelAppFixture`, `PresetsTest::testPhpStanLaravelConfigReportsTheUndefinedEloquentProperty` |
+| `Larastan env() rule` | PHPStan + Larastan | Enforced | `PresetsTest::testLaravelPresetReportsAnEnvCallOutsideConfig`, `PresetsTest::testLaravelPresetAcceptsAConfigCallOutsideConfig` |
+| `PHPStan ignore comments` | PHPStan | Enforced | `PresetsTest::testPhpStanRawConfigReportsAnIgnoreWithoutAComment`, `PresetsTest::testPhpStanRawConfigReportsAnIgnoreThatMatchesNothing`, `PresetsTest::testPhpStanRawConfigAcceptsAnIgnoreWithAComment` |
+| `Laravel dd() and dump() methods banned` | PHPStan + Larastan | Enforced | `PresetsTest::testLaravelPresetReportsDdAndDumpMethodsLeftIn`, `PresetsTest::testLaravelPresetAcceptsASchemaDump` |
+| `TLS checks turned off banned` | PHPStan (+ Pinstripe's curl rule) | Enforced | `PresetsTest::testPhpStanReportsTlsChecksTurnedOffInRawPhp`, `PresetsTest::testPhpStanAcceptsTlsChecksLeftOnInRawPhp`, `PresetsTest::testLaravelPresetReportsTheVerifyOptionSetToFalse`, `PresetsTest::testLaravelPresetAcceptsVerifyPointedAtACaBundle`, `PresetsTest::testPhpStanLaravelConfigReportsCurlVerifyOffInTheLaravelAppFixture` |
+| `Banned call tips link to the CREED rule` | PHPStan | Enforced | `tests/BannedCallLinksTest.php` (`BannedCallLinksTest::testEveryBanCarriesAnIdentifierAndATip` makes sure no entry goes without) |
+| `rector/base.php` | Rector | Enforced | `PresetsTest::testRectorPresetAcceptsTheCleanFixture`, `PresetsTest::testRectorPresetReportsChangesOnTheOldFixture` |
+| `eslint/javascript.js` | ESLint | Enforced | `tests/js/presets.test.mjs` (`npm test`) |
+| `eslint/typescript.js` | ESLint | Enforced | `tests/js/presets.test.mjs` (`npm test`) |
+| `prettier/index.json` | Prettier | Enforced | `tests/js/prettier.test.mjs` (`npm test`) |
+| README "Tool floors" | composer.lock + package-lock.json | Enforced | `ToolFloorsTest::testToolFloorsMatchTheLockFiles` |
+| This page | PHPUnit | Enforced | `BestPracticesTest::testEveryTestNamedHereExists`, `BestPracticesTest::testEveryFileNamedHereExists`, `BestPracticesTest::testEveryRowHasAKnownStatusAndAnEnforcedRowNamesItsTests`, `BestPracticesTest::testTheDocsPageCarriesTheSameTable` |
 
 ### Related[#](https://pinstripe.apps.wayne.edu/docs/reference/best-practices.html#related)
 
 - [Tested with and tool floors](https://pinstripe.apps.wayne.edu/docs/reference/tested-with.html)
+- [Banned calls](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html)
 - [ADR-0001: PHPStan level 8 and baselines](https://pinstripe.apps.wayne.edu/docs/adr/0001-phpstan-level-and-baseline-policy.html)
 - [Baselines only shrink](https://pinstripe.apps.wayne.edu/docs/guides/baselines.html)
 - [Changelog](https://pinstripe.apps.wayne.edu/docs/changelog.html)
