@@ -688,6 +688,124 @@ final class PresetsTest extends TestCase
         $this->assertSame(0, $exit, $output);
     }
 
+    #[DataProvider('bannedCallConfigs')]
+    public function testPhpStanReportsSqlJoinedFromStringsInRawPhp(string $config): void
+    {
+        // PDO, mysqli and oci8 with a variable joined into the SQL: by
+        // concatenation, interpolation, sprintf() and an int. PHPStan's own
+        // literal-string type does the telling; disallowed.neon asks for it.
+        [$exit, $output, $messages] = $this->runPhpStanJson([
+            PHP_BINARY,
+            $this->root() . '/vendor/bin/phpstan',
+            'analyse',
+            '-c',
+            $this->root() . '/phpstan/' . $config,
+            '--no-progress',
+            $this->root() . '/tests/fixtures/raw-disallowed/src/JoinedSql.php',
+        ], $this->root() . '/tests/fixtures/laravel');
+
+        $this->assertNotSame(0, $exit, $output);
+        $this->assertSame(
+            [
+                ['pinstripe.banned.joinedSql', 'PDO::query()', 22],
+                ['pinstripe.banned.joinedSql', 'PDO::prepare()', 23],
+                ['pinstripe.banned.joinedSql', 'PDO::exec()', 24],
+                ['pinstripe.banned.joinedSql', 'PDO::query()', 25],
+                ['pinstripe.banned.joinedSql', 'mysqli::query()', 26],
+                ['pinstripe.banned.joinedSql', 'mysqli::prepare()', 27],
+                ['pinstripe.banned.joinedSql', 'mysqli_query()', 28],
+                ['pinstripe.banned.joinedSql', 'oci_parse()', 29],
+            ],
+            array_map(
+                static fn (array $message): array => [$message[0], (string) preg_replace('/^Calling (\S+) is forbidden.*$/s', '$1', $message[1]), $message[2]],
+                $messages
+            ),
+            $output
+        );
+
+        foreach ($messages as [, $message]) {
+            $this->assertStringContainsString('is forbidden, it runs SQL joined from strings', $message);
+            $this->assertStringContainsString('; ', $message, 'a ban message says what to use instead after the reason');
+            $this->assertStringEndsWith('(OWASP A05:2025 Injection).', $message);
+        }
+    }
+
+    #[DataProvider('bannedCallConfigs')]
+    public function testPhpStanAcceptsLiteralSqlWithBoundValuesInRawPhp(string $config): void
+    {
+        [$exit, $output] = $this->runInDir([
+            PHP_BINARY,
+            $this->root() . '/vendor/bin/phpstan',
+            'analyse',
+            '-c',
+            $this->root() . '/phpstan/' . $config,
+            '--no-progress',
+            '--error-format=raw',
+            $this->root() . '/tests/fixtures/raw-disallowed/src/BoundSql.php',
+        ], $this->root() . '/tests/fixtures/laravel');
+
+        $this->assertSame(0, $exit, $output);
+    }
+
+    public function testLaravelPresetReportsSqlJoinedFromStrings(): void
+    {
+        // Pinstripe bans the connection's calls; the builder's raw methods
+        // are typed literal-string by Laravel, so PHPStan reports those as
+        // argument.type. Both halves are asserted, so a Laravel release that
+        // drops its literal-string types fails here instead of going quiet.
+        [$exit, $output, $messages] = $this->runPhpStanJson([
+            PHP_BINARY,
+            $this->root() . '/vendor/bin/phpstan',
+            'analyse',
+            '-c',
+            'phpstan.neon',
+            '--no-progress',
+            'src/JoinedQueries.php',
+        ], $this->root() . '/tests/fixtures/laravel');
+
+        $this->assertNotSame(0, $exit, $output);
+        $this->assertSame(
+            [
+                ['pinstripe.banned.joinedSql', 27],
+                ['pinstripe.banned.joinedSql', 28],
+                ['pinstripe.banned.joinedSql', 29],
+                ['pinstripe.banned.joinedSql', 30],
+                ['pinstripe.banned.joinedSql', 31],
+                ['pinstripe.banned.joinedSql', 32],
+                ['argument.type', 34],
+                ['argument.type', 35],
+                ['argument.type', 36],
+            ],
+            array_map(static fn (array $message): array => [$message[0], $message[2]], $messages),
+            $output
+        );
+
+        foreach ($messages as [$identifier, $message]) {
+            if ($identifier === 'pinstripe.banned.joinedSql') {
+                $this->assertStringContainsString('is forbidden, it runs SQL joined from strings', $message);
+                $this->assertStringEndsWith('(OWASP A05:2025 Injection).', $message);
+            } else {
+                $this->assertStringContainsString('literal-string', $message);
+            }
+        }
+    }
+
+    public function testLaravelPresetAcceptsLiteralSqlWithBindings(): void
+    {
+        [$exit, $output] = $this->runInDir([
+            PHP_BINARY,
+            $this->root() . '/vendor/bin/phpstan',
+            'analyse',
+            '-c',
+            'phpstan.neon',
+            '--no-progress',
+            '--error-format=raw',
+            'src/BoundQueries.php',
+        ], $this->root() . '/tests/fixtures/laravel');
+
+        $this->assertSame(0, $exit, $output);
+    }
+
     public function testPhpStanRawConfigAcceptsABannedCallKeptWithAReason(): void
     {
         [$exit, $output] = $this->runInDir([

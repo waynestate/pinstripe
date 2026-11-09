@@ -2,8 +2,9 @@
 # The PHP version is inferred from the consumer's composer.json, not pinned here.
 includes:
     # Banned calls (eval, extract, var_dump, dd, dump, Laravel's
-    # withoutVerifying and dd()/dump() methods, and TLS checks turned off
-    # through curl, stream contexts or verify => false), through
+    # withoutVerifying and dd()/dump() methods, TLS checks turned off
+    # through curl, stream contexts or verify => false, and SQL joined from
+    # strings), through
     # spaze/phpstan-disallowed-calls and one rule of Pinstripe's own.
     - disallowed.neon
 parameters:

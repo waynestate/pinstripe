@@ -25,9 +25,37 @@ The one exception is `curl_setopt()` with a verify option set to false: it needs
 | `'verify' => false` | The same hole through Guzzle's `verify` option: Laravel's `withOptions()`, `new Client([...])`, and the options of `request()`, `send()`, `get()`, `post()` and the other verbs. | Set `verify` to the path of the CA bundle, or leave it out. | A02 Security Misconfiguration |
 | `curl_setopt()` and `curl_setopt_array()` with `CURLOPT_SSL_VERIFYPEER` false or `CURLOPT_SSL_VERIFYHOST` 0 | Turns off curl's certificate or host name check in raw PHP. | Keep both on; for a private CA, point `CURLOPT_CAINFO` at its bundle. | A02 Security Misconfiguration |
 | `stream_context_create()` with `ssl` `verify_peer` or `verify_peer_name` false, or `allow_self_signed` true | Turns off the same checks for `file_get_contents()` and the other stream functions. | Keep them on; for a private CA, set the `ssl` `cafile` option. | A02 Security Misconfiguration |
+| SQL joined from strings: `PDO::query()`, `prepare()` and `exec()`, mysqli (`query()`, `prepare()`, `mysqli_query()` and the rest), `oci_parse()`, and Laravel's `DB::select()`, `insert()`, `update()`, `delete()`, `statement()`, `scalar()`, `cursor()` and `fromQuery()` | A variable joined into the SQL (`'... id = ' . $id`, `"... {$id}"`, `sprintf()`) lets one untrusted value rewrite the query. | Keep the SQL a literal and bind every value (`?` or `:name` placeholders, `oci_bind_by_name()`). | A05 Injection |
 
 Each ban has a stable identifier: `pinstripe.banned.eval`, `pinstripe.banned.extract`, `pinstripe.banned.varDump`,
-`pinstripe.banned.dd`, `pinstripe.banned.dump`, `pinstripe.banned.withoutVerifying`, `pinstripe.banned.verifyFalse`, `pinstripe.banned.curlVerifyOff` and `pinstripe.banned.streamVerifyOff`.
+`pinstripe.banned.dd`, `pinstripe.banned.dump`, `pinstripe.banned.withoutVerifying`, `pinstripe.banned.verifyFalse`, `pinstripe.banned.curlVerifyOff`, `pinstripe.banned.streamVerifyOff` and `pinstripe.banned.joinedSql`.
+
+## SQL joined from strings
+
+The SQL ban stands on PHPStan's own `literal-string` type, so there is no taint rule to trust: PHPStan already knows which strings are literals. These pass:
+
+```php
+$pdo->prepare('SELECT * FROM users WHERE id = ?')->execute([$id]);
+$pdo->query('SELECT COUNT(*) FROM ' . self::TABLE);                  // a class constant is a literal
+$sql = 'SELECT * FROM users WHERE 1 = 1';
+if ($activeOnly) {
+    $sql .= ' AND active = 1';                                        // literal onto literal
+}
+$marks = implode(', ', array_fill(0, count($ids), '?'));             // placeholders from literals
+$pdo->prepare('SELECT * FROM users WHERE id IN (' . $marks . ')')->execute($ids);
+DB::select('select * from users where id = ?', [$id]);
+```
+
+Anything with a variable in it fails, an `int` included (bind it):
+
+```php
+$pdo->query('SELECT * FROM users WHERE id = ' . $id);                 // pinstripe.banned.joinedSql
+DB::select("select * from users where id = {$id}");                 // pinstripe.banned.joinedSql
+```
+
+Laravel already types `DB::raw()`, `DB::unprepared()` and the query builder's `whereRaw()`, `selectRaw()`, `orderByRaw()` and other raw methods as `literal-string`, so PHPStan reports a joined string there by itself, as `argument.type`; Pinstripe covers the connection calls Laravel leaves as plain `string`. The query builder's own `insert()`, `update()`, `delete()` and `select()` take arrays and column names, not SQL, and are not touched.
+
+SQL that is safe but not a literal (read from a `.sql` file, or returned by a helper) can say so: type the helper `@return literal-string`, or keep the call with a reasoned ignore. An older app with many joined queries can baseline the rest while it binds them, since a baseline only shrinks.
 
 Only the off switch is banned: `CURLOPT_SSL_VERIFYPEER` set to true, `verify` pointed at a CA bundle, and `false` on an option that has nothing to do with TLS all pass. The match is on literal values, so `'verify' => $verify`, or a curl option read from config, passes too; keep the value a literal where you can.
 
@@ -60,6 +88,7 @@ List more bans under the same parameters (`disallowedFunctionCalls`, `disallowed
 ## Not covered yet
 
 - An off switch PHPStan cannot pin to a value: `'verify' => $verify`, or a curl option read from config.
+- Postgres's `pg_query()` and friends: the connection argument is optional, so the SQL has no fixed position to check.
 
 ## Not banned yet
 
@@ -75,6 +104,8 @@ List more bans under the same parameters (`disallowedFunctionCalls`, `disallowed
 - `tests/fixtures/laravel/src/InsecureHttp.php` turns TLS checks off both ways, and the Laravel preset must report both.
 - `tests/fixtures/raw-disallowed/src/InsecureTransport.php` turns TLS checks off eight ways through curl and stream contexts, and the raw and strict cuts must report each one; its twin `SecureTransport.php` sets verification on and must stay green.
 - `tests/fixtures/laravel/src/VerifyFalse.php` sets `verify` to false five ways through `withOptions()` and Guzzle, and the Laravel preset must report each one; its twin `VerifiedHttp.php` points `verify` at a CA bundle and must stay green.
+- `tests/fixtures/raw-disallowed/src/JoinedSql.php` joins a variable into SQL eight ways through PDO, mysqli and `oci_parse()`, and the raw and strict cuts must report each one; its twin `BoundSql.php` binds every value and must stay green.
+- `tests/fixtures/laravel/src/JoinedQueries.php` does the same six ways through Laravel's connection and three through the raw builder methods, and the Laravel preset must report all nine (six as `pinstripe.banned.joinedSql`, three as Laravel's own `argument.type`); its twin `BoundQueries.php` uses bindings and the query builder and must stay green.
 - The Laravel app fixture installs Pinstripe through Composer, like an app does, and must fail on a leftover `dd()`, and on curl told to skip the certificate check (which proves Pinstripe's own curl rule loads from `vendor/`).
 
 A suit with a `dd()` in the pocket does not leave the shop.

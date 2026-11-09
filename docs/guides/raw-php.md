@@ -56,7 +56,8 @@ Pinstripe ships `phpstan/phpstan-deprecation-rules`, loaded automatically by
 The tailor flags the old cut before the fabric is retired.
 It also fails on `eval()`, `extract()`, `var_dump()`, `dd()` and `dump()`, and on TLS checks turned off through
 curl (`CURLOPT_SSL_VERIFYPEER` false, `CURLOPT_SSL_VERIFYHOST` 0), a stream context (`verify_peer` false) or
-Guzzle (`'verify' => false`): the
+Guzzle (`'verify' => false`), and on SQL joined from strings through PDO, mysqli or `oci_parse()` (bind the values
+instead): the
 [Banned calls](../reference/banned-calls.md) page says why and what to use instead.
 
 ## Show Pint findings in the merge request

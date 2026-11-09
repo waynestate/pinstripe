@@ -113,6 +113,38 @@ parameters:
                     name: 'options'
                     typeString: 'array{ssl: array{allow_self_signed: true}}'
 
+        # SQL built by joining strings, in raw PHP. PHPStan already knows
+        # whether a string is a literal (literal-string): 'a' . 'b', a class
+        # constant and a literal .= on a literal all are, while anything
+        # joined with a variable is not. So the SQL argument must be a
+        # literal, and values go in as bound parameters. Postgres's
+        # pg_query() is left out: its connection argument is optional, so
+        # the SQL has no fixed position. Bobby Tables need not apply.
+        -
+            function:
+                - 'mysqli_query()'
+                - 'mysqli_real_query()'
+                - 'mysqli_multi_query()'
+                - 'mysqli_prepare()'
+            message: 'it runs SQL joined from strings, so one untrusted value can rewrite the query; keep the SQL a literal (constants and literal pieces joined together are fine) and pass every value as a bound parameter (OWASP A05:2025 Injection)'
+            errorIdentifier: 'pinstripe.banned.joinedSql'
+            errorTip: 'See https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html and the CREED rule at https://creed.apps.wayne.edu/handbook/code.html#banned-patterns'
+            allowParamsAnywhere:
+                -
+                    position: 2
+                    name: 'query'
+                    typeString: 'literal-string'
+        -
+            function: 'oci_parse()'
+            message: 'it runs SQL joined from strings, so one untrusted value can rewrite the query; keep the SQL a literal (constants and literal pieces joined together are fine) and pass every value with oci_bind_by_name() (OWASP A05:2025 Injection)'
+            errorIdentifier: 'pinstripe.banned.joinedSql'
+            errorTip: 'See https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html and the CREED rule at https://creed.apps.wayne.edu/handbook/code.html#banned-patterns'
+            allowParamsAnywhere:
+                -
+                    position: 2
+                    name: 'sql'
+                    typeString: 'literal-string'
+
     # Laravel's HTTP client. The method entry covers chains such as
     # Http::acceptJson()->withoutVerifying(). The facade call
     # Http::withoutVerifying() is a static call, so it needs the static
@@ -187,6 +219,73 @@ parameters:
                     name: 'options'
                     typeString: 'array{verify: false}'
 
+        # SQL built by joining strings, through PDO, mysqli and Laravel's
+        # connection (the same literal-string test as the functions above).
+        # Laravel already types raw(), unprepared() and the query builder's
+        # *Raw() methods as literal-string, so PHPStan reports a joined
+        # string there by itself (argument.type); these are the calls it
+        # leaves as plain string. The connection's classes are named one by
+        # one: the query builder has insert(), update(), delete() and
+        # select() too, and those take arrays and column names, not SQL.
+        -
+            method:
+                - 'PDO::query()'
+                - 'PDO::prepare()'
+                - 'mysqli::query()'
+                - 'mysqli::real_query()'
+                - 'mysqli::multi_query()'
+                - 'mysqli::prepare()'
+                - 'mysqli_stmt::prepare()'
+            message: 'it runs SQL joined from strings, so one untrusted value can rewrite the query; keep the SQL a literal (constants and literal pieces joined together are fine) and pass every value as a bound parameter (OWASP A05:2025 Injection)'
+            errorIdentifier: 'pinstripe.banned.joinedSql'
+            errorTip: 'See https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html and the CREED rule at https://creed.apps.wayne.edu/handbook/code.html#banned-patterns'
+            allowParamsAnywhere:
+                -
+                    position: 1
+                    name: 'query'
+                    typeString: 'literal-string'
+        -
+            method: 'PDO::exec()'
+            message: 'it runs SQL joined from strings, so one untrusted value can rewrite the query; keep the SQL a literal (constants and literal pieces joined together are fine) and pass every value as a bound parameter (OWASP A05:2025 Injection)'
+            errorIdentifier: 'pinstripe.banned.joinedSql'
+            errorTip: 'See https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html and the CREED rule at https://creed.apps.wayne.edu/handbook/code.html#banned-patterns'
+            allowParamsAnywhere:
+                -
+                    position: 1
+                    name: 'statement'
+                    typeString: 'literal-string'
+        -
+            method:
+                - 'Illuminate\Database\ConnectionInterface::select()'
+                - 'Illuminate\Database\ConnectionInterface::selectOne()'
+                - 'Illuminate\Database\ConnectionInterface::scalar()'
+                - 'Illuminate\Database\ConnectionInterface::cursor()'
+                - 'Illuminate\Database\ConnectionInterface::insert()'
+                - 'Illuminate\Database\ConnectionInterface::update()'
+                - 'Illuminate\Database\ConnectionInterface::delete()'
+                - 'Illuminate\Database\ConnectionInterface::statement()'
+                - 'Illuminate\Database\ConnectionInterface::affectingStatement()'
+                - 'Illuminate\Database\Connection::select()'
+                - 'Illuminate\Database\Connection::selectOne()'
+                - 'Illuminate\Database\Connection::selectFromWriteConnection()'
+                - 'Illuminate\Database\Connection::selectResultSets()'
+                - 'Illuminate\Database\Connection::scalar()'
+                - 'Illuminate\Database\Connection::cursor()'
+                - 'Illuminate\Database\Connection::insert()'
+                - 'Illuminate\Database\Connection::update()'
+                - 'Illuminate\Database\Connection::delete()'
+                - 'Illuminate\Database\Connection::statement()'
+                - 'Illuminate\Database\Connection::affectingStatement()'
+                - 'Illuminate\Database\Eloquent\Builder::fromQuery()'
+            message: 'it runs SQL joined from strings, so one untrusted value can rewrite the query; keep the SQL a literal (constants and literal pieces joined together are fine) and pass every value as a binding (OWASP A05:2025 Injection)'
+            errorIdentifier: 'pinstripe.banned.joinedSql'
+            errorTip: 'See https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html and the CREED rule at https://creed.apps.wayne.edu/handbook/code.html#banned-patterns'
+            allowParamsAnywhere:
+                -
+                    position: 1
+                    name: 'query'
+                    typeString: 'literal-string'
+
         # Laravel's own dd() and dump() methods: $users->dd(),
         # DB::table('users')->dumpRawSql(), $request->dump(), Http::get()->dd()
         # and the rest. They share the function bans' identifiers, so one
@@ -234,6 +333,41 @@ parameters:
                     position: 1
                     name: 'options'
                     typeString: 'array{verify: false}'
+
+        # SQL joined from strings off the DB facade (DB::select() and the
+        # rest; Larastan resolves the facade to the connection) or off a
+        # model (User::fromQuery()). The same list as the method entry.
+        -
+            method:
+                - 'Illuminate\Database\ConnectionInterface::select()'
+                - 'Illuminate\Database\ConnectionInterface::selectOne()'
+                - 'Illuminate\Database\ConnectionInterface::scalar()'
+                - 'Illuminate\Database\ConnectionInterface::cursor()'
+                - 'Illuminate\Database\ConnectionInterface::insert()'
+                - 'Illuminate\Database\ConnectionInterface::update()'
+                - 'Illuminate\Database\ConnectionInterface::delete()'
+                - 'Illuminate\Database\ConnectionInterface::statement()'
+                - 'Illuminate\Database\ConnectionInterface::affectingStatement()'
+                - 'Illuminate\Database\Connection::select()'
+                - 'Illuminate\Database\Connection::selectOne()'
+                - 'Illuminate\Database\Connection::selectFromWriteConnection()'
+                - 'Illuminate\Database\Connection::selectResultSets()'
+                - 'Illuminate\Database\Connection::scalar()'
+                - 'Illuminate\Database\Connection::cursor()'
+                - 'Illuminate\Database\Connection::insert()'
+                - 'Illuminate\Database\Connection::update()'
+                - 'Illuminate\Database\Connection::delete()'
+                - 'Illuminate\Database\Connection::statement()'
+                - 'Illuminate\Database\Connection::affectingStatement()'
+                - 'Illuminate\Database\Eloquent\Builder::fromQuery()'
+            message: 'it runs SQL joined from strings, so one untrusted value can rewrite the query; keep the SQL a literal (constants and literal pieces joined together are fine) and pass every value as a binding (OWASP A05:2025 Injection)'
+            errorIdentifier: 'pinstripe.banned.joinedSql'
+            errorTip: 'See https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html and the CREED rule at https://creed.apps.wayne.edu/handbook/code.html#banned-patterns'
+            allowParamsAnywhere:
+                -
+                    position: 1
+                    name: 'query'
+                    typeString: 'literal-string'
 
         # The same dd() and dump() methods called off a facade, such as
         # Http::dd(); Larastan resolves the facade to the class behind it.
