@@ -1846,8 +1846,8 @@
             "description": "The Wayne State app stack version policy as data, with a framework-free PHP reader.",
             "homepage": "https://creed.apps.wayne.edu/",
             "support": {
-                "issues": "https://nougat.snu.gs/enterprise-apps/creed/-/issues",
-                "source": "https://nougat.snu.gs/enterprise-apps/creed"
+                "issues": "https://git.wayne.edu/enterprise-apps/creed/-/issues",
+                "source": "https://github.com/waynestate/creed"
             },
             "time": "2026-11-03T15:13:26+00:00"
         },
@@ -1919,8 +1919,8 @@
             "description": "Wayne State's baseline runtime: security headers, session hardening, trusted proxies, a health check and structured logs for web apps.",
             "homepage": "https://helmet.apps.wayne.edu/",
             "support": {
-                "issues": "https://nougat.snu.gs/enterprise-apps/helmet/-/issues",
-                "source": "https://nougat.snu.gs/enterprise-apps/helmet"
+                "issues": "https://git.wayne.edu/enterprise-apps/helmet/-/issues",
+                "source": "https://github.com/waynestate/helmet"
             },
             "time": "2026-11-03T15:53:01+00:00"
         },
@@ -1978,8 +1978,8 @@
             "description": "A framework-free PHP CLI that measures a PHP app against the version policy.",
             "homepage": "https://proctor.apps.wayne.edu/",
             "support": {
-                "issues": "https://nougat.snu.gs/enterprise-apps/proctor/-/issues",
-                "source": "https://nougat.snu.gs/enterprise-apps/proctor"
+                "issues": "https://git.wayne.edu/enterprise-apps/proctor/-/issues",
+                "source": "https://github.com/waynestate/proctor"
             },
             "time": "2026-11-03T15:15:39+00:00"
         }

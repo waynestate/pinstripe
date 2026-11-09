@@ -8,7 +8,7 @@ The README and the Markdown twin of every page, joined. The index is https://pin
 
 ## README
 
-Source: https://nougat.snu.gs/enterprise-apps/pinstripe/blob/HEAD/README.md
+Source: https://github.com/waynestate/pinstripe/blob/HEAD/README.md
 
 ## Pinstripe
 
@@ -24,16 +24,16 @@ PHP version.
 
 Checks: `composer ci` (the same command runs on GitLab and GitHub).
 
-Documentation: the docs site is at [`site/docs/index.html`](https://nougat.snu.gs/enterprise-apps/pinstripe/blob/HEAD/site/docs/index.html), built from `docs/` by Squire's shared builder and kept current by `composer ci`. The pages wear the front page's look through `docs/_header.html` and `docs/theme/pinstripe.css`: edit those two files, never the vendored kit.
+Documentation: the docs site is at [`site/docs/index.html`](https://github.com/waynestate/pinstripe/blob/HEAD/site/docs/index.html), built from `docs/` by Squire's shared builder and kept current by `composer ci`. The pages wear the front page's look through `docs/_header.html` and `docs/theme/pinstripe.css`: edit those two files, never the vendored kit.
 
 ### Where the code lives
 
-The canonical repository is on nougat: [enterprise-apps/pinstripe](https://nougat.snu.gs/enterprise-apps/pinstripe). git.wayne.edu and GitHub ([waynestate/pinstripe](https://github.com/waynestate/pinstripe)) are read-only mirrors of it.
-Open issues and merge requests on nougat, not on the mirrors.
-This moves to git.wayne.edu once it has CI runners. The pinstripes are sewn on nougat; the mirrors are off-the-rack copies.
+The canonical repository is [enterprise-apps/pinstripe](https://git.wayne.edu/enterprise-apps/pinstripe) on git.wayne.edu: clone over SSH (`git@git.wayne.edu:enterprise-apps/pinstripe.git`) or HTTPS (`https://git.wayne.edu/enterprise-apps/pinstripe.git`). Open issues and merge requests there, and tags are made there, by the maintainer, with an approver.
+GitHub ([waynestate/pinstripe](https://github.com/waynestate/pinstripe)) is a read-only push mirror of it, for the published packages only: nobody pushes to it, and Packagist and npm read from it.
+The pinstripes are sewn on git.wayne.edu; the GitHub mirror is the off-the-rack copy.
 
-Front page: [`site/index.html`](https://nougat.snu.gs/enterprise-apps/pinstripe/blob/HEAD/site/index.html), a static tailor's shop you can open in a browser or serve from `site/`.
-On Citadel it is served by the raw-PHP deploy layer in [`deploy/`](https://nougat.snu.gs/enterprise-apps/pinstripe/blob/HEAD/deploy/): a Squire kit whose front controller serves `site/` behind HELMET's security headers. For local development, keep serving `site/` directly.
+Front page: [`site/index.html`](https://github.com/waynestate/pinstripe/blob/HEAD/site/index.html), a static tailor's shop you can open in a browser or serve from `site/`.
+On Citadel it is served by the raw-PHP deploy layer in [`deploy/`](https://github.com/waynestate/pinstripe/blob/HEAD/deploy/): a Squire kit whose front controller serves `site/` behind HELMET's security headers. For local development, keep serving `site/` directly.
 
 ### Use it in a raw PHP app
 
@@ -46,7 +46,7 @@ composer require --dev waynestate/pinstripe:^0.1
 
 Pinstripe loads its PHPStan rules through `phpstan/extension-installer`, and Composer will not ask when it cannot prompt.
 If Composer stops because a package your app already locks (often an older PHPStan) does not fit, run the same `composer require` again with `-W`, as Composer suggests, so it may update that package too.
-Pinstripe 0.1.4 is on Packagist. The npm package, `@waynestate/pinstripe`, is published by hand after each tag; `npm view @waynestate/pinstripe version` shows where it is.
+Pinstripe 0.1.5 is on Packagist. The npm package, `@waynestate/pinstripe`, is published by hand after each tag; `npm view @waynestate/pinstripe version` shows where it is.
 
 Point PHPStan at the raw config. `phpstan.neon`:
 
@@ -391,11 +391,11 @@ vendor/bin/pinstripe-baseline check --against=$CI_MERGE_REQUEST_DIFF_BASE_SHA ph
 ```
 
 A baseline is a tailor's chalk line, and this command is the tape measure: it fails the build the moment the line
-gets longer. The policy behind this section is recorded in [docs/adr/0001-phpstan-level-and-baseline-policy.md](https://nougat.snu.gs/enterprise-apps/pinstripe/blob/HEAD/docs/adr/0001-phpstan-level-and-baseline-policy.md).
+gets longer. The policy behind this section is recorded in [docs/adr/0001-phpstan-level-and-baseline-policy.md](https://github.com/waynestate/pinstripe/blob/HEAD/docs/adr/0001-phpstan-level-and-baseline-policy.md).
 
 ### Tested with
 
-Maintainers: how to build, test and release this project, and where its data comes from, is in [MAINTAINING.md](https://nougat.snu.gs/enterprise-apps/pinstripe/blob/HEAD/MAINTAINING.md).
+Maintainers: how to build, test and release this project, and where its data comes from, is in [MAINTAINING.md](https://github.com/waynestate/pinstripe/blob/HEAD/MAINTAINING.md).
 
 - Pint 1.32.1
 - PHPStan 2.3.3
@@ -955,6 +955,13 @@ All notable changes to Pinstripe are documented here.
 
 ### Unreleased[#](https://pinstripe.apps.wayne.edu/docs/changelog.html#unreleased)
 
+### 0.1.5 (2026-11-09)[#](https://pinstripe.apps.wayne.edu/docs/changelog.html#0-1-5-2026-11-09)
+
+A patch on the 0.1 line, cut from 0.1.4, for consumers that pin `^0.1` (Booster among them). It changes no preset.
+
+- Fixed: the deploy kit's lock (`deploy/composer.lock`) names git.wayne.edu and GitHub for CREED, HELMET and PROCTOR instead of the archived internal host.
+- Changed: The canonical repository is git.wayne.edu (ADR-0021); docs, links and package metadata no longer point at the archived nougat copy.
+
 ### 0.1.4 (2026-11-06)[#](https://pinstripe.apps.wayne.edu/docs/changelog.html#0-1-4-2026-11-06)
 
 - Fixed: `pinstripe-baseline` mutes deprecations while it loads the app's autoloader, so an old package in the app no longer prints PHP warnings ahead of the count a script reads (found by the 2026-11-05 proof run; new test in tests/BaselineTest.php).
@@ -1075,7 +1082,7 @@ This page sets out the steps to release Pinstripe, from the CHANGELOG to the npm
 2. Set the same version in `package.json`.
 3. `composer ci` and `npm test` green locally, then both pipelines green for that commit.
 4. Run a secrets scan of the history and check that nothing internal is in the tree.
-5. Tag `X.Y.Z` (no `v`) on nougat. The mirror carries the tag to GitHub, and Packagist picks it up from there.
+5. Tag `X.Y.Z` (no `v`) on git.wayne.edu. The push mirror carries the tag to GitHub, and Packagist picks it up from there.
 6. **npm is published by hand,** after the tag, from a clean checkout of the tagged commit, by an owner of the `@waynestate` npm scope with two-factor auth:
    ```
    npm ci --ignore-scripts
@@ -1255,7 +1262,7 @@ composer config allow-plugins.phpstan/extension-installer true
 composer require --dev waynestate/pinstripe:^0.1
 ```
 
-Pinstripe loads its PHPStan rules through `phpstan/extension-installer`, and Composer will not ask when it cannot prompt. If Composer stops because a package your app already locks (often an older PHPStan) does not fit, run the same `composer require` again with `-W`, as Composer suggests, so it may update that package too. Pinstripe 0.1.4 is on Packagist. The npm package, `@waynestate/pinstripe`, is published by hand after each tag; `npm view @waynestate/pinstripe version` shows where it is.
+Pinstripe loads its PHPStan rules through `phpstan/extension-installer`, and Composer will not ask when it cannot prompt. If Composer stops because a package your app already locks (often an older PHPStan) does not fit, run the same `composer require` again with `-W`, as Composer suggests, so it may update that package too. Pinstripe 0.1.5 is on Packagist. The npm package, `@waynestate/pinstripe`, is published by hand after each tag; `npm view @waynestate/pinstripe version` shows where it is.
 
 ### Point PHPStan at the raw config[#](https://pinstripe.apps.wayne.edu/docs/guides/raw-php.html#point-phpstan-at-the-raw-config)
 
@@ -1549,7 +1556,7 @@ composer analyse
 
 ### Status[#](https://pinstripe.apps.wayne.edu/docs/#status)
 
-The repository is at version 0.1.4. The npm package, `@waynestate/pinstripe`, follows each tag at the same version, published by hand. The canonical repository is on nougat; git.wayne.edu and GitHub are read-only mirrors of it. The agent-ready site ships a plain-text twin for machines: [llms.txt](https://pinstripe.apps.wayne.edu/llms.txt).
+The repository is at version 0.1.5. The npm package, `@waynestate/pinstripe`, follows each tag at the same version, published by hand. The canonical repository is on git.wayne.edu; GitHub is a read-only push mirror of it, and Packagist and npm read from it. The agent-ready site ships a plain-text twin for machines: [llms.txt](https://pinstripe.apps.wayne.edu/llms.txt).
 
 ### Related[#](https://pinstripe.apps.wayne.edu/docs/#related)
 
@@ -1816,6 +1823,14 @@ This page walks through each released version of Pinstripe, what changed for con
 ### What a stricter preset means to you[#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#what-a-stricter-preset-means-to-you)
 
 A stricter preset breaks consumers' builds. Pinstripe ships such a change in a minor version, not a major one, so you opt in by updating the package. When a version below marks a change as breaking, it is a stricter preset taking effect in your app the moment you update to it; hold the current version until you are ready.
+
+### 0.1.5 (2026-11-09)[#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#0-1-5-2026-11-09)
+
+No breaking change and no change to the presets. The package metadata (`support` in `composer.json`, `repository` and `bugs` in `package.json`) and the docs now point at the canonical repository on git.wayne.edu and its GitHub mirror, so the entry Composer writes into your `composer.lock` names only public addresses.
+
+**Steps:** Your constraint is `^0.1`, which already allows 0.1.5: run `composer update waynestate/pinstripe`.
+
+**How to verify:** `composer show waynestate/pinstripe` reports 0.1.5, and the Pinstripe entry in your `composer.lock` names git.wayne.edu and github.com only.
 
 ### 0.1.4 (2026-11-06)[#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#0-1-4-2026-11-06)
 

@@ -46,7 +46,7 @@ composer analyse
 
 ## Status[#](https://pinstripe.apps.wayne.edu/docs/#status)
 
-The repository is at version 0.1.4. The npm package, `@waynestate/pinstripe`, follows each tag at the same version, published by hand. The canonical repository is on nougat; git.wayne.edu and GitHub are read-only mirrors of it. The agent-ready site ships a plain-text twin for machines: [llms.txt](https://pinstripe.apps.wayne.edu/llms.txt).
+The repository is at version 0.1.5. The npm package, `@waynestate/pinstripe`, follows each tag at the same version, published by hand. The canonical repository is on git.wayne.edu; GitHub is a read-only push mirror of it, and Packagist and npm read from it. The agent-ready site ships a plain-text twin for machines: [llms.txt](https://pinstripe.apps.wayne.edu/llms.txt).
 
 ## Related[#](https://pinstripe.apps.wayne.edu/docs/#related)
 

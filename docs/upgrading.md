@@ -11,6 +11,14 @@ This page walks through each released version of Pinstripe, what changed for con
 
 A stricter preset breaks consumers' builds. Pinstripe ships such a change in a minor version, not a major one, so you opt in by updating the package. When a version below marks a change as breaking, it is a stricter preset taking effect in your app the moment you update to it; hold the current version until you are ready.
 
+## 0.1.5 (2026-11-09)
+
+No breaking change and no change to the presets. The package metadata (`support` in `composer.json`, `repository` and `bugs` in `package.json`) and the docs now point at the canonical repository on git.wayne.edu and its GitHub mirror, so the entry Composer writes into your `composer.lock` names only public addresses.
+
+**Steps:** Your constraint is `^0.1`, which already allows 0.1.5: run `composer update waynestate/pinstripe`.
+
+**How to verify:** `composer show waynestate/pinstripe` reports 0.1.5, and the Pinstripe entry in your `composer.lock` names git.wayne.edu and github.com only.
+
 ## 0.1.4 (2026-11-06)
 
 **Breaking (three tailoring changes, each a stricter fit):**
