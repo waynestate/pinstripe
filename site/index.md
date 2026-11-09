@@ -96,7 +96,7 @@ There are seven, each named for a part of the suit. The status comes from `BEST_
    Enforced
 2. The inseam PHPStan
    `phpstan/raw.neon` `phpstan/laravel.neon`
-   Level 8 for new code. An ignore without a comment is an error, and so is a `dd()`, an `eval()` or TLS checks turned off.
+   Level 8 for new code. An ignore without a comment is an error, and so is a `dd()`, an `eval()`, TLS checks turned off or SQL joined from strings.
    Enforced
 3. The lining Larastan
    `phpstan/laravel.neon`

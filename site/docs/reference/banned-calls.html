@@ -114,10 +114,40 @@
 <td>Keep them on; for a private CA, set the <code>ssl</code> <code>cafile</code> option.</td>
 <td>A02 Security Misconfiguration</td>
 </tr>
+<tr>
+<td>SQL joined from strings: <code>PDO::query()</code>, <code>prepare()</code> and <code>exec()</code>, mysqli (<code>query()</code>, <code>prepare()</code>, <code>mysqli_query()</code> and the rest), <code>oci_parse()</code> and its old alias <code>ociparse()</code>, and Laravel's <code>DB::select()</code>, <code>insert()</code>, <code>update()</code>, <code>delete()</code>, <code>statement()</code>, <code>scalar()</code>, <code>cursor()</code> and <code>fromQuery()</code></td>
+<td>A variable joined into the SQL (<code>'... id = ' . $id</code>, <code>&quot;... {$id}&quot;</code>, <code>sprintf()</code>) lets one untrusted value rewrite the query.</td>
+<td>Keep the SQL a literal and bind every value (<code>?</code> or <code>:name</code> placeholders, <code>oci_bind_by_name()</code>).</td>
+<td>A05 Injection</td>
+</tr>
 </tbody>
 </table></div>
 <p>Each ban has a stable identifier: <code>pinstripe.banned.eval</code>, <code>pinstripe.banned.extract</code>, <code>pinstripe.banned.varDump</code>,
-<code>pinstripe.banned.dd</code>, <code>pinstripe.banned.dump</code>, <code>pinstripe.banned.withoutVerifying</code>, <code>pinstripe.banned.verifyFalse</code>, <code>pinstripe.banned.curlVerifyOff</code> and <code>pinstripe.banned.streamVerifyOff</code>.</p>
+<code>pinstripe.banned.dd</code>, <code>pinstripe.banned.dump</code>, <code>pinstripe.banned.withoutVerifying</code>, <code>pinstripe.banned.verifyFalse</code>, <code>pinstripe.banned.curlVerifyOff</code>, <code>pinstripe.banned.streamVerifyOff</code> and <code>pinstripe.banned.joinedSql</code>.</p>
+<h2 id="sql-joined-from-strings">SQL joined from strings<a class="docs-heading-link" aria-label="Link to this section" href="#sql-joined-from-strings">#</a></h2>
+<p>The SQL ban stands on PHPStan's own <code>literal-string</code> type, so there is no taint rule to trust: PHPStan already knows which strings are literals. These pass:</p>
+<pre tabindex="0"><code class="language-php">$pdo-&gt;prepare('SELECT * FROM users WHERE id = ?')-&gt;execute([$id]);
+$pdo-&gt;query('SELECT COUNT(*) FROM ' . self::TABLE);                  // a class constant is a literal
+$sql = 'SELECT * FROM users WHERE 1 = 1';
+if ($activeOnly) {
+    $sql .= ' AND active = 1';                                        // literal onto literal
+}
+$marks = implode(', ', array_fill(0, count($ids), '?'));             // placeholders from literals
+$pdo-&gt;prepare('SELECT * FROM users WHERE id IN (' . $marks . ')')-&gt;execute($ids);
+DB::select('select * from users where id = ?', [$id]);
+</code></pre>
+<p>Anything with a variable in it fails, an <code>int</code> included (bind it):</p>
+<pre tabindex="0"><code class="language-php">$pdo-&gt;query('SELECT * FROM users WHERE id = ' . $id);                 // pinstripe.banned.joinedSql
+DB::select(&quot;select * from users where id = {$id}&quot;);                 // pinstripe.banned.joinedSql
+</code></pre>
+<p>On PHP 8.4 and newer, <code>ociparse()</code> is also reported as deprecated, whatever the SQL looks like, and the fix is <code>oci_parse()</code>.</p>
+<p>Laravel already types <code>DB::raw()</code>, <code>DB::unprepared()</code> and the query builder's <code>whereRaw()</code>, <code>selectRaw()</code>, <code>orderByRaw()</code> and other raw methods as <code>literal-string</code>, so PHPStan reports a joined string there by itself, as <code>argument.type</code>; Pinstripe covers the connection calls Laravel leaves as plain <code>string</code>. The query builder's own <code>insert()</code>, <code>update()</code>, <code>delete()</code> and <code>select()</code> take arrays and column names, not SQL, and are not touched.</p>
+<p>SQL that is safe but not a literal (read from a <code>.sql</code> file, or returned by a helper) can say so, or the call can keep a reasoned ignore. An older app with many joined queries can baseline the rest while it binds them, since a baseline only shrinks.</p>
+<ul>
+<li>Type the helper that reads or builds the SQL <code>@return literal-string</code>, when its SQL really is a literal (a trusted <code>.sql</code> file, for example); the value then counts as a literal.</li>
+<li>Wrap the SQL parameter as <code>literal-string</code>, so a call site can only hand the method literal SQL.</li>
+<li>Give PHPStan the connection's type, a typed property or <code>@var \PDO $db</code>; with a <code>mixed</code> connection PHPStan cannot see the call, and the ban stays quiet.</li>
+</ul>
 <p>Only the off switch is banned: <code>CURLOPT_SSL_VERIFYPEER</code> set to true, <code>verify</code> pointed at a CA bundle, and <code>false</code> on an option that has nothing to do with TLS all pass. The match is on literal values, so <code>'verify' =&gt; $verify</code>, or a curl option read from config, passes too; keep the value a literal where you can.</p>
 <p>Laravel's methods share the functions' identifiers: <code>dd()</code>, <code>ddRawSql()</code>, <code>ddHeaders()</code>, <code>ddBody()</code>, <code>ddJson()</code> and <code>ddSession()</code> report as <code>pinstripe.banned.dd</code>, and <code>dump()</code>, <code>dumpRawSql()</code>, <code>dumpHeaders()</code> and <code>dumpSession()</code> as <code>pinstripe.banned.dump</code>. Facade calls such as <code>Http::dd()</code> count too. Only methods Laravel itself declares are caught, so your own <code>dump()</code> method is fine, and so is the schema dump behind <code>php artisan schema:dump</code>.</p>
 <p>The <code>withoutVerifying()</code> ban catches both <code>Http::withoutVerifying()</code> and the method partway down a chain such as <code>Http::acceptJson()-&gt;withoutVerifying()</code>. Raw PHP apps never match it.</p>
@@ -136,6 +166,7 @@ var_dump($report);
 <h2 id="not-covered-yet">Not covered yet<a class="docs-heading-link" aria-label="Link to this section" href="#not-covered-yet">#</a></h2>
 <ul>
 <li>An off switch PHPStan cannot pin to a value: <code>'verify' =&gt; $verify</code>, or a curl option read from config.</li>
+<li>Postgres's <code>pg_query()</code> and friends: the connection argument is optional, so the SQL has no fixed position to check.</li>
 </ul>
 <h2 id="not-banned-yet">Not banned yet<a class="docs-heading-link" aria-label="Link to this section" href="#not-banned-yet">#</a></h2>
 <p><code>md5()</code>, <code>sha1()</code>, <code>rand()</code> and <code>mt_rand()</code> are weak for passwords, tokens and signatures, but they are fine for cache keys, checksums and other non-security uses, and apps across the fleet use them that way. Whether Pinstripe bans them (and how it would allow the safe uses) is an open call, so for now they pass.</p>
@@ -148,6 +179,8 @@ var_dump($report);
 <li><code>tests/fixtures/laravel/src/InsecureHttp.php</code> turns TLS checks off both ways, and the Laravel preset must report both.</li>
 <li><code>tests/fixtures/raw-disallowed/src/InsecureTransport.php</code> turns TLS checks off eight ways through curl and stream contexts, and the raw and strict cuts must report each one; its twin <code>SecureTransport.php</code> sets verification on and must stay green.</li>
 <li><code>tests/fixtures/laravel/src/VerifyFalse.php</code> sets <code>verify</code> to false five ways through <code>withOptions()</code> and Guzzle, and the Laravel preset must report each one; its twin <code>VerifiedHttp.php</code> points <code>verify</code> at a CA bundle and must stay green.</li>
+<li><code>tests/fixtures/raw-disallowed/src/JoinedSql.php</code> joins a variable into SQL nine ways through PDO, mysqli, <code>oci_parse()</code> and its old alias <code>ociparse()</code>, and the raw and strict cuts must report each one; its twin <code>BoundSql.php</code> binds every value and must stay green.</li>
+<li><code>tests/fixtures/laravel/src/JoinedQueries.php</code> does the same six ways through Laravel's connection and three through the raw builder methods, and the Laravel preset must report all nine (six as <code>pinstripe.banned.joinedSql</code>, three as Laravel's own <code>argument.type</code>); its twin <code>BoundQueries.php</code> uses bindings and the query builder and must stay green.</li>
 <li>The Laravel app fixture installs Pinstripe through Composer, like an app does, and must fail on a leftover <code>dd()</code>, and on curl told to skip the certificate check (which proves Pinstripe's own curl rule loads from <code>vendor/</code>).</li>
 </ul>
 <p>A suit with a <code>dd()</code> in the pocket does not leave the shop.</p>
@@ -162,7 +195,7 @@ var_dump($report);
     </main>
     <nav class="docs-pager" aria-label="Pages"><a class="docs-pager__link" href="../../docs/reference/tested-with.html"><span class="docs-pager__dir">Previous</span><span class="docs-pager__title">Tested with and tool floors</span></a><a class="docs-pager__link docs-pager__link--next" href="../../docs/reference/best-practices.html"><span class="docs-pager__dir">Next</span><span class="docs-pager__title">Best practices</span></a></nav>
   </div>
-  <nav class="docs-toc" aria-label="On this page"><h2 class="docs-toc__title">On this page</h2><ul class="docs-toc__list"><li class="docs-toc__item"><a href="#what-is-banned">What is banned</a></li><li class="docs-toc__item"><a href="#keep-one-on-purpose">Keep one on purpose</a></li><li class="docs-toc__item"><a href="#add-your-own">Add your own</a></li><li class="docs-toc__item"><a href="#not-covered-yet">Not covered yet</a></li><li class="docs-toc__item"><a href="#not-banned-yet">Not banned yet</a></li><li class="docs-toc__item"><a href="#how-it-is-proven">How it is proven</a></li><li class="docs-toc__item"><a href="#related">Related</a></li></ul></nav>
+  <nav class="docs-toc" aria-label="On this page"><h2 class="docs-toc__title">On this page</h2><ul class="docs-toc__list"><li class="docs-toc__item"><a href="#what-is-banned">What is banned</a></li><li class="docs-toc__item"><a href="#sql-joined-from-strings">SQL joined from strings</a></li><li class="docs-toc__item"><a href="#keep-one-on-purpose">Keep one on purpose</a></li><li class="docs-toc__item"><a href="#add-your-own">Add your own</a></li><li class="docs-toc__item"><a href="#not-covered-yet">Not covered yet</a></li><li class="docs-toc__item"><a href="#not-banned-yet">Not banned yet</a></li><li class="docs-toc__item"><a href="#how-it-is-proven">How it is proven</a></li><li class="docs-toc__item"><a href="#related">Related</a></li></ul></nav>
 </div>
 <footer class="docs-footer">
   <span>Documents Pinstripe <span data-docs-version>0.2.0</span></span>

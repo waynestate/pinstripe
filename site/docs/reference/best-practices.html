@@ -142,6 +142,12 @@ Both run in CI on GitLab and GitHub, so a preset that stops working fails the pi
 <td><code>PresetsTest::testPhpStanReportsTlsChecksTurnedOffInRawPhp</code>, <code>PresetsTest::testPhpStanAcceptsTlsChecksLeftOnInRawPhp</code>, <code>PresetsTest::testLaravelPresetReportsTheVerifyOptionSetToFalse</code>, <code>PresetsTest::testLaravelPresetAcceptsVerifyPointedAtACaBundle</code>, <code>PresetsTest::testPhpStanLaravelConfigReportsCurlVerifyOffInTheLaravelAppFixture</code></td>
 </tr>
 <tr>
+<td><code>SQL joined from strings banned</code></td>
+<td>PHPStan (<code>literal-string</code>) + disallowed-calls</td>
+<td>Enforced</td>
+<td><code>PresetsTest::testPhpStanReportsSqlJoinedFromStringsInRawPhp</code>, <code>PresetsTest::testPhpStanAcceptsLiteralSqlWithBoundValuesInRawPhp</code>, <code>PresetsTest::testLaravelPresetReportsSqlJoinedFromStrings</code>, <code>PresetsTest::testLaravelPresetAcceptsLiteralSqlWithBindings</code></td>
+</tr>
+<tr>
 <td><code>Banned call tips link to the CREED rule</code></td>
 <td>PHPStan</td>
 <td>Enforced</td>
