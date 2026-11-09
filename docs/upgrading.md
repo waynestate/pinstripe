@@ -11,6 +11,14 @@ This page walks through each released version of Pinstripe, what changed for con
 
 A stricter preset breaks consumers' builds. Pinstripe ships such a change in a minor version, not a major one, so you opt in by updating the package. When a version below marks a change as breaking, it is a stricter preset taking effect in your app the moment you update to it; hold the current version until you are ready.
 
+## Unreleased
+
+**Breaking (a stricter fit):** in Laravel apps, Laravel's own `dd()` and `dump()` methods fail `composer analyse` too, not only the functions: `$users->dd()`, `DB::table('users')->dumpRawSql()`, `$request->dump()`, `Http::get($url)->dd()` and the rest of the family (`ddRawSql()`, `ddHeaders()`, `ddBody()`, `ddJson()`, `ddSession()`, `dumpHeaders()`, `dumpSession()`). They report as `pinstripe.banned.dd` and `pinstripe.banned.dump`, the same identifiers as the functions. Your own methods named `dump()` and the schema dump behind `php artisan schema:dump` are not affected.
+
+**Steps:** Delete each reported call, or keep one on purpose with `@phpstan-ignore pinstripe.banned.dd (why)`.
+
+**How to verify:** `composer analyse` passes, or lists only the leftovers you now own.
+
 ## 0.2.0 (2026-11-08)
 
 **Breaking (a stricter fit):** every cut bans `eval()`, `extract()`, `var_dump()`, `dd()`, `dump()` and Laravel's `PendingRequest::withoutVerifying()` (including `Http::withoutVerifying()`), through `spaze/phpstan-disallowed-calls`, which Pinstripe now requires. An app with one of these left in fails `composer analyse` once it updates. Each finding's tip links to [Banned calls](reference/banned-calls.md) and to the [CREED rule](https://creed.apps.wayne.edu/handbook/code.html#banned-patterns) it enforces.

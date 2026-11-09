@@ -55,8 +55,57 @@ parameters:
             message: 'it turns off TLS certificate checks, so anyone on the network path can read or change the traffic; keep verification on, and for a private CA pass its bundle with withOptions and the verify option (OWASP A02:2025 Security Misconfiguration)'
             errorIdentifier: 'pinstripe.banned.withoutVerifying'
             errorTip: 'See https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html and the CREED rule at https://creed.apps.wayne.edu/handbook/code.html#banned-patterns'
+
+        # Laravel's own dd() and dump() methods: $users->dd(),
+        # DB::table('users')->dumpRawSql(), $request->dump(), Http::get()->dd()
+        # and the rest. They share the function bans' identifiers, so one
+        # reasoned ignore reads the same either way. The match is on the
+        # class that declares the method (or its trait), so only Laravel's
+        # classes are caught; an app's own dump() method, like the look-alikes
+        # in tests/fixtures/raw-disallowed, is left alone. Schema dumps
+        # (php artisan schema:dump) are real work, not debugging, so the
+        # Schema classes are excluded.
+        -
+            method:
+                - 'Illuminate\*::dd()'
+                - 'Illuminate\*::ddRawSql()'
+                - 'Illuminate\*::ddHeaders()'
+                - 'Illuminate\*::ddBody()'
+                - 'Illuminate\*::ddJson()'
+                - 'Illuminate\*::ddSession()'
+            message: 'a dd() left in dumps internals to the browser and halts the request in production; log it with a PSR-3 logger (Log::debug() in Laravel), or step through with Xdebug (OWASP A02:2025 Security Misconfiguration)'
+            errorIdentifier: 'pinstripe.banned.dd'
+            errorTip: 'See https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html and the CREED rule at https://creed.apps.wayne.edu/handbook/code.html#banned-patterns'
+        -
+            method:
+                - 'Illuminate\*::dump()'
+                - 'Illuminate\*::dumpRawSql()'
+                - 'Illuminate\*::dumpHeaders()'
+                - 'Illuminate\*::dumpSession()'
+            exclude:
+                - 'Illuminate\Database\Schema\*'
+            message: 'a dump() left in ships paths, config and secrets straight to the browser; log it with a PSR-3 logger (Log::debug() in Laravel), or step through with Xdebug (OWASP A02:2025 Security Misconfiguration)'
+            errorIdentifier: 'pinstripe.banned.dump'
+            errorTip: 'See https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html and the CREED rule at https://creed.apps.wayne.edu/handbook/code.html#banned-patterns'
     disallowedStaticCalls:
         -
             method: 'Illuminate\Http\Client\PendingRequest::withoutVerifying()'
             message: 'it turns off TLS certificate checks, so anyone on the network path can read or change the traffic; keep verification on, and for a private CA pass its bundle with withOptions and the verify option (OWASP A02:2025 Security Misconfiguration)'
             errorIdentifier: 'pinstripe.banned.withoutVerifying'
+
+        # The same dd() and dump() methods called off a facade, such as
+        # Http::dd(); Larastan resolves the facade to the class behind it.
+        -
+            method:
+                - 'Illuminate\*::dd()'
+            message: 'a dd() left in dumps internals to the browser and halts the request in production; log it with a PSR-3 logger (Log::debug() in Laravel), or step through with Xdebug (OWASP A02:2025 Security Misconfiguration)'
+            errorIdentifier: 'pinstripe.banned.dd'
+            errorTip: 'See https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html and the CREED rule at https://creed.apps.wayne.edu/handbook/code.html#banned-patterns'
+        -
+            method:
+                - 'Illuminate\*::dump()'
+            exclude:
+                - 'Illuminate\Database\Schema\*'
+            message: 'a dump() left in ships paths, config and secrets straight to the browser; log it with a PSR-3 logger (Log::debug() in Laravel), or step through with Xdebug (OWASP A02:2025 Security Misconfiguration)'
+            errorIdentifier: 'pinstripe.banned.dump'
+            errorTip: 'See https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html and the CREED rule at https://creed.apps.wayne.edu/handbook/code.html#banned-patterns'

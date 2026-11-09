@@ -4,6 +4,7 @@ All notable changes to Pinstripe are documented here.
 
 ## Unreleased
 
+- Added: Laravel's own `dd()` and `dump()` methods are banned too (`$users->dd()`, `DB::table('users')->dumpRawSql()`, `$request->dump()`, `Http::get($url)->dd()`, `Http::dump()` and the rest of the family), under the functions' identifiers `pinstripe.banned.dd` and `pinstripe.banned.dump`; only methods Laravel declares match, so an app's own `dump()` and the schema dump behind `php artisan schema:dump` pass. Breaking for Laravel apps with one left in. New fixtures `tests/fixtures/laravel/src/LeftoverDebugMethods.php` and `SchemaDump.php`.
 - Changed: CI pins the Preflight components to 0.4.0 (the proctor job clones the full history, so the override-approver check can read git blame).
 
 ## 0.2.0 (2026-11-08)

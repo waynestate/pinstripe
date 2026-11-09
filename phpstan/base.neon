@@ -2,7 +2,8 @@
 # The PHP version is inferred from the consumer's composer.json, not pinned here.
 includes:
     # Banned calls (eval, extract, var_dump, dd, dump, and Laravel's
-    # withoutVerifying), through spaze/phpstan-disallowed-calls.
+    # withoutVerifying and dd()/dump() methods), through
+    # spaze/phpstan-disallowed-calls.
     - disallowed.neon
 parameters:
     level: 8

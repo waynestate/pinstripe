@@ -1070,6 +1070,63 @@ final class PresetsTest extends TestCase
         }
     }
 
+    public function testLaravelPresetReportsDdAndDumpMethodsLeftIn(): void
+    {
+        // Laravel's own dd() and dump() methods carry the same identifiers
+        // as the functions: on a collection, a query, a request, an HTTP
+        // response and straight off the Http facade.
+        [$exit, $output, $messages] = $this->runPhpStanJson([
+            PHP_BINARY,
+            $this->root() . '/vendor/bin/phpstan',
+            'analyse',
+            '-c',
+            'phpstan.neon',
+            '--no-progress',
+            'src/LeftoverDebugMethods.php',
+        ], $this->root() . '/tests/fixtures/laravel');
+
+        $this->assertNotSame(0, $exit, $output);
+        $this->assertSame(
+            [
+                ['pinstripe.banned.dump', 'Illuminate\\Support\\Collection::dump()', 25],
+                ['pinstripe.banned.dd', 'Illuminate\\Support\\Collection::dd()', 33],
+                ['pinstripe.banned.dd', 'Illuminate\\Database\\Query\\Builder::dd()', 38],
+                ['pinstripe.banned.dump', 'Illuminate\\Database\\Query\\Builder::dumpRawSql()', 43],
+                ['pinstripe.banned.dump', 'Illuminate\\Http\\Request::dump()', 48],
+                ['pinstripe.banned.dd', 'Illuminate\\Http\\Client\\Response::dd()', 53],
+                ['pinstripe.banned.dump', 'Illuminate\\Http\\Client\\PendingRequest::dump()', 58],
+            ],
+            array_map(
+                static fn (array $message): array => [$message[0], (string) preg_replace('/^Calling (\S+).*$/s', '$1', $message[1]), $message[2]],
+                $messages
+            ),
+            $output
+        );
+
+        foreach ($messages as [$identifier, $message]) {
+            $this->assertStringContainsString($identifier === 'pinstripe.banned.dd' ? 'a dd() left in' : 'a dump() left in', $message);
+            $this->assertStringContainsString('(OWASP A02:2025 Security Misconfiguration).', $message);
+        }
+    }
+
+    public function testLaravelPresetAcceptsASchemaDump(): void
+    {
+        // SchemaState::dump() writes the schema file behind
+        // php artisan schema:dump; it shares the name, not the leak.
+        [$exit, $output] = $this->runInDir([
+            PHP_BINARY,
+            $this->root() . '/vendor/bin/phpstan',
+            'analyse',
+            '-c',
+            'phpstan.neon',
+            '--no-progress',
+            '--error-format=raw',
+            'src/SchemaDump.php',
+        ], $this->root() . '/tests/fixtures/laravel');
+
+        $this->assertSame(0, $exit, $output);
+    }
+
     /**
      * A temporary Laravel app fixture, installed on first use.
      *
