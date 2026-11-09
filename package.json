@@ -1,6 +1,6 @@
 {
     "name": "@waynestate/pinstripe",
-    "version":  "0.3.0",
+    "version": "0.3.0",
     "description": "The coding standard for the Wayne State app stack: shared ESLint and Prettier presets for Vue.",
     "license": "MIT",
     "homepage": "https://pinstripe.apps.wayne.edu/",
