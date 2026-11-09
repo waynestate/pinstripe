@@ -48,6 +48,10 @@ tape as our fit; 9 is snug, 10 can't breathe). The hero cloth is ruled stripe by
 on, two pins go in and the hang tag swings. Point at a piece on the order card and its pin lifts out of the
 cushion; pick up a pattern piece and a pin pops in. Type `measure` anywhere.
 
+**House rules.** A notice pinned on the green cloth lists the banned call families (`phpstan/disallowed.neon` and
+the curl rule) with their OWASP tags. As each row scrolls in, the call is struck through in mauve chalk and a
+"Refused" stamp comes down on it; with reduced motion both are there from the start.
+
 ## Motion and access
 
 - With `prefers-reduced-motion: reduce` the page is static and complete at first paint: no tape, both garments

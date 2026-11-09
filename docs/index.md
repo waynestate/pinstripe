@@ -31,7 +31,7 @@ In your app, add Pinstripe as a dev dependency, then run the checks:
 
 ```bash
 composer config allow-plugins.phpstan/extension-installer true
-composer require --dev waynestate/pinstripe:^0.1
+composer require --dev waynestate/pinstripe:^0.3
 composer lint
 composer fix
 composer analyse
@@ -49,7 +49,7 @@ composer analyse
 
 ## Status
 
-The repository is at version 0.3.0. The npm package, `@waynestate/pinstripe`, follows each tag at the same version, published by hand. The canonical repository is on git.wayne.edu; GitHub is a read-only push mirror of it, and Packagist and npm read from it. The agent-ready site ships a plain-text twin for machines: [llms.txt](../llms.txt).
+The repository is at version 0.3.0: every cut bans SQL joined from strings, TLS checks turned off and leftover debug calls ([Banned calls](reference/banned-calls.md)), and `^0.3` installs it. Packagist reads the GitHub mirror, which can trail a release; the [Raw PHP guide](guides/raw-php.md#add-the-dependency) shows the one line that installs 0.3.0 from git.wayne.edu meanwhile. The npm package, `@waynestate/pinstripe`, follows each tag at the same version, published by hand; its ESLint and Prettier presets have not changed since 0.1.4. The canonical repository is on git.wayne.edu; GitHub is a read-only push mirror of it, and Packagist and npm read from it. The agent-ready site ships a plain-text twin for machines: [llms.txt](../llms.txt).
 
 ## Related
 

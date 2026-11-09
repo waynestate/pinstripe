@@ -18,7 +18,7 @@ Shared presets for **Pint**, **PHPStan** with Larastan, **Rector**, **ESLint** f
 
 **[WELD](https://weld.apps.wayne.edu/) already has it.** WELD starts with a copy of the Laravel presets. Install Pinstripe yourself to bring the same settings to an app you already have.
 
-Version 0.1.4 is on Packagist and npm. Walk-ins welcome.
+Version 0.3.0 is cut: joined SQL and switched-off TLS now fail the build. Walk-ins welcome.
 
 Scroll, and the tailor gets to work
 
@@ -72,7 +72,7 @@ final class Greeter
 }
 ```
 
-Alterations No. 0.1
+Alterations No. 0.3.0
 
 1. Rector Promote the property into the constructor.
 2. Rector Add the return type, `: string`.
@@ -141,6 +141,40 @@ It catches
 - an `<img>` without alt, a `v-for` without `:key`
 - double quotes and a missing semicolon fail Prettier
 
+What this shop will not sew
+
+## House rules
+
+Every cut, raw, Laravel and strict, fails the build on a short list of calls no Wayne State app should ship. Each refusal says why and what to use instead, ends with its OWASP Top 10:2025 tag, and has a stable identifier, so keeping one on purpose takes one line with a reason.
+
+[Every banned call, with its fix](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html)
+
+Notice by order of the tailor
+
+1. `eval()` `extract()`
+   A string runs as PHP, or request data overwrites any variable in scope.
+   Instead Write the code out, and read the keys you need by name.
+   A05 Injection
+2. `var_dump()` `dd()` `dump()` `$users->dd()`
+   Debug output left in ships paths, config and secrets to the browser.
+   Instead A PSR-3 logger (`Log::debug()` in Laravel), or Xdebug.
+   A02 Security Misconfiguration
+3. `withoutVerifying()` `'verify' => false` `CURLOPT_SSL_VERIFYPEER` `verify_peer`
+   TLS checks turned off, so anyone on the path can read or change the traffic.
+   Instead Keep them on; for a private CA, point the client at its bundle.
+   A02 Security Misconfiguration
+4. `"... id = " . $id` into PDO, mysqli, `oci_parse()` or `DB::select()`
+   A variable joined into the SQL lets one untrusted value rewrite the query.
+   Instead Keep the SQL a literal, with `?` or `:name`, and bind every value.
+   A05 Injection
+
+Keeping one on purpose
+
+```
+// @phpstan-ignore pinstripe.banned.varDump (CLI-only diagnostics)
+var_dump($report);
+```
+
 Pick your pattern
 
 ## Made to measure
@@ -157,12 +191,12 @@ Install
 
 ```
 composer config allow-plugins.phpstan/extension-installer true
-composer require --dev waynestate/pinstripe:^0.1
+composer require --dev waynestate/pinstripe:^0.3
 ```
 
 Pinstripe loads its PHPStan rules through `phpstan/extension-installer`, and Composer will not ask when it cannot prompt.
 
-`^0.1` gets you 0.1.4, the current release. Change it when 0.2 ships.
+`^0.3` gets you 0.3.0, the current release. Composer cannot find it yet? Packagist reads the GitHub mirror, which can trail a release: the [Raw PHP guide](https://pinstripe.apps.wayne.edu/docs/guides/raw-php.html#add-the-dependency) has the one line that installs it from git.wayne.edu.
 
 phpstan.neon
 
@@ -195,7 +229,7 @@ Install
 
 ```
 composer config allow-plugins.phpstan/extension-installer true
-composer require --dev waynestate/pinstripe:^0.1 larastan/larastan
+composer require --dev waynestate/pinstripe:^0.3 larastan/larastan
 ```
 
 Pinstripe loads its PHPStan rules through `phpstan/extension-installer`, and Composer will not ask when it cannot prompt.
@@ -313,7 +347,7 @@ Read first:
 - composer.json, and the folders that hold the app's PHP code.
 
 Task:
-1. Add Pinstripe with `composer require --dev waynestate/pinstripe:^0.1`.
+1. Add Pinstripe with `composer require --dev waynestate/pinstripe:^0.3`.
 2. Write phpstan.neon: include vendor/waynestate/pinstripe/phpstan/raw.neon and list the app's own code folders under paths.
 3. Add the lint, fix and analyse Composer scripts from the README, with Pint pointed at vendor/waynestate/pinstripe/pint/per.json.
 4. Run `composer lint` and `composer analyse`. If existing code fails, generate a baseline with `phpstan analyse --generate-baseline`, include it, and report its size with `vendor/bin/pinstripe-baseline count phpstan-baseline.neon`.
@@ -342,7 +376,7 @@ Read first:
 - composer.json (config.allow-plugins included), and any pint.json and phpstan.neon the app already has.
 
 Task:
-1. Add Pinstripe and Larastan with `composer require --dev waynestate/pinstripe:^0.1 larastan/larastan`. Allow phpstan/extension-installer when Composer asks: it registers Larastan, so there is no Larastan line to add.
+1. Add Pinstripe and Larastan with `composer require --dev waynestate/pinstripe:^0.3 larastan/larastan`. Allow phpstan/extension-installer when Composer asks: it registers Larastan, so there is no Larastan line to add.
 2. Make phpstan.neon include vendor/waynestate/pinstripe/phpstan/laravel.neon and nothing else, as the README shows.
 3. Add lint, fix and analyse Composer scripts like the raw PHP ones in the README, with Pint pointed at vendor/waynestate/pinstripe/pint/laravel.json.
 4. Run `composer lint` and `composer analyse`. If existing code fails, generate a baseline with `phpstan analyse --generate-baseline`, include it, and report its size with `vendor/bin/pinstripe-baseline count phpstan-baseline.neon`.
@@ -395,7 +429,7 @@ To see the presets work before you add them to an app, clone Pinstripe and run i
 
 The commands are the same on Windows, macOS and Linux. You need PHP 8.3 or newer, Composer, and Node 22.13 or newer.
 
-On the cutting table next Reading the PHP floor from CREED. coming soon
+Just off the cutting table 0.3.0 refuses SQL joined from strings and TLS checks turned off, in every cut. [Upgrading](https://pinstripe.apps.wayne.edu/docs/upgrading.html) walks an app through it.
 
 Fitting room any OS
 

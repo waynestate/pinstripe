@@ -54,7 +54,7 @@ PHP version.</p></aside>
 <p>In your app, add Pinstripe as a dev dependency, then run the checks:</p>
 <!-- docs-test: skip runs in the app, not in this repo -->
 <pre tabindex="0"><code class="language-bash">composer config allow-plugins.phpstan/extension-installer true
-composer require --dev waynestate/pinstripe:^0.1
+composer require --dev waynestate/pinstripe:^0.3
 composer lint
 composer fix
 composer analyse
@@ -69,7 +69,7 @@ composer analyse
 <li><a href="reference/tested-with.html">Tested with</a>: the tool versions Pinstripe is tested with, and the floors each tool needs.</li>
 </ul>
 <h2 id="status">Status<a class="docs-heading-link" aria-label="Link to this section" href="#status">#</a></h2>
-<p>The repository is at version 0.3.0. The npm package, <code>@waynestate/pinstripe</code>, follows each tag at the same version, published by hand. The canonical repository is on git.wayne.edu; GitHub is a read-only push mirror of it, and Packagist and npm read from it. The agent-ready site ships a plain-text twin for machines: <a href="../llms.txt">llms.txt</a>.</p>
+<p>The repository is at version 0.3.0: every cut bans SQL joined from strings, TLS checks turned off and leftover debug calls (<a href="reference/banned-calls.html">Banned calls</a>), and <code>^0.3</code> installs it. Packagist reads the GitHub mirror, which can trail a release; the <a href="guides/raw-php.html#add-the-dependency">Raw PHP guide</a> shows the one line that installs 0.3.0 from git.wayne.edu meanwhile. The npm package, <code>@waynestate/pinstripe</code>, follows each tag at the same version, published by hand; its ESLint and Prettier presets have not changed since 0.1.4. The canonical repository is on git.wayne.edu; GitHub is a read-only push mirror of it, and Packagist and npm read from it. The agent-ready site ships a plain-text twin for machines: <a href="../llms.txt">llms.txt</a>.</p>
 <h2 id="related">Related<a class="docs-heading-link" aria-label="Link to this section" href="#related">#</a></h2>
 <ul>
 <li><a href="upgrading.html">Upgrading</a></li>

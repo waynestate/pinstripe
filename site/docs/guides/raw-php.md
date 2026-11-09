@@ -16,10 +16,18 @@ Add Pinstripe as a dev dependency:
 
 ```bash
 composer config allow-plugins.phpstan/extension-installer true
-composer require --dev waynestate/pinstripe:^0.1
+composer require --dev waynestate/pinstripe:^0.3
 ```
 
-Pinstripe loads its PHPStan rules through `phpstan/extension-installer`, and Composer will not ask when it cannot prompt. If Composer stops because a package your app already locks (often an older PHPStan) does not fit, run the same `composer require` again with `-W`, as Composer suggests, so it may update that package too. Pinstripe 0.1.4 is on Packagist. The npm package, `@waynestate/pinstripe`, is published by hand after each tag; `npm view @waynestate/pinstripe version` shows where it is.
+Pinstripe loads its PHPStan rules through `phpstan/extension-installer`, and Composer will not ask when it cannot prompt. If Composer stops because a package your app already locks (often an older PHPStan) does not fit, run the same `composer require` again with `-W`, as Composer suggests, so it may update that package too.
+
+`^0.3` gets you 0.3.0, the current release, with every [banned call](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html). Packagist reads the GitHub mirror, which can trail a release by a while. If Composer says it cannot find a 0.3 version, point it at the canonical repository first (it asks for your git.wayne.edu sign-in), then run the `composer require` again:
+
+```bash
+composer config repositories.pinstripe vcs https://git.wayne.edu/enterprise-apps/pinstripe.git
+```
+
+The npm package, `@waynestate/pinstripe`, is published by hand after each tag; `npm view @waynestate/pinstripe version` shows where it is. The ESLint and Prettier presets have not changed since 0.1.4, so any version from 0.1.4 up is today's cut.
 
 ## Point PHPStan at the raw config[#](https://pinstripe.apps.wayne.edu/docs/guides/raw-php.html#point-phpstan-at-the-raw-config)
 

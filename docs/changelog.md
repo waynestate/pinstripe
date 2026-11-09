@@ -11,6 +11,8 @@ All notable changes to Pinstripe are documented here.
 
 ## Unreleased
 
+- Docs: every install line says `^0.3` (it said `^0.1`, which stops at 0.1.4), with the one `composer config repositories` line that installs 0.3.0 from git.wayne.edu while Packagist's GitHub mirror trails the release; the npm notes say the ESLint and Prettier presets have not changed since 0.1.4. The front page drops its "0.1.4 on Packagist and npm" note and a "coming soon" chip for the CREED PHP floor (built in 0.2.0), keeps a Docs link in the header at phone width, and gains House rules: a notice of the banned call families with their OWASP tags, struck through in chalk and stamped as they scroll in (already struck and stamped with reduced motion).
+
 ## 0.3.0 (2026-11-09)
 
 - Added: every cut bans SQL joined from strings (`pinstripe.banned.joinedSql`, OWASP A05:2025): a variable concatenated, interpolated or `sprintf()`'d into the SQL given to `PDO::query()`, `prepare()` or `exec()`, mysqli's `query()`, `prepare()`, `mysqli_query()` and the rest, `oci_parse()` (and the old alias `ociparse()`), or Laravel's `DB::select()`, `insert()`, `update()`, `delete()`, `statement()`, `scalar()`, `cursor()` and `fromQuery()`. No taint rule: spaze/phpstan-disallowed-calls asks for PHPStan's own `literal-string` type, so literal SQL with bindings, class constants and literal pieces joined together pass; Laravel already types `DB::raw()`, `DB::unprepared()` and the `*Raw()` builder methods that way, and a test now holds it to that. Breaking for apps that build SQL from variables. New fixtures `JoinedSql.php`, `BoundSql.php`, `JoinedQueries.php` and `BoundQueries.php`.

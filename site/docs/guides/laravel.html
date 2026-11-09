@@ -44,8 +44,9 @@
 <h2 id="install">Install<a class="docs-heading-link" aria-label="Link to this section" href="#install">#</a></h2>
 <p>Add Pinstripe and Larastan as dev dependencies:</p>
 <pre tabindex="0"><code>composer config allow-plugins.phpstan/extension-installer true
-composer require --dev waynestate/pinstripe:^0.1 larastan/larastan
+composer require --dev waynestate/pinstripe:^0.3 larastan/larastan
 </code></pre>
+<p><code>^0.3</code> gets you 0.3.0, the current release. If Composer cannot find it yet (Packagist reads the GitHub mirror, which can trail a release), add the canonical repository first, as <a href="raw-php.html#add-the-dependency">Raw PHP apps</a> shows.</p>
 <aside class="docs-callout docs-callout--note" role="note"><p class="docs-callout__label">Note</p><p>Pinstripe loads its PHPStan rules through <code>phpstan/extension-installer</code>, and Composer will not ask when it cannot prompt. Pinstripe pulls in <code>phpstan/extension-installer</code>, which registers Larastan for you. When Composer asks, allow the plugin (<code>config.allow-plugins</code> in your <code>composer.json</code>).</p></aside>
 <p>If Composer stops because a package your app already locks (often an older PHPStan) does not fit, run the same <code>composer require</code> again with <code>-W</code>, as Composer suggests, so it may update that package too.</p>
 <h2 id="configure">Configure<a class="docs-heading-link" aria-label="Link to this section" href="#configure">#</a></h2>

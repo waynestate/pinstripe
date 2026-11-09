@@ -1682,6 +1682,329 @@ h1, h2, h3 {
   overflow: hidden;
 }
 
+/* ------------------------------------------------------- 8b. house rules */
+/* The notice pinned by the shop door: a sheet of tissue on the green cloth,
+   two gold pins at the top, one row per banned family. The bad cloth (the
+   call) is struck through in mauve chalk and a "Refused" stamp sits on the
+   row. Without motion, both are there from the first paint. */
+
+.rules {
+  background-color: var(--ps-green-deep);
+  background-image:
+    repeating-linear-gradient(90deg, transparent 0 39px, rgba(244, 241, 234, 0.07) 39px 40px),
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.02) 0 2px, transparent 2px 5px);
+  color: var(--ps-cream);
+}
+
+.rules__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 3.5rem);
+  align-items: start;
+}
+
+.rules .section__head h2 {
+  color: var(--ps-cream);
+}
+
+.rules .section__head p {
+  color: rgba(244, 241, 234, 0.86);
+}
+
+.rules .section__head p.eyebrow {
+  color: var(--ps-gold);
+}
+
+.rules .section__head p.rules__more {
+  margin-top: 1.25rem;
+}
+
+.rules__more a {
+  color: var(--ps-gold);
+  font-weight: var(--wsu-font-weight-bold);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+
+.rules :focus-visible {
+  outline-color: var(--ps-gold);
+}
+
+.notice {
+  position: relative;
+  min-width: 0;
+  padding: clamp(1.5rem, 3.5vw, 2.25rem) clamp(1.1rem, 3vw, 2rem) clamp(1.25rem, 3vw, 1.75rem);
+  background: var(--ps-tissue);
+  color: var(--ps-ink);
+  border-radius: 3px;
+  box-shadow: 0 26px 44px -24px rgba(0, 0, 0, 0.8);
+  transform: rotate(-0.6deg);
+}
+
+/* The seam allowance: a dashed line just inside the edge. */
+.notice::before {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  border: 1.5px dashed rgba(139, 99, 114, 0.5);
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+.notice__pin {
+  position: absolute;
+  top: -8px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fff3c9, var(--ps-gold) 50%, #b98c0c);
+  box-shadow: 0 3px 4px rgba(0, 0, 0, 0.35);
+}
+
+.notice__pin--l { left: 2.25rem; }
+.notice__pin--r { right: 2.25rem; }
+
+.notice__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 0.75rem;
+  margin: 0 0 0.75rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid var(--ps-green-deep);
+}
+
+.notice__title {
+  font-family: var(--ps-display);
+  font-size: clamp(1.75rem, 3.5vw, 2.25rem);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ps-green-deep);
+  line-height: 1;
+}
+
+.notice__sub {
+  font-family: var(--ps-display);
+  font-style: italic;
+  font-size: 1rem;
+  color: var(--ps-mauve-deep);
+}
+
+.notice__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.notice__row {
+  position: relative;
+  display: grid;
+  gap: 0.35rem;
+  padding: 1rem 5.5rem 1rem 0;
+  border-bottom: 1px dashed rgba(139, 99, 114, 0.45);
+}
+
+.notice__row p {
+  margin: 0;
+}
+
+.notice__calls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 0.5rem;
+}
+
+.notice__bad {
+  position: relative;
+  padding: 0.05rem 0.35rem;
+  background: rgba(12, 84, 73, 0.07);
+  border-radius: 2px;
+  color: var(--ps-ink);
+  overflow-wrap: anywhere;
+}
+
+/* The chalk strike, drawn on the cloth. */
+.notice__bad::after {
+  content: "";
+  position: absolute;
+  left: -0.15rem;
+  right: -0.15rem;
+  top: 54%;
+  height: 1.5px;
+  border-radius: 2px;
+  background: var(--ps-mauve-deep);
+  opacity: 0.75;
+  transform: rotate(-2deg);
+  transform-origin: 0 50%;
+  filter: url(#chalk);
+}
+
+.notice__into {
+  font-size: 0.875rem;
+  color: var(--ps-ink-soft);
+}
+
+.notice__why {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.notice__instead {
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--ps-ink-soft);
+}
+
+.notice__k {
+  margin-right: 0.35rem;
+  font-family: var(--ps-chalk);
+  font-size: 1.35rem;
+  line-height: 1;
+  color: var(--ps-green);
+}
+
+.notice__tag {
+  justify-self: start;
+  padding: 0.1rem 0.5rem;
+  border: 1px solid rgba(12, 84, 73, 0.35);
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: var(--wsu-font-weight-bold);
+  letter-spacing: 0.04em;
+  color: var(--ps-green-deep);
+}
+
+.notice__stamp {
+  position: absolute;
+  top: 1rem;
+  right: 0;
+  padding: 0.2rem 0.45rem;
+  border: 2px solid var(--ps-mauve-deep);
+  border-radius: 3px;
+  outline: 1px solid var(--ps-mauve-deep);
+  outline-offset: 2px;
+  font-family: var(--ps-display);
+  font-size: 0.8125rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ps-mauve-deep);
+  transform: rotate(-9deg);
+  opacity: 0.88;
+  mix-blend-mode: multiply;
+}
+
+.notice__foot {
+  margin-top: 1rem;
+}
+
+.notice__foot .notice__k {
+  margin: 0 0 0.35rem;
+}
+
+.notice__code {
+  margin: 0;
+  padding: 0.75rem 0.9rem;
+  overflow-x: auto;
+  background: var(--ps-green-deep);
+  color: var(--ps-cream);
+  border-radius: 3px;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+}
+
+.notice__code:focus-visible {
+  outline-color: var(--ps-green);
+}
+
+.try__next a {
+  color: var(--ps-gold);
+  font-weight: var(--wsu-font-weight-bold);
+  text-underline-offset: 3px;
+}
+
+/* Below the full menu's width the header keeps one link: Docs. */
+@media (max-width: 959.98px) {
+  .site-nav {
+    display: flex;
+  }
+
+  .site-nav a:not(.site-nav__docs) {
+    display: none;
+  }
+
+  .size-label {
+    margin-left: 0;
+  }
+}
+
+/* Narrow notices: the stamp comes down beside the OWASP tag instead of over
+   the calls, so the row's text gets the full width. */
+@media (max-width: 559.98px) {
+  .notice__row {
+    padding-right: 0;
+  }
+
+  .notice__tag {
+    max-width: calc(100% - 6rem);
+  }
+
+  .notice__stamp {
+    top: auto;
+    bottom: 1rem;
+    font-size: 0.6875rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .site-header__row {
+    gap: 1rem;
+  }
+
+  .size-label__k {
+    display: none;
+  }
+}
+
+@media (min-width: 1100px) {
+  .rules__grid {
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  }
+
+  .rules__head {
+    position: sticky;
+    top: 4rem;
+  }
+}
+
+/* Motion: the chalk strikes across, then the stamp comes down. The row
+   itself rises in with the page's other reveals. */
+.motion .notice__bad::after {
+  transform: rotate(-2deg) scaleX(0);
+  transition: transform 0.55s var(--ps-ease-out) 0.25s;
+}
+
+.motion .notice__row.is-in .notice__bad::after {
+  transform: rotate(-2deg) scaleX(1);
+}
+
+.motion .notice__row .notice__bad:nth-child(2)::after { transition-delay: 0.35s; }
+.motion .notice__row .notice__bad:nth-child(3)::after { transition-delay: 0.45s; }
+.motion .notice__row .notice__bad:nth-child(4)::after { transition-delay: 0.55s; }
+
+.motion .notice__stamp {
+  opacity: 0;
+  transform: rotate(-22deg) scale(1.8);
+  transition: opacity 0.2s ease-out 0.8s, transform 0.45s var(--ps-ease-spring) 0.8s;
+}
+
+.motion .notice__row.is-in .notice__stamp {
+  opacity: 0.88;
+  transform: rotate(-9deg) scale(1);
+}
+
 /* -------------------------------------------------------- 9. responsive */
 
 @media (min-width: 560px) {

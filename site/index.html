@@ -56,7 +56,7 @@
       <a href="#measure">Made to measure</a>
       <a href="#agents">Agents</a>
       <a href="#try">Try it on</a>
-      <a href="docs/index.html">Docs</a>
+      <a class="site-nav__docs" href="docs/index.html">Docs</a>
     </nav>
     <span class="size-label"><span class="size-label__k">size</span> <span data-docs-version>0.3.0</span></span>
   </div>
@@ -88,7 +88,7 @@
             <li><a class="ar-page__link" href="llms.txt">llms.txt</a></li>
           </ul>
         </nav>
-        <p class="hero__note"><span class="pin-dot" aria-hidden="true"></span> Version 0.1.4 is on Packagist and npm. Walk-ins welcome.</p>
+        <p class="hero__note"><span class="pin-dot" aria-hidden="true"></span> Version 0.3.0 is cut: joined SQL and switched-off TLS now fail the build. Walk-ins welcome.</p>
       </div>
 
       <!-- The hero is built from the mark: a swatch of green pinstripe cloth
@@ -202,7 +202,7 @@
           </figure>
 
           <div class="ticket">
-            <p class="ticket__head"><span>Alterations</span> <span class="ticket__no">No. 0.1</span></p>
+            <p class="ticket__head"><span>Alterations</span> <span class="ticket__no">No. <span data-docs-version>0.3.0</span></span></p>
             <ol class="ticket__list">
               <li data-step="1"><span class="ticket__n" aria-hidden="true">1</span><span class="ticket__tool">Rector</span> <span class="ticket__what">Promote the property into the constructor.</span></li>
               <li data-step="2"><span class="ticket__n" aria-hidden="true">2</span><span class="ticket__tool">Rector</span> <span class="ticket__what">Add the return type, <code>: string</code>.</span></li>
@@ -329,6 +329,63 @@
     </div>
   </section>
 
+  <!-- ========================================================= house rules -->
+  <!-- The notice pinned by the shop door: the calls every cut refuses, read from
+       phpstan/disallowed.neon and src/PHPStan/CurlVerifyOffRule.php. With motion,
+       each row's bad cloth is struck through in chalk and stamped as it comes
+       into view; without it, every row is already struck and stamped. -->
+  <section class="section rules" id="rules" aria-labelledby="rules-title">
+    <div class="wsu-container rules__grid">
+      <div class="section__head rules__head" data-reveal>
+        <p class="eyebrow eyebrow--gold">What this shop will not sew</p>
+        <h2 id="rules-title">House rules</h2>
+        <p>Every cut, raw, Laravel and strict, fails the build on a short list of calls no Wayne State app should ship. Each refusal says why and what to use instead, ends with its OWASP Top 10:2025 tag, and has a stable identifier, so keeping one on purpose takes one line with a reason.</p>
+        <p class="rules__more"><a href="docs/reference/banned-calls.html">Every banned call, with its fix</a></p>
+      </div>
+
+      <div class="notice">
+        <p class="notice__head"><span class="notice__title">Notice</span> <span class="notice__sub">by order of the tailor</span></p>
+        <ol class="notice__list">
+          <li class="notice__row" data-reveal>
+            <p class="notice__calls"><code class="notice__bad">eval()</code> <code class="notice__bad">extract()</code></p>
+            <p class="notice__why">A string runs as PHP, or request data overwrites any variable in scope.</p>
+            <p class="notice__instead"><span class="notice__k">Instead</span> Write the code out, and read the keys you need by name.</p>
+            <p class="notice__tag">A05 Injection</p>
+            <span class="notice__stamp" aria-hidden="true">Refused</span>
+          </li>
+          <li class="notice__row" data-reveal>
+            <p class="notice__calls"><code class="notice__bad">var_dump()</code> <code class="notice__bad">dd()</code> <code class="notice__bad">dump()</code> <code class="notice__bad">$users-&gt;dd()</code></p>
+            <p class="notice__why">Debug output left in ships paths, config and secrets to the browser.</p>
+            <p class="notice__instead"><span class="notice__k">Instead</span> A PSR-3 logger (<code>Log::debug()</code> in Laravel), or Xdebug.</p>
+            <p class="notice__tag">A02 Security Misconfiguration</p>
+            <span class="notice__stamp" aria-hidden="true">Refused</span>
+          </li>
+          <li class="notice__row" data-reveal>
+            <p class="notice__calls"><code class="notice__bad">withoutVerifying()</code> <code class="notice__bad">'verify' =&gt; false</code> <code class="notice__bad">CURLOPT_SSL_VERIFYPEER</code> <code class="notice__bad">verify_peer</code></p>
+            <p class="notice__why">TLS checks turned off, so anyone on the path can read or change the traffic.</p>
+            <p class="notice__instead"><span class="notice__k">Instead</span> Keep them on; for a private CA, point the client at its bundle.</p>
+            <p class="notice__tag">A02 Security Misconfiguration</p>
+            <span class="notice__stamp" aria-hidden="true">Refused</span>
+          </li>
+          <li class="notice__row" data-reveal>
+            <p class="notice__calls"><code class="notice__bad">"... id = " . $id</code> <span class="notice__into">into PDO, mysqli, <code>oci_parse()</code> or <code>DB::select()</code></span></p>
+            <p class="notice__why">A variable joined into the SQL lets one untrusted value rewrite the query.</p>
+            <p class="notice__instead"><span class="notice__k">Instead</span> Keep the SQL a literal, with <code>?</code> or <code>:name</code>, and bind every value.</p>
+            <p class="notice__tag">A05 Injection</p>
+            <span class="notice__stamp" aria-hidden="true">Refused</span>
+          </li>
+        </ol>
+        <div class="notice__foot">
+          <p class="notice__k">Keeping one on purpose</p>
+<pre class="notice__code" tabindex="0"><code>// @phpstan-ignore pinstripe.banned.varDump (CLI-only diagnostics)
+var_dump($report);</code></pre>
+        </div>
+        <span class="notice__pin notice__pin--l" aria-hidden="true"></span>
+        <span class="notice__pin notice__pin--r" aria-hidden="true"></span>
+      </div>
+    </div>
+  </section>
+
   <!-- ===================================================== made to measure -->
   <section class="section measure" id="measure" aria-labelledby="measure-title">
     <div class="wsu-container">
@@ -345,11 +402,11 @@
           <p class="pattern__fit">No framework. Pint with PER, PHPStan at level 8.</p>
           <p class="pattern__file">Install</p>
 <pre class="pattern__code" tabindex="0"><code>composer config allow-plugins.phpstan/extension-installer true
-composer require --dev waynestate/pinstripe:^0.1</code></pre>
+composer require --dev waynestate/pinstripe:^0.3</code></pre>
           <p class="pattern__fit">Pinstripe loads its PHPStan rules through <code>phpstan/extension-installer</code>, and Composer will not ask when it cannot prompt.</p>
-          <p class="pattern__fit"><code>^0.1</code> gets you 0.1.4, the current release. Change it when 0.2 ships.</p>
+          <p class="pattern__fit"><code>^0.3</code> gets you 0.3.0, the current release. Composer cannot find it yet? Packagist reads the GitHub mirror, which can trail a release: the <a href="docs/guides/raw-php.html#add-the-dependency">Raw PHP guide</a> has the one line that installs it from git.wayne.edu.</p>
           <p class="pattern__fit"><button class="copy-btn" type="button" data-copy="composer config allow-plugins.phpstan/extension-installer true
-composer require --dev waynestate/pinstripe:^0.1"><span class="copy-btn__label">Copy</span></button></p>
+composer require --dev waynestate/pinstripe:^0.3"><span class="copy-btn__label">Copy</span></button></p>
           <p class="pattern__file">phpstan.neon</p>
 <pre class="pattern__code" tabindex="0"><code>includes:
     - vendor/waynestate/pinstripe/phpstan/raw.neon
@@ -371,10 +428,10 @@ parameters:
           <p class="pattern__fit">Laravel's Pint preset, and PHPStan with Larastan.</p>
           <p class="pattern__file">Install</p>
 <pre class="pattern__code" tabindex="0"><code>composer config allow-plugins.phpstan/extension-installer true
-composer require --dev waynestate/pinstripe:^0.1 larastan/larastan</code></pre>
+composer require --dev waynestate/pinstripe:^0.3 larastan/larastan</code></pre>
           <p class="pattern__fit">Pinstripe loads its PHPStan rules through <code>phpstan/extension-installer</code>, and Composer will not ask when it cannot prompt.</p>
           <p class="pattern__fit"><button class="copy-btn" type="button" data-copy="composer config allow-plugins.phpstan/extension-installer true
-composer require --dev waynestate/pinstripe:^0.1 larastan/larastan"><span class="copy-btn__label">Copy</span></button></p>
+composer require --dev waynestate/pinstripe:^0.3 larastan/larastan"><span class="copy-btn__label">Copy</span></button></p>
           <p class="pattern__file">phpstan.neon</p>
 <pre class="pattern__code" tabindex="0"><code>includes:
     - vendor/waynestate/pinstripe/phpstan/laravel.neon</code></pre>
@@ -489,7 +546,7 @@ Read first:
 - composer.json, and the folders that hold the app's PHP code.
 
 Task:
-1. Add Pinstripe with `composer require --dev waynestate/pinstripe:^0.1`.
+1. Add Pinstripe with `composer require --dev waynestate/pinstripe:^0.3`.
 2. Write phpstan.neon: include vendor/waynestate/pinstripe/phpstan/raw.neon and list the app's own code folders under paths.
 3. Add the lint, fix and analyse Composer scripts from the README, with Pint pointed at vendor/waynestate/pinstripe/pint/per.json.
 4. Run `composer lint` and `composer analyse`. If existing code fails, generate a baseline with `phpstan analyse --generate-baseline`, include it, and report its size with `vendor/bin/pinstripe-baseline count phpstan-baseline.neon`.
@@ -520,7 +577,7 @@ Read first:
 - composer.json (config.allow-plugins included), and any pint.json and phpstan.neon the app already has.
 
 Task:
-1. Add Pinstripe and Larastan with `composer require --dev waynestate/pinstripe:^0.1 larastan/larastan`. Allow phpstan/extension-installer when Composer asks: it registers Larastan, so there is no Larastan line to add.
+1. Add Pinstripe and Larastan with `composer require --dev waynestate/pinstripe:^0.3 larastan/larastan`. Allow phpstan/extension-installer when Composer asks: it registers Larastan, so there is no Larastan line to add.
 2. Make phpstan.neon include vendor/waynestate/pinstripe/phpstan/laravel.neon and nothing else, as the README shows.
 3. Add lint, fix and analyse Composer scripts like the raw PHP ones in the README, with Pint pointed at vendor/waynestate/pinstripe/pint/laravel.json.
 4. Run `composer lint` and `composer analyse`. If existing code fails, generate a baseline with `phpstan analyse --generate-baseline`, include it, and report its size with `vendor/bin/pinstripe-baseline count phpstan-baseline.neon`.
@@ -578,7 +635,7 @@ Output: the files you added or changed, the lint findings grouped by rule, then 
         <h2 id="try-title">Try it on</h2>
         <p>To see the presets work before you add them to an app, clone Pinstripe and run its own checks. <code>composer ci</code> runs Pint, PHPStan, Larastan and Rector against the fixtures, and <code>npm test</code> runs the ESLint and Prettier presets.</p>
         <p>The commands are the same on Windows, macOS and Linux. You need PHP 8.3 or newer, Composer, and Node 22.13 or newer.</p>
-        <p class="try__next"><span class="try__next-k">On the cutting table next</span> Reading the PHP floor from CREED. <span class="chip-soon">coming soon</span></p>
+        <p class="try__next"><span class="try__next-k">Just off the cutting table</span> 0.3.0 refuses SQL joined from strings and TLS checks turned off, in every cut. <a href="docs/upgrading.html">Upgrading</a> walks an app through it.</p>
       </div>
 
       <div class="receipt" data-reveal>
