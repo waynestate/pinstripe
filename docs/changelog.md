@@ -57,6 +57,13 @@ All notable changes to Pinstripe are documented here.
 - Changed: The canonical repository is git.wayne.edu (ADR-0021); docs, links and package metadata no longer point at the archived nougat copy.
 - Added: The Proof page records its last run.
 
+## 0.1.5 (2026-11-09)
+
+A patch on the 0.1 line, cut from 0.1.4 on the `0.1.x` branch, for consumers that pin `^0.1` (Booster among them). It changes no preset; 0.2.0 and 0.3.0 already carry the same fix.
+
+- Fixed: the deploy kit's lock (`deploy/composer.lock`) names git.wayne.edu and GitHub for CREED, HELMET and PROCTOR instead of the archived internal host.
+- Changed: The canonical repository is git.wayne.edu (ADR-0021); docs, links and package metadata no longer point at the archived nougat copy.
+
 ## 0.1.4 (2026-11-06)
 
 - Fixed: `pinstripe-baseline` mutes deprecations while it loads the app's autoloader, so an old package in the app no longer prints PHP warnings ahead of the count a script reads (found by the 2026-11-05 proof run; new test in tests/BaselineTest.php).

@@ -32,6 +32,14 @@ A stricter preset breaks consumers' builds. Pinstripe ships such a change in a m
 
 **How to verify:** `composer analyse` passes, or lists only the banned calls you now own, and `vendor/bin/rector process --dry-run` shows only changes you expect.
 
+## 0.1.5 (2026-11-09)[#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#0-1-5-2026-11-09)
+
+For apps still on `^0.1`. No breaking change and no change to the presets: the package metadata and docs point at the canonical repository on git.wayne.edu and its GitHub mirror, so the entry Composer writes into your `composer.lock` names only public addresses.
+
+**Steps:** Your constraint is `^0.1`, which already allows 0.1.5: run `composer update waynestate/pinstripe`.
+
+**How to verify:** `composer show waynestate/pinstripe` reports 0.1.5, and the Pinstripe entry in your `composer.lock` names git.wayne.edu and github.com only.
+
 ## 0.1.4 (2026-11-06)[#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#0-1-4-2026-11-06)
 
 **Breaking (three tailoring changes, each a stricter fit):**
