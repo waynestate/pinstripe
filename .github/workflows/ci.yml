@@ -13,8 +13,8 @@ permissions:
 jobs:
   ci:
     # Pinned by tag, not branch: a workflow can only call a reusable workflow
-    # from another repository by tag or full SHA. 0.1.2 is the newest Preflight
-    # tag on the public mirror (checked 2026-11-02).
+    # from another repository by tag or full SHA. 0.1.4 is the newest Preflight
+    # tag on the public mirror (checked 2026-11-09).
     uses: waynestate/preflight/.github/workflows/php-package.yml@0.1.4
     with:
       php-versions: '["8.3","8.4","8.5"]'

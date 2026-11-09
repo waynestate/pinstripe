@@ -258,6 +258,40 @@ final class PresetsTest extends TestCase
         $this->assertNotSame(0, $exit, $output);
     }
 
+    public function testPintLaravelPresetRejectsTheMessyFixture(): void
+    {
+        // The other half of testPintLaravelPresetAcceptsTheLaravelAppFixture:
+        // long array syntax and a brace on the wrong line fail Laravel's
+        // style, so the preset is proven to catch something, not only to pass.
+        [$exit, $output] = $this->runCommand([
+            PHP_BINARY,
+            'vendor/bin/pint',
+            '--test',
+            '--config',
+            'pint/laravel.json',
+            'tests/fixtures/raw-messy',
+        ]);
+
+        $this->assertNotSame(0, $exit, $output);
+    }
+
+    public function testPintLaravelStrictPresetAcceptsTheStrictTypesLaravelCleanFixture(): void
+    {
+        // Its own clean twin, because the PER one fails Laravel's style on
+        // concatenation spacing (`'a' . $b`), which is not what this proves:
+        // a file in Laravel style that declares strict types passes.
+        [$exit, $output] = $this->runCommand([
+            PHP_BINARY,
+            'vendor/bin/pint',
+            '--test',
+            '--config',
+            'pint/laravel-strict.json',
+            'tests/fixtures/strict-types/laravel-clean',
+        ]);
+
+        $this->assertSame(0, $exit, $output);
+    }
+
     public function testPintLaravelStrictPresetRejectsTheStrictTypesMissingFixture(): void
     {
         [$exit, $output] = $this->runCommand([
@@ -694,9 +728,9 @@ final class PresetsTest extends TestCase
         // PDO, mysqli and oci8 with a variable joined into the SQL: by
         // concatenation, interpolation, sprintf() and an int. PHPStan's own
         // literal-string type does the telling; disallowed.neon asks for it.
-        // On PHP 8.4+ the ociparse() alias is also reported as deprecated
-        // by the deprecation rules, and the preset keeps that report, so
-        // expect it on those versions.
+        // The ociparse() alias is also reported as deprecated by the
+        // deprecation rules on every PHP version Pinstripe supports, and the
+        // preset keeps that report, so expect it always.
         $expected = [
             ['pinstripe.banned.joinedSql', 'PDO::query()', 22],
             ['pinstripe.banned.joinedSql', 'PDO::prepare()', 23],

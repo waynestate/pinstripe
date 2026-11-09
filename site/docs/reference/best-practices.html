@@ -74,14 +74,14 @@ Both run in CI on GitLab and GitHub, so a preset that stops working fails the pi
 <tr>
 <td><code>ESLint GitLab output</code></td>
 <td>ESLint</td>
-<td>Checked</td>
-<td><code>tests/js/gitlab-formatter.test.mjs</code></td>
+<td>Enforced</td>
+<td><code>tests/js/gitlab-formatter.test.mjs</code> (<code>npm test</code>: the bad fixture gives findings, the clean one an empty report)</td>
 </tr>
 <tr>
 <td><code>pint/laravel.json</code></td>
 <td>Pint</td>
-<td>Checked</td>
-<td><code>PresetsTest::testPintLaravelPresetAcceptsTheLaravelAppFixture</code></td>
+<td>Enforced</td>
+<td><code>PresetsTest::testPintLaravelPresetAcceptsTheLaravelAppFixture</code>, <code>PresetsTest::testPintLaravelPresetRejectsTheMessyFixture</code></td>
 </tr>
 <tr>
 <td><code>pint/per-strict.json</code></td>
@@ -92,8 +92,8 @@ Both run in CI on GitLab and GitHub, so a preset that stops working fails the pi
 <tr>
 <td><code>pint/laravel-strict.json</code></td>
 <td>Pint</td>
-<td>Checked</td>
-<td><code>PresetsTest::testPintLaravelStrictPresetRejectsTheStrictTypesMissingFixture</code></td>
+<td>Enforced</td>
+<td><code>PresetsTest::testPintLaravelStrictPresetAcceptsTheStrictTypesLaravelCleanFixture</code>, <code>PresetsTest::testPintLaravelStrictPresetRejectsTheStrictTypesMissingFixture</code></td>
 </tr>
 <tr>
 <td><code>phpstan/raw.neon</code></td>

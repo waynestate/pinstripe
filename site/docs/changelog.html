@@ -65,6 +65,9 @@
 <li>
 <p>Docs: MAINTAINING.md names the maintainer as a role (the stack maintainer), reached through an issue on git.wayne.edu, not a person; the CI file's cache comment drops an internal decision number.</p>
 </li>
+<li>
+<p>Added: the three presets the truth pass marked Checked are Enforced again, each now proven in both directions: <code>PresetsTest::testPintLaravelPresetRejectsTheMessyFixture</code> (<code>pint/laravel.json</code> fails the messy fixture), <code>PresetsTest::testPintLaravelStrictPresetAcceptsTheStrictTypesLaravelCleanFixture</code> (<code>pint/laravel-strict.json</code> passes a new Laravel-style clean fixture, <code>tests/fixtures/strict-types/laravel-clean</code>), and a <code>gitlab-formatter.test.mjs</code> case where the clean Vue fixture gives an empty Code Quality report. Two stale comments are fixed: the GitHub workflow names its real Preflight pin (0.1.4, not 0.1.2), and <code>PresetsTest</code> says the <code>ociparse()</code> deprecation is expected on every PHP version, not only 8.4 and newer.</p>
+</li>
 </ul>
 <h2 id="0-3-0-2026-11-09">0.3.0 (2026-11-09)<a class="docs-heading-link" aria-label="Link to this section" href="#0-3-0-2026-11-09">#</a></h2>
 <ul>

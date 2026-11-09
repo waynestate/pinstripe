@@ -18,10 +18,10 @@ A preset is **Enforced** when a test asserts both directions: a clean fixture pa
 | --- | --- | --- | --- |
 | `pint/per.json` | Pint | Enforced | `PresetsTest::testPintPerPresetAcceptsTheCleanFixture`, `PresetsTest::testPintPerPresetRejectsTheMessyFixture` |
 | `Pint GitLab output` | Pint | Enforced | `PresetsTest::testPintGitlabFormatReportsTheMessyFixtureAsCodeQualityJson`, `PresetsTest::testPintGitlabFormatIsAnEmptyArrayForTheCleanFixture` |
-| `ESLint GitLab output` | ESLint | Checked | `tests/js/gitlab-formatter.test.mjs` |
-| `pint/laravel.json` | Pint | Checked | `PresetsTest::testPintLaravelPresetAcceptsTheLaravelAppFixture` |
+| `ESLint GitLab output` | ESLint | Enforced | `tests/js/gitlab-formatter.test.mjs` (`npm test`: the bad fixture gives findings, the clean one an empty report) |
+| `pint/laravel.json` | Pint | Enforced | `PresetsTest::testPintLaravelPresetAcceptsTheLaravelAppFixture`, `PresetsTest::testPintLaravelPresetRejectsTheMessyFixture` |
 | `pint/per-strict.json` | Pint | Enforced | `PresetsTest::testPintPerStrictPresetAcceptsTheStrictTypesCleanFixture`, `PresetsTest::testPintPerStrictPresetRejectsTheStrictTypesMissingFixture` |
-| `pint/laravel-strict.json` | Pint | Checked | `PresetsTest::testPintLaravelStrictPresetRejectsTheStrictTypesMissingFixture` |
+| `pint/laravel-strict.json` | Pint | Enforced | `PresetsTest::testPintLaravelStrictPresetAcceptsTheStrictTypesLaravelCleanFixture`, `PresetsTest::testPintLaravelStrictPresetRejectsTheStrictTypesMissingFixture` |
 | `phpstan/raw.neon` | PHPStan | Enforced | `PresetsTest::testPhpStanRawConfigAcceptsTheCleanFixture`, `PresetsTest::testPhpStanRawConfigReportsTheNullBug` |
 | `phpstan/strict.neon` | PHPStan + strict-rules | Enforced | `PresetsTest::testPhpStanStrictConfigAcceptsTheCleanFixture`, `PresetsTest::testPhpStanStrictConfigReportsTheLooseComparison` |
 | `phpstan/disallowed.neon` (banned calls) | PHPStan + disallowed-calls | Enforced | `PresetsTest::testPhpStanReportsEveryBannedCall`, `PresetsTest::testPhpStanAcceptsMethodsThatShareTheBannedNames`, `PresetsTest::testPhpStanRawConfigAcceptsABannedCallKeptWithAReason`, `PresetsTest::testLaravelPresetReportsTlsVerificationTurnedOff` |
