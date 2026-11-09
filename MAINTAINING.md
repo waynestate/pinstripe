@@ -93,5 +93,6 @@ it on Node 22, 24 and 26, so a broken ESLint or Prettier preset fails the build 
 
 ## Who maintains it
 
-Adam Perkins, Wayne State University Enterprise Applications. Internal runbook (accounts, tokens, mirrors, npm and
-Packagist access): ask Enterprise Applications.
+The stack maintainer (a role, not a named person), Wayne State University Enterprise Applications. To reach them,
+open an issue on git.wayne.edu. Internal runbook (accounts, tokens, mirrors, npm and Packagist access): ask
+Enterprise Applications.

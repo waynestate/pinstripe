@@ -11,6 +11,7 @@ All notable changes to Pinstripe are documented here.
 - Changed: CI's `composer-ci` and `wayneui-copies` jobs, and the Docker-only command in MAINTAINING.md and Contributing, use Composer 2.11.1 pinned by its multi-arch list digest (was 2.10.3, which is no longer maintained; 2.11 fixes GHSA-c968-33g3-wh7p and GHSA-fm2w-xgf2-f9fh).
 - Changed: the deploy kit is Squire 0.10.2 (was 0.10.0): the fallback base names its images in full and copies Composer 2.11.1 from a `COMPOSER_IMAGE` build argument, `.squire/php.ini` sets `session.cookie_samesite = Lax`, and the portable image drops `node_modules/` after the build; build.sh takes the template's note on what a Citadel Update runs and keeps its deliberate SQUIRE_BUILD_REVISION=2 marker.
 - Changed: the front-page deploy layer requires HELMET `^1.3` (was `^1.0`, locked 1.3.0, was 1.0.0), PROCTOR `^0.11` (was `^0.8`, locked 0.11.1, was 0.8.0) and CREED `^0.1.8` (was `^0.1`, locked 0.1.8, was 0.1.7). `proctor check` still passes on `deploy/`.
+- Docs: MAINTAINING.md names the maintainer as a role (the stack maintainer), reached through an issue on git.wayne.edu, not a person; the CI file's cache comment drops an internal decision number.
 
 ## 0.3.0 (2026-11-09)
 
