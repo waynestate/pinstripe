@@ -135,7 +135,9 @@ parameters:
                     name: 'query'
                     typeString: 'literal-string'
         -
-            function: 'oci_parse()'
+            function:
+                - 'oci_parse()'
+                - 'ociparse()'
             message: 'it runs SQL joined from strings, so one untrusted value can rewrite the query; keep the SQL a literal (constants and literal pieces joined together are fine) and pass every value with oci_bind_by_name() (OWASP A05:2025 Injection)'
             errorIdentifier: 'pinstripe.banned.joinedSql'
             errorTip: 'See https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html and the CREED rule at https://creed.apps.wayne.edu/handbook/code.html#banned-patterns'
@@ -144,6 +146,17 @@ parameters:
                     position: 2
                     name: 'sql'
                     typeString: 'literal-string'
+
+    # ociparse() is the old alias for oci_parse(), deprecated in PHP 8.4. On
+    # PHP 8.4+ the deprecation rule reports every call as function.deprecated,
+    # even the bound ones this ban lets through, so that report is dropped
+    # here; the ban already says to use oci_parse(). reportUnmatched stays off
+    # on this entry, because most apps never call the alias at all.
+    ignoreErrors:
+        -
+            message: '#^Call to deprecated function ociparse\(\)\.$#'
+            identifier: 'function.deprecated'
+            reportUnmatched: false
 
     # Laravel's HTTP client. The method entry covers chains such as
     # Http::acceptJson()->withoutVerifying(). The facade call

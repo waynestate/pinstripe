@@ -333,7 +333,7 @@ pipeline red, the same as any other PHPStan error.
 | `'verify' => false` | The same hole through Guzzle's `verify` option: Laravel's `withOptions()`, `new Client([...])`, and the options of `request()`, `send()`, `get()`, `post()` and the other verbs. | Set `verify` to the path of the CA bundle, or leave it out. | A02 Security Misconfiguration |
 | `curl_setopt()` and `curl_setopt_array()` with `CURLOPT_SSL_VERIFYPEER` false or `CURLOPT_SSL_VERIFYHOST` 0 | Turns off curl's certificate or host name check in raw PHP. | Keep both on; for a private CA, point `CURLOPT_CAINFO` at its bundle. | A02 Security Misconfiguration |
 | `stream_context_create()` with `ssl` `verify_peer` or `verify_peer_name` false, or `allow_self_signed` true | Turns off the same checks for `file_get_contents()` and the other stream functions. | Keep them on; for a private CA, set the `ssl` `cafile` option. | A02 Security Misconfiguration |
-| SQL joined from strings: `PDO::query()`, `prepare()` and `exec()`, mysqli (`query()`, `prepare()`, `mysqli_query()` and the rest), `oci_parse()`, and Laravel's `DB::select()`, `insert()`, `update()`, `delete()`, `statement()`, `scalar()`, `cursor()` and `fromQuery()` | A variable joined into the SQL (`'... id = ' . $id`, `"... {$id}"`, `sprintf()`) lets one untrusted value rewrite the query. | Keep the SQL a literal and bind every value (`?` or `:name` placeholders, `oci_bind_by_name()`). | A05 Injection |
+| SQL joined from strings: `PDO::query()`, `prepare()` and `exec()`, mysqli (`query()`, `prepare()`, `mysqli_query()` and the rest), `oci_parse()` and its old alias `ociparse()`, and Laravel's `DB::select()`, `insert()`, `update()`, `delete()`, `statement()`, `scalar()`, `cursor()` and `fromQuery()` | A variable joined into the SQL (`'... id = ' . $id`, `"... {$id}"`, `sprintf()`) lets one untrusted value rewrite the query. | Keep the SQL a literal and bind every value (`?` or `:name` placeholders, `oci_bind_by_name()`). | A05 Injection |
 
 Each ban has a stable identifier: `pinstripe.banned.eval`, `pinstripe.banned.extract`, `pinstripe.banned.varDump`,
 `pinstripe.banned.dd`, `pinstripe.banned.dump`, `pinstripe.banned.withoutVerifying`, `pinstripe.banned.verifyFalse`,
@@ -385,7 +385,7 @@ identifier and with its OWASP tag, in both the raw and strict cuts; its clean tw
 and `dump()` methods in and must be reported for each, while its twin `SchemaDump.php` stays green;
 `tests/fixtures/laravel/src/InsecureHttp.php` turns TLS checks off both ways; `InsecureTransport.php` (raw curl and
 streams, eight ways) and `VerifyFalse.php` (Laravel and Guzzle, five ways) must be reported for each, while their
-twins `SecureTransport.php` and `VerifiedHttp.php` stay green; `JoinedSql.php` (PDO, mysqli and oci8, eight ways)
+twins `SecureTransport.php` and `VerifiedHttp.php` stay green; `JoinedSql.php` (PDO, mysqli and oci8, nine ways)
 and `JoinedQueries.php` (Laravel, six of Pinstripe's and three of Laravel's own) must be reported for each, while
 `BoundSql.php` and `BoundQueries.php` bind their values and stay green; and the
 Laravel app fixture installs Pinstripe through Composer and must fail on a leftover `dd()` and on curl told to skip

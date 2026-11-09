@@ -715,6 +715,7 @@ final class PresetsTest extends TestCase
                 ['pinstripe.banned.joinedSql', 'mysqli::prepare()', 27],
                 ['pinstripe.banned.joinedSql', 'mysqli_query()', 28],
                 ['pinstripe.banned.joinedSql', 'oci_parse()', 29],
+                ['pinstripe.banned.joinedSql', 'ociparse()', 30],
             ],
             array_map(
                 static fn (array $message): array => [$message[0], (string) preg_replace('/^Calling (\S+) is forbidden.*$/s', '$1', $message[1]), $message[2]],

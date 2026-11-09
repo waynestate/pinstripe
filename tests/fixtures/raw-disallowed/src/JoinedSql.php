@@ -27,5 +27,6 @@ final class JoinedSql
         $mysql->prepare('SELECT * FROM users WHERE id = ' . $id);
         mysqli_query($mysql, 'SELECT * FROM users WHERE id = ' . $id);
         oci_parse($oracle, "SELECT * FROM people WHERE person_id = '" . $id . "'");
+        ociparse($oracle, 'SELECT * FROM people WHERE person_id = ' . $id);
     }
 }
