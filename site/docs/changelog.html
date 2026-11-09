@@ -43,6 +43,9 @@
 <h1 id="changelog">Changelog<a class="docs-heading-link" aria-label="Link to this section" href="#changelog">#</a></h1>
 <p>All notable changes to Pinstripe are documented here.</p>
 <h2 id="unreleased">Unreleased<a class="docs-heading-link" aria-label="Link to this section" href="#unreleased">#</a></h2>
+<ul>
+<li>Changed: CI pins the Preflight components to 0.4.0 (the proctor job clones the full history, so the override-approver check can read git blame).</li>
+</ul>
 <h2 id="0-2-0-2026-11-08">0.2.0 (2026-11-08)<a class="docs-heading-link" aria-label="Link to this section" href="#0-2-0-2026-11-08">#</a></h2>
 <ul>
 <li>Changed: every banned call's tip links to the CREED rule it enforces (code handbook, Banned patterns) as well as to Pinstripe's banned-calls page; <code>tests/BannedCallLinksTest.php</code> keeps it that way.</li>

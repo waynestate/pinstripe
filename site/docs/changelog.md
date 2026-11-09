@@ -12,6 +12,8 @@ All notable changes to Pinstripe are documented here.
 
 ## Unreleased[#](https://pinstripe.apps.wayne.edu/docs/changelog.html#unreleased)
 
+- Changed: CI pins the Preflight components to 0.4.0 (the proctor job clones the full history, so the override-approver check can read git blame).
+
 ## 0.2.0 (2026-11-08)[#](https://pinstripe.apps.wayne.edu/docs/changelog.html#0-2-0-2026-11-08)
 
 - Changed: every banned call's tip links to the CREED rule it enforces (code handbook, Banned patterns) as well as to Pinstripe's banned-calls page; `tests/BannedCallLinksTest.php` keeps it that way.
