@@ -11,6 +11,7 @@ All notable changes to Pinstripe are documented here.
 
 ## Unreleased
 
+- Changed: the deploy kit is Squire 0.10.0 (was 0.7.1): release.sh keeps Composer and npm download caches in the app folder and the gate takes SQUIRE_PHP_RUNTIME; the compose file, health.php and .env.squire.example follow the template, and the portable image files are added (build.sh keeps its deliberate SQUIRE_BUILD_REVISION=2 marker).
 - Docs: every install line says `^0.3` (it said `^0.1`, which stops at 0.1.4), with the one `composer config repositories` line that installs 0.3.0 from git.wayne.edu while Packagist's GitHub mirror trails the release; the npm notes say the ESLint and Prettier presets have not changed since 0.1.4. The front page drops its "0.1.4 on Packagist and npm" note and a "coming soon" chip for the CREED PHP floor (built in 0.2.0), keeps a Docs link in the header at phone width, and gains House rules: a notice of the banned call families with their OWASP tags, struck through in chalk and stamped as they scroll in (already struck and stamped with reduced motion).
 
 ## 0.3.0 (2026-11-09)
