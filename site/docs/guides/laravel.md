@@ -35,7 +35,7 @@ The Laravel preset also rejects `env()` outside `config/`: once the config is ca
 
 ## Banned calls[#](https://pinstripe.apps.wayne.edu/docs/guides/laravel.html#banned-calls)
 
-Every cut also fails on `eval()`, `extract()`, `var_dump()`, `dd()`, `dump()` and the HTTP client's `withoutVerifying()`, whether you call it as `Http::withoutVerifying()` or partway down a chain. The [Banned calls](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html) page says why and what to use instead.
+Every cut also fails on `eval()`, `extract()`, `var_dump()`, `dd()`, `dump()` and the HTTP client's `withoutVerifying()`, whether you call it as `Http::withoutVerifying()` or partway down a chain, and on the long way round to the same hole, `withOptions(['verify' => false])` (Guzzle's `verify` option set to false, in Laravel or in Guzzle itself). Laravel's own `dd()` and `dump()` methods count as well (`$users->dd()`, `DB::table('users')->dumpRawSql()`, `$request->dump()`, `Http::get($url)->dd()`), under the same identifiers as the functions. The [Banned calls](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html) page says why and what to use instead.
 
 ## Proven on Laravel[#](https://pinstripe.apps.wayne.edu/docs/guides/laravel.html#proven-on-laravel)
 

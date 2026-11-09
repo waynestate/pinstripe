@@ -74,7 +74,9 @@ parameters:
 Pinstripe ships <code>phpstan/phpstan-deprecation-rules</code>, loaded automatically by
 <code>phpstan/extension-installer</code>. Calling a <code>@deprecated</code> method fails the build.
 The tailor flags the old cut before the fabric is retired.
-It also fails on <code>eval()</code>, <code>extract()</code>, <code>var_dump()</code>, <code>dd()</code> and <code>dump()</code>: the
+It also fails on <code>eval()</code>, <code>extract()</code>, <code>var_dump()</code>, <code>dd()</code> and <code>dump()</code>, and on TLS checks turned off through
+curl (<code>CURLOPT_SSL_VERIFYPEER</code> false, <code>CURLOPT_SSL_VERIFYHOST</code> 0), a stream context (<code>verify_peer</code> false) or
+Guzzle (<code>'verify' =&gt; false</code>): the
 <a href="../reference/banned-calls.html">Banned calls</a> page says why and what to use instead.</p>
 <h2 id="show-pint-findings-in-the-merge-request">Show Pint findings in the merge request<a class="docs-heading-link" aria-label="Link to this section" href="#show-pint-findings-in-the-merge-request">#</a></h2>
 <p>Add a second script that writes the report to a file:</p>

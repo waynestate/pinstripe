@@ -312,10 +312,25 @@ pipeline red, the same as any other PHPStan error.
 | `var_dump()` | Debug output left in ships paths, config and secrets to the browser. | A PSR-3 logger (`Log::debug()` in Laravel), or Xdebug. | A02 Security Misconfiguration |
 | `dd()` | Dumps internals to the browser and halts the request in production. | The same. | A02 Security Misconfiguration |
 | `dump()` | The same leak as `var_dump()`, Symfony and Laravel flavored. | The same. | A02 Security Misconfiguration |
+| Laravel's `->dd()` and `->dump()` methods | The same leaks, called on a collection, query, request or HTTP response (`$users->dd()`, `->dumpRawSql()`, `Http::get($url)->dd()`). | The same. | A02 Security Misconfiguration |
 | `withoutVerifying()` | Turns off TLS certificate checks in Laravel's HTTP client (`PendingRequest`), so anyone on the path can read or change the traffic. | Keep verification on; for a private CA, pass its bundle through `withOptions` and the `verify` option. | A02 Security Misconfiguration |
+| `'verify' => false` | The same hole through Guzzle's `verify` option: Laravel's `withOptions()`, `new Client([...])`, and the options of `request()`, `send()`, `get()`, `post()` and the other verbs. | Set `verify` to the path of the CA bundle, or leave it out. | A02 Security Misconfiguration |
+| `curl_setopt()` and `curl_setopt_array()` with `CURLOPT_SSL_VERIFYPEER` false or `CURLOPT_SSL_VERIFYHOST` 0 | Turns off curl's certificate or host name check in raw PHP. | Keep both on; for a private CA, point `CURLOPT_CAINFO` at its bundle. | A02 Security Misconfiguration |
+| `stream_context_create()` with `ssl` `verify_peer` or `verify_peer_name` false, or `allow_self_signed` true | Turns off the same checks for `file_get_contents()` and the other stream functions. | Keep them on; for a private CA, set the `ssl` `cafile` option. | A02 Security Misconfiguration |
 
 Each ban has a stable identifier: `pinstripe.banned.eval`, `pinstripe.banned.extract`, `pinstripe.banned.varDump`,
-`pinstripe.banned.dd`, `pinstripe.banned.dump` and `pinstripe.banned.withoutVerifying`.
+`pinstripe.banned.dd`, `pinstripe.banned.dump`, `pinstripe.banned.withoutVerifying`, `pinstripe.banned.verifyFalse`,
+`pinstripe.banned.curlVerifyOff` and `pinstripe.banned.streamVerifyOff`.
+
+Only the off switch is banned. Setting `CURLOPT_SSL_VERIFYPEER` to true, `verify` to a CA bundle, or `false` on an
+option that has nothing to do with TLS passes. The `curl_setopt()` ban is the one Pinstripe writes itself
+(`src/PHPStan/CurlVerifyOffRule.php`), because it needs the option and the value together, which
+spaze/phpstan-disallowed-calls cannot match; it reads and links like the others.
+
+Laravel's methods share the functions' identifiers: `dd()`, `ddRawSql()`, `ddHeaders()`, `ddBody()`, `ddJson()` and
+`ddSession()` report as `pinstripe.banned.dd`, and `dump()`, `dumpRawSql()`, `dumpHeaders()` and `dumpSession()` as
+`pinstripe.banned.dump`. Only methods Laravel itself declares are caught, so your own `dump()` method is fine, and
+so is the schema dump behind `php artisan schema:dump`.
 
 The `withoutVerifying()` ban catches both `Http::withoutVerifying()` and the method partway down a chain such as
 `Http::acceptJson()->withoutVerifying()`. Each message ends with its OWASP tag and carries a link to the
@@ -334,13 +349,18 @@ would hide the next one too.
 **Adding your own.** List more bans under the same parameters (`disallowedFunctionCalls`, `disallowedMethodCalls`,
 `disallowedStaticCalls`) in your app's `phpstan.neon`. NEON appends lists, so yours join Pinstripe's.
 
-**Not covered yet.** The `dd()` and `dump()` methods on collections, queries and requests (`$users->dd()`), and
-turning verification off through `withOptions(['verify' => false])`.
+**Not covered yet.** An off switch PHPStan cannot pin to a value: `'verify' => $verify`, or a curl option read from
+config. Those pass, so keep the value a literal where you can.
 
 Proven on fixtures: `tests/fixtures/raw-disallowed` makes each banned call once and must be reported for each, by
 identifier and with its OWASP tag, in both the raw and strict cuts; its clean twin defines methods named `dump()` and
-`dd()` and must stay green; `tests/fixtures/laravel/src/InsecureHttp.php` turns TLS checks off both ways; and the
-Laravel app fixture installs Pinstripe through Composer and must fail on a leftover `dd()`. A suit with a `dd()` in
+`dd()` and must stay green; `tests/fixtures/laravel/src/LeftoverDebugMethods.php` leaves seven of Laravel's `dd()`
+and `dump()` methods in and must be reported for each, while its twin `SchemaDump.php` stays green;
+`tests/fixtures/laravel/src/InsecureHttp.php` turns TLS checks off both ways; `InsecureTransport.php` (raw curl and
+streams, eight ways) and `VerifyFalse.php` (Laravel and Guzzle, five ways) must be reported for each, while their
+twins `SecureTransport.php` and `VerifiedHttp.php` stay green; and the
+Laravel app fixture installs Pinstripe through Composer and must fail on a leftover `dd()` and on curl told to skip
+the certificate check, which proves the curl rule loads from `vendor/`. A suit with a `dd()` in
 the pocket does not leave the shop.
 
 #### Not banned yet
@@ -1017,6 +1037,8 @@ All notable changes to Pinstripe are documented here.
 
 ### Unreleased[#](https://pinstripe.apps.wayne.edu/docs/changelog.html#unreleased)
 
+- Added: every cut bans TLS checks turned off: `curl_setopt()` and `curl_setopt_array()` with `CURLOPT_SSL_VERIFYPEER` false or `CURLOPT_SSL_VERIFYHOST` 0 (`pinstripe.banned.curlVerifyOff`), `stream_context_create()` with `ssl` `verify_peer` or `verify_peer_name` false or `allow_self_signed` true (`pinstripe.banned.streamVerifyOff`), and Guzzle's `verify` option set to false through Laravel's `withOptions()`, `new GuzzleHttp\Client()` or a request's options (`pinstripe.banned.verifyFalse`), each tagged OWASP A02:2025. The `curl_setopt()` ban is Pinstripe's first PHPStan rule of its own (`src/PHPStan/CurlVerifyOffRule.php`), since it needs the option and the value together; the rest are spaze/phpstan-disallowed-calls entries. Breaking for apps that skip the certificate check. New fixtures `InsecureTransport.php`, `SecureTransport.php`, `VerifyFalse.php`, `VerifiedHttp.php` and the Laravel app's `banned/InsecureCurl.php`.
+- Added: Laravel's own `dd()` and `dump()` methods are banned too (`$users->dd()`, `DB::table('users')->dumpRawSql()`, `$request->dump()`, `Http::get($url)->dd()`, `Http::dump()` and the rest of the family), under the functions' identifiers `pinstripe.banned.dd` and `pinstripe.banned.dump`; only methods Laravel declares match, so an app's own `dump()` and the schema dump behind `php artisan schema:dump` pass. Breaking for Laravel apps with one left in. New fixtures `tests/fixtures/laravel/src/LeftoverDebugMethods.php` and `SchemaDump.php`.
 - Changed: CI pins the Preflight components to 0.4.0 (the proctor job clones the full history, so the override-approver check can read git blame).
 
 ### 0.2.0 (2026-11-08)[#](https://pinstripe.apps.wayne.edu/docs/changelog.html#0-2-0-2026-11-08)
@@ -1319,7 +1341,7 @@ The Laravel preset also rejects `env()` outside `config/`: once the config is ca
 
 ### Banned calls[#](https://pinstripe.apps.wayne.edu/docs/guides/laravel.html#banned-calls)
 
-Every cut also fails on `eval()`, `extract()`, `var_dump()`, `dd()`, `dump()` and the HTTP client's `withoutVerifying()`, whether you call it as `Http::withoutVerifying()` or partway down a chain. The [Banned calls](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html) page says why and what to use instead.
+Every cut also fails on `eval()`, `extract()`, `var_dump()`, `dd()`, `dump()` and the HTTP client's `withoutVerifying()`, whether you call it as `Http::withoutVerifying()` or partway down a chain, and on the long way round to the same hole, `withOptions(['verify' => false])` (Guzzle's `verify` option set to false, in Laravel or in Guzzle itself). Laravel's own `dd()` and `dump()` methods count as well (`$users->dd()`, `DB::table('users')->dumpRawSql()`, `$request->dump()`, `Http::get($url)->dd()`), under the same identifiers as the functions. The [Banned calls](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html) page says why and what to use instead.
 
 ### Proven on Laravel[#](https://pinstripe.apps.wayne.edu/docs/guides/laravel.html#proven-on-laravel)
 
@@ -1379,7 +1401,7 @@ Add Composer scripts that run on every OS:
 }
 ```
 
-`composer lint` fails on style. `composer fix` fixes it. Pint's `per` preset is the PER Coding Style, and `tests/fixtures/per` keeps a clean and a messy proof. `composer analyse` runs PHPStan at level 8, with deprecation checks too. Pinstripe ships `phpstan/phpstan-deprecation-rules`, loaded automatically by `phpstan/extension-installer`. Calling a `@deprecated` method fails the build. The tailor flags the old cut before the fabric is retired. It also fails on `eval()`, `extract()`, `var_dump()`, `dd()` and `dump()`: the [Banned calls](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html) page says why and what to use instead.
+`composer lint` fails on style. `composer fix` fixes it. Pint's `per` preset is the PER Coding Style, and `tests/fixtures/per` keeps a clean and a messy proof. `composer analyse` runs PHPStan at level 8, with deprecation checks too. Pinstripe ships `phpstan/phpstan-deprecation-rules`, loaded automatically by `phpstan/extension-installer`. Calling a `@deprecated` method fails the build. The tailor flags the old cut before the fabric is retired. It also fails on `eval()`, `extract()`, `var_dump()`, `dd()` and `dump()`, and on TLS checks turned off through curl (`CURLOPT_SSL_VERIFYPEER` false, `CURLOPT_SSL_VERIFYHOST` 0), a stream context (`verify_peer` false) or Guzzle (`'verify' => false`): the [Banned calls](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html) page says why and what to use instead.
 
 ### Show Pint findings in the merge request[#](https://pinstripe.apps.wayne.edu/docs/guides/raw-php.html#show-pint-findings-in-the-merge-request)
 
@@ -1674,6 +1696,8 @@ This page lists the calls every Pinstripe cut fails the build on, says why each 
 
 Every cut (raw, Laravel and strict) includes `phpstan/disallowed.neon` through `base.neon`. The rules come from [spaze/phpstan-disallowed-calls](https://github.com/spaze/phpstan-disallowed-calls), which Pinstripe requires and `phpstan/extension-installer` loads, so your `phpstan.neon` needs no new line. A `dd()` left in after debugging turns the pipeline red, the same as any other PHPStan error.
 
+The one exception is `curl_setopt()` with a verify option set to false: it needs the option and the value together, which that package cannot match, so Pinstripe ships a small rule of its own (`src/PHPStan/CurlVerifyOffRule.php`), registered in the same file. Its report reads and links like the others.
+
 | Call | Why it is banned | Use instead | OWASP Top 10:2025 |
 | --- | --- | --- | --- |
 | `eval()` | Runs a string as PHP, so one untrusted value is remote code execution. | Write the code out, or pick a callable with `match`. | A05 Injection |
@@ -1681,9 +1705,17 @@ Every cut (raw, Laravel and strict) includes `phpstan/disallowed.neon` through `
 | `var_dump()` | Debug output left in ships paths, config and secrets to the browser. | A PSR-3 logger (`Log::debug()` in Laravel), or Xdebug. | A02 Security Misconfiguration |
 | `dd()` | Dumps internals to the browser and halts the request in production. | The same. | A02 Security Misconfiguration |
 | `dump()` | The same leak as `var_dump()`, Symfony and Laravel flavored. | The same. | A02 Security Misconfiguration |
+| Laravel's `->dd()` and `->dump()` methods | The same leaks, called on a collection, query, request or HTTP response (`$users->dd()`, `->dumpRawSql()`, `Http::get($url)->dd()`). | The same. | A02 Security Misconfiguration |
 | `withoutVerifying()` | Turns off TLS certificate checks in Laravel's HTTP client (`PendingRequest`), so anyone on the path can read or change the traffic. | Keep verification on; for a private CA, pass its bundle through `withOptions` and the `verify` option. | A02 Security Misconfiguration |
+| `'verify' => false` | The same hole through Guzzle's `verify` option: Laravel's `withOptions()`, `new Client([...])`, and the options of `request()`, `send()`, `get()`, `post()` and the other verbs. | Set `verify` to the path of the CA bundle, or leave it out. | A02 Security Misconfiguration |
+| `curl_setopt()` and `curl_setopt_array()` with `CURLOPT_SSL_VERIFYPEER` false or `CURLOPT_SSL_VERIFYHOST` 0 | Turns off curl's certificate or host name check in raw PHP. | Keep both on; for a private CA, point `CURLOPT_CAINFO` at its bundle. | A02 Security Misconfiguration |
+| `stream_context_create()` with `ssl` `verify_peer` or `verify_peer_name` false, or `allow_self_signed` true | Turns off the same checks for `file_get_contents()` and the other stream functions. | Keep them on; for a private CA, set the `ssl` `cafile` option. | A02 Security Misconfiguration |
 
-Each ban has a stable identifier: `pinstripe.banned.eval`, `pinstripe.banned.extract`, `pinstripe.banned.varDump`, `pinstripe.banned.dd`, `pinstripe.banned.dump` and `pinstripe.banned.withoutVerifying`.
+Each ban has a stable identifier: `pinstripe.banned.eval`, `pinstripe.banned.extract`, `pinstripe.banned.varDump`, `pinstripe.banned.dd`, `pinstripe.banned.dump`, `pinstripe.banned.withoutVerifying`, `pinstripe.banned.verifyFalse`, `pinstripe.banned.curlVerifyOff` and `pinstripe.banned.streamVerifyOff`.
+
+Only the off switch is banned: `CURLOPT_SSL_VERIFYPEER` set to true, `verify` pointed at a CA bundle, and `false` on an option that has nothing to do with TLS all pass. The match is on literal values, so `'verify' => $verify`, or a curl option read from config, passes too; keep the value a literal where you can.
+
+Laravel's methods share the functions' identifiers: `dd()`, `ddRawSql()`, `ddHeaders()`, `ddBody()`, `ddJson()` and `ddSession()` report as `pinstripe.banned.dd`, and `dump()`, `dumpRawSql()`, `dumpHeaders()` and `dumpSession()` as `pinstripe.banned.dump`. Facade calls such as `Http::dd()` count too. Only methods Laravel itself declares are caught, so your own `dump()` method is fine, and so is the schema dump behind `php artisan schema:dump`.
 
 The `withoutVerifying()` ban catches both `Http::withoutVerifying()` and the method partway down a chain such as `Http::acceptJson()->withoutVerifying()`. Raw PHP apps never match it.
 
@@ -1711,8 +1743,7 @@ List more bans under the same parameters (`disallowedFunctionCalls`, `disallowed
 
 ### Not covered yet[#](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html#not-covered-yet)
 
-- The `dd()` and `dump()` methods on collections, queries and requests (`$users->dd()`).
-- Turning verification off through `withOptions(['verify' => false])`.
+- An off switch PHPStan cannot pin to a value: `'verify' => $verify`, or a curl option read from config.
 
 ### Not banned yet[#](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html#not-banned-yet)
 
@@ -1724,8 +1755,11 @@ List more bans under the same parameters (`disallowedFunctionCalls`, `disallowed
 
 - `tests/fixtures/raw-disallowed/src/Leftovers.php` makes each banned call once, and the raw and strict cuts must report each one, by identifier, with its OWASP tag, and nothing else.
 - Its clean twin, `LookAlikes.php`, defines methods named `dump()` and `dd()` and uses `var_export()` and `match`, and must stay green; `Excused.php` keeps one `var_dump()` with a reasoned ignore and must stay green too.
+- `tests/fixtures/laravel/src/LeftoverDebugMethods.php` leaves seven of Laravel's `dd()` and `dump()` methods in (on a collection, a query, a request, an HTTP response and the `Http` facade), and the Laravel preset must report each one; its twin `SchemaDump.php` writes a schema dump and must stay green.
 - `tests/fixtures/laravel/src/InsecureHttp.php` turns TLS checks off both ways, and the Laravel preset must report both.
-- The Laravel app fixture installs Pinstripe through Composer, like an app does, and must fail on a leftover `dd()`.
+- `tests/fixtures/raw-disallowed/src/InsecureTransport.php` turns TLS checks off eight ways through curl and stream contexts, and the raw and strict cuts must report each one; its twin `SecureTransport.php` sets verification on and must stay green.
+- `tests/fixtures/laravel/src/VerifyFalse.php` sets `verify` to false five ways through `withOptions()` and Guzzle, and the Laravel preset must report each one; its twin `VerifiedHttp.php` points `verify` at a CA bundle and must stay green.
+- The Laravel app fixture installs Pinstripe through Composer, like an app does, and must fail on a leftover `dd()`, and on curl told to skip the certificate check (which proves Pinstripe's own curl rule loads from `vendor/`).
 
 A suit with a `dd()` in the pocket does not leave the shop.
 
@@ -2009,6 +2043,16 @@ This page walks through each released version of Pinstripe, what changed for con
 ### What a stricter preset means to you[#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#what-a-stricter-preset-means-to-you)
 
 A stricter preset breaks consumers' builds. Pinstripe ships such a change in a minor version, not a major one, so you opt in by updating the package. When a version below marks a change as breaking, it is a stricter preset taking effect in your app the moment you update to it; hold the current version until you are ready.
+
+### Unreleased[#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#unreleased)
+
+**Breaking (a stricter fit):** every cut fails on TLS checks turned off: `curl_setopt()` or `curl_setopt_array()` with `CURLOPT_SSL_VERIFYPEER` false or `CURLOPT_SSL_VERIFYHOST` 0 (`pinstripe.banned.curlVerifyOff`), `stream_context_create()` with `ssl` `verify_peer` or `verify_peer_name` false or `allow_self_signed` true (`pinstripe.banned.streamVerifyOff`), and Guzzle's `verify` option set to false, through Laravel's `withOptions()` or Guzzle itself (`pinstripe.banned.verifyFalse`). Setting verification on, or pointing it at a CA bundle, passes.
+
+**Breaking (a stricter fit):** in Laravel apps, Laravel's own `dd()` and `dump()` methods fail `composer analyse` too, not only the functions: `$users->dd()`, `DB::table('users')->dumpRawSql()`, `$request->dump()`, `Http::get($url)->dd()` and the rest of the family (`ddRawSql()`, `ddHeaders()`, `ddBody()`, `ddJson()`, `ddSession()`, `dumpHeaders()`, `dumpSession()`). They report as `pinstripe.banned.dd` and `pinstripe.banned.dump`, the same identifiers as the functions. Your own methods named `dump()` and the schema dump behind `php artisan schema:dump` are not affected.
+
+**Steps:** Delete each reported leftover. For a TLS finding, turn verification back on, and if the server uses a private CA, point the client at its bundle (`CURLOPT_CAINFO`, the `ssl` `cafile` option, or `verify` set to the bundle's path). Keep one on purpose with `@phpstan-ignore pinstripe.banned.<name> (why)`.
+
+**How to verify:** `composer analyse` passes, or lists only the leftovers you now own.
 
 ### 0.2.0 (2026-11-08)[#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#0-2-0-2026-11-08)
 

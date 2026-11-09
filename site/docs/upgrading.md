@@ -14,6 +14,16 @@ This page walks through each released version of Pinstripe, what changed for con
 
 A stricter preset breaks consumers' builds. Pinstripe ships such a change in a minor version, not a major one, so you opt in by updating the package. When a version below marks a change as breaking, it is a stricter preset taking effect in your app the moment you update to it; hold the current version until you are ready.
 
+## Unreleased[#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#unreleased)
+
+**Breaking (a stricter fit):** every cut fails on TLS checks turned off: `curl_setopt()` or `curl_setopt_array()` with `CURLOPT_SSL_VERIFYPEER` false or `CURLOPT_SSL_VERIFYHOST` 0 (`pinstripe.banned.curlVerifyOff`), `stream_context_create()` with `ssl` `verify_peer` or `verify_peer_name` false or `allow_self_signed` true (`pinstripe.banned.streamVerifyOff`), and Guzzle's `verify` option set to false, through Laravel's `withOptions()` or Guzzle itself (`pinstripe.banned.verifyFalse`). Setting verification on, or pointing it at a CA bundle, passes.
+
+**Breaking (a stricter fit):** in Laravel apps, Laravel's own `dd()` and `dump()` methods fail `composer analyse` too, not only the functions: `$users->dd()`, `DB::table('users')->dumpRawSql()`, `$request->dump()`, `Http::get($url)->dd()` and the rest of the family (`ddRawSql()`, `ddHeaders()`, `ddBody()`, `ddJson()`, `ddSession()`, `dumpHeaders()`, `dumpSession()`). They report as `pinstripe.banned.dd` and `pinstripe.banned.dump`, the same identifiers as the functions. Your own methods named `dump()` and the schema dump behind `php artisan schema:dump` are not affected.
+
+**Steps:** Delete each reported leftover. For a TLS finding, turn verification back on, and if the server uses a private CA, point the client at its bundle (`CURLOPT_CAINFO`, the `ssl` `cafile` option, or `verify` set to the bundle's path). Keep one on purpose with `@phpstan-ignore pinstripe.banned.<name> (why)`.
+
+**How to verify:** `composer analyse` passes, or lists only the leftovers you now own.
+
 ## 0.2.0 (2026-11-08)[#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#0-2-0-2026-11-08)
 
 **Breaking (a stricter fit):** every cut bans `eval()`, `extract()`, `var_dump()`, `dd()`, `dump()` and Laravel's `PendingRequest::withoutVerifying()` (including `Http::withoutVerifying()`), through `spaze/phpstan-disallowed-calls`, which Pinstripe now requires. An app with one of these left in fails `composer analyse` once it updates. Each finding's tip links to [Banned calls](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html) and to the [CREED rule](https://creed.apps.wayne.edu/handbook/code.html#banned-patterns) it enforces.
