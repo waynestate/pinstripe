@@ -4,6 +4,8 @@ All notable changes to Pinstripe are documented here.
 
 ## Unreleased
 
+## 0.3.0 (2026-11-09)
+
 - Added: every cut bans SQL joined from strings (`pinstripe.banned.joinedSql`, OWASP A05:2025): a variable concatenated, interpolated or `sprintf()`'d into the SQL given to `PDO::query()`, `prepare()` or `exec()`, mysqli's `query()`, `prepare()`, `mysqli_query()` and the rest, `oci_parse()` (and the old alias `ociparse()`), or Laravel's `DB::select()`, `insert()`, `update()`, `delete()`, `statement()`, `scalar()`, `cursor()` and `fromQuery()`. No taint rule: spaze/phpstan-disallowed-calls asks for PHPStan's own `literal-string` type, so literal SQL with bindings, class constants and literal pieces joined together pass; Laravel already types `DB::raw()`, `DB::unprepared()` and the `*Raw()` builder methods that way, and a test now holds it to that. Breaking for apps that build SQL from variables. New fixtures `JoinedSql.php`, `BoundSql.php`, `JoinedQueries.php` and `BoundQueries.php`.
 - Docs: the Best practices docs page carries BEST_PRACTICES.md word for word again (it had fallen behind: no ESLint GitLab output row, no banned-call rows), and BEST_PRACTICES.md gains rows for `phpstan/strict.neon` and `phpstan/disallowed.neon`. New `tests/BestPracticesTest.php` keeps them in step: every test and file the table names exists, each row has one known status, an Enforced row names its proof, and the docs page matches.
 - Fixed: the `Http::withoutVerifying()` ban (the static entry) carries the same tip as the others, linking to the Banned calls page and the CREED rule; `BannedCallLinksTest::testEveryBanCarriesAnIdentifierAndATip` now reads `phpstan/disallowed.neon` and fails on any entry without a message, identifier or tip.
