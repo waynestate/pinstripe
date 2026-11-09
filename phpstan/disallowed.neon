@@ -147,17 +147,6 @@ parameters:
                     name: 'sql'
                     typeString: 'literal-string'
 
-    # ociparse() is the old alias for oci_parse(), deprecated in PHP 8.4. On
-    # PHP 8.4+ the deprecation rule reports every call as function.deprecated,
-    # even the bound ones this ban lets through, so that report is dropped
-    # here; the ban already says to use oci_parse(). reportUnmatched stays off
-    # on this entry, because most apps never call the alias at all.
-    ignoreErrors:
-        -
-            message: '#^Call to deprecated function ociparse\(\)\.$#'
-            identifier: 'function.deprecated'
-            reportUnmatched: false
-
     # Laravel's HTTP client. The method entry covers chains such as
     # Http::acceptJson()->withoutVerifying(). The facade call
     # Http::withoutVerifying() is a static call, so it needs the static

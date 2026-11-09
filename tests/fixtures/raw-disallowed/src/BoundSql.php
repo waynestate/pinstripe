@@ -44,10 +44,5 @@ final class BoundSql
         if ($parsed !== false) {
             oci_bind_by_name($parsed, ':id', $id);
         }
-
-        $alias = ociparse($oracle, 'SELECT * FROM people WHERE last_name = :name');
-        if ($alias !== false) {
-            oci_bind_by_name($alias, ':name', $id);
-        }
     }
 }

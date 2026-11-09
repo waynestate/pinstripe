@@ -694,6 +694,24 @@ final class PresetsTest extends TestCase
         // PDO, mysqli and oci8 with a variable joined into the SQL: by
         // concatenation, interpolation, sprintf() and an int. PHPStan's own
         // literal-string type does the telling; disallowed.neon asks for it.
+        // On PHP 8.4+ the ociparse() alias is also reported as deprecated
+        // by the deprecation rules, and the preset keeps that report, so
+        // expect it on those versions.
+        $expected = [
+            ['pinstripe.banned.joinedSql', 'PDO::query()', 22],
+            ['pinstripe.banned.joinedSql', 'PDO::prepare()', 23],
+            ['pinstripe.banned.joinedSql', 'PDO::exec()', 24],
+            ['pinstripe.banned.joinedSql', 'PDO::query()', 25],
+            ['pinstripe.banned.joinedSql', 'mysqli::query()', 26],
+            ['pinstripe.banned.joinedSql', 'mysqli::prepare()', 27],
+            ['pinstripe.banned.joinedSql', 'mysqli_query()', 28],
+            ['pinstripe.banned.joinedSql', 'oci_parse()', 29],
+            ['pinstripe.banned.joinedSql', 'ociparse()', 30],
+        ];
+        if (PHP_VERSION_ID >= 80400) {
+            $expected[] = ['function.deprecated', 'ociparse()', 30];
+        }
+
         [$exit, $output, $messages] = $this->runPhpStanJson([
             PHP_BINARY,
             $this->root() . '/vendor/bin/phpstan',
@@ -705,26 +723,25 @@ final class PresetsTest extends TestCase
         ], $this->root() . '/tests/fixtures/laravel');
 
         $this->assertNotSame(0, $exit, $output);
-        $this->assertSame(
-            [
-                ['pinstripe.banned.joinedSql', 'PDO::query()', 22],
-                ['pinstripe.banned.joinedSql', 'PDO::prepare()', 23],
-                ['pinstripe.banned.joinedSql', 'PDO::exec()', 24],
-                ['pinstripe.banned.joinedSql', 'PDO::query()', 25],
-                ['pinstripe.banned.joinedSql', 'mysqli::query()', 26],
-                ['pinstripe.banned.joinedSql', 'mysqli::prepare()', 27],
-                ['pinstripe.banned.joinedSql', 'mysqli_query()', 28],
-                ['pinstripe.banned.joinedSql', 'oci_parse()', 29],
-                ['pinstripe.banned.joinedSql', 'ociparse()', 30],
-            ],
-            array_map(
-                static fn (array $message): array => [$message[0], (string) preg_replace('/^Calling (\S+) is forbidden.*$/s', '$1', $message[1]), $message[2]],
-                $messages
-            ),
-            $output
-        );
+        $reported = array_map(
+            static function (array $message): array {
+                $name = $message[0] === 'function.deprecated'
+                    ? (string) preg_replace('/^Call to deprecated function (\w+)\(.*$/s', '$1()', $message[1])
+                    : (string) preg_replace('/^Calling (\S+) is forbidden.*$/s', '$1', $message[1]);
 
-        foreach ($messages as [, $message]) {
+                return [$message[0], $name, $message[2]];
+            },
+            $messages
+        );
+        sort($expected);
+        sort($reported);
+        $this->assertSame($expected, $reported, $output);
+
+        foreach ($messages as [$identifier, $message]) {
+            if ($identifier === 'function.deprecated') {
+                $this->assertStringContainsString('Call to deprecated function ociparse()', $message);
+                continue;
+            }
             $this->assertStringContainsString('is forbidden, it runs SQL joined from strings', $message);
             $this->assertStringContainsString('; ', $message, 'a ban message says what to use instead after the reason');
             $this->assertStringEndsWith('(OWASP A05:2025 Injection).', $message);
