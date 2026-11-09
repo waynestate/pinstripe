@@ -140,7 +140,7 @@ DB::select('select * from users where id = ?', [$id]);
 <pre tabindex="0"><code class="language-php">$pdo-&gt;query('SELECT * FROM users WHERE id = ' . $id);                 // pinstripe.banned.joinedSql
 DB::select(&quot;select * from users where id = {$id}&quot;);                 // pinstripe.banned.joinedSql
 </code></pre>
-<p>On PHP 8.4 and newer, <code>ociparse()</code> is also reported as deprecated, whatever the SQL looks like, and the fix is <code>oci_parse()</code>.</p>
+<p><code>ociparse()</code> is also reported as deprecated (<code>function.deprecated</code>) on every PHP version Pinstripe supports, whatever the SQL looks like, and the fix is <code>oci_parse()</code>.</p>
 <p>Laravel already types <code>DB::raw()</code>, <code>DB::unprepared()</code> and the query builder's <code>whereRaw()</code>, <code>selectRaw()</code>, <code>orderByRaw()</code> and other raw methods as <code>literal-string</code>, so PHPStan reports a joined string there by itself, as <code>argument.type</code>; Pinstripe covers the connection calls Laravel leaves as plain <code>string</code>. The query builder's own <code>insert()</code>, <code>update()</code>, <code>delete()</code> and <code>select()</code> take arrays and column names, not SQL, and are not touched.</p>
 <p>SQL that is safe but not a literal (read from a <code>.sql</code> file, or returned by a helper) can say so, or the call can keep a reasoned ignore. An older app with many joined queries can baseline the rest while it binds them, since a baseline only shrinks.</p>
 <ul>

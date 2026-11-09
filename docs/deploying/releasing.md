@@ -7,8 +7,8 @@ description: How Pinstripe is released.
 
 This page sets out the steps to release Pinstripe, from the CHANGELOG to the npm publish.
 
-1. Move the lines under `## Unreleased` in `CHANGELOG.md` to a new `## X.Y.Z (YYYY-MM-DD)` heading. Bump `package.json` `version` to X.Y.Z in the same release commit (a test fails otherwise), then tag, then `npm publish --access public` (needs a maintainer's npm 2FA).
-2. Set the same version in `package.json`.
+1. Move the lines under `## Unreleased` in `CHANGELOG.md` to a new `## X.Y.Z (YYYY-MM-DD)` heading.
+2. Set the same version in `package.json`, in the same release commit: `tests/PackageVersionTest.php` fails otherwise.
 3. `composer ci` and `npm test` green locally, then both pipelines green for that commit.
 4. Run a secrets scan of the history and check that nothing internal is in the tree.
 5. Tag `X.Y.Z` (no `v`) on git.wayne.edu. The push mirror carries the tag to GitHub, and Packagist picks it up from there.
@@ -21,7 +21,7 @@ This page sets out the steps to release Pinstripe, from the CHANGELOG to the npm
    npm publish --access public
    ```
 
-   `npm pack --dry-run` should list only `eslint/`, `prettier/`, `README.md` and `package.json`. Publishing cannot be undone, so check the version first with `npm view @waynestate/pinstripe version`.
+   `npm pack --dry-run` should list only `eslint/`, `prettier/`, `LICENSE`, `README.md` and `package.json`. Publishing cannot be undone, so check the version first with `npm view @waynestate/pinstripe version`.
 7. A release needs a maintainer's approval. Never move or delete a published tag.
 
 > [!WARNING]

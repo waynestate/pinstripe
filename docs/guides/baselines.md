@@ -9,6 +9,22 @@ Keep a PHPStan baseline from growing by counting it and failing the build the mo
 
 Pinstripe ships `pinstripe-baseline`, one PHP command that runs on every OS, to keep that promise. It reads both the NEON baseline and the PHP format (`phpstan-baseline.php`).
 
+## Opt in first
+
+A baseline is only for apps adopting Pinstripe late; new apps never set it. The app opts in from its own `composer.json`:
+
+```json
+{
+    "extra": {
+        "pinstripe": {
+            "legacy": true
+        }
+    }
+}
+```
+
+Every command checks the flag before it reads the baseline. Without it, `pinstripe-baseline` exits 2 and says how to add it. In a monorepo, point the command at another composer.json with `--composer=<path>` (default: `composer.json` in the current working directory).
+
 ## Count the baseline
 
 ```

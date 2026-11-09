@@ -11,8 +11,8 @@ changes here are small, tested, and announced.
   run unless the app's composer.json carries `extra.pinstripe.legacy: true`).
 - `@waynestate/pinstripe` on npm: the ESLint presets in `eslint/` and the Prettier config in `prettier/`.
 - Runtime dependencies (Composer): `laravel/pint`, `phpstan/phpstan`, `phpstan/extension-installer`,
-  `phpstan/phpstan-strict-rules`, `phpstan/phpstan-deprecation-rules`, `nette/neon`. Larastan and Rector are
-  suggested. npm peers: `eslint` and `prettier`; Node 22.13 or newer.
+  `phpstan/phpstan-strict-rules`, `phpstan/phpstan-deprecation-rules`, `spaze/phpstan-disallowed-calls` (the
+  banned calls), `nette/neon`. Larastan and Rector are suggested. npm peers: `eslint` and `prettier`; Node 22.13 or newer.
 - Presets follow the stack's rules: Pint `laravel` for Laravel apps, `per` for raw PHP and framework-free packages;
   PHPStan level 8 for new code, with baselines for existing apps that may only shrink.
 - **Who uses it:** the other stack packages as a dev dependency, and apps.
@@ -38,18 +38,20 @@ With only Docker:
 docker run --rm -v "${PWD}:/app" -w /app composer:2.10.3 sh -c "composer install --no-interaction && composer ci"
 ```
 
-`composer ci` runs `composer validate --strict`, PHPUnit and `composer audit`. The PHPUnit suite is the real check:
-it installs fixture apps and runs Pint and PHPStan with each preset against planted code, so a preset that
+`composer ci` runs `composer validate --strict`, PHPUnit, the agent-ready check (`php bin/agent-ready.php --check`),
+`composer audit` and the docs check (`php bin/docs-site.php --check`). The PHPUnit suite is the real check:
+it installs fixture apps and runs Pint, PHPStan and Rector with each preset against planted code, so a preset that
 stops catching something fails a test. `npm test` (`node --test`) covers the JS presets, and both pipelines run
-it on Node 22, so a broken ESLint or Prettier preset fails the build too.
+it on Node 22, 24 and 26, so a broken ESLint or Prettier preset fails the build too.
 
 ## CI
 
-- **GitLab:** Preflight's `php-test` (PHP 8.3, 8.4, 8.5) and `composer-audit` components, plus `composer-ci` and
-  `npm-test` (Node 22) jobs.
-- **GitHub:** `.github/workflows/ci.yml` calls Preflight's reusable workflow with `composer ci`, and runs
-  `npm ci` then `npm test` in a `node:22` container.
-- Green means `composer ci` passed on all three PHP versions and `npm test` passed on Node 22, on both.
+- **GitLab:** Preflight's `php-test` (PHP 8.3, 8.4, 8.5), `composer-audit`, `proctor` (on `deploy/`) and `a11y`
+  (on `site/`) components, pinned to 0.4.0, plus `composer-ci`, `npm-test` (Node 22, 24 and 26) and
+  `wayneui-copies` jobs.
+- **GitHub:** `.github/workflows/ci.yml` calls Preflight's reusable workflow (0.1.4) with `composer ci`, and runs
+  `npm ci` then `npm test` in `node:22`, `node:24` and `node:26` containers.
+- Green means `composer ci` passed on all three PHP versions and `npm test` passed on Node 22, 24 and 26, on both.
 
 ## Changing a preset
 
@@ -66,8 +68,9 @@ it on Node 22, so a broken ESLint or Prettier preset fails the build too.
 
 ## Releasing
 
-1. Move the lines under `## Unreleased` in `CHANGELOG.md` to a new `## X.Y.Z (YYYY-MM-DD)` heading. Bump `package.json` `version` to X.Y.Z in the same release commit (a test fails otherwise), then tag, then `npm publish --access public` (needs a maintainer's npm 2FA).
-2. Set the same version in `package.json`.
+1. Move the lines under `## Unreleased` in `CHANGELOG.md` to a new `## X.Y.Z (YYYY-MM-DD)` heading.
+2. Set the same version in `package.json`, in the same release commit: `tests/PackageVersionTest.php` fails
+   otherwise.
 3. `composer ci` and `npm test` green locally, then both pipelines green for that commit.
 4. Run a secrets scan of the history and check that nothing internal is in the tree.
 5. Tag `X.Y.Z` (no `v`) on git.wayne.edu. The push mirror carries the tag to GitHub, and Packagist picks it up from there.
@@ -79,7 +82,7 @@ it on Node 22, so a broken ESLint or Prettier preset fails the build too.
    npm pack --dry-run
    npm publish --access public
    ```
-   `npm pack --dry-run` should list only `eslint/`, `prettier/`, `README.md` and `package.json`. Publishing cannot be
+   `npm pack --dry-run` should list only `eslint/`, `prettier/`, `LICENSE`, `README.md` and `package.json`. Publishing cannot be
    undone, so check the version first with `npm view @waynestate/pinstripe version`.
 7. A release needs a maintainer's approval. Never move or delete a published tag.
 

@@ -166,8 +166,8 @@ Proven on Laravel: `composer ci` lints a minimal Laravel 13 app (`tests/fixtures
 passing. A smaller fixture (`tests/fixtures/laravel`) proves the preset really loads Larastan: it plants an
 undefined Eloquent property that only Larastan reports, and a clean twin it leaves alone. The combined fixture
 `tests/fixtures/laravel-vue` is one app tree with both PHP and Vue files, with `resources/js` beside `app/`.
-`composer ci` lints its PHP side with Pint and PHPStan and its Vue side with ESLint and Prettier on every run,
-with one planted PHP error and two planted Vue defects that each preset must report.
+`composer ci` lints its PHP side with Pint and PHPStan, and `npm test` lints its Vue side with ESLint and Prettier,
+on every run, with one planted PHP error and two planted Vue defects that each preset must report.
 
 ## Use it for Vue
 
@@ -575,7 +575,7 @@ The guard is proven, not claimed: `tests/js/npm-hardening.test.mjs` installs a l
 
 ## Coming next
 
-Nothing on the cutting table right now: the banned calls link to their CREED rule, and the PHP floor comes from CREED through PROCTOR (D-073). Preflight's pint, phpstan and eslint jobs already run your app's Pinstripe config.
+Nothing on the cutting table right now: the banned calls link to their CREED rule, and the PHP floor comes from CREED through PROCTOR. Preflight's pint, phpstan and eslint jobs already run your app's Pinstripe config.
 
 ## The cast
 

@@ -150,8 +150,8 @@ Proven on Laravel: `composer ci` lints a minimal Laravel 13 app (`tests/fixtures
 passing. A smaller fixture (`tests/fixtures/laravel`) proves the preset really loads Larastan: it plants an
 undefined Eloquent property that only Larastan reports, and a clean twin it leaves alone. The combined fixture
 `tests/fixtures/laravel-vue` is one app tree with both PHP and Vue files, with `resources/js` beside `app/`.
-`composer ci` lints its PHP side with Pint and PHPStan and its Vue side with ESLint and Prettier on every run,
-with one planted PHP error and two planted Vue defects that each preset must report.
+`composer ci` lints its PHP side with Pint and PHPStan, and `npm test` lints its Vue side with ESLint and Prettier,
+on every run, with one planted PHP error and two planted Vue defects that each preset must report.
 
 ### Use it for Vue
 
@@ -559,7 +559,7 @@ The guard is proven, not claimed: `tests/js/npm-hardening.test.mjs` installs a l
 
 ### Coming next
 
-Nothing on the cutting table right now: the banned calls link to their CREED rule, and the PHP floor comes from CREED through PROCTOR (D-073). Preflight's pint, phpstan and eslint jobs already run your app's Pinstripe config.
+Nothing on the cutting table right now: the banned calls link to their CREED rule, and the PHP floor comes from CREED through PROCTOR. Preflight's pint, phpstan and eslint jobs already run your app's Pinstripe config.
 
 ### The cast
 
@@ -1097,6 +1097,7 @@ All notable changes to Pinstripe are documented here.
 
 - Changed: the deploy kit is Squire 0.10.0 (was 0.7.1): release.sh keeps Composer and npm download caches in the app folder and the gate takes SQUIRE_PHP_RUNTIME; the compose file, health.php and .env.squire.example follow the template, and the portable image files are added (build.sh keeps its deliberate SQUIRE_BUILD_REVISION=2 marker).
 - Docs: every install line says `^0.3` (it said `^0.1`, which stops at 0.1.4), with the one `composer config repositories` line that installs 0.3.0 from git.wayne.edu while Packagist's GitHub mirror trails the release; the npm notes say the ESLint and Prettier presets have not changed since 0.1.4. The front page drops its "0.1.4 on Packagist and npm" note and a "coming soon" chip for the CREED PHP floor (built in 0.2.0), keeps a Docs link in the header at phone width, and gains House rules: a notice of the banned call families with their OWASP tags, struck through in chalk and stamped as they scroll in (already struck and stamped with reduced motion).
+- Docs: truth pass. The `laravel-vue` fixture's Vue side runs under `npm test`, not `composer ci` (README, Laravel guide); MAINTAINING.md and Contributing list all five `composer ci` steps, the Node 22, 24 and 26 matrix, every CI component and job, and `spaze/phpstan-disallowed-calls` among the runtime dependencies; the release steps no longer say to set the version twice, and `npm pack` lists `LICENSE` too; Banned calls says `ociparse()` is reported as deprecated on every supported PHP, not only 8.4 and newer; the Baselines guide gains the `legacy` opt-in and `--composer=<path>`; the Vue guide covers the error-level presets and their `-warn` twins; Upgrading 0.1.3 no longer lists the docs site (it shipped in 0.1.4); and BEST_PRACTICES.md marks three rows proven in one direction only (`pint/laravel.json`, `pint/laravel-strict.json`, ESLint GitLab output) as Checked, a status it now defines.
 
 ### 0.3.0 (2026-11-09)[#](https://pinstripe.apps.wayne.edu/docs/changelog.html#0-3-0-2026-11-09)
 
@@ -1217,13 +1218,13 @@ With only Docker:
 docker run --rm -v "${PWD}:/app" -w /app composer:2.10.3 sh -c "composer install --no-interaction && composer ci"
 ```
 
-`composer ci` runs `composer validate --strict`, PHPUnit and `composer audit`. The PHPUnit suite is the real check: it installs fixture apps and runs Pint and PHPStan with each preset against planted code, so a preset that stops catching something fails a test. `npm test` (`node --test`) covers the JS presets, and both pipelines run it on Node 22, so a broken ESLint or Prettier preset fails the build too.
+`composer ci` runs `composer validate --strict`, PHPUnit, the agent-ready check (`php bin/agent-ready.php --check`), `composer audit` and the docs check (`php bin/docs-site.php --check`). The PHPUnit suite is the real check: it installs fixture apps and runs Pint, PHPStan and Rector with each preset against planted code, so a preset that stops catching something fails a test. `npm test` (`node --test`) covers the JS presets, and both pipelines run it on Node 22, 24 and 26, so a broken ESLint or Prettier preset fails the build too.
 
 ### CI[#](https://pinstripe.apps.wayne.edu/docs/contributing.html#ci)
 
-- **GitLab:** Preflight's `php-test` (PHP 8.3, 8.4, 8.5) and `composer-audit` components, plus `composer-ci` and `npm-test` (Node 22) jobs.
-- **GitHub:** `.github/workflows/ci.yml` calls Preflight's reusable workflow with `composer ci`, and runs `npm ci` then `npm test` in a `node:22` container.
-- Green means `composer ci` passed on all three PHP versions and `npm test` passed on Node 22, on both.
+- **GitLab:** Preflight's `php-test` (PHP 8.3, 8.4, 8.5), `composer-audit`, `proctor` (on `deploy/`) and `a11y` (on `site/`) components, pinned to 0.4.0, plus `composer-ci`, `npm-test` (Node 22, 24 and 26) and `wayneui-copies` jobs.
+- **GitHub:** `.github/workflows/ci.yml` calls Preflight's reusable workflow (0.1.4) with `composer ci`, and runs `npm ci` then `npm test` in `node:22`, `node:24` and `node:26` containers.
+- Green means `composer ci` passed on all three PHP versions and `npm test` passed on Node 22, 24 and 26, on both.
 
 ### Changing a preset[#](https://pinstripe.apps.wayne.edu/docs/contributing.html#changing-a-preset)
 
@@ -1250,8 +1251,8 @@ Source: https://pinstripe.apps.wayne.edu/docs/deploying/releasing.html
 
 This page sets out the steps to release Pinstripe, from the CHANGELOG to the npm publish.
 
-1. Move the lines under `## Unreleased` in `CHANGELOG.md` to a new `## X.Y.Z (YYYY-MM-DD)` heading. Bump `package.json` `version` to X.Y.Z in the same release commit (a test fails otherwise), then tag, then `npm publish --access public` (needs a maintainer's npm 2FA).
-2. Set the same version in `package.json`.
+1. Move the lines under `## Unreleased` in `CHANGELOG.md` to a new `## X.Y.Z (YYYY-MM-DD)` heading.
+2. Set the same version in `package.json`, in the same release commit: `tests/PackageVersionTest.php` fails otherwise.
 3. `composer ci` and `npm test` green locally, then both pipelines green for that commit.
 4. Run a secrets scan of the history and check that nothing internal is in the tree.
 5. Tag `X.Y.Z` (no `v`) on git.wayne.edu. The push mirror carries the tag to GitHub, and Packagist picks it up from there.
@@ -1262,7 +1263,7 @@ This page sets out the steps to release Pinstripe, from the CHANGELOG to the npm
    npm pack --dry-run
    npm publish --access public
    ```
-   `npm pack --dry-run` should list only `eslint/`, `prettier/`, `README.md` and `package.json`. Publishing cannot be undone, so check the version first with `npm view @waynestate/pinstripe version`.
+   `npm pack --dry-run` should list only `eslint/`, `prettier/`, `LICENSE`, `README.md` and `package.json`. Publishing cannot be undone, so check the version first with `npm view @waynestate/pinstripe version`.
 7. A release needs a maintainer's approval. Never move or delete a published tag.
 
 Warning
@@ -1328,6 +1329,22 @@ Source: https://pinstripe.apps.wayne.edu/docs/guides/baselines.html
 Keep a PHPStan baseline from growing by counting it and failing the build the moment it does.
 
 Pinstripe ships `pinstripe-baseline`, one PHP command that runs on every OS, to keep that promise. It reads both the NEON baseline and the PHP format (`phpstan-baseline.php`).
+
+### Opt in first[#](https://pinstripe.apps.wayne.edu/docs/guides/baselines.html#opt-in-first)
+
+A baseline is only for apps adopting Pinstripe late; new apps never set it. The app opts in from its own `composer.json`:
+
+```json
+{
+    "extra": {
+        "pinstripe": {
+            "legacy": true
+        }
+    }
+}
+```
+
+Every command checks the flag before it reads the baseline. Without it, `pinstripe-baseline` exits 2 and says how to add it. In a monorepo, point the command at another composer.json with `--composer=<path>` (default: `composer.json` in the current working directory).
 
 ### Count the baseline[#](https://pinstripe.apps.wayne.edu/docs/guides/baselines.html#count-the-baseline)
 
@@ -1413,7 +1430,7 @@ Every cut also fails on `eval()`, `extract()`, `var_dump()`, `dd()`, `dump()` an
 
 ### Proven on Laravel[#](https://pinstripe.apps.wayne.edu/docs/guides/laravel.html#proven-on-laravel)
 
-`composer ci` lints a minimal Laravel 13 app (`tests/fixtures/laravel-app`) with `pint/laravel.json` and analyzes it with `phpstan/laravel.neon` on every run, and fails if the app stops passing. A smaller fixture (`tests/fixtures/laravel`) proves the preset really loads Larastan: it plants an undefined Eloquent property that only Larastan reports, and a clean twin it leaves alone. The combined fixture `tests/fixtures/laravel-vue` is one app tree with both PHP and Vue files, with `resources/js` beside `app/`. `composer ci` lints its PHP side with Pint and PHPStan and its Vue side with ESLint and Prettier on every run, with one planted PHP error and two planted Vue defects that each preset must report.
+`composer ci` lints a minimal Laravel 13 app (`tests/fixtures/laravel-app`) with `pint/laravel.json` and analyzes it with `phpstan/laravel.neon` on every run, and fails if the app stops passing. A smaller fixture (`tests/fixtures/laravel`) proves the preset really loads Larastan: it plants an undefined Eloquent property that only Larastan reports, and a clean twin it leaves alone. The combined fixture `tests/fixtures/laravel-vue` is one app tree with both PHP and Vue files, with `resources/js` beside `app/`. `composer ci` lints its PHP side with Pint and PHPStan, and `npm test` lints its Vue side with ESLint and Prettier, on every run, with one planted PHP error and two planted Vue defects that each preset must report.
 
 ### Related[#](https://pinstripe.apps.wayne.edu/docs/guides/laravel.html#related)
 
@@ -1696,7 +1713,9 @@ Add scripts that run on every OS:
 }
 ```
 
-`npm run lint` fails on style and accessibility. `npm run format` fixes the layout. The preset is the off-the-rack suit: it fits every app, and you only add your own cufflinks.
+`npm run lint` fails on style and accessibility, and on every Vue and accessibility finding: where the plugins' recommended configs report a rule as a warning, Pinstripe reports it as an error, so the editor, a local run and CI all agree on what fails. `npm run format` fixes the layout.
+
+An app that cannot fix every finding in one cut can spread the `-warn` twin for a while (`@waynestate/pinstripe/eslint/javascript-warn` or `@waynestate/pinstripe/eslint/typescript-warn`): the same rules with the plugins' original severities, so findings that were warnings stay warnings. Switch back to the strict preset once the codebase is clean. The preset is the off-the-rack suit: it fits every app, and you only add your own cufflinks.
 
 Note
 
@@ -1813,7 +1832,7 @@ $pdo->query('SELECT * FROM users WHERE id = ' . $id);                 // pinstri
 DB::select("select * from users where id = {$id}");                 // pinstripe.banned.joinedSql
 ```
 
-On PHP 8.4 and newer, `ociparse()` is also reported as deprecated, whatever the SQL looks like, and the fix is `oci_parse()`.
+`ociparse()` is also reported as deprecated (`function.deprecated`) on every PHP version Pinstripe supports, whatever the SQL looks like, and the fix is `oci_parse()`.
 
 Laravel already types `DB::raw()`, `DB::unprepared()` and the query builder's `whereRaw()`, `selectRaw()`, `orderByRaw()` and other raw methods as `literal-string`, so PHPStan reports a joined string there by itself, as `argument.type`; Pinstripe covers the connection calls Laravel leaves as plain `string`. The query builder's own `insert()`, `update()`, `delete()` and `select()` take arrays and column names, not SQL, and are not touched.
 
@@ -1893,16 +1912,16 @@ This page lists every rule Pinstripe holds itself to and the tests that prove ea
 
 How Pinstripe keeps its own promises: every preset is enforced by a test that runs the real tool against a fixture, so a preset that stops working fails `composer ci` here instead of failing a developer's app. A preset without a test is a suit without a mirror: you cannot tell when it has gone wrinkled.
 
-A preset is **Enforced** when a test asserts both directions: a clean fixture passes, and a deliberately broken one is caught. The PHP presets run under `composer ci` (PHPUnit); the JavaScript presets run under `npm test`. Both run in CI on GitLab and GitHub, so a preset that stops working fails the pipeline before it reaches an app.
+A preset is **Enforced** when a test asserts both directions: a clean fixture passes, and a deliberately broken one is caught. It is **Checked** when a test runs the real tool in one direction only: the clean side passes, or the broken side is caught, but not both yet. The PHP presets run under `composer ci` (PHPUnit); the JavaScript presets run under `npm test`. Both run in CI on GitLab and GitHub, so a preset that stops working fails the pipeline before it reaches an app.
 
 | Preset | Tool | Status | Enforced by |
 | --- | --- | --- | --- |
 | `pint/per.json` | Pint | Enforced | `PresetsTest::testPintPerPresetAcceptsTheCleanFixture`, `PresetsTest::testPintPerPresetRejectsTheMessyFixture` |
 | `Pint GitLab output` | Pint | Enforced | `PresetsTest::testPintGitlabFormatReportsTheMessyFixtureAsCodeQualityJson`, `PresetsTest::testPintGitlabFormatIsAnEmptyArrayForTheCleanFixture` |
-| `ESLint GitLab output` | ESLint | Enforced | `tests/js/gitlab-formatter.test.mjs` |
-| `pint/laravel.json` | Pint | Enforced | `PresetsTest::testPintLaravelPresetAcceptsTheLaravelAppFixture` |
+| `ESLint GitLab output` | ESLint | Checked | `tests/js/gitlab-formatter.test.mjs` |
+| `pint/laravel.json` | Pint | Checked | `PresetsTest::testPintLaravelPresetAcceptsTheLaravelAppFixture` |
 | `pint/per-strict.json` | Pint | Enforced | `PresetsTest::testPintPerStrictPresetAcceptsTheStrictTypesCleanFixture`, `PresetsTest::testPintPerStrictPresetRejectsTheStrictTypesMissingFixture` |
-| `pint/laravel-strict.json` | Pint | Enforced | `PresetsTest::testPintLaravelStrictPresetRejectsTheStrictTypesMissingFixture` |
+| `pint/laravel-strict.json` | Pint | Checked | `PresetsTest::testPintLaravelStrictPresetRejectsTheStrictTypesMissingFixture` |
 | `phpstan/raw.neon` | PHPStan | Enforced | `PresetsTest::testPhpStanRawConfigAcceptsTheCleanFixture`, `PresetsTest::testPhpStanRawConfigReportsTheNullBug` |
 | `phpstan/strict.neon` | PHPStan + strict-rules | Enforced | `PresetsTest::testPhpStanStrictConfigAcceptsTheCleanFixture`, `PresetsTest::testPhpStanStrictConfigReportsTheLooseComparison` |
 | `phpstan/disallowed.neon` (banned calls) | PHPStan + disallowed-calls | Enforced | `PresetsTest::testPhpStanReportsEveryBannedCall`, `PresetsTest::testPhpStanAcceptsMethodsThatShareTheBannedNames`, `PresetsTest::testPhpStanRawConfigAcceptsABannedCallKeptWithAReason`, `PresetsTest::testLaravelPresetReportsTlsVerificationTurnedOff` |
@@ -2121,7 +2140,7 @@ A stricter preset breaks consumers' builds. Pinstripe ships such a change in a m
 
 ### 0.1.3 (2026-11-03)[#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#0-1-3-2026-11-03)
 
-No breaking change. The one change that touches your app is that the install instructions now include `composer config allow-plugins.phpstan/extension-installer true`, so a non-interactive install works. The remaining items (the docs site, the ADR, the Node 22, 24 and 26 test matrix, the `laravel-vue` fixture, and the CI and deploy pins) are internal to Pinstripe.
+No breaking change. The one change that touches your app is that the install instructions now include `composer config allow-plugins.phpstan/extension-installer true`, so a non-interactive install works. The remaining items (the ADR, the Node 22, 24 and 26 test matrix, the `laravel-vue` fixture, and the CI and deploy pins) are internal to Pinstripe.
 
 ### 0.1.2[#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#0-1-2)
 

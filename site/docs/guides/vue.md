@@ -53,7 +53,9 @@ Add scripts that run on every OS:
 }
 ```
 
-`npm run lint` fails on style and accessibility. `npm run format` fixes the layout. The preset is the off-the-rack suit: it fits every app, and you only add your own cufflinks.
+`npm run lint` fails on style and accessibility, and on every Vue and accessibility finding: where the plugins' recommended configs report a rule as a warning, Pinstripe reports it as an error, so the editor, a local run and CI all agree on what fails. `npm run format` fixes the layout.
+
+An app that cannot fix every finding in one cut can spread the `-warn` twin for a while (`@waynestate/pinstripe/eslint/javascript-warn` or `@waynestate/pinstripe/eslint/typescript-warn`): the same rules with the plugins' original severities, so findings that were warnings stay warnings. Switch back to the strict preset once the codebase is clean. The preset is the off-the-rack suit: it fits every app, and you only add your own cufflinks.
 
 Note
 

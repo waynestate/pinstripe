@@ -55,7 +55,7 @@ $pdo->query('SELECT * FROM users WHERE id = ' . $id);                 // pinstri
 DB::select("select * from users where id = {$id}");                 // pinstripe.banned.joinedSql
 ```
 
-On PHP 8.4 and newer, `ociparse()` is also reported as deprecated, whatever the SQL looks like, and the fix is `oci_parse()`.
+`ociparse()` is also reported as deprecated (`function.deprecated`) on every PHP version Pinstripe supports, whatever the SQL looks like, and the fix is `oci_parse()`.
 
 Laravel already types `DB::raw()`, `DB::unprepared()` and the query builder's `whereRaw()`, `selectRaw()`, `orderByRaw()` and other raw methods as `literal-string`, so PHPStan reports a joined string there by itself, as `argument.type`; Pinstripe covers the connection calls Laravel leaves as plain `string`. The query builder's own `insert()`, `update()`, `delete()` and `select()` take arrays and column names, not SQL, and are not touched.
 

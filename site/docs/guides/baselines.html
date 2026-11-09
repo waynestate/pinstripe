@@ -42,6 +42,17 @@
       <article class="docs-article"><h1 id="baselines-only-shrink">Baselines only shrink<a class="docs-heading-link" aria-label="Link to this section" href="#baselines-only-shrink">#</a></h1>
 <p>Keep a PHPStan baseline from growing by counting it and failing the build the moment it does.</p>
 <p>Pinstripe ships <code>pinstripe-baseline</code>, one PHP command that runs on every OS, to keep that promise. It reads both the NEON baseline and the PHP format (<code>phpstan-baseline.php</code>).</p>
+<h2 id="opt-in-first">Opt in first<a class="docs-heading-link" aria-label="Link to this section" href="#opt-in-first">#</a></h2>
+<p>A baseline is only for apps adopting Pinstripe late; new apps never set it. The app opts in from its own <code>composer.json</code>:</p>
+<pre tabindex="0"><code class="language-json">{
+    &quot;extra&quot;: {
+        &quot;pinstripe&quot;: {
+            &quot;legacy&quot;: true
+        }
+    }
+}
+</code></pre>
+<p>Every command checks the flag before it reads the baseline. Without it, <code>pinstripe-baseline</code> exits 2 and says how to add it. In a monorepo, point the command at another composer.json with <code>--composer=&lt;path&gt;</code> (default: <code>composer.json</code> in the current working directory).</p>
 <h2 id="count-the-baseline">Count the baseline<a class="docs-heading-link" aria-label="Link to this section" href="#count-the-baseline">#</a></h2>
 <pre tabindex="0"><code>vendor/bin/pinstripe-baseline count phpstan-baseline.neon
 </code></pre>
@@ -71,7 +82,7 @@
     </main>
     <nav class="docs-pager" aria-label="Pages"><a class="docs-pager__link" href="../../docs/guides/adopting.html"><span class="docs-pager__dir">Previous</span><span class="docs-pager__title">Adopting on an existing app</span></a><a class="docs-pager__link docs-pager__link--next" href="../../docs/reference/tested-with.html"><span class="docs-pager__dir">Next</span><span class="docs-pager__title">Tested with and tool floors</span></a></nav>
   </div>
-  <nav class="docs-toc" aria-label="On this page"><h2 class="docs-toc__title">On this page</h2><ul class="docs-toc__list"><li class="docs-toc__item"><a href="#count-the-baseline">Count the baseline</a></li><li class="docs-toc__item"><a href="#check-against-a-limit">Check against a limit</a></li><li class="docs-toc__item"><a href="#check-against-the-target-branch">Check against the target branch</a></li><li class="docs-toc__item"><a href="#the-policy">The policy</a></li><li class="docs-toc__item"><a href="#related">Related</a></li></ul></nav>
+  <nav class="docs-toc" aria-label="On this page"><h2 class="docs-toc__title">On this page</h2><ul class="docs-toc__list"><li class="docs-toc__item"><a href="#opt-in-first">Opt in first</a></li><li class="docs-toc__item"><a href="#count-the-baseline">Count the baseline</a></li><li class="docs-toc__item"><a href="#check-against-a-limit">Check against a limit</a></li><li class="docs-toc__item"><a href="#check-against-the-target-branch">Check against the target branch</a></li><li class="docs-toc__item"><a href="#the-policy">The policy</a></li><li class="docs-toc__item"><a href="#related">Related</a></li></ul></nav>
 </div>
 <footer class="docs-footer">
   <span>Documents Pinstripe <span data-docs-version>0.3.0</span></span>
