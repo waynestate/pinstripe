@@ -223,6 +223,7 @@ parameters:
             method: 'Illuminate\Http\Client\PendingRequest::withoutVerifying()'
             message: 'it turns off TLS certificate checks, so anyone on the network path can read or change the traffic; keep verification on, and for a private CA pass its bundle with withOptions and the verify option (OWASP A02:2025 Security Misconfiguration)'
             errorIdentifier: 'pinstripe.banned.withoutVerifying'
+            errorTip: 'See https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html and the CREED rule at https://creed.apps.wayne.edu/handbook/code.html#banned-patterns'
         -
             method: 'Illuminate\Http\Client\PendingRequest::withOptions()'
             message: 'it turns off TLS certificate checks (the verify option set to false), so anyone on the network path can read or change the traffic; keep verification on, and for a private CA set verify to the path of its bundle (OWASP A02:2025 Security Misconfiguration)'

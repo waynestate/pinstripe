@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace WayneState\Pinstripe\Tests;
 
+use Nette\Neon\Neon;
 use PHPUnit\Framework\TestCase;
 use WayneState\Pinstripe\PHPStan\CurlVerifyOffRule;
 
 /**
  * Keeps every banned call's errorTip pointing at both the Pinstripe page
  * and the CREED handbook rule it enforces, and every identifier inside the
- * pinstripe.banned. namespace. Plain string work over the NEON text; no
- * parser needed.
+ * pinstripe.banned. namespace. Mostly plain string work over the NEON text;
+ * nette/neon reads it once to prove no entry goes without its tip.
  */
 final class BannedCallLinksTest extends TestCase
 {
@@ -29,6 +30,31 @@ final class BannedCallLinksTest extends TestCase
             $this->assertStringContainsString(self::PINSTRIPE_PAGE, $tip);
             $this->assertStringContainsString(self::CREED_RULE, $tip);
         }
+    }
+
+    public function testEveryBanCarriesAnIdentifierAndATip(): void
+    {
+        // The line scan above only checks the tips that exist; this reads the
+        // NEON for real, so an entry that forgot its tip (the static
+        // withoutVerifying() entry once did) fails here.
+        $parameters = Neon::decodeFile(dirname(__DIR__) . '/phpstan/disallowed.neon')['parameters'];
+        $bare = [];
+        $count = 0;
+
+        foreach (['disallowedFunctionCalls', 'disallowedMethodCalls', 'disallowedStaticCalls'] as $list) {
+            foreach ($parameters[$list] as $index => $entry) {
+                $count++;
+
+                foreach (['message', 'errorIdentifier', 'errorTip'] as $key) {
+                    if (! is_string($entry[$key] ?? null) || $entry[$key] === '') {
+                        $bare[] = "{$list}[{$index}] has no {$key}";
+                    }
+                }
+            }
+        }
+
+        $this->assertGreaterThanOrEqual(20, $count, 'expected the ban lists in phpstan/disallowed.neon');
+        $this->assertSame([], $bare);
     }
 
     public function testEveryErrorIdentifierStartsWithPinstripeBanned(): void
