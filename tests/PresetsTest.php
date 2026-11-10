@@ -19,6 +19,8 @@ final class PresetsTest extends TestCase
 
     private static ?string $laravelVueDirectory = null;
 
+    private static ?string $rawVueDirectory = null;
+
     public static function tearDownAfterClass(): void
     {
         if (self::$laravelAppDirectory !== null) {
@@ -29,6 +31,11 @@ final class PresetsTest extends TestCase
         if (self::$laravelVueDirectory !== null) {
             self::removeTemporaryFixture(self::$laravelVueDirectory);
             self::$laravelVueDirectory = null;
+        }
+
+        if (self::$rawVueDirectory !== null) {
+            self::removeTemporaryFixture(self::$rawVueDirectory);
+            self::$rawVueDirectory = null;
         }
 
         parent::tearDownAfterClass();
@@ -1341,6 +1348,61 @@ final class PresetsTest extends TestCase
         $this->assertStringContainsString('Access to an undefined property App\Models\Greeting::$audience', $output);
     }
 
+    public function testPintPerPresetAcceptsTheRawVueFixture(): void
+    {
+        $fixture = $this->rawVueFixture();
+
+        // The Vue side of the fixture lives in resources/js and is covered by
+        // the ESLint and Prettier tests; Pint only reads the PHP paths.
+        [$exit, $output] = $this->runInDir([
+            PHP_BINARY,
+            'vendor/bin/pint',
+            '--test',
+            '--config',
+            'vendor/waynestate/pinstripe/pint/per.json',
+            'src',
+        ], $fixture);
+
+        $this->assertSame(0, $exit, $output);
+    }
+
+    public function testPhpStanRawConfigAcceptsTheRawVueFixture(): void
+    {
+        $fixture = $this->rawVueFixture();
+
+        [$exit, $output] = $this->runInDir([
+            PHP_BINARY,
+            'vendor/bin/phpstan',
+            'analyse',
+            '-c',
+            'phpstan.neon',
+            '--no-progress',
+            '--error-format=raw',
+            'src',
+        ], $fixture);
+
+        $this->assertSame(0, $exit, $output);
+    }
+
+    public function testPhpStanRawConfigReportsThePlantedPhpErrorInTheRawVueFixture(): void
+    {
+        $fixture = $this->rawVueFixture();
+
+        [$exit, $output] = $this->runInDir([
+            PHP_BINARY,
+            'vendor/bin/phpstan',
+            'analyse',
+            '-c',
+            'phpstan.neon',
+            '--no-progress',
+            '--error-format=raw',
+            'bad',
+        ], $fixture);
+
+        $this->assertNotSame(0, $exit, $output);
+        $this->assertStringContainsString('Access to an undefined property App\Greeting::$audience', $output);
+    }
+
     public function testLaravelPresetReportsTheUndefinedEloquentProperty(): void
     {
         $fixture = $this->root() . '/tests/fixtures/laravel';
@@ -1589,6 +1651,31 @@ final class PresetsTest extends TestCase
     {
         self::$laravelVueDirectory ??= $this->temporaryConsumerFixture('laravel-vue');
         $fixture = self::$laravelVueDirectory;
+
+        if (!is_file($fixture . '/vendor/autoload.php')) {
+            [$installExit, $installOutput] = $this->runInDir(
+                array_merge($this->composerCommand(), ['update', '--no-interaction', '--no-progress']),
+                $fixture
+            );
+
+            $this->assertSame(0, $installExit, $installOutput);
+        }
+
+        return $fixture;
+    }
+
+    /**
+     * A temporary raw PHP + Vue app fixture, installed on first use.
+     *
+     * Same install story as laravelVueFixture: the fixture's composer.lock is
+     * gitignored, so a fresh checkout needs an `update`, and the vendor
+     * directory is shared by this class's tests and removed by
+     * tearDownAfterClass.
+     */
+    private function rawVueFixture(): string
+    {
+        self::$rawVueDirectory ??= $this->temporaryConsumerFixture('raw-vue');
+        $fixture = self::$rawVueDirectory;
 
         if (!is_file($fixture . '/vendor/autoload.php')) {
             [$installExit, $installOutput] = $this->runInDir(
