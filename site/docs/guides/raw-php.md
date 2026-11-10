@@ -1,6 +1,6 @@
 ---
 title: "Raw PHP apps | Pinstripe docs"
-description: "Use the Pinstripe presets in a raw PHP app, including Pint findings in the merge request."
+description: "Use the Pinstripe presets in a raw PHP app, including Pint and PHPStan findings in the merge request."
 url: https://pinstripe.apps.wayne.edu/docs/guides/raw-php.html
 llms: https://pinstripe.apps.wayne.edu/llms.txt
 generator: Squire agent-ready
@@ -70,15 +70,37 @@ Add a second script that writes the report to a file:
 }
 ```
 
-Point GitLab at the artifact:
+Point GitLab at the artifact, and keep it when the job fails, which is exactly when it has something to show:
 
 ```yaml
 artifacts:
+    when: always
     reports:
         codequality: pint-codequality.json
 ```
 
 `--format=gitlab` writes GitLab's Code Quality JSON and `[]` when the code is clean, and Pinstripe tests both. Chalk marks wash out; these findings stay pinned to the merge request.
+
+## Show PHPStan findings in the merge request[#](https://pinstripe.apps.wayne.edu/docs/guides/raw-php.html#show-phpstan-findings-in-the-merge-request)
+
+PHPStan writes the same report with its own `gitlab` error format:
+
+```json
+{
+    "scripts": {
+        "analyse:gitlab": "phpstan analyse --no-progress --error-format=gitlab > phpstan-codequality.json"
+    }
+}
+```
+
+```yaml
+artifacts:
+    when: always
+    reports:
+        codequality: phpstan-codequality.json
+```
+
+Each finding carries its identifier (`pinstripe.banned.joinedSql`, `argument.type`) as the check name. Pinstripe tests both sides: the raw preset turns the null bug fixture into a non-empty report and the clean fixture into `[]`.
 
 ## Related[#](https://pinstripe.apps.wayne.edu/docs/guides/raw-php.html#related)
 

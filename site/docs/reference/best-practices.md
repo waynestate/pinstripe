@@ -18,6 +18,7 @@ A preset is **Enforced** when a test asserts both directions: a clean fixture pa
 | --- | --- | --- | --- |
 | `pint/per.json` | Pint | Enforced | `PresetsTest::testPintPerPresetAcceptsTheCleanFixture`, `PresetsTest::testPintPerPresetRejectsTheMessyFixture` |
 | `Pint GitLab output` | Pint | Enforced | `PresetsTest::testPintGitlabFormatReportsTheMessyFixtureAsCodeQualityJson`, `PresetsTest::testPintGitlabFormatIsAnEmptyArrayForTheCleanFixture` |
+| `PHPStan GitLab output` | PHPStan | Enforced | `PresetsTest::testPhpStanGitlabFormatReportsTheNullBugAsCodeQualityJson`, `PresetsTest::testPhpStanGitlabFormatIsAnEmptyArrayForTheCleanFixture` |
 | `ESLint GitLab output` | ESLint | Enforced | `tests/js/gitlab-formatter.test.mjs` (`npm test`: the bad fixture gives findings, the clean one an empty report) |
 | `pint/laravel.json` | Pint | Enforced | `PresetsTest::testPintLaravelPresetAcceptsTheLaravelAppFixture`, `PresetsTest::testPintLaravelPresetRejectsTheMessyFixture` |
 | `pint/per-strict.json` | Pint | Enforced | `PresetsTest::testPintPerStrictPresetAcceptsTheStrictTypesCleanFixture`, `PresetsTest::testPintPerStrictPresetRejectsTheStrictTypesMissingFixture` |
@@ -39,7 +40,7 @@ A preset is **Enforced** when a test asserts both directions: a clean fixture pa
 | README "Tool floors" | composer.lock + package-lock.json | Enforced | `ToolFloorsTest::testToolFloorsMatchTheLockFiles` |
 | This page | PHPUnit | Enforced | `BestPracticesTest::testEveryTestNamedHereExists`, `BestPracticesTest::testEveryFileNamedHereExists`, `BestPracticesTest::testEveryRowHasAKnownStatusAndAnEnforcedRowNamesItsTests`, `BestPracticesTest::testTheDocsPageCarriesTheSameTable`, `BestPracticesTest::testTheTallyCountsTheTable` |
 
-Tally: 22 rows, 22 Enforced, 0 Checked.
+Tally: 23 rows, 23 Enforced, 0 Checked.
 
 ## Related[#](https://pinstripe.apps.wayne.edu/docs/reference/best-practices.html#related)
 

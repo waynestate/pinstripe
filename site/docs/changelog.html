@@ -77,6 +77,12 @@
 <li>
 <p>Docs: Banned calls shows the fix for the joined-SQL report older apps meet most: SQL kept in <code>.sql</code> files, read by one helper typed <code>@return literal-string</code> with a single reasoned ignore (its file name is <code>literal-string</code> too, so a request value cannot pick the file). It also says to type a wrapper's SQL parameter <code>literal-string</code> and never baseline it, because a plain-<code>string</code> wrapper is reported once, inside, and hides every caller. Both are proven: new fixtures <code>SqlFiles.php</code> (green in the raw and strict cuts) and <code>JoinedThroughAWrapper.php</code> (each joined caller reported as <code>argument.type</code>, the loose wrapper once), with <code>PresetsTest::testPhpStanAcceptsSqlReadFromFilesThroughATypedWrapper</code> and <code>PresetsTest::testPhpStanReportsSqlJoinedThroughAWrapperAtTheCaller</code>. No rule changed.</p>
 </li>
+<li>
+<p>Added: &quot;Show PHPStan findings in the merge request&quot; (README and the Raw PHP guide): an <code>analyse:gitlab</code> script with PHPStan's own <code>--error-format=gitlab</code>, each finding named by its identifier. New <code>PresetsTest::testPhpStanGitlabFormatReportsTheNullBugAsCodeQualityJson</code> and <code>testPhpStanGitlabFormatIsAnEmptyArrayForTheCleanFixture</code> prove both sides, and BEST_PRACTICES.md gains the row (23 rows, 23 Enforced).</p>
+</li>
+<li>
+<p>Fixed: the Pint, PHPStan and ESLint Code Quality snippets set <code>artifacts: when: always</code>. Without it GitLab keeps a job's artifacts only when the job passes, so a lint job that found something, the one time the report matters, uploaded nothing.</p>
+</li>
 </ul>
 <h2 id="0-3-0-2026-11-09">0.3.0 (2026-11-09)<a class="docs-heading-link" aria-label="Link to this section" href="#0-3-0-2026-11-09">#</a></h2>
 <ul>

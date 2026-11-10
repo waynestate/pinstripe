@@ -28,7 +28,7 @@ Every page below is Markdown. The HTML pages send the same Markdown to a client 
 - [Adopting on an existing app | Pinstripe docs](https://pinstripe.apps.wayne.edu/docs/guides/adopting.md): How to adopt Pinstripe on an existing app, and why ignore comments must say why.
 - [Baselines only shrink | Pinstripe docs](https://pinstripe.apps.wayne.edu/docs/guides/baselines.md): How baselines work in Pinstripe, and why they only shrink.
 - [Laravel apps | Pinstripe docs](https://pinstripe.apps.wayne.edu/docs/guides/laravel.md): Use the Pinstripe presets in a Laravel app.
-- [Raw PHP apps | Pinstripe docs](https://pinstripe.apps.wayne.edu/docs/guides/raw-php.md): Use the Pinstripe presets in a raw PHP app, including Pint findings in the merge request.
+- [Raw PHP apps | Pinstripe docs](https://pinstripe.apps.wayne.edu/docs/guides/raw-php.md): Use the Pinstripe presets in a raw PHP app, including Pint and PHPStan findings in the merge request.
 - [Rector | Pinstripe docs](https://pinstripe.apps.wayne.edu/docs/guides/rector.md): Use the Pinstripe Rector set to modernize code within the current PHP version.
 - [The strict cut | Pinstripe docs](https://pinstripe.apps.wayne.edu/docs/guides/strict-cut.md): What the strict cut adds on top of the base presets.
 - [Require strict types | Pinstripe docs](https://pinstripe.apps.wayne.edu/docs/guides/strict-types.md): How to require declare(strict_types=1) with the Pinstripe presets.

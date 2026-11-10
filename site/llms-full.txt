@@ -94,15 +94,39 @@ Add a second script that writes the report to a file:
 }
 ```
 
-Point GitLab at the artifact:
+Point GitLab at the artifact, and keep it when the job fails, which is exactly when it has something to show:
 
 ```yaml
 artifacts:
+    when: always
     reports:
         codequality: pint-codequality.json
 ```
 
 `--format=gitlab` writes GitLab's Code Quality JSON and `[]` when the code is clean, and Pinstripe tests both. Chalk marks wash out; these findings stay pinned to the merge request.
+
+#### Show PHPStan findings in the merge request
+
+PHPStan writes the same report with its own `gitlab` error format:
+
+```json
+{
+    "scripts": {
+        "analyse:gitlab": "phpstan analyse --no-progress --error-format=gitlab > phpstan-codequality.json"
+    }
+}
+```
+
+```yaml
+artifacts:
+    when: always
+    reports:
+        codequality: phpstan-codequality.json
+```
+
+Each finding carries its identifier (`pinstripe.banned.joinedSql`, `argument.type`) as the check name. Pinstripe tests
+both sides: the raw preset turns the null bug fixture into a non-empty report and the clean fixture into `[]`. A
+fitting note, pinned where the reviewer is already looking.
 
 `composer lint` fails on style. `composer fix` fixes it. Pint's `per` preset is the PER Coding Style, and `tests/fixtures/per` keeps a clean and a messy proof.
 `composer analyse` runs PHPStan at level 8, with deprecation checks too.
@@ -223,10 +247,11 @@ Add a second script that uses the gitlab formatter:
 }
 ```
 
-Point GitLab at the artifact:
+Point GitLab at the artifact, and keep it when the job fails:
 
 ```yaml
 artifacts:
+    when: always
     reports:
         codequality: gl-codequality.json
 ```
@@ -1114,6 +1139,8 @@ All notable changes to Pinstripe are documented here.
 - Added: the three presets the truth pass marked Checked are Enforced again, each now proven in both directions: `PresetsTest::testPintLaravelPresetRejectsTheMessyFixture` (`pint/laravel.json` fails the messy fixture), `PresetsTest::testPintLaravelStrictPresetAcceptsTheStrictTypesLaravelCleanFixture` (`pint/laravel-strict.json` passes a new Laravel-style clean fixture, `tests/fixtures/strict-types/laravel-clean`), and a `gitlab-formatter.test.mjs` case where the clean Vue fixture gives an empty Code Quality report. Two stale comments are fixed: the GitHub workflow names its real Preflight pin (0.1.4, not 0.1.2), and `PresetsTest` says the `ociparse()` deprecation is expected on every PHP version, not only 8.4 and newer.
 - Added: BEST_PRACTICES.md (and its docs page) ends the table with a tally, today 22 rows, 22 Enforced, 0 Checked, and `BestPracticesTest::testTheTallyCountsTheTable` recounts it on every run, so a new row or one slipping back to Checked moves the tally in the same change.
 - Docs: Banned calls shows the fix for the joined-SQL report older apps meet most: SQL kept in `.sql` files, read by one helper typed `@return literal-string` with a single reasoned ignore (its file name is `literal-string` too, so a request value cannot pick the file). It also says to type a wrapper's SQL parameter `literal-string` and never baseline it, because a plain-`string` wrapper is reported once, inside, and hides every caller. Both are proven: new fixtures `SqlFiles.php` (green in the raw and strict cuts) and `JoinedThroughAWrapper.php` (each joined caller reported as `argument.type`, the loose wrapper once), with `PresetsTest::testPhpStanAcceptsSqlReadFromFilesThroughATypedWrapper` and `PresetsTest::testPhpStanReportsSqlJoinedThroughAWrapperAtTheCaller`. No rule changed.
+- Added: "Show PHPStan findings in the merge request" (README and the Raw PHP guide): an `analyse:gitlab` script with PHPStan's own `--error-format=gitlab`, each finding named by its identifier. New `PresetsTest::testPhpStanGitlabFormatReportsTheNullBugAsCodeQualityJson` and `testPhpStanGitlabFormatIsAnEmptyArrayForTheCleanFixture` prove both sides, and BEST_PRACTICES.md gains the row (23 rows, 23 Enforced).
+- Fixed: the Pint, PHPStan and ESLint Code Quality snippets set `artifacts: when: always`. Without it GitLab keeps a job's artifacts only when the job passes, so a lint job that found something, the one time the report matters, uploaded nothing.
 
 ### 0.3.0 (2026-11-09)[#](https://pinstripe.apps.wayne.edu/docs/changelog.html#0-3-0-2026-11-09)
 
@@ -1531,15 +1558,37 @@ Add a second script that writes the report to a file:
 }
 ```
 
-Point GitLab at the artifact:
+Point GitLab at the artifact, and keep it when the job fails, which is exactly when it has something to show:
 
 ```yaml
 artifacts:
+    when: always
     reports:
         codequality: pint-codequality.json
 ```
 
 `--format=gitlab` writes GitLab's Code Quality JSON and `[]` when the code is clean, and Pinstripe tests both. Chalk marks wash out; these findings stay pinned to the merge request.
+
+### Show PHPStan findings in the merge request[#](https://pinstripe.apps.wayne.edu/docs/guides/raw-php.html#show-phpstan-findings-in-the-merge-request)
+
+PHPStan writes the same report with its own `gitlab` error format:
+
+```json
+{
+    "scripts": {
+        "analyse:gitlab": "phpstan analyse --no-progress --error-format=gitlab > phpstan-codequality.json"
+    }
+}
+```
+
+```yaml
+artifacts:
+    when: always
+    reports:
+        codequality: phpstan-codequality.json
+```
+
+Each finding carries its identifier (`pinstripe.banned.joinedSql`, `argument.type`) as the check name. Pinstripe tests both sides: the raw preset turns the null bug fixture into a non-empty report and the clean fixture into `[]`.
 
 ### Related[#](https://pinstripe.apps.wayne.edu/docs/guides/raw-php.html#related)
 
@@ -1996,6 +2045,7 @@ A preset is **Enforced** when a test asserts both directions: a clean fixture pa
 | --- | --- | --- | --- |
 | `pint/per.json` | Pint | Enforced | `PresetsTest::testPintPerPresetAcceptsTheCleanFixture`, `PresetsTest::testPintPerPresetRejectsTheMessyFixture` |
 | `Pint GitLab output` | Pint | Enforced | `PresetsTest::testPintGitlabFormatReportsTheMessyFixtureAsCodeQualityJson`, `PresetsTest::testPintGitlabFormatIsAnEmptyArrayForTheCleanFixture` |
+| `PHPStan GitLab output` | PHPStan | Enforced | `PresetsTest::testPhpStanGitlabFormatReportsTheNullBugAsCodeQualityJson`, `PresetsTest::testPhpStanGitlabFormatIsAnEmptyArrayForTheCleanFixture` |
 | `ESLint GitLab output` | ESLint | Enforced | `tests/js/gitlab-formatter.test.mjs` (`npm test`: the bad fixture gives findings, the clean one an empty report) |
 | `pint/laravel.json` | Pint | Enforced | `PresetsTest::testPintLaravelPresetAcceptsTheLaravelAppFixture`, `PresetsTest::testPintLaravelPresetRejectsTheMessyFixture` |
 | `pint/per-strict.json` | Pint | Enforced | `PresetsTest::testPintPerStrictPresetAcceptsTheStrictTypesCleanFixture`, `PresetsTest::testPintPerStrictPresetRejectsTheStrictTypesMissingFixture` |
@@ -2017,7 +2067,7 @@ A preset is **Enforced** when a test asserts both directions: a clean fixture pa
 | README "Tool floors" | composer.lock + package-lock.json | Enforced | `ToolFloorsTest::testToolFloorsMatchTheLockFiles` |
 | This page | PHPUnit | Enforced | `BestPracticesTest::testEveryTestNamedHereExists`, `BestPracticesTest::testEveryFileNamedHereExists`, `BestPracticesTest::testEveryRowHasAKnownStatusAndAnEnforcedRowNamesItsTests`, `BestPracticesTest::testTheDocsPageCarriesTheSameTable`, `BestPracticesTest::testTheTallyCountsTheTable` |
 
-Tally: 22 rows, 22 Enforced, 0 Checked.
+Tally: 23 rows, 23 Enforced, 0 Checked.
 
 ### Related[#](https://pinstripe.apps.wayne.edu/docs/reference/best-practices.html#related)
 

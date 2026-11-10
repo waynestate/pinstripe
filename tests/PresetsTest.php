@@ -359,6 +359,72 @@ final class PresetsTest extends TestCase
         $this->assertStringContainsString('string|null', $output);
     }
 
+    public function testPhpStanGitlabFormatReportsTheNullBugAsCodeQualityJson(): void
+    {
+        // The README's analyse:gitlab script: PHPStan's own gitlab error
+        // format, read by GitLab as a Code Quality report. Same working
+        // directory as the other raw-preset runs (see above).
+        [$exit, $output] = $this->runInDir([
+            PHP_BINARY,
+            $this->root() . '/vendor/bin/phpstan',
+            'analyse',
+            '-c',
+            $this->root() . '/phpstan/raw.neon',
+            '--no-progress',
+            '--error-format=gitlab',
+            $this->root() . '/tests/fixtures/raw-nullbug/src',
+        ], $this->root() . '/tests/fixtures/laravel');
+
+        $this->assertNotSame(0, $exit, $output);
+
+        $start = strpos($output, '[');
+        $end = strrpos($output, ']');
+        $this->assertNotFalse($start, $output);
+        $this->assertNotFalse($end, $output);
+
+        $issues = json_decode(substr($output, $start, $end - $start + 1), true, 512, JSON_THROW_ON_ERROR);
+        $this->assertIsArray($issues);
+        $this->assertNotEmpty($issues);
+
+        foreach ($issues as $issue) {
+            $this->assertIsArray($issue);
+            $this->assertArrayHasKey('description', $issue);
+            $this->assertArrayHasKey('fingerprint', $issue);
+            $this->assertArrayHasKey('severity', $issue);
+            $this->assertArrayHasKey('location', $issue);
+            $this->assertIsArray($issue['location']);
+            $this->assertArrayHasKey('path', $issue['location']);
+            $this->assertStringEndsWith('.php', $issue['location']['path']);
+            $this->assertIsArray($issue['location']['lines'] ?? null, $output);
+            $this->assertIsInt($issue['location']['lines']['begin'] ?? null, $output);
+            $this->assertArrayHasKey('check_name', $issue);
+        }
+
+        $this->assertStringContainsString('string|null', implode("\n", array_column($issues, 'description')));
+    }
+
+    public function testPhpStanGitlabFormatIsAnEmptyArrayForTheCleanFixture(): void
+    {
+        [$exit, $output] = $this->runInDir([
+            PHP_BINARY,
+            $this->root() . '/vendor/bin/phpstan',
+            'analyse',
+            '-c',
+            $this->root() . '/phpstan/raw.neon',
+            '--no-progress',
+            '--error-format=gitlab',
+            $this->root() . '/tests/fixtures/raw-clean/src',
+        ], $this->root() . '/tests/fixtures/laravel');
+
+        $this->assertSame(0, $exit, $output);
+
+        $start = strpos($output, '[');
+        $end = strrpos($output, ']');
+        $this->assertNotFalse($start, $output);
+        $this->assertNotFalse($end, $output);
+        $this->assertSame('[]', trim(substr($output, $start, $end - $start + 1)));
+    }
+
     public function testPhpStanRawConfigReportsTheDeprecatedCall(): void
     {
         // See testPhpStanRawConfigAcceptsTheCleanFixture for why the raw
