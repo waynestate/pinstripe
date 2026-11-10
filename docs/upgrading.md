@@ -11,6 +11,16 @@ This page walks through each released version of Pinstripe, what changed for con
 
 A stricter preset breaks consumers' builds. Pinstripe ships such a change in a minor version, not a major one, so you opt in by updating the package. When a version below marks a change as breaking, it is a stricter preset taking effect in your app the moment you update to it; hold the current version until you are ready.
 
+## 0.3.2 (2026-11-10)
+
+No breaking change: one preset is looser, none is stricter, so every cut that passed on 0.3.1 still passes.
+
+**What changed for you:** the Vue presets let Inertia page components under `Pages/` or `pages/` have one-word names such as `Index` and `Show` (`vue/multi-word-component-names` is off there only, and still on everywhere else). An app that renamed or disabled the rule for its pages can undo that. Pinstripe now has a fixture for every stack app shape (Laravel plus Inertia plus Vue, raw PHP plus Vue), and the ban tables name the OWASP ASVS 5.0 requirement each ban enforces.
+
+**Steps:** Your constraint is `^0.3`, which already allows 0.3.2: run `composer update waynestate/pinstripe`. Move `@waynestate/pinstripe` to 0.3.2 when `npm view @waynestate/pinstripe version` shows it (npm is published by hand after the tag).
+
+**How to verify:** `composer show waynestate/pinstripe` reports 0.3.2; `npm run lint` on an Inertia app no longer flags a one-word component under `Pages/`, and still flags one elsewhere.
+
 ## 0.3.1 (2026-11-09)
 
 No breaking change and no preset change: every cut passes and fails exactly what it did in 0.3.0.
