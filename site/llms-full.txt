@@ -1128,6 +1128,8 @@ All notable changes to Pinstripe are documented here.
 
 ### Unreleased[#](https://pinstripe.apps.wayne.edu/docs/changelog.html#unreleased)
 
+- Changed: Deploy kit refreshed to Squire 0.10.5 (was 0.10.2).
+
 ### 0.3.1 (2026-11-09)[#](https://pinstripe.apps.wayne.edu/docs/changelog.html#0-3-1-2026-11-09)
 
 A patch: no preset passes or fails anything it did not in 0.3.0. It adds proof and docs (PHPStan findings in the merge request, the fix for SQL kept in `.sql` files), keeps Code Quality reports when a lint job fails, and brings the deploy kit and CI pins up to date.
