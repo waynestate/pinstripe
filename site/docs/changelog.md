@@ -12,6 +12,7 @@ All notable changes to Pinstripe are documented here.
 
 ## Unreleased[#](https://pinstripe.apps.wayne.edu/docs/changelog.html#unreleased)
 
+- Site: `assets/stack-env.js` knows Parity, so a pre-production page links Parity's pre-production site and a dev page links its local `site/` folder. Until now Parity, of all parts, was the one link that ignored its environment.
 - Changed: Deploy kit refreshed to Squire 0.10.5 (was 0.10.2).
 
 ## 0.3.1 (2026-11-09)[#](https://pinstripe.apps.wayne.edu/docs/changelog.html#0-3-1-2026-11-09)
