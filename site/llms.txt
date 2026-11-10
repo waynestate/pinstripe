@@ -34,7 +34,7 @@ Every page below is Markdown. The HTML pages send the same Markdown to a client 
 - [Require strict types | Pinstripe docs](https://pinstripe.apps.wayne.edu/docs/guides/strict-types.md): How to require declare(strict_types=1) with the Pinstripe presets.
 - [Vue | Pinstripe docs](https://pinstripe.apps.wayne.edu/docs/guides/vue.md): Use the Pinstripe ESLint and Prettier presets for Vue.
 - [Overview | Pinstripe docs](https://pinstripe.apps.wayne.edu/docs/index.md): Pinstripe in one page: what it is, who it is for, and where to go next.
-- [Banned calls | Pinstripe docs](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.md): The calls every Pinstripe cut fails the build on, why, what to use instead, and their OWASP Top 10:2025 tags.
+- [Banned calls | Pinstripe docs](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.md): The calls every Pinstripe cut fails the build on, why, what to use instead, and their OWASP Top 10:2025 and ASVS 5.0 tags.
 - [Best practices | Pinstripe docs](https://pinstripe.apps.wayne.edu/docs/reference/best-practices.md): The rules Pinstripe holds itself to, and the tests that prove them.
 - [Proof | Pinstripe docs](https://pinstripe.apps.wayne.edu/docs/reference/proof.md): Pinstripe's presets run against 82 Wayne State applications on 2026-11-05: what ran, what held, what it caught in Pinstripe itself, what it does not prove, and how to run the same on your app.
 - [Tested with and tool floors | Pinstripe docs](https://pinstripe.apps.wayne.edu/docs/reference/tested-with.md): The tool versions Pinstripe is tested with, and the floors each tool needs.

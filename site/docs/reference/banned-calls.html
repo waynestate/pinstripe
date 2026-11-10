@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Banned calls | Pinstripe docs</title>
-<meta name="description" content="The calls every Pinstripe cut fails the build on, why, what to use instead, and their OWASP Top 10:2025 tags.">
+<meta name="description" content="The calls every Pinstripe cut fails the build on, why, what to use instead, and their OWASP Top 10:2025 and ASVS 5.0 tags.">
 <meta name="docs-version" content="0.3.1">
 <link rel="stylesheet" href="../../assets/wayne-ui/wayne-ui.css">
 <link rel="stylesheet" href="../../assets/docs.css">
@@ -51,6 +51,7 @@
 <th>Why it is banned</th>
 <th>Use instead</th>
 <th>OWASP Top 10:2025</th>
+<th>ASVS 5.0</th>
 </tr>
 </thead>
 <tbody>
@@ -59,69 +60,81 @@
 <td>Runs a string as PHP, so one untrusted value is remote code execution.</td>
 <td>Write the code out, or pick a callable with <code>match</code>.</td>
 <td>A05 Injection</td>
+<td>V1.3.2</td>
 </tr>
 <tr>
 <td><code>extract()</code></td>
 <td>Turns array keys into variables, so request data can overwrite any variable in scope.</td>
 <td>Read the keys you need by name, or destructure the array.</td>
 <td>A05 Injection</td>
+<td>V15.3.3 (closest: mass assignment)</td>
 </tr>
 <tr>
 <td><code>var_dump()</code></td>
 <td>Debug output left in ships paths, config and secrets to the browser.</td>
 <td>A PSR-3 logger (<code>Log::debug()</code> in Laravel), or Xdebug.</td>
 <td>A02 Security Misconfiguration</td>
+<td>V13.4.2</td>
 </tr>
 <tr>
 <td><code>dd()</code></td>
 <td>Dumps internals to the browser and halts the request in production.</td>
 <td>The same.</td>
 <td>A02 Security Misconfiguration</td>
+<td>V13.4.2</td>
 </tr>
 <tr>
 <td><code>dump()</code></td>
 <td>The same leak as <code>var_dump()</code>, Symfony and Laravel flavored.</td>
 <td>The same.</td>
 <td>A02 Security Misconfiguration</td>
+<td>V13.4.2</td>
 </tr>
 <tr>
 <td>Laravel's <code>-&gt;dd()</code> and <code>-&gt;dump()</code> methods</td>
 <td>The same leaks, called on a collection, query, request or HTTP response (<code>$users-&gt;dd()</code>, <code>-&gt;dumpRawSql()</code>, <code>Http::get($url)-&gt;dd()</code>).</td>
 <td>The same.</td>
 <td>A02 Security Misconfiguration</td>
+<td>V13.4.2</td>
 </tr>
 <tr>
 <td><code>withoutVerifying()</code></td>
 <td>Turns off TLS certificate checks in Laravel's HTTP client (<code>PendingRequest</code>), so anyone on the path can read or change the traffic.</td>
 <td>Keep verification on; for a private CA, pass its bundle through <code>withOptions</code> and the <code>verify</code> option.</td>
 <td>A02 Security Misconfiguration</td>
+<td>V12.3.2</td>
 </tr>
 <tr>
 <td><code>'verify' =&gt; false</code></td>
 <td>The same hole through Guzzle's <code>verify</code> option: Laravel's <code>withOptions()</code>, <code>new Client([...])</code>, and the options of <code>request()</code>, <code>send()</code>, <code>get()</code>, <code>post()</code> and the other verbs.</td>
 <td>Set <code>verify</code> to the path of the CA bundle, or leave it out.</td>
 <td>A02 Security Misconfiguration</td>
+<td>V12.3.2</td>
 </tr>
 <tr>
 <td><code>curl_setopt()</code> and <code>curl_setopt_array()</code> with <code>CURLOPT_SSL_VERIFYPEER</code> false or <code>CURLOPT_SSL_VERIFYHOST</code> 0</td>
 <td>Turns off curl's certificate or host name check in raw PHP.</td>
 <td>Keep both on; for a private CA, point <code>CURLOPT_CAINFO</code> at its bundle.</td>
 <td>A02 Security Misconfiguration</td>
+<td>V12.3.2</td>
 </tr>
 <tr>
 <td><code>stream_context_create()</code> with <code>ssl</code> <code>verify_peer</code> or <code>verify_peer_name</code> false, or <code>allow_self_signed</code> true</td>
 <td>Turns off the same checks for <code>file_get_contents()</code> and the other stream functions.</td>
 <td>Keep them on; for a private CA, set the <code>ssl</code> <code>cafile</code> option.</td>
 <td>A02 Security Misconfiguration</td>
+<td>V12.3.2</td>
 </tr>
 <tr>
 <td>SQL joined from strings: <code>PDO::query()</code>, <code>prepare()</code> and <code>exec()</code>, mysqli (<code>query()</code>, <code>prepare()</code>, <code>mysqli_query()</code> and the rest), <code>oci_parse()</code> and its old alias <code>ociparse()</code>, and Laravel's <code>DB::select()</code>, <code>insert()</code>, <code>update()</code>, <code>delete()</code>, <code>statement()</code>, <code>scalar()</code>, <code>cursor()</code> and <code>fromQuery()</code></td>
 <td>A variable joined into the SQL (<code>'... id = ' . $id</code>, <code>&quot;... {$id}&quot;</code>, <code>sprintf()</code>) lets one untrusted value rewrite the query.</td>
 <td>Keep the SQL a literal and bind every value (<code>?</code> or <code>:name</code> placeholders, <code>oci_bind_by_name()</code>).</td>
 <td>A05 Injection</td>
+<td>V1.2.4</td>
 </tr>
 </tbody>
 </table></div>
+<p>The ASVS column names the requirement each ban enforces in <a rel="noopener" href="https://github.com/OWASP/ASVS/tree/v5.0.0/5.0/en">OWASP ASVS 5.0.0</a>. ASVS has no requirement for <code>extract()</code> by name; mass assignment (V15.3.3) is the closest.</p>
 <p>Each ban has a stable identifier: <code>pinstripe.banned.eval</code>, <code>pinstripe.banned.extract</code>, <code>pinstripe.banned.varDump</code>,
 <code>pinstripe.banned.dd</code>, <code>pinstripe.banned.dump</code>, <code>pinstripe.banned.withoutVerifying</code>, <code>pinstripe.banned.verifyFalse</code>, <code>pinstripe.banned.curlVerifyOff</code>, <code>pinstripe.banned.streamVerifyOff</code> and <code>pinstripe.banned.joinedSql</code>.</p>
 <h2 id="sql-joined-from-strings">SQL joined from <span class="docs-heading-tail"><span>strings</span><a class="docs-heading-link" aria-label="Link to this section" href="#sql-joined-from-strings">#</a></span></h2>
