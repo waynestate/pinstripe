@@ -97,6 +97,46 @@ test('laravel-vue fixture: App.vue is formatted to the Prettier preset', async (
     assert.equal(await prettier.check(source, { ...options, filepath: 'App.vue' }), true)
 })
 
+// The laravel-inertia fixture is the same proof for WELD's shape, Laravel with
+// Inertia and Vue: an Inertia controller and a page under resources/js/Pages.
+// The PHP presets run under composer ci, these cover the Vue side.
+test('laravel-inertia fixture: the javascript preset accepts Pages/Greetings/Index.vue', async () => {
+    const [result] = await lint('eslint/javascript.js', ['tests/fixtures/laravel-inertia/resources/js/Pages/Greetings/Index.vue'])
+    assert.deepEqual(result.messages, [], result.messages.map((m) => `${m.ruleId}: ${m.message}`).join('\n'))
+})
+
+test('laravel-inertia fixture: the typescript preset accepts Pages/Greetings/Index.vue', async () => {
+    const [result] = await lint('eslint/typescript.js', ['tests/fixtures/laravel-inertia/resources/js/Pages/Greetings/Index.vue'])
+    assert.deepEqual(result.messages, [], result.messages.map((m) => `${m.ruleId}: ${m.message}`).join('\n'))
+})
+
+test('laravel-inertia fixture: the javascript preset flags bad/Broken.vue with vue/require-v-for-key', async () => {
+    const [result] = await lint('eslint/javascript.js', ['tests/fixtures/laravel-inertia/resources/js/bad/Broken.vue'])
+    const ids = ruleIds(result)
+    assert.ok(
+        ids.includes('vue/require-v-for-key'),
+        `expected vue/require-v-for-key, got: ${ids.join(', ')}`,
+    )
+})
+
+test('laravel-inertia fixture: the typescript preset flags bad/NoAlt.vue with vuejs-accessibility/alt-text', async () => {
+    const [result] = await lint('eslint/typescript.js', ['tests/fixtures/laravel-inertia/resources/js/bad/NoAlt.vue'])
+    const ids = ruleIds(result)
+    assert.ok(
+        ids.includes('vuejs-accessibility/alt-text'),
+        `expected vuejs-accessibility/alt-text, got: ${ids.join(', ')}`,
+    )
+})
+
+test('laravel-inertia fixture: Pages/Greetings/Index.vue is formatted to the Prettier preset', async () => {
+    const options = JSON.parse(await readFile(path.join(root, 'prettier', 'index.json'), 'utf8'))
+    const source = await readFile(
+        path.join(root, 'tests/fixtures/laravel-inertia/resources/js/Pages/Greetings/Index.vue'),
+        'utf8',
+    )
+    assert.equal(await prettier.check(source, { ...options, filepath: 'Index.vue' }), true)
+})
+
 // The raw-vue fixture is the same proof for a plain PHP app with a Vue front
 // end and no Laravel: the PHP presets run under composer ci, these cover the
 // Vue side under resources/js.

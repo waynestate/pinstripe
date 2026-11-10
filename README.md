@@ -195,6 +195,9 @@ on every run, with one planted PHP error and two planted Vue defects that each p
 `tests/fixtures/raw-vue` is the same proof for a plain PHP app with a Vue front end and no Laravel, with one
 planted PHP error for the raw preset and the same two planted Vue defects.
 
+`tests/fixtures/laravel-inertia` is the same proof for WELD's shape, Laravel with Inertia and Vue: an Inertia
+controller and a page under `resources/js/Pages`, with the same planted PHP error and Vue defects.
+
 ## Use it for Vue
 
 Add Pinstripe as a dev dependency:

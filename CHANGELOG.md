@@ -4,6 +4,7 @@ All notable changes to Pinstripe are documented here.
 
 ## Unreleased
 
+- Tests: a Laravel plus Inertia plus Vue fixture (tests/fixtures/laravel-inertia) proves the presets on WELD's app shape, so every stack app shape now has a fixture.
 - Docs: the ban tables in the README and on the Banned calls page name the OWASP ASVS 5.0 requirement each ban enforces (V1.2.4, V1.3.2, V12.3.2, V13.4.2, and V15.3.3 as the closest fit for `extract()`). The messages keep their OWASP Top 10 tags.
 - Tests: a raw PHP plus Vue fixture (tests/fixtures/raw-vue) proves the presets on that app shape too, with one planted PHP error and two planted Vue defects.
 - Changed: the GitHub workflow calls Preflight 0.5.0 (was 0.1.4), now that GitHub's copy of Preflight has the tag; MAINTAINING.md and the contributing guide name the 0.5.0 pins.

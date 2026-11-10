@@ -19,6 +19,8 @@ final class PresetsTest extends TestCase
 
     private static ?string $laravelVueDirectory = null;
 
+    private static ?string $laravelInertiaDirectory = null;
+
     private static ?string $rawVueDirectory = null;
 
     public static function tearDownAfterClass(): void
@@ -31,6 +33,11 @@ final class PresetsTest extends TestCase
         if (self::$laravelVueDirectory !== null) {
             self::removeTemporaryFixture(self::$laravelVueDirectory);
             self::$laravelVueDirectory = null;
+        }
+
+        if (self::$laravelInertiaDirectory !== null) {
+            self::removeTemporaryFixture(self::$laravelInertiaDirectory);
+            self::$laravelInertiaDirectory = null;
         }
 
         if (self::$rawVueDirectory !== null) {
@@ -1348,6 +1355,65 @@ final class PresetsTest extends TestCase
         $this->assertStringContainsString('Access to an undefined property App\Models\Greeting::$audience', $output);
     }
 
+    public function testPintLaravelPresetAcceptsTheLaravelInertiaFixture(): void
+    {
+        $fixture = $this->laravelInertiaFixture();
+
+        // The Vue side of the fixture lives in resources/js and is covered by
+        // the ESLint and Prettier tests; Pint only reads the PHP paths.
+        [$exit, $output] = $this->runInDir([
+            PHP_BINARY,
+            'vendor/bin/pint',
+            '--test',
+            '--config',
+            'vendor/waynestate/pinstripe/pint/laravel.json',
+            'app',
+            'routes',
+            'bootstrap/app.php',
+        ], $fixture);
+
+        $this->assertSame(0, $exit, $output);
+    }
+
+    public function testPhpStanLaravelConfigAcceptsTheLaravelInertiaFixture(): void
+    {
+        $fixture = $this->laravelInertiaFixture();
+
+        [$exit, $output] = $this->runInDir([
+            PHP_BINARY,
+            'vendor/bin/phpstan',
+            'analyse',
+            '-c',
+            'phpstan.neon',
+            '--no-progress',
+            '--error-format=raw',
+            'app',
+            'bootstrap',
+            'routes',
+        ], $fixture);
+
+        $this->assertSame(0, $exit, $output);
+    }
+
+    public function testPhpStanLaravelConfigReportsThePlantedPhpErrorInTheLaravelInertiaFixture(): void
+    {
+        $fixture = $this->laravelInertiaFixture();
+
+        [$exit, $output] = $this->runInDir([
+            PHP_BINARY,
+            'vendor/bin/phpstan',
+            'analyse',
+            '-c',
+            'phpstan.neon',
+            '--no-progress',
+            '--error-format=raw',
+            'bad',
+        ], $fixture);
+
+        $this->assertNotSame(0, $exit, $output);
+        $this->assertStringContainsString('Access to an undefined property App\Models\Greeting::$audience', $output);
+    }
+
     public function testPintPerPresetAcceptsTheRawVueFixture(): void
     {
         $fixture = $this->rawVueFixture();
@@ -1651,6 +1717,31 @@ final class PresetsTest extends TestCase
     {
         self::$laravelVueDirectory ??= $this->temporaryConsumerFixture('laravel-vue');
         $fixture = self::$laravelVueDirectory;
+
+        if (!is_file($fixture . '/vendor/autoload.php')) {
+            [$installExit, $installOutput] = $this->runInDir(
+                array_merge($this->composerCommand(), ['update', '--no-interaction', '--no-progress']),
+                $fixture
+            );
+
+            $this->assertSame(0, $installExit, $installOutput);
+        }
+
+        return $fixture;
+    }
+
+    /**
+     * A temporary Laravel + Inertia + Vue app fixture, installed on first use.
+     *
+     * Same install story as laravelVueFixture: the fixture's composer.lock is
+     * gitignored, so a fresh checkout needs an `update`, and the vendor
+     * directory is shared by this class's tests and removed by
+     * tearDownAfterClass.
+     */
+    private function laravelInertiaFixture(): string
+    {
+        self::$laravelInertiaDirectory ??= $this->temporaryConsumerFixture('laravel-inertia');
+        $fixture = self::$laravelInertiaDirectory;
 
         if (!is_file($fixture . '/vendor/autoload.php')) {
             [$installExit, $installOutput] = $this->runInDir(
