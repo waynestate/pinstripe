@@ -19,7 +19,7 @@ composer config allow-plugins.phpstan/extension-installer true
 composer require --dev waynestate/pinstripe:^0.3 larastan/larastan
 ```
 
-`^0.3` gets you 0.3.1, the current release. If Composer cannot find it yet (Packagist reads the GitHub mirror, which can trail a release), add the canonical repository first, as [Raw PHP apps](https://pinstripe.apps.wayne.edu/docs/guides/raw-php.html#add-the-dependency) shows.
+`^0.3` gets you 0.3.2, the current release. If Composer cannot find it yet (Packagist reads the GitHub mirror, which can trail a release), add the canonical repository first, as [Raw PHP apps](https://pinstripe.apps.wayne.edu/docs/guides/raw-php.html#add-the-dependency) shows.
 
 Note
 

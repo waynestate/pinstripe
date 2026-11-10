@@ -72,7 +72,7 @@ final class Greeter
 }
 ```
 
-Alterations No. 0.3.1
+Alterations No. 0.3.2
 
 1. Rector Promote the property into the constructor.
 2. Rector Add the return type, `: string`.

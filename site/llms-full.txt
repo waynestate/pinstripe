@@ -47,7 +47,7 @@ composer require --dev waynestate/pinstripe:^0.3
 Pinstripe loads its PHPStan rules through `phpstan/extension-installer`, and Composer will not ask when it cannot prompt.
 If Composer stops because a package your app already locks (often an older PHPStan) does not fit, run the same `composer require` again with `-W`, as Composer suggests, so it may update that package too.
 
-`^0.3` gets you 0.3.1, the current release, with every [banned call](#banned-calls) below. Packagist reads the GitHub
+`^0.3` gets you 0.3.2, the current release, with every [banned call](#banned-calls) below. Packagist reads the GitHub
 mirror, which can trail a release by a while. If Composer says it cannot find a 0.3 version, point it at the
 canonical repository first (it asks for your git.wayne.edu sign-in), then run the `composer require` again:
 
@@ -672,7 +672,7 @@ final class Greeter
 }
 ```
 
-Alterations No. 0.3.1
+Alterations No. 0.3.2
 
 1. Rector Promote the property into the constructor.
 2. Rector Add the return type, `: string`.
@@ -1136,6 +1136,8 @@ All notable changes to Pinstripe are documented here.
 
 ### Unreleased [#](https://pinstripe.apps.wayne.edu/docs/changelog.html#unreleased)
 
+### 0.3.2 (2026-11-10) [#](https://pinstripe.apps.wayne.edu/docs/changelog.html#0-3-2-2026-11-10)
+
 - Changed: the deploy layer requires PROCTOR ^0.15 (locked 0.15.0, was ^0.12): 0.13 checks the release cooldown against the CREED policy, 0.14 adds `script-pair` and 0.15 adds `mysql56-ci`; all only warn, nothing breaks.
 - Docs: the Proof page says its 82-app run used the presets as they were on `main` on 2026-11-05, not "as they are on main".
 - Added: `node scripts/readme-art/build.mjs --check` rebuilds the README art in a temp folder and fails when `docs/readme/` is stale (SVGs byte for byte, images by pixels within a small tolerance), and the `readme-art` CI job runs it. The license badge says `license`, not `licence`.
@@ -1487,7 +1489,7 @@ composer config allow-plugins.phpstan/extension-installer true
 composer require --dev waynestate/pinstripe:^0.3 larastan/larastan
 ```
 
-`^0.3` gets you 0.3.1, the current release. If Composer cannot find it yet (Packagist reads the GitHub mirror, which can trail a release), add the canonical repository first, as [Raw PHP apps](https://pinstripe.apps.wayne.edu/docs/guides/raw-php.html#add-the-dependency) shows.
+`^0.3` gets you 0.3.2, the current release. If Composer cannot find it yet (Packagist reads the GitHub mirror, which can trail a release), add the canonical repository first, as [Raw PHP apps](https://pinstripe.apps.wayne.edu/docs/guides/raw-php.html#add-the-dependency) shows.
 
 Note
 
@@ -1538,7 +1540,7 @@ composer require --dev waynestate/pinstripe:^0.3
 
 Pinstripe loads its PHPStan rules through `phpstan/extension-installer`, and Composer will not ask when it cannot prompt. If Composer stops because a package your app already locks (often an older PHPStan) does not fit, run the same `composer require` again with `-W`, as Composer suggests, so it may update that package too.
 
-`^0.3` gets you 0.3.1, the current release, with every [banned call](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html). Packagist reads the GitHub mirror, which can trail a release by a while. If Composer says it cannot find a 0.3 version, point it at the canonical repository first (it asks for your git.wayne.edu sign-in), then run the `composer require` again:
+`^0.3` gets you 0.3.2, the current release, with every [banned call](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html). Packagist reads the GitHub mirror, which can trail a release by a while. If Composer says it cannot find a 0.3 version, point it at the canonical repository first (it asks for your git.wayne.edu sign-in), then run the `composer require` again:
 
 ```bash
 composer config repositories.pinstripe vcs https://git.wayne.edu/enterprise-apps/pinstripe.git
@@ -1872,7 +1874,7 @@ composer analyse
 
 ### Status [#](https://pinstripe.apps.wayne.edu/docs/#status)
 
-The repository is at version 0.3.1: every cut bans SQL joined from strings, TLS checks turned off and leftover debug calls ([Banned calls](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html)), and `^0.3` installs it. Packagist reads the GitHub mirror, which can trail a release; the [Raw PHP guide](https://pinstripe.apps.wayne.edu/docs/guides/raw-php.html#add-the-dependency) shows the one line that installs it from git.wayne.edu meanwhile. The npm package, `@waynestate/pinstripe`, follows each tag at the same version, published by hand; its ESLint and Prettier presets have not changed since 0.1.4. The canonical repository is on git.wayne.edu; GitHub is a read-only push mirror of it, and Packagist and npm read from it. The agent-ready site ships a plain-text twin for machines: [llms.txt](https://pinstripe.apps.wayne.edu/llms.txt).
+The repository is at version 0.3.2: every cut bans SQL joined from strings, TLS checks turned off and leftover debug calls ([Banned calls](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html)), and `^0.3` installs it. Packagist reads the GitHub mirror, which can trail a release; the [Raw PHP guide](https://pinstripe.apps.wayne.edu/docs/guides/raw-php.html#add-the-dependency) shows the one line that installs it from git.wayne.edu meanwhile. The npm package, `@waynestate/pinstripe`, follows each tag at the same version, published by hand; its ESLint and Prettier presets have not changed since 0.1.4. The canonical repository is on git.wayne.edu; GitHub is a read-only push mirror of it, and Packagist and npm read from it. The agent-ready site ships a plain-text twin for machines: [llms.txt](https://pinstripe.apps.wayne.edu/llms.txt).
 
 ### Related [#](https://pinstripe.apps.wayne.edu/docs/#related)
 
@@ -2269,6 +2271,16 @@ This page walks through each released version of Pinstripe, what changed for con
 ### What a stricter preset means to you [#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#what-a-stricter-preset-means-to-you)
 
 A stricter preset breaks consumers' builds. Pinstripe ships such a change in a minor version, not a major one, so you opt in by updating the package. When a version below marks a change as breaking, it is a stricter preset taking effect in your app the moment you update to it; hold the current version until you are ready.
+
+### 0.3.2 (2026-11-10) [#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#0-3-2-2026-11-10)
+
+No breaking change: one preset is looser, none is stricter, so every cut that passed on 0.3.1 still passes.
+
+**What changed for you:** the Vue presets let Inertia page components under `Pages/` or `pages/` have one-word names such as `Index` and `Show` (`vue/multi-word-component-names` is off there only, and still on everywhere else). An app that renamed or disabled the rule for its pages can undo that. Pinstripe now has a fixture for every stack app shape (Laravel plus Inertia plus Vue, raw PHP plus Vue), and the ban tables name the OWASP ASVS 5.0 requirement each ban enforces.
+
+**Steps:** Your constraint is `^0.3`, which already allows 0.3.2: run `composer update waynestate/pinstripe`. Move `@waynestate/pinstripe` to 0.3.2 when `npm view @waynestate/pinstripe version` shows it (npm is published by hand after the tag).
+
+**How to verify:** `composer show waynestate/pinstripe` reports 0.3.2; `npm run lint` on an Inertia app no longer flags a one-word component under `Pages/`, and still flags one elsewhere.
 
 ### 0.3.1 (2026-11-09) [#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#0-3-1-2026-11-09)
 
