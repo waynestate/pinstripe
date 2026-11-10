@@ -11,8 +11,7 @@ final class Greeting
     public function __construct(
         public readonly string $body,
         private readonly int $replyCount = 0,
-    ) {
-    }
+    ) {}
 
     public function replyCount(): int
     {
