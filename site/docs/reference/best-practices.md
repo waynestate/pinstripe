@@ -35,13 +35,14 @@ A preset is **Enforced** when a test asserts both directions: a clean fixture pa
 | `Banned call tips link to the CREED rule` | PHPStan | Enforced | `tests/BannedCallLinksTest.php` (`BannedCallLinksTest::testEveryBanCarriesAnIdentifierAndATip` makes sure no entry goes without) |
 | `rector/base.php` | Rector | Enforced | `PresetsTest::testRectorPresetAcceptsTheCleanFixture`, `PresetsTest::testRectorPresetReportsChangesOnTheOldFixture` |
 | `rector/strict-types.php` | Rector | Enforced | `PresetsTest::testRectorStrictTypesPresetDeclaresOnlyTheSafeFile`, `PresetsTest::testRectorStrictTypesPresetLeavesTheCoercingFileAlone` |
+| `rector/levels.php` | Rector | Enforced | `PresetsTest::testRectorLevelsPresetStartsWithTheFirstDeadCodeRuleOnly`, `PresetsTest::testRectorLevelsPresetRaisingTheLevelAddsTheNextRules`, `PresetsTest::testRectorLevelsPresetKeepsTheFamiliesApart`, `PresetsTest::testRectorLevelsPresetRefusesToRunWithNoFamilyNamed` |
 | `eslint/javascript.js` | ESLint | Enforced | `tests/js/presets.test.mjs` (`npm test`) |
 | `eslint/typescript.js` | ESLint | Enforced | `tests/js/presets.test.mjs` (`npm test`) |
 | `prettier/index.json` | Prettier | Enforced | `tests/js/prettier.test.mjs` (`npm test`) |
 | README "Tool floors" | composer.lock + package-lock.json | Enforced | `ToolFloorsTest::testToolFloorsMatchTheLockFiles` |
 | This page | PHPUnit | Enforced | `BestPracticesTest::testEveryTestNamedHereExists`, `BestPracticesTest::testEveryFileNamedHereExists`, `BestPracticesTest::testEveryRowHasAKnownStatusAndAnEnforcedRowNamesItsTests`, `BestPracticesTest::testTheDocsPageCarriesTheSameTable`, `BestPracticesTest::testTheTallyCountsTheTable` |
 
-Tally: 24 rows, 24 Enforced, 0 Checked.
+Tally: 25 rows, 25 Enforced, 0 Checked.
 
 ## Related [#](https://pinstripe.apps.wayne.edu/docs/reference/best-practices.html#related)
 

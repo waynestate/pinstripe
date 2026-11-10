@@ -377,6 +377,27 @@ Proven on fixtures: `composer ci` runs the preset against a modern app (`tests/f
 old-style one (`tests/fixtures/rector-old`) on every run, and fails if the clean one changes or the old one is left
 alone. Rector is the tailor's press: it smooths old code to the standard without changing the cut.
 
+### One level at a time, on a big old app
+
+On an app that has never met Rector, the base preset's four whole sets make one diff nobody can review. The opt-in
+`rector/levels.php` returns a function instead: name a rule family and how far up it goes, and Rector applies only
+that family's first rules, safest first.
+
+```php
+<?php
+
+$levels = require __DIR__ . '/vendor/waynestate/pinstripe/rector/levels.php';
+
+return $levels(deadCode: 0)->withPaths([__DIR__ . '/src']);
+```
+
+The families are `deadCode`, `typeCoverage`, `codeQuality` and `php` (the PHP-version rules, still capped at your
+`require.php`), and each one stays off until you name it. Level 0 is the first rule, not "off". Dry-run, review,
+apply, commit, then raise the number by one in the next merge request; when every family runs whole, switch to
+`rector/base.php`. Three fixture configs in `tests/fixtures/rector-levels` prove that level 0 makes only the first
+change, level 2 adds the next ones, and one family never applies another's rules. A suit is altered one fitting at a
+time.
+
 ## Banned calls
 
 Every cut (raw, Laravel and strict) fails the build on a short list of calls no Wayne State app should ship. The list

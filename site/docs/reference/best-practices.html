@@ -174,6 +174,12 @@ Both run in CI on GitLab and GitHub, so a preset that stops working fails the pi
 <td><code>PresetsTest::testRectorStrictTypesPresetDeclaresOnlyTheSafeFile</code>, <code>PresetsTest::testRectorStrictTypesPresetLeavesTheCoercingFileAlone</code></td>
 </tr>
 <tr>
+<td><code>rector/levels.php</code></td>
+<td>Rector</td>
+<td>Enforced</td>
+<td><code>PresetsTest::testRectorLevelsPresetStartsWithTheFirstDeadCodeRuleOnly</code>, <code>PresetsTest::testRectorLevelsPresetRaisingTheLevelAddsTheNextRules</code>, <code>PresetsTest::testRectorLevelsPresetKeepsTheFamiliesApart</code>, <code>PresetsTest::testRectorLevelsPresetRefusesToRunWithNoFamilyNamed</code></td>
+</tr>
+<tr>
 <td><code>eslint/javascript.js</code></td>
 <td>ESLint</td>
 <td>Enforced</td>
@@ -205,7 +211,7 @@ Both run in CI on GitLab and GitHub, so a preset that stops working fails the pi
 </tr>
 </tbody>
 </table></div>
-<p>Tally: 24 rows, 24 Enforced, 0 Checked.</p>
+<p>Tally: 25 rows, 25 Enforced, 0 Checked.</p>
 <h2 id="related"><span class="docs-heading-tail"><span>Related</span><a class="docs-heading-link" aria-label="Link to this section" href="#related">#</a></span></h2>
 <ul>
 <li><a href="tested-with.html">Tested with and tool floors</a></li>

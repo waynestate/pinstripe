@@ -1053,6 +1053,61 @@ final class PresetsTest extends TestCase
         ), 'the coercing fixture must stay without strict types, or the test proves nothing');
     }
 
+    public function testRectorLevelsPresetStartsWithTheFirstDeadCodeRuleOnly(): void
+    {
+        $diffs = $this->rectorDiffs('rector-levels', 'rector-dead-code-0.php');
+
+        $this->assertSame(['Ledger.php'], array_keys($diffs), 'dead code level 0 should drop the unused foreach key and nothing else');
+        $this->assertStringContainsString('+        foreach ($fittings as $minutes) {', $diffs['Ledger.php']['diff']);
+        $this->assertSame(
+            ['Rector\\DeadCode\\Rector\\Foreach_\\RemoveUnusedForeachKeyRector'],
+            $diffs['Ledger.php']['applied_rectors']
+        );
+    }
+
+    public function testRectorLevelsPresetRaisingTheLevelAddsTheNextRules(): void
+    {
+        $diffs = $this->rectorDiffs('rector-levels', 'rector-dead-code-2.php');
+
+        $this->assertSame(['Cuff.php', 'Ledger.php'], $this->sortedKeys($diffs), 'dead code level 2 should also drop the useless cast');
+        $this->assertStringContainsString('+        return $initials;', $diffs['Cuff.php']['diff']);
+        $this->assertSame(
+            ['Rector\\DeadCode\\Rector\\Cast\\RecastingRemovalRector'],
+            $diffs['Cuff.php']['applied_rectors']
+        );
+    }
+
+    public function testRectorLevelsPresetKeepsTheFamiliesApart(): void
+    {
+        $diffs = $this->rectorDiffs('rector-levels', 'rector-type-coverage-0.php');
+
+        $this->assertSame(['Seam.php'], array_keys($diffs), 'type coverage level 0 should type the closure and touch no dead code');
+        $this->assertStringContainsString('+        return function (string $stitch): void {', $diffs['Seam.php']['diff']);
+    }
+
+    public function testRectorLevelsPresetRefusesToRunWithNoFamilyNamed(): void
+    {
+        $levels = require $this->root() . '/rector/levels.php';
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('name at least one rule family');
+
+        $levels();
+    }
+
+    /**
+     * @param array<string, mixed> $diffs
+     *
+     * @return list<string>
+     */
+    private function sortedKeys(array $diffs): array
+    {
+        $keys = array_keys($diffs);
+        sort($keys);
+
+        return $keys;
+    }
+
     /**
      * Dry-run the strict-types preset on its fixture and key the proposed
      * diffs by file name.
@@ -1061,16 +1116,29 @@ final class PresetsTest extends TestCase
      */
     private function rectorStrictTypesDiffs(): array
     {
+        return $this->rectorDiffs('rector-strict-types', 'rector.php');
+    }
+
+    /**
+     * Dry-run one rector config inside a fixture (the fixture is the working
+     * directory, so Rector reads its composer.json) and key the proposed
+     * diffs by file name.
+     *
+     * @return array<string, array{diff: string, applied_rectors: list<string>}>
+     */
+    private function rectorDiffs(string $fixture, string $config): array
+    {
         [$exit, $output] = $this->runInDir([
             PHP_BINARY,
             $this->root() . '/vendor/bin/rector',
             'process',
             '--dry-run',
             '--no-progress-bar',
+            '--clear-cache',
             '--output-format=json',
             '-c',
-            'rector.php',
-        ], $this->root() . '/tests/fixtures/rector-strict-types');
+            $config,
+        ], $this->root() . '/tests/fixtures/' . $fixture);
 
         // A dry run exits non-zero when it proposes changes.
         $this->assertNotSame(0, $exit, $output);

@@ -1,0 +1,8 @@
+{
+    "name": "waynestate/pinstripe-fixture-rector-levels",
+    "description": "A PHP app with one planted fix per Rector level that proves Pinstripe's rector/levels.php raises one family, one level at a time.",
+    "type": "project",
+    "require": {
+        "php": "^8.3"
+    }
+}

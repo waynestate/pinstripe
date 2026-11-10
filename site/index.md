@@ -103,8 +103,8 @@ There are seven, each named for a part of the suit. The status comes from `BEST_
    Loaded by `phpstan/extension-installer`, so there's no include line to add.
    Enforced
 4. The press Rector
-   `rector/base.php` `rector/strict-types.php`
-   Reads your PHP version from `composer.json`. It runs the dead code, code quality, type declaration and early return sets. The strict-types press declares `strict_types` only in files it cannot break.
+   `rector/base.php` `rector/strict-types.php` `rector/levels.php`
+   Reads your PHP version from `composer.json`. It runs the dead code, code quality, type declaration and early return sets. The strict-types press declares `strict_types` only in files it cannot break, and the levels press takes a big old app up one rule at a time.
    Enforced
 5. The buttonholes ESLint
    `eslint/javascript.js` `eslint/typescript.js`

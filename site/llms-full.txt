@@ -361,6 +361,27 @@ Proven on fixtures: `composer ci` runs the preset against a modern app (`tests/f
 old-style one (`tests/fixtures/rector-old`) on every run, and fails if the clean one changes or the old one is left
 alone. Rector is the tailor's press: it smooths old code to the standard without changing the cut.
 
+#### One level at a time, on a big old app
+
+On an app that has never met Rector, the base preset's four whole sets make one diff nobody can review. The opt-in
+`rector/levels.php` returns a function instead: name a rule family and how far up it goes, and Rector applies only
+that family's first rules, safest first.
+
+```php
+<?php
+
+$levels = require __DIR__ . '/vendor/waynestate/pinstripe/rector/levels.php';
+
+return $levels(deadCode: 0)->withPaths([__DIR__ . '/src']);
+```
+
+The families are `deadCode`, `typeCoverage`, `codeQuality` and `php` (the PHP-version rules, still capped at your
+`require.php`), and each one stays off until you name it. Level 0 is the first rule, not "off". Dry-run, review,
+apply, commit, then raise the number by one in the next merge request; when every family runs whole, switch to
+`rector/base.php`. Three fixture configs in `tests/fixtures/rector-levels` prove that level 0 makes only the first
+change, level 2 adds the next ones, and one family never applies another's rules. A suit is altered one fitting at a
+time.
+
 ### Banned calls
 
 Every cut (raw, Laravel and strict) fails the build on a short list of calls no Wayne State app should ship. The list
@@ -725,8 +746,8 @@ There are seven, each named for a part of the suit. The status comes from `BEST_
    Loaded by `phpstan/extension-installer`, so there's no include line to add.
    Enforced
 4. The press Rector
-   `rector/base.php` `rector/strict-types.php`
-   Reads your PHP version from `composer.json`. It runs the dead code, code quality, type declaration and early return sets. The strict-types press declares `strict_types` only in files it cannot break.
+   `rector/base.php` `rector/strict-types.php` `rector/levels.php`
+   Reads your PHP version from `composer.json`. It runs the dead code, code quality, type declaration and early return sets. The strict-types press declares `strict_types` only in files it cannot break, and the levels press takes a big old app up one rule at a time.
    Enforced
 5. The buttonholes ESLint
    `eslint/javascript.js` `eslint/typescript.js`
@@ -1159,6 +1180,7 @@ All notable changes to Pinstripe are documented here.
 ### Unreleased [#](https://pinstripe.apps.wayne.edu/docs/changelog.html#unreleased)
 
 - Added: `rector/strict-types.php`, an opt-in Rector preset for the careful route to strict types on an old app. It runs Rector's `SafeDeclareStrictTypesRector` and nothing else, so it adds `declare(strict_types=1)` only to files whose calls, returns and property assignments already pass the types they ask for, and leaves the rest for a later run. Opt-in, so no app sees a change until it points a config at it. New fixture `tests/fixtures/rector-strict-types` with `PresetsTest::testRectorStrictTypesPresetDeclaresOnlyTheSafeFile` and `testRectorStrictTypesPresetLeavesTheCoercingFileAlone`; the README, Require strict types and Rector guides show it, and BEST_PRACTICES.md gains the row (24 rows, 24 Enforced).
+- Added: `rector/levels.php`, an opt-in Rector preset for an app that has never met Rector. It returns a function: `$levels(deadCode: 0)` runs only the first dead-code rule, and you raise the number one merge request at a time, then start `typeCoverage`, `codeQuality` or `php` the same way (each family stays off until named, and naming none throws). It wraps Rector's own `withDeadCodeLevel`, `withTypeCoverageLevel`, `withCodeQualityLevel` and `withPhpLevel`, and leaves out the import tidying and Laravel rules that touch every file. Opt-in, so no app sees a change until it points a config at it. New fixture `tests/fixtures/rector-levels` with four `PresetsTest::testRectorLevelsPreset*` tests; the README and Rector guide show the climb, and BEST_PRACTICES.md gains the row (25 rows, 25 Enforced).
 - Site: the front page's "Just off the cutting table" note says what 0.3.2 brought (it still led with 0.3.0), and new `tests/FrontPageTest.php` fails `composer ci` while the note names anything but the newest CHANGELOG release, so it cannot fall behind again. The release steps in MAINTAINING.md and on the Releasing page say to rewrite it in the release commit.
 - Site: the hero's hang tag can be read on a phone. Its handwriting was 12px and its labels 7px at 390 px wide; now the writing never drops below 17px (with a hairline stroke behind the thin hand), the labels never below 9px, and the labels and values line up in two columns like a real ticket. The tag is wider, and the extra width hangs out past the cloth into the margin, so it covers no more of the label than before. The README hero is rebuilt to match.
 
@@ -1703,9 +1725,39 @@ Check with `vendor/bin/rector process --dry-run` and apply with `vendor/bin/rect
 
 A second, opt-in preset, `rector/strict-types.php`, adds `declare(strict_types=1)` only to the files where it cannot change what the code does. Keep it in its own config so its diff is only declarations. [Require strict types](https://pinstripe.apps.wayne.edu/docs/guides/strict-types.html) walks through it.
 
+### One level at a time, on a big old app [#](https://pinstripe.apps.wayne.edu/docs/guides/rector.html#one-level-at-a-time-on-a-big-old-app)
+
+On an app that has never met Rector, the base preset's four whole sets make one diff nobody can review. The opt-in preset `rector/levels.php` returns a function instead: name a rule family and how far up it goes, and Rector applies only that family's first rules, safest first.
+
+```php
+<?php
+
+$levels = require __DIR__ . '/vendor/waynestate/pinstripe/rector/levels.php';
+
+return $levels(deadCode: 0)->withPaths([__DIR__ . '/src']);
+```
+
+| Family | What it runs |
+| --- | --- |
+| `deadCode` | Rector's dead-code rules: unused foreach keys first, then useless casts, and on up. |
+| `typeCoverage` | Return, parameter and property types, from the rules that can only be right (a closure that returns nothing gets `: void`) upward. |
+| `codeQuality` | Code-quality fixes, smallest first. |
+| `php` | The PHP-version rules one at a time, still capped at the PHP floor in your `composer.json`. |
+
+Each family stays off until you name it, and calling `$levels()` with none throws. Level 0 is the first rule, not "off". The climb:
+
+1. Dry-run with `vendor/bin/rector process --dry-run`, review the diff, apply it, run your tests, commit.
+2. Raise the number by one in the next merge request.
+3. When a family is whole (Rector says so when the level passes its last rule), start the next one: `$levels(deadCode: 40, typeCoverage: 0)`.
+4. When every family runs whole, switch to `rector/base.php`.
+
+The levels preset leaves out the base preset's import tidying and Laravel upgrade rules on purpose, because each of those touches every file at once. A suit is altered one fitting at a time.
+
 ### Proven on fixtures [#](https://pinstripe.apps.wayne.edu/docs/guides/rector.html#proven-on-fixtures)
 
 `composer ci` runs the preset against a modern app (`tests/fixtures/rector-clean`) and an old-style one (`tests/fixtures/rector-old`) on every run, and fails if the clean one changes or the old one is left alone. Rector is the tailor's press: it smooths old code to the standard without changing the cut.
+
+The levels preset has its own fixture, `tests/fixtures/rector-levels`, with one planted fix per step and three configs: `deadCode: 0` must change only the unused foreach key, `deadCode: 2` must also drop the useless cast, and `typeCoverage: 0` must type the closure and touch no dead code.
 
 ### Related [#](https://pinstripe.apps.wayne.edu/docs/guides/rector.html#related)
 
@@ -2152,13 +2204,14 @@ A preset is **Enforced** when a test asserts both directions: a clean fixture pa
 | `Banned call tips link to the CREED rule` | PHPStan | Enforced | `tests/BannedCallLinksTest.php` (`BannedCallLinksTest::testEveryBanCarriesAnIdentifierAndATip` makes sure no entry goes without) |
 | `rector/base.php` | Rector | Enforced | `PresetsTest::testRectorPresetAcceptsTheCleanFixture`, `PresetsTest::testRectorPresetReportsChangesOnTheOldFixture` |
 | `rector/strict-types.php` | Rector | Enforced | `PresetsTest::testRectorStrictTypesPresetDeclaresOnlyTheSafeFile`, `PresetsTest::testRectorStrictTypesPresetLeavesTheCoercingFileAlone` |
+| `rector/levels.php` | Rector | Enforced | `PresetsTest::testRectorLevelsPresetStartsWithTheFirstDeadCodeRuleOnly`, `PresetsTest::testRectorLevelsPresetRaisingTheLevelAddsTheNextRules`, `PresetsTest::testRectorLevelsPresetKeepsTheFamiliesApart`, `PresetsTest::testRectorLevelsPresetRefusesToRunWithNoFamilyNamed` |
 | `eslint/javascript.js` | ESLint | Enforced | `tests/js/presets.test.mjs` (`npm test`) |
 | `eslint/typescript.js` | ESLint | Enforced | `tests/js/presets.test.mjs` (`npm test`) |
 | `prettier/index.json` | Prettier | Enforced | `tests/js/prettier.test.mjs` (`npm test`) |
 | README "Tool floors" | composer.lock + package-lock.json | Enforced | `ToolFloorsTest::testToolFloorsMatchTheLockFiles` |
 | This page | PHPUnit | Enforced | `BestPracticesTest::testEveryTestNamedHereExists`, `BestPracticesTest::testEveryFileNamedHereExists`, `BestPracticesTest::testEveryRowHasAKnownStatusAndAnEnforcedRowNamesItsTests`, `BestPracticesTest::testTheDocsPageCarriesTheSameTable`, `BestPracticesTest::testTheTallyCountsTheTable` |
 
-Tally: 24 rows, 24 Enforced, 0 Checked.
+Tally: 25 rows, 25 Enforced, 0 Checked.
 
 ### Related [#](https://pinstripe.apps.wayne.edu/docs/reference/best-practices.html#related)
 

@@ -63,8 +63,51 @@ return $base-&gt;withPaths([__DIR__ . '/src']);
 <p>Check with <code>vendor/bin/rector process --dry-run</code> and apply with <code>vendor/bin/rector process</code>.</p>
 <h2 id="strict-types-file-by-file">Strict types, file by <span class="docs-heading-tail"><span>file</span><a class="docs-heading-link" aria-label="Link to this section" href="#strict-types-file-by-file">#</a></span></h2>
 <p>A second, opt-in preset, <code>rector/strict-types.php</code>, adds <code>declare(strict_types=1)</code> only to the files where it cannot change what the code does. Keep it in its own config so its diff is only declarations. <a href="strict-types.html">Require strict types</a> walks through it.</p>
+<h2 id="one-level-at-a-time-on-a-big-old-app">One level at a time, on a big old <span class="docs-heading-tail"><span>app</span><a class="docs-heading-link" aria-label="Link to this section" href="#one-level-at-a-time-on-a-big-old-app">#</a></span></h2>
+<p>On an app that has never met Rector, the base preset's four whole sets make one diff nobody can review. The opt-in preset <code>rector/levels.php</code> returns a function instead: name a rule family and how far up it goes, and Rector applies only that family's first rules, safest first.</p>
+<pre tabindex="0"><code class="language-php">&lt;?php
+
+$levels = require __DIR__ . '/vendor/waynestate/pinstripe/rector/levels.php';
+
+return $levels(deadCode: 0)-&gt;withPaths([__DIR__ . '/src']);
+</code></pre>
+<div class="docs-table" role="region" aria-label="Table" tabindex="0"><table>
+<thead>
+<tr>
+<th>Family</th>
+<th>What it runs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>deadCode</code></td>
+<td>Rector's dead-code rules: unused foreach keys first, then useless casts, and on up.</td>
+</tr>
+<tr>
+<td><code>typeCoverage</code></td>
+<td>Return, parameter and property types, from the rules that can only be right (a closure that returns nothing gets <code>: void</code>) upward.</td>
+</tr>
+<tr>
+<td><code>codeQuality</code></td>
+<td>Code-quality fixes, smallest first.</td>
+</tr>
+<tr>
+<td><code>php</code></td>
+<td>The PHP-version rules one at a time, still capped at the PHP floor in your <code>composer.json</code>.</td>
+</tr>
+</tbody>
+</table></div>
+<p>Each family stays off until you name it, and calling <code>$levels()</code> with none throws. Level 0 is the first rule, not &quot;off&quot;. The climb:</p>
+<ol>
+<li>Dry-run with <code>vendor/bin/rector process --dry-run</code>, review the diff, apply it, run your tests, commit.</li>
+<li>Raise the number by one in the next merge request.</li>
+<li>When a family is whole (Rector says so when the level passes its last rule), start the next one: <code>$levels(deadCode: 40, typeCoverage: 0)</code>.</li>
+<li>When every family runs whole, switch to <code>rector/base.php</code>.</li>
+</ol>
+<p>The levels preset leaves out the base preset's import tidying and Laravel upgrade rules on purpose, because each of those touches every file at once. A suit is altered one fitting at a time.</p>
 <h2 id="proven-on-fixtures">Proven on <span class="docs-heading-tail"><span>fixtures</span><a class="docs-heading-link" aria-label="Link to this section" href="#proven-on-fixtures">#</a></span></h2>
 <p><code>composer ci</code> runs the preset against a modern app (<code>tests/fixtures/rector-clean</code>) and an old-style one (<code>tests/fixtures/rector-old</code>) on every run, and fails if the clean one changes or the old one is left alone. Rector is the tailor's press: it smooths old code to the standard without changing the cut.</p>
+<p>The levels preset has its own fixture, <code>tests/fixtures/rector-levels</code>, with one planted fix per step and three configs: <code>deadCode: 0</code> must change only the unused foreach key, <code>deadCode: 2</code> must also drop the useless cast, and <code>typeCoverage: 0</code> must type the closure and touch no dead code.</p>
 <h2 id="related"><span class="docs-heading-tail"><span>Related</span><a class="docs-heading-link" aria-label="Link to this section" href="#related">#</a></span></h2>
 <ul>
 <li><a href="raw-php.html">Raw PHP apps</a></li>
@@ -77,7 +120,7 @@ return $base-&gt;withPaths([__DIR__ . '/src']);
     </main>
     <nav class="docs-pager" aria-label="Pages"><a class="docs-pager__link" href="../../docs/guides/vue.html"><span class="docs-pager__dir">Previous</span><span class="docs-pager__title">Vue</span></a><a class="docs-pager__link docs-pager__link--next" href="../../docs/guides/strict-cut.html"><span class="docs-pager__dir">Next</span><span class="docs-pager__title">The strict cut</span></a></nav>
   </div>
-  <nav class="docs-toc" aria-label="On this page"><h2 class="docs-toc__title">On this page</h2><ul class="docs-toc__list"><li class="docs-toc__item"><a href="#install">Install</a></li><li class="docs-toc__item"><a href="#configure">Configure</a></li><li class="docs-toc__item"><a href="#laravel-upgrade-rules">Laravel upgrade rules</a></li><li class="docs-toc__item"><a href="#run">Run</a></li><li class="docs-toc__item"><a href="#strict-types-file-by-file">Strict types, file by file</a></li><li class="docs-toc__item"><a href="#proven-on-fixtures">Proven on fixtures</a></li><li class="docs-toc__item"><a href="#related">Related</a></li></ul></nav>
+  <nav class="docs-toc" aria-label="On this page"><h2 class="docs-toc__title">On this page</h2><ul class="docs-toc__list"><li class="docs-toc__item"><a href="#install">Install</a></li><li class="docs-toc__item"><a href="#configure">Configure</a></li><li class="docs-toc__item"><a href="#laravel-upgrade-rules">Laravel upgrade rules</a></li><li class="docs-toc__item"><a href="#run">Run</a></li><li class="docs-toc__item"><a href="#strict-types-file-by-file">Strict types, file by file</a></li><li class="docs-toc__item"><a href="#one-level-at-a-time-on-a-big-old-app">One level at a time, on a big old app</a></li><li class="docs-toc__item"><a href="#proven-on-fixtures">Proven on fixtures</a></li><li class="docs-toc__item"><a href="#related">Related</a></li></ul></nav>
 </div>
 <footer class="docs-footer">
   <span>Documents Pinstripe <span data-docs-version>0.3.2</span></span>
