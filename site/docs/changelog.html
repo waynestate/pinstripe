@@ -44,6 +44,8 @@
 <p>All notable changes to Pinstripe are documented here.</p>
 <h2 id="unreleased"><span class="docs-heading-tail"><span>Unreleased</span><a class="docs-heading-link" aria-label="Link to this section" href="#unreleased">#</a></span></h2>
 <ul>
+<li>Changed: the Vue presets let Inertia page components under <code>Pages/</code> or <code>pages/</code> have one-word names such as <code>Index</code> and <code>Show</code> (<code>vue/multi-word-component-names</code> is off there only).</li>
+<li>Tests: a Laravel plus Inertia plus Vue fixture (tests/fixtures/laravel-inertia) proves the presets on WELD's app shape, so every stack app shape now has a fixture.</li>
 <li>Docs: the ban tables in the README and on the Banned calls page name the OWASP ASVS 5.0 requirement each ban enforces (V1.2.4, V1.3.2, V12.3.2, V13.4.2, and V15.3.3 as the closest fit for <code>extract()</code>). The messages keep their OWASP Top 10 tags.</li>
 <li>Tests: a raw PHP plus Vue fixture (tests/fixtures/raw-vue) proves the presets on that app shape too, with one planted PHP error and two planted Vue defects.</li>
 <li>Changed: the GitHub workflow calls Preflight 0.5.0 (was 0.1.4), now that GitHub's copy of Preflight has the tag; MAINTAINING.md and the contributing guide name the 0.5.0 pins.</li>
