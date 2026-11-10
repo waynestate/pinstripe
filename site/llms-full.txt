@@ -1142,6 +1142,7 @@ All notable changes to Pinstripe are documented here.
 - Added: "Show PHPStan findings in the merge request" (README and the Raw PHP guide): an `analyse:gitlab` script with PHPStan's own `--error-format=gitlab`, each finding named by its identifier. New `PresetsTest::testPhpStanGitlabFormatReportsTheNullBugAsCodeQualityJson` and `testPhpStanGitlabFormatIsAnEmptyArrayForTheCleanFixture` prove both sides, and BEST_PRACTICES.md gains the row (23 rows, 23 Enforced).
 - Fixed: the Pint, PHPStan and ESLint Code Quality snippets set `artifacts: when: always`. Without it GitLab keeps a job's artifacts only when the job passes, so a lint job that found something, the one time the report matters, uploaded nothing.
 - Docs: no internal decision numbers in public text. This changelog's 0.2.0 and 0.1.5 entries, the CI file, the deploy layer's composer.json and a comment on the front page drop numbers that pointed into a private repository, and the old entries say "an internal GitLab" instead of naming it.
+- Fixed: the Composer package's description (what Packagist shows) names the Rector preset and the banned calls; it said "shared Pint and PHPStan presets".
 
 ### 0.3.0 (2026-11-09)[#](https://pinstripe.apps.wayne.edu/docs/changelog.html#0-3-0-2026-11-09)
 

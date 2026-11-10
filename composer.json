@@ -1,6 +1,6 @@
 {
     "name": "waynestate/pinstripe",
-    "description": "The coding standard for the Wayne State app stack: shared Pint and PHPStan presets.",
+    "description": "The coding standard for the Wayne State app stack: shared Pint, PHPStan and Rector presets, and banned calls.",
     "homepage": "https://pinstripe.apps.wayne.edu/",
     "support": {
         "source": "https://github.com/waynestate/pinstripe",
