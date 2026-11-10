@@ -29,8 +29,8 @@ docker run --rm -v "${PWD}:/app" -w /app composer:2.11.1@sha256:8de2184c6de224f4
 
 ## CI [#](https://pinstripe.apps.wayne.edu/docs/contributing.html#ci)
 
-- **GitLab:** Preflight's `php-test` (PHP 8.3, 8.4, 8.5), `composer-audit`, `proctor` (on `deploy/`) and `a11y` (on `site/`) components, pinned to 0.4.0, plus `composer-ci`, `npm-test` (Node 22, 24 and 26) and `wayneui-copies` jobs.
-- **GitHub:** `.github/workflows/ci.yml` calls Preflight's reusable workflow (0.1.4) with `composer ci`, and runs `npm ci` then `npm test` in `node:22`, `node:24` and `node:26` containers.
+- **GitLab:** Preflight's `php-test` (PHP 8.3, 8.4, 8.5), `composer-audit`, `proctor` (on `deploy/`) and `a11y` (on `site/`) components, pinned to 0.5.0, plus `composer-ci`, `npm-test` (Node 22, 24 and 26) and `wayneui-copies` jobs.
+- **GitHub:** `.github/workflows/ci.yml` calls Preflight's reusable workflow (0.5.0) with `composer ci`, and runs `npm ci` then `npm test` in `node:22`, `node:24` and `node:26` containers.
 - Green means `composer ci` passed on all three PHP versions and `npm test` passed on Node 22, 24 and 26, on both.
 
 ## Changing a preset [#](https://pinstripe.apps.wayne.edu/docs/contributing.html#changing-a-preset)
