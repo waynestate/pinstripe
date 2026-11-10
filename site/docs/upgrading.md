@@ -6,15 +6,15 @@ llms: https://pinstripe.apps.wayne.edu/llms.txt
 generator: Squire agent-ready
 ---
 
-# Upgrading[#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#upgrading)
+# Upgrading [#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#upgrading)
 
 This page walks through each released version of Pinstripe, what changed for consumers, and how to verify the upgrade.
 
-## What a stricter preset means to you[#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#what-a-stricter-preset-means-to-you)
+## What a stricter preset means to you [#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#what-a-stricter-preset-means-to-you)
 
 A stricter preset breaks consumers' builds. Pinstripe ships such a change in a minor version, not a major one, so you opt in by updating the package. When a version below marks a change as breaking, it is a stricter preset taking effect in your app the moment you update to it; hold the current version until you are ready.
 
-## 0.3.1 (2026-11-09)[#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#0-3-1-2026-11-09)
+## 0.3.1 (2026-11-09) [#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#0-3-1-2026-11-09)
 
 No breaking change and no preset change: every cut passes and fails exactly what it did in 0.3.0.
 
@@ -24,7 +24,7 @@ No breaking change and no preset change: every cut passes and fails exactly what
 
 **How to verify:** `composer show waynestate/pinstripe` reports 0.3.1, and `composer analyse` reports exactly what it did on 0.3.0.
 
-## 0.3.0 (2026-11-09)[#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#0-3-0-2026-11-09)
+## 0.3.0 (2026-11-09) [#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#0-3-0-2026-11-09)
 
 **Breaking (a stricter fit):** every cut bans three more families of calls, all listed on [Banned calls](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html). SQL joined from strings (`pinstripe.banned.joinedSql`): a variable concatenated, interpolated or `sprintf()`'d into the SQL passed to `PDO::query()`, `prepare()` or `exec()`, mysqli's `query()`, `prepare()`, `mysqli_query()` and the rest, `oci_parse()` (and the old alias `ociparse()`), or Laravel's `DB::select()`, `insert()`, `update()`, `delete()`, `statement()`, `scalar()`, `cursor()` and `fromQuery()`. TLS checks turned off (`pinstripe.banned.curlVerifyOff`, `pinstripe.banned.streamVerifyOff` and `pinstripe.banned.verifyFalse`): `curl_setopt()` or `curl_setopt_array()` with `CURLOPT_SSL_VERIFYPEER` false or `CURLOPT_SSL_VERIFYHOST` 0, `stream_context_create()` with `ssl` `verify_peer` or `verify_peer_name` false or `allow_self_signed` true, and Guzzle's `verify` option set to false, through Laravel's `withOptions()`, `new GuzzleHttp\Client()` or a request's options. And in Laravel apps, Laravel's own `dd()` and `dump()` methods (`pinstripe.banned.dd` and `pinstripe.banned.dump`): `$users->dd()`, `DB::table('users')->dumpRawSql()`, `$request->dump()`, `Http::get($url)->dd()`, `Http::dump()` and the rest of the family, not only the functions. Your own methods named `dump()` and the schema dump behind `php artisan schema:dump` are not affected.
 
@@ -32,7 +32,7 @@ No breaking change and no preset change: every cut passes and fails exactly what
 
 **How to verify:** `composer analyse` passes, or lists only the calls you now own.
 
-## 0.2.0 (2026-11-08)[#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#0-2-0-2026-11-08)
+## 0.2.0 (2026-11-08) [#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#0-2-0-2026-11-08)
 
 **Breaking (a stricter fit):** every cut bans `eval()`, `extract()`, `var_dump()`, `dd()`, `dump()` and Laravel's `PendingRequest::withoutVerifying()` (including `Http::withoutVerifying()`), through `spaze/phpstan-disallowed-calls`, which Pinstripe now requires. An app with one of these left in fails `composer analyse` once it updates. Each finding's tip links to [Banned calls](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html) and to the [CREED rule](https://creed.apps.wayne.edu/handbook/code.html#banned-patterns) it enforces.
 
@@ -42,7 +42,7 @@ No breaking change and no preset change: every cut passes and fails exactly what
 
 **How to verify:** `composer analyse` passes, or lists only the banned calls you now own, and `vendor/bin/rector process --dry-run` shows only changes you expect.
 
-## 0.1.5 (2026-11-09)[#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#0-1-5-2026-11-09)
+## 0.1.5 (2026-11-09) [#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#0-1-5-2026-11-09)
 
 For apps still on `^0.1`. No breaking change and no change to the presets: the package metadata and docs point at the canonical repository on git.wayne.edu and its GitHub mirror, so the entry Composer writes into your `composer.lock` names only public addresses.
 
@@ -50,7 +50,7 @@ For apps still on `^0.1`. No breaking change and no change to the presets: the p
 
 **How to verify:** `composer show waynestate/pinstripe` reports 0.1.5, and the Pinstripe entry in your `composer.lock` names git.wayne.edu and github.com only.
 
-## 0.1.4 (2026-11-06)[#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#0-1-4-2026-11-06)
+## 0.1.4 (2026-11-06) [#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#0-1-4-2026-11-06)
 
 **Breaking (three tailoring changes, each a stricter fit):**
 
@@ -62,11 +62,11 @@ For apps still on `^0.1`. No breaking change and no change to the presets: the p
 
 **How to verify:** `composer analyse` and `npm run lint` pass (or list the findings you now own), `pinstripe-baseline check` still counts your baseline, and `npx prettier --check "resources/views/**/*.blade.php"` passes after the one-time reformat.
 
-## 0.1.3 (2026-11-03)[#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#0-1-3-2026-11-03)
+## 0.1.3 (2026-11-03) [#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#0-1-3-2026-11-03)
 
 No breaking change. The one change that touches your app is that the install instructions now include `composer config allow-plugins.phpstan/extension-installer true`, so a non-interactive install works. The remaining items (the ADR, the Node 22, 24 and 26 test matrix, the `laravel-vue` fixture, and the CI and deploy pins) are internal to Pinstripe.
 
-## 0.1.2[#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#0-1-2)
+## 0.1.2 [#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#0-1-2)
 
 **Breaking (Laravel apps):** `phpstan/laravel.neon` now pins Larastan's `noEnvCallsOutsideOfConfig` rule on, so an `env()` call outside `config/` fails analysis. This is a stricter preset shipped in a minor version, so you opt in by updating rather than being forced into a breaking major.
 
@@ -74,7 +74,7 @@ No breaking change. The one change that touches your app is that the install ins
 
 **How to verify:** Run `composer analyse` in your app. Any `env()` call outside `config/` is now reported; read config with `config()` instead, because once the config is cached `env()` returns null.
 
-## 0.1.1[#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#0-1-1)
+## 0.1.1 [#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#0-1-1)
 
 No breaking change: this release only removes reports the raw and Laravel cuts should never have made. It fixes the raw and Laravel PHPStan cuts inheriting `reportMaybesInMethodSignatures` and `reportStaticMethodSignatures` from `phpstan/phpstan-strict-rules`, which made them report phpdoc method signature issues they should not; `base.neon` now pins both to false and `strict.neon` keeps them on. It also pins the other eight parameters `phpstan/phpstan-strict-rules` forces on: four low-noise ones stay on in every cut, and `checkDynamicProperties`, `reportMaybesInPropertyPhpDocTypes`, `reportWrongPhpDocTypeInVarTag` and `reportNonIntStringArrayKey` are off in `base.neon` and on in `strict.neon`.
 
@@ -82,7 +82,7 @@ No breaking change: this release only removes reports the raw and Laravel cuts s
 
 **How to verify:** Run `composer analyse` in your app. The raw and Laravel cuts no longer report the inherited phpdoc method signature issues.
 
-## 0.1.0[#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#0-1-0)
+## 0.1.0 [#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#0-1-0)
 
 First release, so there is nothing to break. It adds `bin/pinstripe-baseline`, which counts a PHPStan baseline's ignored errors (`count`) and fails when the baseline grows (`check --max=<n>` or `check --against=<git-ref>`), so baselines only shrink. It adds `phpstan/strict.neon`, an opt-in PHPStan preset for new apps that turns on `phpstan/phpstan-strict-rules`, and adds `tests/fixtures/per`, a Pint fixture proving the `per` preset is the PER Coding Style.
 
@@ -90,7 +90,7 @@ First release, so there is nothing to break. It adds `bin/pinstripe-baseline`, w
 
 **How to verify:** In your app, run `composer lint` and `composer analyse` once the presets are wired in.
 
-## Related[#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#related)
+## Related [#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#related)
 
 - [Changelog](https://pinstripe.apps.wayne.edu/docs/changelog.html)
 - [Adopting on an existing app](https://pinstripe.apps.wayne.edu/docs/guides/adopting.html)

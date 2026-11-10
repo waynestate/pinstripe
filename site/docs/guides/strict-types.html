@@ -39,9 +39,9 @@
   <nav class="docs-nav docs-nav--sidebar" aria-label="Documentation"><ul class="docs-nav__list"><li class="docs-nav__group"><span class="docs-nav__label">Getting started</span><ul><li><a href="../../docs/index.html">Overview</a></li></ul></li><li class="docs-nav__group"><span class="docs-nav__label">Guides</span><ul><li><a href="../../docs/guides/raw-php.html">Raw PHP apps</a></li><li><a href="../../docs/guides/strict-types.html" aria-current="page">Require strict types</a></li><li><a href="../../docs/guides/laravel.html">Laravel apps</a></li><li><a href="../../docs/guides/vue.html">Vue</a></li><li><a href="../../docs/guides/rector.html">Rector</a></li><li><a href="../../docs/guides/strict-cut.html">The strict cut</a></li><li><a href="../../docs/guides/adopting.html">Adopting on an existing app</a></li><li><a href="../../docs/guides/baselines.html">Baselines only shrink</a></li></ul></li><li class="docs-nav__group"><span class="docs-nav__label">Reference</span><ul><li><a href="../../docs/reference/tested-with.html">Tested with and tool floors</a></li><li><a href="../../docs/reference/banned-calls.html">Banned calls</a></li><li><a href="../../docs/reference/best-practices.html">Best practices</a></li><li><a href="../../docs/reference/proof.html">Proof</a></li><li><a href="../../docs/adr/0001-phpstan-level-and-baseline-policy.html">ADR-0001: PHPStan level 8 and baselines</a></li></ul></li><li class="docs-nav__group"><span class="docs-nav__label">Deploying</span><ul><li><a href="../../docs/deploying/releasing.html">Releasing</a></li></ul></li><li><a href="../../docs/upgrading.html">Upgrading</a></li><li><a href="../../docs/contributing.html">Contributing</a></li><li><a href="../../docs/changelog.html">Changelog</a></li></ul></nav>
   <div class="docs-content">
     <main id="main">
-      <article class="docs-article"><h1 id="require-strict-types">Require strict types<a class="docs-heading-link" aria-label="Link to this section" href="#require-strict-types">#</a></h1>
+      <article class="docs-article"><h1 id="require-strict-types">Require strict <span class="docs-heading-tail"><span>types</span><a class="docs-heading-link" aria-label="Link to this section" href="#require-strict-types">#</a></span></h1>
 <p>Opt in to <code>declare(strict_types=1)</code> so every file Pint touches carries the declaration.</p>
-<h2 id="point-the-scripts-at-the-strict-preset">Point the scripts at the strict preset<a class="docs-heading-link" aria-label="Link to this section" href="#point-the-scripts-at-the-strict-preset">#</a></h2>
+<h2 id="point-the-scripts-at-the-strict-preset">Point the scripts at the strict <span class="docs-heading-tail"><span>preset</span><a class="docs-heading-link" aria-label="Link to this section" href="#point-the-scripts-at-the-strict-preset">#</a></span></h2>
 <p>Opt-in. Point <code>composer lint</code> and <code>composer fix</code> at the strict preset instead of <code>per.json</code>:</p>
 <pre tabindex="0"><code class="language-json">{
     &quot;scripts&quot;: {
@@ -52,9 +52,9 @@
 </code></pre>
 <aside class="docs-callout docs-callout--warning" role="note"><p class="docs-callout__label">Warning</p><p><code>composer fix</code> adds <code>declare(strict_types=1);</code> to every file it touches, so run your tests first and commit the change on its own.</p></aside>
 <p>For a big app, Rector's <code>SafeDeclareStrictTypesRector</code> is the careful route. Strict types leave no loose threads.</p>
-<h2 id="covered-by-tests">Covered by tests<a class="docs-heading-link" aria-label="Link to this section" href="#covered-by-tests">#</a></h2>
+<h2 id="covered-by-tests">Covered by <span class="docs-heading-tail"><span>tests</span><a class="docs-heading-link" aria-label="Link to this section" href="#covered-by-tests">#</a></span></h2>
 <p>Pinstripe runs the real Pint against clean and missing fixtures for <code>pint/per-strict.json</code> and <code>pint/laravel-strict.json</code>, and asserts each strict config declares its preset and the <code>declare_strict_types</code> rule.</p>
-<h2 id="related">Related<a class="docs-heading-link" aria-label="Link to this section" href="#related">#</a></h2>
+<h2 id="related"><span class="docs-heading-tail"><span>Related</span><a class="docs-heading-link" aria-label="Link to this section" href="#related">#</a></span></h2>
 <ul>
 <li><a href="../index.html">Overview</a></li>
 <li><a href="raw-php.html">Raw PHP apps</a></li>

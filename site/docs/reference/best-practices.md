@@ -6,7 +6,7 @@ llms: https://pinstripe.apps.wayne.edu/llms.txt
 generator: Squire agent-ready
 ---
 
-# Best practices[#](https://pinstripe.apps.wayne.edu/docs/reference/best-practices.html#best-practices)
+# Best practices [#](https://pinstripe.apps.wayne.edu/docs/reference/best-practices.html#best-practices)
 
 This page lists every rule Pinstripe holds itself to and the tests that prove each one. It carries BEST_PRACTICES.md word for word, and `BestPracticesTest` fails the build when the two drift apart.
 
@@ -42,7 +42,7 @@ A preset is **Enforced** when a test asserts both directions: a clean fixture pa
 
 Tally: 23 rows, 23 Enforced, 0 Checked.
 
-## Related[#](https://pinstripe.apps.wayne.edu/docs/reference/best-practices.html#related)
+## Related [#](https://pinstripe.apps.wayne.edu/docs/reference/best-practices.html#related)
 
 - [Tested with and tool floors](https://pinstripe.apps.wayne.edu/docs/reference/tested-with.html)
 - [Banned calls](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html)

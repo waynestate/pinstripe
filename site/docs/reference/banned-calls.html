@@ -39,9 +39,9 @@
   <nav class="docs-nav docs-nav--sidebar" aria-label="Documentation"><ul class="docs-nav__list"><li class="docs-nav__group"><span class="docs-nav__label">Getting started</span><ul><li><a href="../../docs/index.html">Overview</a></li></ul></li><li class="docs-nav__group"><span class="docs-nav__label">Guides</span><ul><li><a href="../../docs/guides/raw-php.html">Raw PHP apps</a></li><li><a href="../../docs/guides/strict-types.html">Require strict types</a></li><li><a href="../../docs/guides/laravel.html">Laravel apps</a></li><li><a href="../../docs/guides/vue.html">Vue</a></li><li><a href="../../docs/guides/rector.html">Rector</a></li><li><a href="../../docs/guides/strict-cut.html">The strict cut</a></li><li><a href="../../docs/guides/adopting.html">Adopting on an existing app</a></li><li><a href="../../docs/guides/baselines.html">Baselines only shrink</a></li></ul></li><li class="docs-nav__group"><span class="docs-nav__label">Reference</span><ul><li><a href="../../docs/reference/tested-with.html">Tested with and tool floors</a></li><li><a href="../../docs/reference/banned-calls.html" aria-current="page">Banned calls</a></li><li><a href="../../docs/reference/best-practices.html">Best practices</a></li><li><a href="../../docs/reference/proof.html">Proof</a></li><li><a href="../../docs/adr/0001-phpstan-level-and-baseline-policy.html">ADR-0001: PHPStan level 8 and baselines</a></li></ul></li><li class="docs-nav__group"><span class="docs-nav__label">Deploying</span><ul><li><a href="../../docs/deploying/releasing.html">Releasing</a></li></ul></li><li><a href="../../docs/upgrading.html">Upgrading</a></li><li><a href="../../docs/contributing.html">Contributing</a></li><li><a href="../../docs/changelog.html">Changelog</a></li></ul></nav>
   <div class="docs-content">
     <main id="main">
-      <article class="docs-article"><h1 id="banned-calls">Banned calls<a class="docs-heading-link" aria-label="Link to this section" href="#banned-calls">#</a></h1>
+      <article class="docs-article"><h1 id="banned-calls">Banned <span class="docs-heading-tail"><span>calls</span><a class="docs-heading-link" aria-label="Link to this section" href="#banned-calls">#</a></span></h1>
 <p>This page lists the calls every Pinstripe cut fails the build on, says why each is banned and what to use instead, and shows how to keep one on purpose.</p>
-<h2 id="what-is-banned">What is banned<a class="docs-heading-link" aria-label="Link to this section" href="#what-is-banned">#</a></h2>
+<h2 id="what-is-banned">What is <span class="docs-heading-tail"><span>banned</span><a class="docs-heading-link" aria-label="Link to this section" href="#what-is-banned">#</a></span></h2>
 <p>Every cut (raw, Laravel and strict) includes <code>phpstan/disallowed.neon</code> through <code>base.neon</code>. The rules come from <a rel="noopener" href="https://github.com/spaze/phpstan-disallowed-calls">spaze/phpstan-disallowed-calls</a>, which Pinstripe requires and <code>phpstan/extension-installer</code> loads, so your <code>phpstan.neon</code> needs no new line. A <code>dd()</code> left in after debugging turns the pipeline red, the same as any other PHPStan error.</p>
 <p>The one exception is <code>curl_setopt()</code> with a verify option set to false: it needs the option and the value together, which that package cannot match, so Pinstripe ships a small rule of its own (<code>src/PHPStan/CurlVerifyOffRule.php</code>), registered in the same file. Its report reads and links like the others.</p>
 <div class="docs-table" role="region" aria-label="Table" tabindex="0"><table>
@@ -124,7 +124,7 @@
 </table></div>
 <p>Each ban has a stable identifier: <code>pinstripe.banned.eval</code>, <code>pinstripe.banned.extract</code>, <code>pinstripe.banned.varDump</code>,
 <code>pinstripe.banned.dd</code>, <code>pinstripe.banned.dump</code>, <code>pinstripe.banned.withoutVerifying</code>, <code>pinstripe.banned.verifyFalse</code>, <code>pinstripe.banned.curlVerifyOff</code>, <code>pinstripe.banned.streamVerifyOff</code> and <code>pinstripe.banned.joinedSql</code>.</p>
-<h2 id="sql-joined-from-strings">SQL joined from strings<a class="docs-heading-link" aria-label="Link to this section" href="#sql-joined-from-strings">#</a></h2>
+<h2 id="sql-joined-from-strings">SQL joined from <span class="docs-heading-tail"><span>strings</span><a class="docs-heading-link" aria-label="Link to this section" href="#sql-joined-from-strings">#</a></span></h2>
 <p>The SQL ban stands on PHPStan's own <code>literal-string</code> type, so there is no taint rule to trust: PHPStan already knows which strings are literals. These pass:</p>
 <pre tabindex="0"><code class="language-php">$pdo-&gt;prepare('SELECT * FROM users WHERE id = ?')-&gt;execute([$id]);
 $pdo-&gt;query('SELECT COUNT(*) FROM ' . self::TABLE);                  // a class constant is a literal
@@ -143,7 +143,7 @@ DB::select(&quot;select * from users where id = {$id}&quot;);                 //
 <p><code>ociparse()</code> is also reported as deprecated (<code>function.deprecated</code>) on every PHP version Pinstripe supports, whatever the SQL looks like, and the fix is <code>oci_parse()</code>.</p>
 <p>Laravel already types <code>DB::raw()</code>, <code>DB::unprepared()</code> and the query builder's <code>whereRaw()</code>, <code>selectRaw()</code>, <code>orderByRaw()</code> and other raw methods as <code>literal-string</code>, so PHPStan reports a joined string there by itself, as <code>argument.type</code>; Pinstripe covers the connection calls Laravel leaves as plain <code>string</code>. The query builder's own <code>insert()</code>, <code>update()</code>, <code>delete()</code> and <code>select()</code> take arrays and column names, not SQL, and are not touched.</p>
 <p>SQL that is safe but not a literal (read from a <code>.sql</code> file, or returned by a helper) can say so, or the call can keep a reasoned ignore.</p>
-<h3 id="sql-kept-in-sql-files">SQL kept in .sql files<a class="docs-heading-link" aria-label="Link to this section" href="#sql-kept-in-sql-files">#</a></h3>
+<h3 id="sql-kept-in-sql-files">SQL kept in .sql <span class="docs-heading-tail"><span>files</span><a class="docs-heading-link" aria-label="Link to this section" href="#sql-kept-in-sql-files">#</a></span></h3>
 <p>Many apps keep their queries in <code>.sql</code> files and bind every value. That is safe, but PHPStan cannot tell that a file's contents are static, so the ban reports every call that runs one. It is the report older Wayne State apps meet most often. One typed reader clears all of them, with the one reasoned ignore in one place:</p>
 <pre tabindex="0"><code class="language-php">/**
  * @param literal-string $name
@@ -165,7 +165,7 @@ $statement = oci_parse($oracle, sqlFile('people'));
 oci_bind_by_name($statement, ':id', $id);
 </code></pre>
 <p>The name is <code>literal-string</code> too, so a request value can never pick the file. A helper that only ever returns literals needs no ignore at all: type it <code>@return literal-string</code> and PHPStan checks that it is true.</p>
-<h3 id="type-a-wrapper-never-baseline-it">Type a wrapper, never baseline it<a class="docs-heading-link" aria-label="Link to this section" href="#type-a-wrapper-never-baseline-it">#</a></h3>
+<h3 id="type-a-wrapper-never-baseline-it">Type a wrapper, never baseline <span class="docs-heading-tail"><span>it</span><a class="docs-heading-link" aria-label="Link to this section" href="#type-a-wrapper-never-baseline-it">#</a></span></h3>
 <p>A wrapper that takes the whole SQL as a plain <code>string</code> is reported once, inside the wrapper, and never at its callers:</p>
 <pre tabindex="0"><code class="language-php">function query($db, string $sql)
 {
@@ -183,7 +183,7 @@ function query($db, string $sql)
 }
 </code></pre>
 <p>Now PHPStan checks each caller: literal SQL passes, and a joined string is reported where it is joined, as <code>argument.type</code> (&quot;expects literal-string&quot;).</p>
-<h3 id="other-ways-out">Other ways out<a class="docs-heading-link" aria-label="Link to this section" href="#other-ways-out">#</a></h3>
+<h3 id="other-ways-out">Other ways <span class="docs-heading-tail"><span>out</span><a class="docs-heading-link" aria-label="Link to this section" href="#other-ways-out">#</a></span></h3>
 <ul>
 <li>Give PHPStan the connection's type, a typed property or <code>@var \PDO $db</code>; with a <code>mixed</code> connection PHPStan cannot see the call, and the ban stays quiet.</li>
 <li>An older app with many joined queries can baseline the rest while it binds them, since a baseline only shrinks. Baseline call sites, never a wrapper.</li>
@@ -195,22 +195,22 @@ function query($db, string $sql)
 <pre tabindex="0"><code class="language-text">Calling dd() is forbidden, a dd() left in dumps internals to the browser and halts the request in production;
 log it with a PSR-3 logger (Log::debug() in Laravel), or step through with Xdebug (OWASP A02:2025 Security Misconfiguration).
 </code></pre>
-<h2 id="keep-one-on-purpose">Keep one on purpose<a class="docs-heading-link" aria-label="Link to this section" href="#keep-one-on-purpose">#</a></h2>
+<h2 id="keep-one-on-purpose">Keep one on <span class="docs-heading-tail"><span>purpose</span><a class="docs-heading-link" aria-label="Link to this section" href="#keep-one-on-purpose">#</a></span></h2>
 <p>Use the ban's identifier and say why in parentheses, as with any other ignore. Every cut reports an ignore without a reason.</p>
 <pre tabindex="0"><code class="language-php">// @phpstan-ignore pinstripe.banned.varDump (CLI-only diagnostics; output goes to the operator's terminal)
 var_dump($report);
 </code></pre>
 <p>On an existing app, fix the banned calls rather than baselining them: each is usually one line, and a baseline would hide the next one too.</p>
-<h2 id="add-your-own">Add your own<a class="docs-heading-link" aria-label="Link to this section" href="#add-your-own">#</a></h2>
+<h2 id="add-your-own">Add your <span class="docs-heading-tail"><span>own</span><a class="docs-heading-link" aria-label="Link to this section" href="#add-your-own">#</a></span></h2>
 <p>List more bans under the same parameters (<code>disallowedFunctionCalls</code>, <code>disallowedMethodCalls</code>, <code>disallowedStaticCalls</code>) in your app's <code>phpstan.neon</code>. NEON appends lists, so yours join Pinstripe's. The package's <a rel="noopener" href="https://github.com/spaze/phpstan-disallowed-calls/blob/main/docs/custom-rules.md">custom rules guide</a> shows every key.</p>
-<h2 id="not-covered-yet">Not covered yet<a class="docs-heading-link" aria-label="Link to this section" href="#not-covered-yet">#</a></h2>
+<h2 id="not-covered-yet">Not covered <span class="docs-heading-tail"><span>yet</span><a class="docs-heading-link" aria-label="Link to this section" href="#not-covered-yet">#</a></span></h2>
 <ul>
 <li>An off switch PHPStan cannot pin to a value: <code>'verify' =&gt; $verify</code>, or a curl option read from config.</li>
 <li>Postgres's <code>pg_query()</code> and friends: the connection argument is optional, so the SQL has no fixed position to check.</li>
 </ul>
-<h2 id="not-banned-yet">Not banned yet<a class="docs-heading-link" aria-label="Link to this section" href="#not-banned-yet">#</a></h2>
+<h2 id="not-banned-yet">Not banned <span class="docs-heading-tail"><span>yet</span><a class="docs-heading-link" aria-label="Link to this section" href="#not-banned-yet">#</a></span></h2>
 <p><code>md5()</code>, <code>sha1()</code>, <code>rand()</code> and <code>mt_rand()</code> are weak for passwords, tokens and signatures, but they are fine for cache keys, checksums and other non-security uses, and apps across the fleet use them that way. Whether Pinstripe bans them (and how it would allow the safe uses) is an open call, so for now they pass.</p>
-<h2 id="how-it-is-proven">How it is proven<a class="docs-heading-link" aria-label="Link to this section" href="#how-it-is-proven">#</a></h2>
+<h2 id="how-it-is-proven">How it is <span class="docs-heading-tail"><span>proven</span><a class="docs-heading-link" aria-label="Link to this section" href="#how-it-is-proven">#</a></span></h2>
 <p><code>composer ci</code> runs these on every change:</p>
 <ul>
 <li><code>tests/fixtures/raw-disallowed/src/Leftovers.php</code> makes each banned call once, and the raw and strict cuts must report each one, by identifier, with its OWASP tag, and nothing else.</li>
@@ -225,7 +225,7 @@ var_dump($report);
 <li>The Laravel app fixture installs Pinstripe through Composer, like an app does, and must fail on a leftover <code>dd()</code>, and on curl told to skip the certificate check (which proves Pinstripe's own curl rule loads from <code>vendor/</code>).</li>
 </ul>
 <p>A suit with a <code>dd()</code> in the pocket does not leave the shop.</p>
-<h2 id="related">Related<a class="docs-heading-link" aria-label="Link to this section" href="#related">#</a></h2>
+<h2 id="related"><span class="docs-heading-tail"><span>Related</span><a class="docs-heading-link" aria-label="Link to this section" href="#related">#</a></span></h2>
 <ul>
 <li><a href="../guides/raw-php.html">Raw PHP apps</a></li>
 <li><a href="../guides/laravel.html">Laravel apps</a></li>

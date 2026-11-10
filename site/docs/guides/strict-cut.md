@@ -6,19 +6,19 @@ llms: https://pinstripe.apps.wayne.edu/llms.txt
 generator: Squire agent-ready
 ---
 
-# The strict cut[#](https://pinstripe.apps.wayne.edu/docs/guides/strict-cut.html#the-strict-cut)
+# The strict cut [#](https://pinstripe.apps.wayne.edu/docs/guides/strict-cut.html#the-strict-cut)
 
 Point a new app at the strict PHPStan cut so loose comparisons and the strict rules fail the build.
 
-## Choose the strict cut[#](https://pinstripe.apps.wayne.edu/docs/guides/strict-cut.html#choose-the-strict-cut)
+## Choose the strict cut [#](https://pinstripe.apps.wayne.edu/docs/guides/strict-cut.html#choose-the-strict-cut)
 
 New apps can include `vendor/waynestate/pinstripe/phpstan/strict.neon` instead of `raw.neon` or `laravel.neon`. It keeps the base cut and turns on `phpstan/phpstan-strict-rules`, so loose comparisons like `==` fail the build. Existing apps stay on the base cut and baseline their way over.
 
-## What the strict cut adds[#](https://pinstripe.apps.wayne.edu/docs/guides/strict-cut.html#what-the-strict-cut-adds)
+## What the strict cut adds [#](https://pinstripe.apps.wayne.edu/docs/guides/strict-cut.html#what-the-strict-cut-adds)
 
 PHPStan checks phpdoc method signatures from level 3 up, and `phpstan/phpstan-strict-rules` forces the two switches behind them on for every run it is installed for. The base cut pins `reportMaybesInMethodSignatures` and `reportStaticMethodSignatures` off so it stays exactly as documented; the strict cut keeps them on, so it also reports maybe-mismatched overrides and static method overrides.
 
-## The eight extra switches[#](https://pinstripe.apps.wayne.edu/docs/guides/strict-cut.html#the-eight-extra-switches)
+## The eight extra switches [#](https://pinstripe.apps.wayne.edu/docs/guides/strict-cut.html#the-eight-extra-switches)
 
 `phpstan/phpstan-strict-rules` forces eight more switches on for every run as well. Each one is decided below: low noise and real bugs stay on in every cut, noisy ones are pinned off in the base cut and turned on only in `strict.neon`.
 
@@ -37,7 +37,7 @@ Note
 
 Strict is the tailor's chalk line drawn before the first stitch.
 
-## Related[#](https://pinstripe.apps.wayne.edu/docs/guides/strict-cut.html#related)
+## Related [#](https://pinstripe.apps.wayne.edu/docs/guides/strict-cut.html#related)
 
 - [Adopting on an existing app](https://pinstripe.apps.wayne.edu/docs/guides/adopting.html)
 - [Baselines only shrink](https://pinstripe.apps.wayne.edu/docs/guides/baselines.html)

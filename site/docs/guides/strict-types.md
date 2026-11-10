@@ -6,11 +6,11 @@ llms: https://pinstripe.apps.wayne.edu/llms.txt
 generator: Squire agent-ready
 ---
 
-# Require strict types[#](https://pinstripe.apps.wayne.edu/docs/guides/strict-types.html#require-strict-types)
+# Require strict types [#](https://pinstripe.apps.wayne.edu/docs/guides/strict-types.html#require-strict-types)
 
 Opt in to `declare(strict_types=1)` so every file Pint touches carries the declaration.
 
-## Point the scripts at the strict preset[#](https://pinstripe.apps.wayne.edu/docs/guides/strict-types.html#point-the-scripts-at-the-strict-preset)
+## Point the scripts at the strict preset [#](https://pinstripe.apps.wayne.edu/docs/guides/strict-types.html#point-the-scripts-at-the-strict-preset)
 
 Opt-in. Point `composer lint` and `composer fix` at the strict preset instead of `per.json`:
 
@@ -29,11 +29,11 @@ Warning
 
 For a big app, Rector's `SafeDeclareStrictTypesRector` is the careful route. Strict types leave no loose threads.
 
-## Covered by tests[#](https://pinstripe.apps.wayne.edu/docs/guides/strict-types.html#covered-by-tests)
+## Covered by tests [#](https://pinstripe.apps.wayne.edu/docs/guides/strict-types.html#covered-by-tests)
 
 Pinstripe runs the real Pint against clean and missing fixtures for `pint/per-strict.json` and `pint/laravel-strict.json`, and asserts each strict config declares its preset and the `declare_strict_types` rule.
 
-## Related[#](https://pinstripe.apps.wayne.edu/docs/guides/strict-types.html#related)
+## Related [#](https://pinstripe.apps.wayne.edu/docs/guides/strict-types.html#related)
 
 - [Overview](https://pinstripe.apps.wayne.edu/docs/index.html)
 - [Raw PHP apps](https://pinstripe.apps.wayne.edu/docs/guides/raw-php.html)

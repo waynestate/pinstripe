@@ -6,11 +6,11 @@ llms: https://pinstripe.apps.wayne.edu/llms.txt
 generator: Squire agent-ready
 ---
 
-# Raw PHP apps[#](https://pinstripe.apps.wayne.edu/docs/guides/raw-php.html#raw-php-apps)
+# Raw PHP apps [#](https://pinstripe.apps.wayne.edu/docs/guides/raw-php.html#raw-php-apps)
 
 Point a raw PHP app at the Pinstripe presets: Pint for style, PHPStan at level 8 for analysis.
 
-## Add the dependency[#](https://pinstripe.apps.wayne.edu/docs/guides/raw-php.html#add-the-dependency)
+## Add the dependency [#](https://pinstripe.apps.wayne.edu/docs/guides/raw-php.html#add-the-dependency)
 
 Add Pinstripe as a dev dependency:
 
@@ -29,7 +29,7 @@ composer config repositories.pinstripe vcs https://git.wayne.edu/enterprise-apps
 
 The npm package, `@waynestate/pinstripe`, is published by hand after each tag; `npm view @waynestate/pinstripe version` shows where it is. The ESLint and Prettier presets have not changed since 0.1.4, so any version from 0.1.4 up is today's cut.
 
-## Point PHPStan at the raw config[#](https://pinstripe.apps.wayne.edu/docs/guides/raw-php.html#point-phpstan-at-the-raw-config)
+## Point PHPStan at the raw config [#](https://pinstripe.apps.wayne.edu/docs/guides/raw-php.html#point-phpstan-at-the-raw-config)
 
 `phpstan.neon`:
 
@@ -42,7 +42,7 @@ parameters:
         - app
 ```
 
-## Add Composer scripts[#](https://pinstripe.apps.wayne.edu/docs/guides/raw-php.html#add-composer-scripts)
+## Add Composer scripts [#](https://pinstripe.apps.wayne.edu/docs/guides/raw-php.html#add-composer-scripts)
 
 Add Composer scripts that run on every OS:
 
@@ -58,7 +58,7 @@ Add Composer scripts that run on every OS:
 
 `composer lint` fails on style. `composer fix` fixes it. Pint's `per` preset is the PER Coding Style, and `tests/fixtures/per` keeps a clean and a messy proof. `composer analyse` runs PHPStan at level 8, with deprecation checks too. Pinstripe ships `phpstan/phpstan-deprecation-rules`, loaded automatically by `phpstan/extension-installer`. Calling a `@deprecated` method fails the build. The tailor flags the old cut before the fabric is retired. It also fails on `eval()`, `extract()`, `var_dump()`, `dd()` and `dump()`, and on TLS checks turned off through curl (`CURLOPT_SSL_VERIFYPEER` false, `CURLOPT_SSL_VERIFYHOST` 0), a stream context (`verify_peer` false) or Guzzle (`'verify' => false`), and on SQL joined from strings through PDO, mysqli or `oci_parse()` (bind the values instead): the [Banned calls](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html) page says why and what to use instead.
 
-## Show Pint findings in the merge request[#](https://pinstripe.apps.wayne.edu/docs/guides/raw-php.html#show-pint-findings-in-the-merge-request)
+## Show Pint findings in the merge request [#](https://pinstripe.apps.wayne.edu/docs/guides/raw-php.html#show-pint-findings-in-the-merge-request)
 
 Add a second script that writes the report to a file:
 
@@ -81,7 +81,7 @@ artifacts:
 
 `--format=gitlab` writes GitLab's Code Quality JSON and `[]` when the code is clean, and Pinstripe tests both. Chalk marks wash out; these findings stay pinned to the merge request.
 
-## Show PHPStan findings in the merge request[#](https://pinstripe.apps.wayne.edu/docs/guides/raw-php.html#show-phpstan-findings-in-the-merge-request)
+## Show PHPStan findings in the merge request [#](https://pinstripe.apps.wayne.edu/docs/guides/raw-php.html#show-phpstan-findings-in-the-merge-request)
 
 PHPStan writes the same report with its own `gitlab` error format:
 
@@ -102,7 +102,7 @@ artifacts:
 
 Each finding carries its identifier (`pinstripe.banned.joinedSql`, `argument.type`) as the check name. Pinstripe tests both sides: the raw preset turns the null bug fixture into a non-empty report and the clean fixture into `[]`.
 
-## Related[#](https://pinstripe.apps.wayne.edu/docs/guides/raw-php.html#related)
+## Related [#](https://pinstripe.apps.wayne.edu/docs/guides/raw-php.html#related)
 
 - [Overview](https://pinstripe.apps.wayne.edu/docs/index.html)
 - [Require strict types](https://pinstripe.apps.wayne.edu/docs/guides/strict-types.html)

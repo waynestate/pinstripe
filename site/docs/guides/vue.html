@@ -39,26 +39,26 @@
   <nav class="docs-nav docs-nav--sidebar" aria-label="Documentation"><ul class="docs-nav__list"><li class="docs-nav__group"><span class="docs-nav__label">Getting started</span><ul><li><a href="../../docs/index.html">Overview</a></li></ul></li><li class="docs-nav__group"><span class="docs-nav__label">Guides</span><ul><li><a href="../../docs/guides/raw-php.html">Raw PHP apps</a></li><li><a href="../../docs/guides/strict-types.html">Require strict types</a></li><li><a href="../../docs/guides/laravel.html">Laravel apps</a></li><li><a href="../../docs/guides/vue.html" aria-current="page">Vue</a></li><li><a href="../../docs/guides/rector.html">Rector</a></li><li><a href="../../docs/guides/strict-cut.html">The strict cut</a></li><li><a href="../../docs/guides/adopting.html">Adopting on an existing app</a></li><li><a href="../../docs/guides/baselines.html">Baselines only shrink</a></li></ul></li><li class="docs-nav__group"><span class="docs-nav__label">Reference</span><ul><li><a href="../../docs/reference/tested-with.html">Tested with and tool floors</a></li><li><a href="../../docs/reference/banned-calls.html">Banned calls</a></li><li><a href="../../docs/reference/best-practices.html">Best practices</a></li><li><a href="../../docs/reference/proof.html">Proof</a></li><li><a href="../../docs/adr/0001-phpstan-level-and-baseline-policy.html">ADR-0001: PHPStan level 8 and baselines</a></li></ul></li><li class="docs-nav__group"><span class="docs-nav__label">Deploying</span><ul><li><a href="../../docs/deploying/releasing.html">Releasing</a></li></ul></li><li><a href="../../docs/upgrading.html">Upgrading</a></li><li><a href="../../docs/contributing.html">Contributing</a></li><li><a href="../../docs/changelog.html">Changelog</a></li></ul></nav>
   <div class="docs-content">
     <main id="main">
-      <article class="docs-article"><h1 id="vue">Vue<a class="docs-heading-link" aria-label="Link to this section" href="#vue">#</a></h1>
+      <article class="docs-article"><h1 id="vue"><span class="docs-heading-tail"><span>Vue</span><a class="docs-heading-link" aria-label="Link to this section" href="#vue">#</a></span></h1>
 <p>This guide shows how to point a Vue app at Pinstripe's ESLint and Prettier presets.</p>
-<h2 id="install">Install<a class="docs-heading-link" aria-label="Link to this section" href="#install">#</a></h2>
+<h2 id="install"><span class="docs-heading-tail"><span>Install</span><a class="docs-heading-link" aria-label="Link to this section" href="#install">#</a></span></h2>
 <p>Add Pinstripe as a dev dependency:</p>
 <pre tabindex="0"><code>npm install --save-dev @waynestate/pinstripe eslint prettier
 </code></pre>
-<h2 id="configure-eslint">Configure ESLint<a class="docs-heading-link" aria-label="Link to this section" href="#configure-eslint">#</a></h2>
+<h2 id="configure-eslint">Configure <span class="docs-heading-tail"><span>ESLint</span><a class="docs-heading-link" aria-label="Link to this section" href="#configure-eslint">#</a></span></h2>
 <p>Create <code>eslint.config.js</code> and spread the preset. For TypeScript:</p>
 <pre tabindex="0"><code class="language-js">import pinstripe from '@waynestate/pinstripe/eslint/typescript'
 
 export default [...pinstripe]
 </code></pre>
 <p>For plain JavaScript, import <code>@waynestate/pinstripe/eslint/javascript</code> instead.</p>
-<h2 id="configure-prettier">Configure Prettier<a class="docs-heading-link" aria-label="Link to this section" href="#configure-prettier">#</a></h2>
+<h2 id="configure-prettier">Configure <span class="docs-heading-tail"><span>Prettier</span><a class="docs-heading-link" aria-label="Link to this section" href="#configure-prettier">#</a></span></h2>
 <p>Point Prettier at the preset in <code>package.json</code>:</p>
 <pre tabindex="0"><code class="language-json">{
     &quot;prettier&quot;: &quot;@waynestate/pinstripe/prettier&quot;
 }
 </code></pre>
-<h2 id="add-scripts">Add scripts<a class="docs-heading-link" aria-label="Link to this section" href="#add-scripts">#</a></h2>
+<h2 id="add-scripts">Add <span class="docs-heading-tail"><span>scripts</span><a class="docs-heading-link" aria-label="Link to this section" href="#add-scripts">#</a></span></h2>
 <p>Add scripts that run on every OS:</p>
 <pre tabindex="0"><code class="language-json">{
     &quot;scripts&quot;: {
@@ -70,7 +70,7 @@ export default [...pinstripe]
 <p><code>npm run lint</code> fails on style and accessibility, and on every Vue and accessibility finding: where the plugins' recommended configs report a rule as a warning, Pinstripe reports it as an error, so the editor, a local run and CI all agree on what fails. <code>npm run format</code> fixes the layout.</p>
 <p>An app that cannot fix every finding in one cut can spread the <code>-warn</code> twin for a while (<code>@waynestate/pinstripe/eslint/javascript-warn</code> or <code>@waynestate/pinstripe/eslint/typescript-warn</code>): the same rules with the plugins' original severities, so findings that were warnings stay warnings. Switch back to the strict preset once the codebase is clean. The preset is the off-the-rack suit: it fits every app, and you only add your own cufflinks.</p>
 <aside class="docs-callout docs-callout--note" role="note"><p class="docs-callout__label">Note</p><p>If an app adopts Oxlint for speed, ESLint stays in the toolchain for <code>.vue</code> files, because Pinstripe's Vue and accessibility rules (eslint-plugin-vue and eslint-plugin-vuejs-accessibility) run only in ESLint.</p></aside>
-<h2 id="related">Related<a class="docs-heading-link" aria-label="Link to this section" href="#related">#</a></h2>
+<h2 id="related"><span class="docs-heading-tail"><span>Related</span><a class="docs-heading-link" aria-label="Link to this section" href="#related">#</a></span></h2>
 <ul>
 <li><a href="raw-php.html">Raw PHP apps</a></li>
 <li><a href="strict-cut.html">The strict cut</a></li>

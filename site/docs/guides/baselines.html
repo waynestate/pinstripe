@@ -39,10 +39,10 @@
   <nav class="docs-nav docs-nav--sidebar" aria-label="Documentation"><ul class="docs-nav__list"><li class="docs-nav__group"><span class="docs-nav__label">Getting started</span><ul><li><a href="../../docs/index.html">Overview</a></li></ul></li><li class="docs-nav__group"><span class="docs-nav__label">Guides</span><ul><li><a href="../../docs/guides/raw-php.html">Raw PHP apps</a></li><li><a href="../../docs/guides/strict-types.html">Require strict types</a></li><li><a href="../../docs/guides/laravel.html">Laravel apps</a></li><li><a href="../../docs/guides/vue.html">Vue</a></li><li><a href="../../docs/guides/rector.html">Rector</a></li><li><a href="../../docs/guides/strict-cut.html">The strict cut</a></li><li><a href="../../docs/guides/adopting.html">Adopting on an existing app</a></li><li><a href="../../docs/guides/baselines.html" aria-current="page">Baselines only shrink</a></li></ul></li><li class="docs-nav__group"><span class="docs-nav__label">Reference</span><ul><li><a href="../../docs/reference/tested-with.html">Tested with and tool floors</a></li><li><a href="../../docs/reference/banned-calls.html">Banned calls</a></li><li><a href="../../docs/reference/best-practices.html">Best practices</a></li><li><a href="../../docs/reference/proof.html">Proof</a></li><li><a href="../../docs/adr/0001-phpstan-level-and-baseline-policy.html">ADR-0001: PHPStan level 8 and baselines</a></li></ul></li><li class="docs-nav__group"><span class="docs-nav__label">Deploying</span><ul><li><a href="../../docs/deploying/releasing.html">Releasing</a></li></ul></li><li><a href="../../docs/upgrading.html">Upgrading</a></li><li><a href="../../docs/contributing.html">Contributing</a></li><li><a href="../../docs/changelog.html">Changelog</a></li></ul></nav>
   <div class="docs-content">
     <main id="main">
-      <article class="docs-article"><h1 id="baselines-only-shrink">Baselines only shrink<a class="docs-heading-link" aria-label="Link to this section" href="#baselines-only-shrink">#</a></h1>
+      <article class="docs-article"><h1 id="baselines-only-shrink">Baselines only <span class="docs-heading-tail"><span>shrink</span><a class="docs-heading-link" aria-label="Link to this section" href="#baselines-only-shrink">#</a></span></h1>
 <p>Keep a PHPStan baseline from growing by counting it and failing the build the moment it does.</p>
 <p>Pinstripe ships <code>pinstripe-baseline</code>, one PHP command that runs on every OS, to keep that promise. It reads both the NEON baseline and the PHP format (<code>phpstan-baseline.php</code>).</p>
-<h2 id="opt-in-first">Opt in first<a class="docs-heading-link" aria-label="Link to this section" href="#opt-in-first">#</a></h2>
+<h2 id="opt-in-first">Opt in <span class="docs-heading-tail"><span>first</span><a class="docs-heading-link" aria-label="Link to this section" href="#opt-in-first">#</a></span></h2>
 <p>A baseline is only for apps adopting Pinstripe late; new apps never set it. The app opts in from its own <code>composer.json</code>:</p>
 <pre tabindex="0"><code class="language-json">{
     &quot;extra&quot;: {
@@ -53,25 +53,25 @@
 }
 </code></pre>
 <p>Every command checks the flag before it reads the baseline. Without it, <code>pinstripe-baseline</code> exits 2 and says how to add it. In a monorepo, point the command at another composer.json with <code>--composer=&lt;path&gt;</code> (default: <code>composer.json</code> in the current working directory).</p>
-<h2 id="count-the-baseline">Count the baseline<a class="docs-heading-link" aria-label="Link to this section" href="#count-the-baseline">#</a></h2>
+<h2 id="count-the-baseline">Count the <span class="docs-heading-tail"><span>baseline</span><a class="docs-heading-link" aria-label="Link to this section" href="#count-the-baseline">#</a></span></h2>
 <pre tabindex="0"><code>vendor/bin/pinstripe-baseline count phpstan-baseline.neon
 </code></pre>
 <p>prints how many errors the baseline ignores: the sum of each entry's <code>count</code>, 1 when <code>count</code> is absent.</p>
-<h2 id="check-against-a-limit">Check against a limit<a class="docs-heading-link" aria-label="Link to this section" href="#check-against-a-limit">#</a></h2>
+<h2 id="check-against-a-limit">Check against a <span class="docs-heading-tail"><span>limit</span><a class="docs-heading-link" aria-label="Link to this section" href="#check-against-a-limit">#</a></span></h2>
 <pre tabindex="0"><code>vendor/bin/pinstripe-baseline check --max=42 phpstan-baseline.neon
 </code></pre>
 <p>exits 1 with <code>baseline grew: N errors, the most allowed is M</code> when the count is above the limit, 0 otherwise.</p>
-<h2 id="check-against-the-target-branch">Check against the target branch<a class="docs-heading-link" aria-label="Link to this section" href="#check-against-the-target-branch">#</a></h2>
+<h2 id="check-against-the-target-branch">Check against the target <span class="docs-heading-tail"><span>branch</span><a class="docs-heading-link" aria-label="Link to this section" href="#check-against-the-target-branch">#</a></span></h2>
 <p>To compare with the target branch instead of a fixed number, pass a git ref:</p>
 <pre tabindex="0"><code>vendor/bin/pinstripe-baseline check --against=origin/main phpstan-baseline.neon
 </code></pre>
 <p>In GitLab CI the merge request's base SHA is already in the environment:</p>
 <pre tabindex="0"><code>vendor/bin/pinstripe-baseline check --against=$CI_MERGE_REQUEST_DIFF_BASE_SHA phpstan-baseline.neon
 </code></pre>
-<h2 id="the-policy">The policy<a class="docs-heading-link" aria-label="Link to this section" href="#the-policy">#</a></h2>
+<h2 id="the-policy">The <span class="docs-heading-tail"><span>policy</span><a class="docs-heading-link" aria-label="Link to this section" href="#the-policy">#</a></span></h2>
 <p>An existing app may generate a baseline once with <code>phpstan analyse --generate-baseline</code> and include it in its <code>phpstan.neon</code>; new code gets no baseline. The count a baseline holds is the sum of each entry's <code>count</code>, 1 when <code>count</code> is absent, and <code>pinstripe-baseline count</code> prints it. <code>bin/pinstripe-baseline check</code> fails the build (exit 1) when the baseline grows, either against a fixed limit with <code>--max=&lt;n&gt;</code> or against a git ref with <code>--against=&lt;git-ref&gt;</code>; in GitLab CI the merge request's base SHA is already in the environment as <code>$CI_MERGE_REQUEST_DIFF_BASE_SHA</code>. Exit codes: 0 ok, 1 the baseline grew, 2 usage or baseline problem.</p>
 <aside class="docs-callout docs-callout--note" role="note"><p class="docs-callout__label">Note</p><p>A baseline is a tailor's chalk line, and this command is the tape measure: it fails the build the moment the line gets longer. The policy behind this section is recorded in <a href="../adr/0001-phpstan-level-and-baseline-policy.html">the ADR</a>.</p></aside>
-<h2 id="related">Related<a class="docs-heading-link" aria-label="Link to this section" href="#related">#</a></h2>
+<h2 id="related"><span class="docs-heading-tail"><span>Related</span><a class="docs-heading-link" aria-label="Link to this section" href="#related">#</a></span></h2>
 <ul>
 <li><a href="adopting.html">Adopting on an existing app</a></li>
 <li><a href="strict-cut.html">The strict cut</a></li>

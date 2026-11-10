@@ -6,11 +6,11 @@ llms: https://pinstripe.apps.wayne.edu/llms.txt
 generator: Squire agent-ready
 ---
 
-# Banned calls[#](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html#banned-calls)
+# Banned calls [#](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html#banned-calls)
 
 This page lists the calls every Pinstripe cut fails the build on, says why each is banned and what to use instead, and shows how to keep one on purpose.
 
-## What is banned[#](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html#what-is-banned)
+## What is banned [#](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html#what-is-banned)
 
 Every cut (raw, Laravel and strict) includes `phpstan/disallowed.neon` through `base.neon`. The rules come from [spaze/phpstan-disallowed-calls](https://github.com/spaze/phpstan-disallowed-calls), which Pinstripe requires and `phpstan/extension-installer` loads, so your `phpstan.neon` needs no new line. A `dd()` left in after debugging turns the pipeline red, the same as any other PHPStan error.
 
@@ -32,7 +32,7 @@ The one exception is `curl_setopt()` with a verify option set to false: it needs
 
 Each ban has a stable identifier: `pinstripe.banned.eval`, `pinstripe.banned.extract`, `pinstripe.banned.varDump`, `pinstripe.banned.dd`, `pinstripe.banned.dump`, `pinstripe.banned.withoutVerifying`, `pinstripe.banned.verifyFalse`, `pinstripe.banned.curlVerifyOff`, `pinstripe.banned.streamVerifyOff` and `pinstripe.banned.joinedSql`.
 
-## SQL joined from strings[#](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html#sql-joined-from-strings)
+## SQL joined from strings [#](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html#sql-joined-from-strings)
 
 The SQL ban stands on PHPStan's own `literal-string` type, so there is no taint rule to trust: PHPStan already knows which strings are literals. These pass:
 
@@ -61,7 +61,7 @@ Laravel already types `DB::raw()`, `DB::unprepared()` and the query builder's `w
 
 SQL that is safe but not a literal (read from a `.sql` file, or returned by a helper) can say so, or the call can keep a reasoned ignore.
 
-### SQL kept in .sql files[#](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html#sql-kept-in-sql-files)
+### SQL kept in .sql files [#](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html#sql-kept-in-sql-files)
 
 Many apps keep their queries in `.sql` files and bind every value. That is safe, but PHPStan cannot tell that a file's contents are static, so the ban reports every call that runs one. It is the report older Wayne State apps meet most often. One typed reader clears all of them, with the one reasoned ignore in one place:
 
@@ -88,7 +88,7 @@ oci_bind_by_name($statement, ':id', $id);
 
 The name is `literal-string` too, so a request value can never pick the file. A helper that only ever returns literals needs no ignore at all: type it `@return literal-string` and PHPStan checks that it is true.
 
-### Type a wrapper, never baseline it[#](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html#type-a-wrapper-never-baseline-it)
+### Type a wrapper, never baseline it [#](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html#type-a-wrapper-never-baseline-it)
 
 A wrapper that takes the whole SQL as a plain `string` is reported once, inside the wrapper, and never at its callers:
 
@@ -114,7 +114,7 @@ function query($db, string $sql)
 
 Now PHPStan checks each caller: literal SQL passes, and a joined string is reported where it is joined, as `argument.type` ("expects literal-string").
 
-### Other ways out[#](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html#other-ways-out)
+### Other ways out [#](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html#other-ways-out)
 
 - Give PHPStan the connection's type, a typed property or `@var \PDO $db`; with a `mixed` connection PHPStan cannot see the call, and the ban stays quiet.
 - An older app with many joined queries can baseline the rest while it binds them, since a baseline only shrinks. Baseline call sites, never a wrapper.
@@ -132,7 +132,7 @@ Calling dd() is forbidden, a dd() left in dumps internals to the browser and hal
 log it with a PSR-3 logger (Log::debug() in Laravel), or step through with Xdebug (OWASP A02:2025 Security Misconfiguration).
 ```
 
-## Keep one on purpose[#](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html#keep-one-on-purpose)
+## Keep one on purpose [#](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html#keep-one-on-purpose)
 
 Use the ban's identifier and say why in parentheses, as with any other ignore. Every cut reports an ignore without a reason.
 
@@ -143,20 +143,20 @@ var_dump($report);
 
 On an existing app, fix the banned calls rather than baselining them: each is usually one line, and a baseline would hide the next one too.
 
-## Add your own[#](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html#add-your-own)
+## Add your own [#](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html#add-your-own)
 
 List more bans under the same parameters (`disallowedFunctionCalls`, `disallowedMethodCalls`, `disallowedStaticCalls`) in your app's `phpstan.neon`. NEON appends lists, so yours join Pinstripe's. The package's [custom rules guide](https://github.com/spaze/phpstan-disallowed-calls/blob/main/docs/custom-rules.md) shows every key.
 
-## Not covered yet[#](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html#not-covered-yet)
+## Not covered yet [#](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html#not-covered-yet)
 
 - An off switch PHPStan cannot pin to a value: `'verify' => $verify`, or a curl option read from config.
 - Postgres's `pg_query()` and friends: the connection argument is optional, so the SQL has no fixed position to check.
 
-## Not banned yet[#](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html#not-banned-yet)
+## Not banned yet [#](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html#not-banned-yet)
 
 `md5()`, `sha1()`, `rand()` and `mt_rand()` are weak for passwords, tokens and signatures, but they are fine for cache keys, checksums and other non-security uses, and apps across the fleet use them that way. Whether Pinstripe bans them (and how it would allow the safe uses) is an open call, so for now they pass.
 
-## How it is proven[#](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html#how-it-is-proven)
+## How it is proven [#](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html#how-it-is-proven)
 
 `composer ci` runs these on every change:
 
@@ -173,7 +173,7 @@ List more bans under the same parameters (`disallowedFunctionCalls`, `disallowed
 
 A suit with a `dd()` in the pocket does not leave the shop.
 
-## Related[#](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html#related)
+## Related [#](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html#related)
 
 - [Raw PHP apps](https://pinstripe.apps.wayne.edu/docs/guides/raw-php.html)
 - [Laravel apps](https://pinstripe.apps.wayne.edu/docs/guides/laravel.html)

@@ -39,10 +39,10 @@
   <nav class="docs-nav docs-nav--sidebar" aria-label="Documentation"><ul class="docs-nav__list"><li class="docs-nav__group"><span class="docs-nav__label">Getting started</span><ul><li><a href="../../docs/index.html">Overview</a></li></ul></li><li class="docs-nav__group"><span class="docs-nav__label">Guides</span><ul><li><a href="../../docs/guides/raw-php.html">Raw PHP apps</a></li><li><a href="../../docs/guides/strict-types.html">Require strict types</a></li><li><a href="../../docs/guides/laravel.html">Laravel apps</a></li><li><a href="../../docs/guides/vue.html">Vue</a></li><li><a href="../../docs/guides/rector.html">Rector</a></li><li><a href="../../docs/guides/strict-cut.html">The strict cut</a></li><li><a href="../../docs/guides/adopting.html">Adopting on an existing app</a></li><li><a href="../../docs/guides/baselines.html">Baselines only shrink</a></li></ul></li><li class="docs-nav__group"><span class="docs-nav__label">Reference</span><ul><li><a href="../../docs/reference/tested-with.html">Tested with and tool floors</a></li><li><a href="../../docs/reference/banned-calls.html">Banned calls</a></li><li><a href="../../docs/reference/best-practices.html">Best practices</a></li><li><a href="../../docs/reference/proof.html" aria-current="page">Proof</a></li><li><a href="../../docs/adr/0001-phpstan-level-and-baseline-policy.html">ADR-0001: PHPStan level 8 and baselines</a></li></ul></li><li class="docs-nav__group"><span class="docs-nav__label">Deploying</span><ul><li><a href="../../docs/deploying/releasing.html">Releasing</a></li></ul></li><li><a href="../../docs/upgrading.html">Upgrading</a></li><li><a href="../../docs/contributing.html">Contributing</a></li><li><a href="../../docs/changelog.html">Changelog</a></li></ul></nav>
   <div class="docs-content">
     <main id="main">
-      <article class="docs-article"><h1 id="proof">Proof<a class="docs-heading-link" aria-label="Link to this section" href="#proof">#</a></h1>
+      <article class="docs-article"><h1 id="proof"><span class="docs-heading-tail"><span>Proof</span><a class="docs-heading-link" aria-label="Link to this section" href="#proof">#</a></span></h1>
 <p>This page says how Pinstripe was proven on real Wayne State applications: what ran, what held, what the run caught in Pinstripe itself, and what it does not prove yet. Next, see <a href="../guides/adopting.html">Adopting on an existing app</a> for the path the run followed and <a href="../guides/baselines.html">Baselines only shrink</a> for the baseline rules.</p>
 <p>A suit is proven at the fitting, not on the hanger. So on 2026-11-05 the presets were fitted to every PHP application in the stack's shared proof corpus, the same set PROCTOR, Squire and Preflight are measured on.</p>
-<h2 id="last-run">Last run<a class="docs-heading-link" aria-label="Link to this section" href="#last-run">#</a></h2>
+<h2 id="last-run">Last <span class="docs-heading-tail"><span>run</span><a class="docs-heading-link" aria-label="Link to this section" href="#last-run">#</a></span></h2>
 <div class="docs-table" role="region" aria-label="Table" tabindex="0"><table>
 <thead>
 <tr>
@@ -92,7 +92,7 @@
 </tbody>
 </table></div>
 <p>To refresh this table, regenerate the site with <code>composer docs</code> and <code>composer site:agent-ready</code>, rerun <code>composer ci</code>, and rewrite the rows with the new counts and the commit you ran on. The 82-application proof run described below did not run here: its corpus of internal application repositories is not reachable from this machine, and the npm side (ESLint and Prettier for Vue) runs in the npm-test CI job, not in <code>composer ci</code>.</p>
-<h2 id="what-ran">What ran<a class="docs-heading-link" aria-label="Link to this section" href="#what-ran">#</a></h2>
+<h2 id="what-ran">What <span class="docs-heading-tail"><span>ran</span><a class="docs-heading-link" aria-label="Link to this section" href="#what-ran">#</a></span></h2>
 <p>Pinstripe 0.1.3, the presets as they are on <code>main</code>, with PHP 8.4. The 82 applications are 64 raw PHP apps (33 with a <code>composer.json</code>, 31 without one), 17 Laravel apps from 5.8 to 13, and 1 Slim 2 app. Laravel apps got the <code>laravel</code> presets; every other app got <code>per</code> and <code>raw</code>.</p>
 <p>Each app was a throwaway copy of its default branch, checked out with Linux line endings, with <code>.env</code> files, <code>auth.json</code> and <code>config.files/</code> removed. Packagist was reachable; every Wayne State host was mapped to <code>127.0.0.1</code>, so nothing private could be fetched. Then, for each app:</p>
 <ol>
@@ -102,7 +102,7 @@
 <li>where the install worked and PHPStan found errors: a baseline generated with <code>--generate-baseline</code>, PHPStan run again with it, and <code>pinstripe-baseline count</code> on it.</li>
 </ol>
 <p>An app <strong>passes</strong> when Pint and PHPStan are both clean. It is <strong>flagged</strong> when either reports findings, or when the install could not finish for a reason the app owns. A <strong>tool error</strong> is a crash, a timeout, a report that is not valid, or a Pinstripe command that does not do what it says.</p>
-<h2 id="results">Results<a class="docs-heading-link" aria-label="Link to this section" href="#results">#</a></h2>
+<h2 id="results"><span class="docs-heading-tail"><span>Results</span><a class="docs-heading-link" aria-label="Link to this section" href="#results">#</a></span></h2>
 <div class="docs-table" role="region" aria-label="Table" tabindex="0"><table>
 <thead>
 <tr>
@@ -148,7 +148,7 @@
 </tr>
 </tbody>
 </table></div>
-<h2 id="what-it-caught-in-pinstripe">What it caught in Pinstripe<a class="docs-heading-link" aria-label="Link to this section" href="#what-it-caught-in-pinstripe">#</a></h2>
+<h2 id="what-it-caught-in-pinstripe">What it caught in <span class="docs-heading-tail"><span>Pinstripe</span><a class="docs-heading-link" aria-label="Link to this section" href="#what-it-caught-in-pinstripe">#</a></span></h2>
 <p>A run that only finds praise was not looking hard enough. This one found these, and every finding is about Pinstripe, not the apps:</p>
 <ul>
 <li><strong>Fixed: <code>pinstripe-baseline count</code> printed an app's deprecations.</strong> Installed in an app, the command loads the app's autoloader, and one app's old HTTP library printed PHP 8.4 deprecations ahead of the count. A script reading the number got a page of warnings. The command now mutes deprecations while it loads the autoloader, and a test covers it.</li>
@@ -157,14 +157,14 @@
 <li><strong>Open: Pint on bundled libraries.</strong> One app bundles a PDF library whose generated font maps are single arrays hundreds of kilobytes long. Pint spent over 100 seconds on one such file and did not finish the app in 15 minutes. That is Pint's fixer, not Pinstripe's preset, and the guide's advice is to point Pint at your own folders.</li>
 <li><strong>Open: Laravel apps that cannot install.</strong> Larastan analyses a Laravel app through its framework, so an app whose dependencies cannot install gets no PHPStan result at all, while a raw app still gets one from a separate install.</li>
 </ul>
-<h2 id="what-this-does-not-prove">What this does not prove<a class="docs-heading-link" aria-label="Link to this section" href="#what-this-does-not-prove">#</a></h2>
+<h2 id="what-this-does-not-prove">What this does not <span class="docs-heading-tail"><span>prove</span><a class="docs-heading-link" aria-label="Link to this section" href="#what-this-does-not-prove">#</a></span></h2>
 <ul>
 <li>No app adopted Pinstripe for real: nothing was committed, and the restyling Pint proposed was not applied or reviewed.</li>
 <li>No private package could be fetched, so 36 apps never got past the install, and 16 Laravel apps were not analysed.</li>
 <li>The npm side (ESLint and Prettier for Vue) did not run here.</li>
 <li>The per-app record names the applications and stays in the stack's internal notes.</li>
 </ul>
-<h2 id="run-it-on-your-app">Run it on your app<a class="docs-heading-link" aria-label="Link to this section" href="#run-it-on-your-app">#</a></h2>
+<h2 id="run-it-on-your-app">Run it on your <span class="docs-heading-tail"><span>app</span><a class="docs-heading-link" aria-label="Link to this section" href="#run-it-on-your-app">#</a></span></h2>
 <p>The same steps on your own app, from its root:</p>
 <pre tabindex="0"><code class="language-sh">composer config allow-plugins.phpstan/extension-installer true
 composer require --dev waynestate/pinstripe:^0.3
@@ -172,7 +172,7 @@ vendor/bin/pint --test --config vendor/waynestate/pinstripe/pint/per.json
 vendor/bin/phpstan analyse
 </code></pre>
 <p>For a Laravel app, add <code>larastan/larastan</code> to the <code>require</code> line and use <code>pint/laravel.json</code>. Then follow <a href="../guides/adopting.html">Adopting on an existing app</a> to baseline what is there and keep the new code clean.</p>
-<h2 id="related">Related<a class="docs-heading-link" aria-label="Link to this section" href="#related">#</a></h2>
+<h2 id="related"><span class="docs-heading-tail"><span>Related</span><a class="docs-heading-link" aria-label="Link to this section" href="#related">#</a></span></h2>
 <ul>
 <li><a href="../guides/adopting.html">Adopting on an existing app</a></li>
 <li><a href="../guides/baselines.html">Baselines only shrink</a></li>

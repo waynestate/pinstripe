@@ -6,7 +6,7 @@ llms: https://pinstripe.apps.wayne.edu/llms.txt
 generator: Squire agent-ready
 ---
 
-# Releasing[#](https://pinstripe.apps.wayne.edu/docs/deploying/releasing.html#releasing)
+# Releasing [#](https://pinstripe.apps.wayne.edu/docs/deploying/releasing.html#releasing)
 
 This page sets out the steps to release Pinstripe, from the CHANGELOG to the npm publish.
 
@@ -29,7 +29,7 @@ Warning
 
 A release needs a maintainer's approval. Never move or delete a published tag.
 
-## Related[#](https://pinstripe.apps.wayne.edu/docs/deploying/releasing.html#related)
+## Related [#](https://pinstripe.apps.wayne.edu/docs/deploying/releasing.html#related)
 
 - [Changelog](https://pinstripe.apps.wayne.edu/docs/changelog.html)
 - [Best practices](https://pinstripe.apps.wayne.edu/docs/reference/best-practices.html)

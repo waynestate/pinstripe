@@ -40,14 +40,15 @@
   <div class="docs-content">
     <main id="main">
       <article class="docs-article"><!-- Generated from CHANGELOG.md by bin/docs-site.php. Edit CHANGELOG.md, not this file. -->
-<h1 id="changelog">Changelog<a class="docs-heading-link" aria-label="Link to this section" href="#changelog">#</a></h1>
+<h1 id="changelog"><span class="docs-heading-tail"><span>Changelog</span><a class="docs-heading-link" aria-label="Link to this section" href="#changelog">#</a></span></h1>
 <p>All notable changes to Pinstripe are documented here.</p>
-<h2 id="unreleased">Unreleased<a class="docs-heading-link" aria-label="Link to this section" href="#unreleased">#</a></h2>
+<h2 id="unreleased"><span class="docs-heading-tail"><span>Unreleased</span><a class="docs-heading-link" aria-label="Link to this section" href="#unreleased">#</a></span></h2>
 <ul>
+<li>Changed: the docs, agent-ready and deploy kits are Squire 0.10.6 (was 0.10.5): the docs builder and agent-ready generator see every file on Docker Desktop mounts.</li>
 <li>Site: <code>assets/stack-env.js</code> knows Parity, so a pre-production page links Parity's pre-production site and a dev page links its local <code>site/</code> folder. Until now Parity, of all parts, was the one link that ignored its environment.</li>
 <li>Changed: Deploy kit refreshed to Squire 0.10.5 (was 0.10.2).</li>
 </ul>
-<h2 id="0-3-1-2026-11-09">0.3.1 (2026-11-09)<a class="docs-heading-link" aria-label="Link to this section" href="#0-3-1-2026-11-09">#</a></h2>
+<h2 id="0-3-1-2026-11-09">0.3.1 <span class="docs-heading-tail"><span>(2026-11-09)</span><a class="docs-heading-link" aria-label="Link to this section" href="#0-3-1-2026-11-09">#</a></span></h2>
 <p>A patch: no preset passes or fails anything it did not in 0.3.0. It adds proof and docs (PHPStan findings in the merge request, the fix for SQL kept in <code>.sql</code> files), keeps Code Quality reports when a lint job fails, and brings the deploy kit and CI pins up to date.</p>
 <ul>
 <li>
@@ -96,7 +97,7 @@
 <p>Fixed: the Composer package's description (what Packagist shows) names the Rector preset and the banned calls; it said &quot;shared Pint and PHPStan presets&quot;.</p>
 </li>
 </ul>
-<h2 id="0-3-0-2026-11-09">0.3.0 (2026-11-09)<a class="docs-heading-link" aria-label="Link to this section" href="#0-3-0-2026-11-09">#</a></h2>
+<h2 id="0-3-0-2026-11-09">0.3.0 <span class="docs-heading-tail"><span>(2026-11-09)</span><a class="docs-heading-link" aria-label="Link to this section" href="#0-3-0-2026-11-09">#</a></span></h2>
 <ul>
 <li>Added: every cut bans SQL joined from strings (<code>pinstripe.banned.joinedSql</code>, OWASP A05:2025): a variable concatenated, interpolated or <code>sprintf()</code>'d into the SQL given to <code>PDO::query()</code>, <code>prepare()</code> or <code>exec()</code>, mysqli's <code>query()</code>, <code>prepare()</code>, <code>mysqli_query()</code> and the rest, <code>oci_parse()</code> (and the old alias <code>ociparse()</code>), or Laravel's <code>DB::select()</code>, <code>insert()</code>, <code>update()</code>, <code>delete()</code>, <code>statement()</code>, <code>scalar()</code>, <code>cursor()</code> and <code>fromQuery()</code>. No taint rule: spaze/phpstan-disallowed-calls asks for PHPStan's own <code>literal-string</code> type, so literal SQL with bindings, class constants and literal pieces joined together pass; Laravel already types <code>DB::raw()</code>, <code>DB::unprepared()</code> and the <code>*Raw()</code> builder methods that way, and a test now holds it to that. Breaking for apps that build SQL from variables. New fixtures <code>JoinedSql.php</code>, <code>BoundSql.php</code>, <code>JoinedQueries.php</code> and <code>BoundQueries.php</code>.</li>
 <li>Docs: the Best practices docs page carries BEST_PRACTICES.md word for word again (it had fallen behind: no ESLint GitLab output row, no banned-call rows), and BEST_PRACTICES.md gains rows for <code>phpstan/strict.neon</code> and <code>phpstan/disallowed.neon</code>. New <code>tests/BestPracticesTest.php</code> keeps them in step: every test and file the table names exists, each row has one known status, an Enforced row names its proof, and the docs page matches.</li>
@@ -105,7 +106,7 @@
 <li>Added: Laravel's own <code>dd()</code> and <code>dump()</code> methods are banned too (<code>$users-&gt;dd()</code>, <code>DB::table('users')-&gt;dumpRawSql()</code>, <code>$request-&gt;dump()</code>, <code>Http::get($url)-&gt;dd()</code>, <code>Http::dump()</code> and the rest of the family), under the functions' identifiers <code>pinstripe.banned.dd</code> and <code>pinstripe.banned.dump</code>; only methods Laravel declares match, so an app's own <code>dump()</code> and the schema dump behind <code>php artisan schema:dump</code> pass. Breaking for Laravel apps with one left in. New fixtures <code>tests/fixtures/laravel/src/LeftoverDebugMethods.php</code> and <code>SchemaDump.php</code>.</li>
 <li>Changed: CI pins the Preflight components to 0.4.0 (the proctor job clones the full history, so the override-approver check can read git blame).</li>
 </ul>
-<h2 id="0-2-0-2026-11-08">0.2.0 (2026-11-08)<a class="docs-heading-link" aria-label="Link to this section" href="#0-2-0-2026-11-08">#</a></h2>
+<h2 id="0-2-0-2026-11-08">0.2.0 <span class="docs-heading-tail"><span>(2026-11-08)</span><a class="docs-heading-link" aria-label="Link to this section" href="#0-2-0-2026-11-08">#</a></span></h2>
 <ul>
 <li>Changed: every banned call's tip links to the CREED rule it enforces (code handbook, Banned patterns) as well as to Pinstripe's banned-calls page; <code>tests/BannedCallLinksTest.php</code> keeps it that way.</li>
 <li>Docs: the README says how CREED's PHP floor reaches the tools (PROCTOR's php-floor check, then Booster; the presets keep reading composer.json); &quot;Coming next&quot; is empty for now, since both items it named are built.</li>
@@ -132,13 +133,13 @@
 <li>Changed: The canonical repository is git.wayne.edu; docs, links and package metadata no longer point at the archived internal copy.</li>
 <li>Added: The Proof page records its last run.</li>
 </ul>
-<h2 id="0-1-5-2026-11-09">0.1.5 (2026-11-09)<a class="docs-heading-link" aria-label="Link to this section" href="#0-1-5-2026-11-09">#</a></h2>
+<h2 id="0-1-5-2026-11-09">0.1.5 <span class="docs-heading-tail"><span>(2026-11-09)</span><a class="docs-heading-link" aria-label="Link to this section" href="#0-1-5-2026-11-09">#</a></span></h2>
 <p>A patch on the 0.1 line, cut from 0.1.4 on the <code>0.1.x</code> branch, for consumers that pin <code>^0.1</code> (Booster among them). It changes no preset; 0.2.0 and 0.3.0 already carry the same fix.</p>
 <ul>
 <li>Fixed: the deploy kit's lock (<code>deploy/composer.lock</code>) names git.wayne.edu and GitHub for CREED, HELMET and PROCTOR instead of the archived internal host.</li>
 <li>Changed: The canonical repository is git.wayne.edu; docs, links and package metadata no longer point at the archived internal copy.</li>
 </ul>
-<h2 id="0-1-4-2026-11-06">0.1.4 (2026-11-06)<a class="docs-heading-link" aria-label="Link to this section" href="#0-1-4-2026-11-06">#</a></h2>
+<h2 id="0-1-4-2026-11-06">0.1.4 <span class="docs-heading-tail"><span>(2026-11-06)</span><a class="docs-heading-link" aria-label="Link to this section" href="#0-1-4-2026-11-06">#</a></span></h2>
 <ul>
 <li>Fixed: <code>pinstripe-baseline</code> mutes deprecations while it loads the app's autoloader, so an old package in the app no longer prints PHP warnings ahead of the count a script reads (found by the 2026-11-05 proof run; new test in tests/BaselineTest.php).</li>
 <li>Added: a public Proof page (<code>docs/reference/proof.md</code>, under Reference): the presets run against 82 Wayne State applications, what held, what the run caught in Pinstripe, and what it does not prove.</li>
@@ -156,7 +157,7 @@
 <li>Added: <code>prettier-plugin-blade</code> (pinned to 3.3.3, no caret) as a dependency and a <code>*.blade.php</code> override in <code>prettier/index.json</code> (parser <code>blade</code>, 4-space tab width), so the Prettier preset formats Blade views; <code>tests/js/blade.test.mjs</code> checks a clean and a messy Blade fixture through Prettier's Node API, and the README gains a &quot;Format Blade views&quot; section with the one-time reformat command and an adopting note.</li>
 <li>Changed: Blade files now format with prettier-plugin-blade; the first run rewrites every Blade file (4-space indent, a space after directive names such as <code>@vite (</code>, void tags self-closed), so reformat in its own commit.</li>
 </ul>
-<h2 id="0-1-3-2026-11-03">0.1.3 (2026-11-03)<a class="docs-heading-link" aria-label="Link to this section" href="#0-1-3-2026-11-03">#</a></h2>
+<h2 id="0-1-3-2026-11-03">0.1.3 <span class="docs-heading-tail"><span>(2026-11-03)</span><a class="docs-heading-link" aria-label="Link to this section" href="#0-1-3-2026-11-03">#</a></span></h2>
 <ul>
 <li>Added: <code>docs/adr/0001-phpstan-level-and-baseline-policy.md</code>, the ADR recording the PHPStan level 8 cut, the baseline policy (generated once for an existing app, never for new code, and only ever shrunk), and the <code>composer ci</code> / <code>composer-ci</code> pipeline enforcement point, plus a README note that apps adopting Oxlint keep ESLint for <code>.vue</code> files because the Vue and accessibility plugins run only in ESLint.</li>
 <li>Changed: the install instructions now include <code>composer config allow-plugins.phpstan/extension-installer true</code>, so a non-interactive install works.</li>
@@ -165,7 +166,7 @@
 <li>Changed: CI pins Preflight 0.1.4 (GitLab component includes and the GitHub reusable workflow tag).</li>
 <li>Added: <code>tests/fixtures/laravel-vue</code>, a combined Laravel + Vue fixture with <code>resources/js</code> beside <code>app/</code>, so one app tree is linted by Pint and PHPStan (PHP side) and ESLint and Prettier (Vue side) on every run; it carries one planted PHP error (<code>bad/BrokenGreeting.php</code>) and two planted Vue defects (<code>resources/js/bad/Broken.vue</code> missing a <code>v-for</code> key, <code>resources/js/bad/NoAlt.vue</code> missing an <code>alt</code>), and <code>tests/js/presets.test.mjs</code> gains five tests for the Vue side.</li>
 </ul>
-<h2 id="0-1-2-2026-11-03">0.1.2 (2026-11-03)<a class="docs-heading-link" aria-label="Link to this section" href="#0-1-2-2026-11-03">#</a></h2>
+<h2 id="0-1-2-2026-11-03">0.1.2 <span class="docs-heading-tail"><span>(2026-11-03)</span><a class="docs-heading-link" aria-label="Link to this section" href="#0-1-2-2026-11-03">#</a></span></h2>
 <ul>
 <li>Added: PHPUnit tests for the PHPStan ignore rules in <code>phpstan/base.neon</code>, which run the raw preset against three one-class fixtures in <code>tests/fixtures/raw-ignores</code> and prove an <code>@phpstan-ignore</code> without a comment fails, an ignore that matches no error fails, and a commented ignore passes.</li>
 <li>Added: PHPUnit tests for Pint's <code>--format=gitlab</code> output, which prove the messy <code>per</code> fixture becomes a non-empty GitLab Code Quality JSON array and the clean fixture becomes <code>[]</code>.</li>
@@ -187,12 +188,12 @@
 <li>Changed: <code>deploy/composer.json</code> drops <code>minimum-stability: dev</code> (every constraint resolves at stable), and the PROCTOR job for <code>deploy/</code> in <code>.gitlab-ci.yml</code> drops <code>allow_failure</code>, since PROCTOR now passes on <code>deploy/</code>.</li>
 <li>Changed: docs and package metadata name an internal GitLab as the canonical repository, with git.wayne.edu and GitHub as read-only mirrors, until git.wayne.edu has CI runners.</li>
 </ul>
-<h2 id="0-1-1-2026-10-29">0.1.1 (2026-10-29)<a class="docs-heading-link" aria-label="Link to this section" href="#0-1-1-2026-10-29">#</a></h2>
+<h2 id="0-1-1-2026-10-29">0.1.1 <span class="docs-heading-tail"><span>(2026-10-29)</span><a class="docs-heading-link" aria-label="Link to this section" href="#0-1-1-2026-10-29">#</a></span></h2>
 <ul>
 <li>Fixed the raw and Laravel PHPStan cuts inheriting <code>reportMaybesInMethodSignatures</code> and <code>reportStaticMethodSignatures</code> from <code>phpstan/phpstan-strict-rules</code>, which made them report phpdoc method signature issues they should not; <code>base.neon</code> now pins both to false and <code>strict.neon</code> keeps them on.</li>
 <li>Pinned the other eight parameters <code>phpstan/phpstan-strict-rules</code> forces on: four low-noise ones stay on in every cut, and <code>checkDynamicProperties</code>, <code>reportMaybesInPropertyPhpDocTypes</code>, <code>reportWrongPhpDocTypeInVarTag</code> and <code>reportNonIntStringArrayKey</code> are off in <code>base.neon</code> and on in <code>strict.neon</code>; the README lists each decision.</li>
 </ul>
-<h2 id="0-1-0-2026-10-29">0.1.0 (2026-10-29)<a class="docs-heading-link" aria-label="Link to this section" href="#0-1-0-2026-10-29">#</a></h2>
+<h2 id="0-1-0-2026-10-29">0.1.0 <span class="docs-heading-tail"><span>(2026-10-29)</span><a class="docs-heading-link" aria-label="Link to this section" href="#0-1-0-2026-10-29">#</a></span></h2>
 <ul>
 <li>Added <code>bin/pinstripe-baseline</code>, which counts a PHPStan baseline's ignored errors (<code>count</code>) and fails when the baseline grows (<code>check --max=&lt;n&gt;</code> or <code>check --against=&lt;git-ref&gt;</code>), so baselines only shrink.</li>
 <li>Added <code>phpstan/strict.neon</code>, an opt-in PHPStan preset for new apps that turns on <code>phpstan/phpstan-strict-rules</code>.</li>

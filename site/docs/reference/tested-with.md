@@ -6,11 +6,11 @@ llms: https://pinstripe.apps.wayne.edu/llms.txt
 generator: Squire agent-ready
 ---
 
-# Tested with and tool floors[#](https://pinstripe.apps.wayne.edu/docs/reference/tested-with.html#tested-with-and-tool-floors)
+# Tested with and tool floors [#](https://pinstripe.apps.wayne.edu/docs/reference/tested-with.html#tested-with-and-tool-floors)
 
 This page records the tool versions Pinstripe is tested with and the PHP or Node floor each locked tool declares.
 
-## Tested with[#](https://pinstripe.apps.wayne.edu/docs/reference/tested-with.html#tested-with)
+## Tested with [#](https://pinstripe.apps.wayne.edu/docs/reference/tested-with.html#tested-with)
 
 - Pint 1.32.1
 - PHPStan 2.3.3
@@ -26,7 +26,7 @@ This page records the tool versions Pinstripe is tested with and the PHP or Node
 - typescript-eslint 8.72.1
 - Node 22, 24 and 26 (the JS presets run in CI on all three; the floor stays 22.13)
 
-## Tool floors[#](https://pinstripe.apps.wayne.edu/docs/reference/tested-with.html#tool-floors)
+## Tool floors [#](https://pinstripe.apps.wayne.edu/docs/reference/tested-with.html#tool-floors)
 
 Can your app run Pinstripe's tools? Each row shows the floor the locked package itself declares, read verbatim from `composer.lock` and `package-lock.json` today and checked against them by `tests/ToolFloorsTest.php`, so a dependency bump forces a README update in the same change.
 
@@ -57,7 +57,7 @@ Node tools:
 
 Measure twice, cut once: these floors are cut from the lock files, and the test keeps the hem honest.
 
-## Related[#](https://pinstripe.apps.wayne.edu/docs/reference/tested-with.html#related)
+## Related [#](https://pinstripe.apps.wayne.edu/docs/reference/tested-with.html#related)
 
 - [Best practices](https://pinstripe.apps.wayne.edu/docs/reference/best-practices.html)
 - [ADR-0001: PHPStan level 8 and baselines](https://pinstripe.apps.wayne.edu/docs/adr/0001-phpstan-level-and-baseline-policy.html)

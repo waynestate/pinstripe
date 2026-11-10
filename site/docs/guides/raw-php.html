@@ -39,9 +39,9 @@
   <nav class="docs-nav docs-nav--sidebar" aria-label="Documentation"><ul class="docs-nav__list"><li class="docs-nav__group"><span class="docs-nav__label">Getting started</span><ul><li><a href="../../docs/index.html">Overview</a></li></ul></li><li class="docs-nav__group"><span class="docs-nav__label">Guides</span><ul><li><a href="../../docs/guides/raw-php.html" aria-current="page">Raw PHP apps</a></li><li><a href="../../docs/guides/strict-types.html">Require strict types</a></li><li><a href="../../docs/guides/laravel.html">Laravel apps</a></li><li><a href="../../docs/guides/vue.html">Vue</a></li><li><a href="../../docs/guides/rector.html">Rector</a></li><li><a href="../../docs/guides/strict-cut.html">The strict cut</a></li><li><a href="../../docs/guides/adopting.html">Adopting on an existing app</a></li><li><a href="../../docs/guides/baselines.html">Baselines only shrink</a></li></ul></li><li class="docs-nav__group"><span class="docs-nav__label">Reference</span><ul><li><a href="../../docs/reference/tested-with.html">Tested with and tool floors</a></li><li><a href="../../docs/reference/banned-calls.html">Banned calls</a></li><li><a href="../../docs/reference/best-practices.html">Best practices</a></li><li><a href="../../docs/reference/proof.html">Proof</a></li><li><a href="../../docs/adr/0001-phpstan-level-and-baseline-policy.html">ADR-0001: PHPStan level 8 and baselines</a></li></ul></li><li class="docs-nav__group"><span class="docs-nav__label">Deploying</span><ul><li><a href="../../docs/deploying/releasing.html">Releasing</a></li></ul></li><li><a href="../../docs/upgrading.html">Upgrading</a></li><li><a href="../../docs/contributing.html">Contributing</a></li><li><a href="../../docs/changelog.html">Changelog</a></li></ul></nav>
   <div class="docs-content">
     <main id="main">
-      <article class="docs-article"><h1 id="raw-php-apps">Raw PHP apps<a class="docs-heading-link" aria-label="Link to this section" href="#raw-php-apps">#</a></h1>
+      <article class="docs-article"><h1 id="raw-php-apps">Raw PHP <span class="docs-heading-tail"><span>apps</span><a class="docs-heading-link" aria-label="Link to this section" href="#raw-php-apps">#</a></span></h1>
 <p>Point a raw PHP app at the Pinstripe presets: Pint for style, PHPStan at level 8 for analysis.</p>
-<h2 id="add-the-dependency">Add the dependency<a class="docs-heading-link" aria-label="Link to this section" href="#add-the-dependency">#</a></h2>
+<h2 id="add-the-dependency">Add the <span class="docs-heading-tail"><span>dependency</span><a class="docs-heading-link" aria-label="Link to this section" href="#add-the-dependency">#</a></span></h2>
 <p>Add Pinstripe as a dev dependency:</p>
 <!-- docs-test: skip runs in the app, not in this repo -->
 <pre tabindex="0"><code class="language-bash">composer config allow-plugins.phpstan/extension-installer true
@@ -54,7 +54,7 @@ If Composer stops because a package your app already locks (often an older PHPSt
 <pre tabindex="0"><code class="language-bash">composer config repositories.pinstripe vcs https://git.wayne.edu/enterprise-apps/pinstripe.git
 </code></pre>
 <p>The npm package, <code>@waynestate/pinstripe</code>, is published by hand after each tag; <code>npm view @waynestate/pinstripe version</code> shows where it is. The ESLint and Prettier presets have not changed since 0.1.4, so any version from 0.1.4 up is today's cut.</p>
-<h2 id="point-phpstan-at-the-raw-config">Point PHPStan at the raw config<a class="docs-heading-link" aria-label="Link to this section" href="#point-phpstan-at-the-raw-config">#</a></h2>
+<h2 id="point-phpstan-at-the-raw-config">Point PHPStan at the raw <span class="docs-heading-tail"><span>config</span><a class="docs-heading-link" aria-label="Link to this section" href="#point-phpstan-at-the-raw-config">#</a></span></h2>
 <p><code>phpstan.neon</code>:</p>
 <pre tabindex="0"><code class="language-neon">includes:
     - vendor/waynestate/pinstripe/phpstan/raw.neon
@@ -63,7 +63,7 @@ parameters:
     paths:
         - app
 </code></pre>
-<h2 id="add-composer-scripts">Add Composer scripts<a class="docs-heading-link" aria-label="Link to this section" href="#add-composer-scripts">#</a></h2>
+<h2 id="add-composer-scripts">Add Composer <span class="docs-heading-tail"><span>scripts</span><a class="docs-heading-link" aria-label="Link to this section" href="#add-composer-scripts">#</a></span></h2>
 <p>Add Composer scripts that run on every OS:</p>
 <pre tabindex="0"><code class="language-json">{
     &quot;scripts&quot;: {
@@ -83,7 +83,7 @@ curl (<code>CURLOPT_SSL_VERIFYPEER</code> false, <code>CURLOPT_SSL_VERIFYHOST</c
 Guzzle (<code>'verify' =&gt; false</code>), and on SQL joined from strings through PDO, mysqli or <code>oci_parse()</code> (bind the values
 instead): the
 <a href="../reference/banned-calls.html">Banned calls</a> page says why and what to use instead.</p>
-<h2 id="show-pint-findings-in-the-merge-request">Show Pint findings in the merge request<a class="docs-heading-link" aria-label="Link to this section" href="#show-pint-findings-in-the-merge-request">#</a></h2>
+<h2 id="show-pint-findings-in-the-merge-request">Show Pint findings in the merge <span class="docs-heading-tail"><span>request</span><a class="docs-heading-link" aria-label="Link to this section" href="#show-pint-findings-in-the-merge-request">#</a></span></h2>
 <p>Add a second script that writes the report to a file:</p>
 <pre tabindex="0"><code class="language-json">{
     &quot;scripts&quot;: {
@@ -98,7 +98,7 @@ instead): the
         codequality: pint-codequality.json
 </code></pre>
 <p><code>--format=gitlab</code> writes GitLab's Code Quality JSON and <code>[]</code> when the code is clean, and Pinstripe tests both. Chalk marks wash out; these findings stay pinned to the merge request.</p>
-<h2 id="show-phpstan-findings-in-the-merge-request">Show PHPStan findings in the merge request<a class="docs-heading-link" aria-label="Link to this section" href="#show-phpstan-findings-in-the-merge-request">#</a></h2>
+<h2 id="show-phpstan-findings-in-the-merge-request">Show PHPStan findings in the merge <span class="docs-heading-tail"><span>request</span><a class="docs-heading-link" aria-label="Link to this section" href="#show-phpstan-findings-in-the-merge-request">#</a></span></h2>
 <p>PHPStan writes the same report with its own <code>gitlab</code> error format:</p>
 <pre tabindex="0"><code class="language-json">{
     &quot;scripts&quot;: {
@@ -112,7 +112,7 @@ instead): the
         codequality: phpstan-codequality.json
 </code></pre>
 <p>Each finding carries its identifier (<code>pinstripe.banned.joinedSql</code>, <code>argument.type</code>) as the check name. Pinstripe tests both sides: the raw preset turns the null bug fixture into a non-empty report and the clean fixture into <code>[]</code>.</p>
-<h2 id="related">Related<a class="docs-heading-link" aria-label="Link to this section" href="#related">#</a></h2>
+<h2 id="related"><span class="docs-heading-tail"><span>Related</span><a class="docs-heading-link" aria-label="Link to this section" href="#related">#</a></span></h2>
 <ul>
 <li><a href="../index.html">Overview</a></li>
 <li><a href="strict-types.html">Require strict types</a></li>

@@ -6,11 +6,11 @@ llms: https://pinstripe.apps.wayne.edu/llms.txt
 generator: Squire agent-ready
 ---
 
-# Vue[#](https://pinstripe.apps.wayne.edu/docs/guides/vue.html#vue)
+# Vue [#](https://pinstripe.apps.wayne.edu/docs/guides/vue.html#vue)
 
 This guide shows how to point a Vue app at Pinstripe's ESLint and Prettier presets.
 
-## Install[#](https://pinstripe.apps.wayne.edu/docs/guides/vue.html#install)
+## Install [#](https://pinstripe.apps.wayne.edu/docs/guides/vue.html#install)
 
 Add Pinstripe as a dev dependency:
 
@@ -18,7 +18,7 @@ Add Pinstripe as a dev dependency:
 npm install --save-dev @waynestate/pinstripe eslint prettier
 ```
 
-## Configure ESLint[#](https://pinstripe.apps.wayne.edu/docs/guides/vue.html#configure-eslint)
+## Configure ESLint [#](https://pinstripe.apps.wayne.edu/docs/guides/vue.html#configure-eslint)
 
 Create `eslint.config.js` and spread the preset. For TypeScript:
 
@@ -30,7 +30,7 @@ export default [...pinstripe]
 
 For plain JavaScript, import `@waynestate/pinstripe/eslint/javascript` instead.
 
-## Configure Prettier[#](https://pinstripe.apps.wayne.edu/docs/guides/vue.html#configure-prettier)
+## Configure Prettier [#](https://pinstripe.apps.wayne.edu/docs/guides/vue.html#configure-prettier)
 
 Point Prettier at the preset in `package.json`:
 
@@ -40,7 +40,7 @@ Point Prettier at the preset in `package.json`:
 }
 ```
 
-## Add scripts[#](https://pinstripe.apps.wayne.edu/docs/guides/vue.html#add-scripts)
+## Add scripts [#](https://pinstripe.apps.wayne.edu/docs/guides/vue.html#add-scripts)
 
 Add scripts that run on every OS:
 
@@ -61,7 +61,7 @@ Note
 
 If an app adopts Oxlint for speed, ESLint stays in the toolchain for `.vue` files, because Pinstripe's Vue and accessibility rules (eslint-plugin-vue and eslint-plugin-vuejs-accessibility) run only in ESLint.
 
-## Related[#](https://pinstripe.apps.wayne.edu/docs/guides/vue.html#related)
+## Related [#](https://pinstripe.apps.wayne.edu/docs/guides/vue.html#related)
 
 - [Raw PHP apps](https://pinstripe.apps.wayne.edu/docs/guides/raw-php.html)
 - [The strict cut](https://pinstripe.apps.wayne.edu/docs/guides/strict-cut.html)

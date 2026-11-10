@@ -6,16 +6,17 @@ llms: https://pinstripe.apps.wayne.edu/llms.txt
 generator: Squire agent-ready
 ---
 
-# Changelog[#](https://pinstripe.apps.wayne.edu/docs/changelog.html#changelog)
+# Changelog [#](https://pinstripe.apps.wayne.edu/docs/changelog.html#changelog)
 
 All notable changes to Pinstripe are documented here.
 
-## Unreleased[#](https://pinstripe.apps.wayne.edu/docs/changelog.html#unreleased)
+## Unreleased [#](https://pinstripe.apps.wayne.edu/docs/changelog.html#unreleased)
 
+- Changed: the docs, agent-ready and deploy kits are Squire 0.10.6 (was 0.10.5): the docs builder and agent-ready generator see every file on Docker Desktop mounts.
 - Site: `assets/stack-env.js` knows Parity, so a pre-production page links Parity's pre-production site and a dev page links its local `site/` folder. Until now Parity, of all parts, was the one link that ignored its environment.
 - Changed: Deploy kit refreshed to Squire 0.10.5 (was 0.10.2).
 
-## 0.3.1 (2026-11-09)[#](https://pinstripe.apps.wayne.edu/docs/changelog.html#0-3-1-2026-11-09)
+## 0.3.1 (2026-11-09) [#](https://pinstripe.apps.wayne.edu/docs/changelog.html#0-3-1-2026-11-09)
 
 A patch: no preset passes or fails anything it did not in 0.3.0. It adds proof and docs (PHPStan findings in the merge request, the fix for SQL kept in `.sql` files), keeps Code Quality reports when a lint job fails, and brings the deploy kit and CI pins up to date.
 
@@ -35,7 +36,7 @@ A patch: no preset passes or fails anything it did not in 0.3.0. It adds proof a
 - Docs: no internal decision numbers in public text. This changelog's 0.2.0 and 0.1.5 entries, the CI file, the deploy layer's composer.json and a comment on the front page drop numbers that pointed into a private repository, and the old entries say "an internal GitLab" instead of naming it.
 - Fixed: the Composer package's description (what Packagist shows) names the Rector preset and the banned calls; it said "shared Pint and PHPStan presets".
 
-## 0.3.0 (2026-11-09)[#](https://pinstripe.apps.wayne.edu/docs/changelog.html#0-3-0-2026-11-09)
+## 0.3.0 (2026-11-09) [#](https://pinstripe.apps.wayne.edu/docs/changelog.html#0-3-0-2026-11-09)
 
 - Added: every cut bans SQL joined from strings (`pinstripe.banned.joinedSql`, OWASP A05:2025): a variable concatenated, interpolated or `sprintf()`'d into the SQL given to `PDO::query()`, `prepare()` or `exec()`, mysqli's `query()`, `prepare()`, `mysqli_query()` and the rest, `oci_parse()` (and the old alias `ociparse()`), or Laravel's `DB::select()`, `insert()`, `update()`, `delete()`, `statement()`, `scalar()`, `cursor()` and `fromQuery()`. No taint rule: spaze/phpstan-disallowed-calls asks for PHPStan's own `literal-string` type, so literal SQL with bindings, class constants and literal pieces joined together pass; Laravel already types `DB::raw()`, `DB::unprepared()` and the `*Raw()` builder methods that way, and a test now holds it to that. Breaking for apps that build SQL from variables. New fixtures `JoinedSql.php`, `BoundSql.php`, `JoinedQueries.php` and `BoundQueries.php`.
 - Docs: the Best practices docs page carries BEST_PRACTICES.md word for word again (it had fallen behind: no ESLint GitLab output row, no banned-call rows), and BEST_PRACTICES.md gains rows for `phpstan/strict.neon` and `phpstan/disallowed.neon`. New `tests/BestPracticesTest.php` keeps them in step: every test and file the table names exists, each row has one known status, an Enforced row names its proof, and the docs page matches.
@@ -44,7 +45,7 @@ A patch: no preset passes or fails anything it did not in 0.3.0. It adds proof a
 - Added: Laravel's own `dd()` and `dump()` methods are banned too (`$users->dd()`, `DB::table('users')->dumpRawSql()`, `$request->dump()`, `Http::get($url)->dd()`, `Http::dump()` and the rest of the family), under the functions' identifiers `pinstripe.banned.dd` and `pinstripe.banned.dump`; only methods Laravel declares match, so an app's own `dump()` and the schema dump behind `php artisan schema:dump` pass. Breaking for Laravel apps with one left in. New fixtures `tests/fixtures/laravel/src/LeftoverDebugMethods.php` and `SchemaDump.php`.
 - Changed: CI pins the Preflight components to 0.4.0 (the proctor job clones the full history, so the override-approver check can read git blame).
 
-## 0.2.0 (2026-11-08)[#](https://pinstripe.apps.wayne.edu/docs/changelog.html#0-2-0-2026-11-08)
+## 0.2.0 (2026-11-08) [#](https://pinstripe.apps.wayne.edu/docs/changelog.html#0-2-0-2026-11-08)
 
 - Changed: every banned call's tip links to the CREED rule it enforces (code handbook, Banned patterns) as well as to Pinstripe's banned-calls page; `tests/BannedCallLinksTest.php` keeps it that way.
 - Docs: the README says how CREED's PHP floor reaches the tools (PROCTOR's php-floor check, then Booster; the presets keep reading composer.json); "Coming next" is empty for now, since both items it named are built.
@@ -71,14 +72,14 @@ A patch: no preset passes or fails anything it did not in 0.3.0. It adds proof a
 - Changed: The canonical repository is git.wayne.edu; docs, links and package metadata no longer point at the archived internal copy.
 - Added: The Proof page records its last run.
 
-## 0.1.5 (2026-11-09)[#](https://pinstripe.apps.wayne.edu/docs/changelog.html#0-1-5-2026-11-09)
+## 0.1.5 (2026-11-09) [#](https://pinstripe.apps.wayne.edu/docs/changelog.html#0-1-5-2026-11-09)
 
 A patch on the 0.1 line, cut from 0.1.4 on the `0.1.x` branch, for consumers that pin `^0.1` (Booster among them). It changes no preset; 0.2.0 and 0.3.0 already carry the same fix.
 
 - Fixed: the deploy kit's lock (`deploy/composer.lock`) names git.wayne.edu and GitHub for CREED, HELMET and PROCTOR instead of the archived internal host.
 - Changed: The canonical repository is git.wayne.edu; docs, links and package metadata no longer point at the archived internal copy.
 
-## 0.1.4 (2026-11-06)[#](https://pinstripe.apps.wayne.edu/docs/changelog.html#0-1-4-2026-11-06)
+## 0.1.4 (2026-11-06) [#](https://pinstripe.apps.wayne.edu/docs/changelog.html#0-1-4-2026-11-06)
 
 - Fixed: `pinstripe-baseline` mutes deprecations while it loads the app's autoloader, so an old package in the app no longer prints PHP warnings ahead of the count a script reads (found by the 2026-11-05 proof run; new test in tests/BaselineTest.php).
 - Added: a public Proof page (`docs/reference/proof.md`, under Reference): the presets run against 82 Wayne State applications, what held, what the run caught in Pinstripe, and what it does not prove.
@@ -96,7 +97,7 @@ A patch on the 0.1 line, cut from 0.1.4 on the `0.1.x` branch, for consumers tha
 - Added: `prettier-plugin-blade` (pinned to 3.3.3, no caret) as a dependency and a `*.blade.php` override in `prettier/index.json` (parser `blade`, 4-space tab width), so the Prettier preset formats Blade views; `tests/js/blade.test.mjs` checks a clean and a messy Blade fixture through Prettier's Node API, and the README gains a "Format Blade views" section with the one-time reformat command and an adopting note.
 - Changed: Blade files now format with prettier-plugin-blade; the first run rewrites every Blade file (4-space indent, a space after directive names such as `@vite (`, void tags self-closed), so reformat in its own commit.
 
-## 0.1.3 (2026-11-03)[#](https://pinstripe.apps.wayne.edu/docs/changelog.html#0-1-3-2026-11-03)
+## 0.1.3 (2026-11-03) [#](https://pinstripe.apps.wayne.edu/docs/changelog.html#0-1-3-2026-11-03)
 
 - Added: `docs/adr/0001-phpstan-level-and-baseline-policy.md`, the ADR recording the PHPStan level 8 cut, the baseline policy (generated once for an existing app, never for new code, and only ever shrunk), and the `composer ci` / `composer-ci` pipeline enforcement point, plus a README note that apps adopting Oxlint keep ESLint for `.vue` files because the Vue and accessibility plugins run only in ESLint.
 - Changed: the install instructions now include `composer config allow-plugins.phpstan/extension-installer true`, so a non-interactive install works.
@@ -105,7 +106,7 @@ A patch on the 0.1 line, cut from 0.1.4 on the `0.1.x` branch, for consumers tha
 - Changed: CI pins Preflight 0.1.4 (GitLab component includes and the GitHub reusable workflow tag).
 - Added: `tests/fixtures/laravel-vue`, a combined Laravel + Vue fixture with `resources/js` beside `app/`, so one app tree is linted by Pint and PHPStan (PHP side) and ESLint and Prettier (Vue side) on every run; it carries one planted PHP error (`bad/BrokenGreeting.php`) and two planted Vue defects (`resources/js/bad/Broken.vue` missing a `v-for` key, `resources/js/bad/NoAlt.vue` missing an `alt`), and `tests/js/presets.test.mjs` gains five tests for the Vue side.
 
-## 0.1.2 (2026-11-03)[#](https://pinstripe.apps.wayne.edu/docs/changelog.html#0-1-2-2026-11-03)
+## 0.1.2 (2026-11-03) [#](https://pinstripe.apps.wayne.edu/docs/changelog.html#0-1-2-2026-11-03)
 
 - Added: PHPUnit tests for the PHPStan ignore rules in `phpstan/base.neon`, which run the raw preset against three one-class fixtures in `tests/fixtures/raw-ignores` and prove an `@phpstan-ignore` without a comment fails, an ignore that matches no error fails, and a commented ignore passes.
 - Added: PHPUnit tests for Pint's `--format=gitlab` output, which prove the messy `per` fixture becomes a non-empty GitLab Code Quality JSON array and the clean fixture becomes `[]`.
@@ -127,12 +128,12 @@ A patch on the 0.1 line, cut from 0.1.4 on the `0.1.x` branch, for consumers tha
 - Changed: `deploy/composer.json` drops `minimum-stability: dev` (every constraint resolves at stable), and the PROCTOR job for `deploy/` in `.gitlab-ci.yml` drops `allow_failure`, since PROCTOR now passes on `deploy/`.
 - Changed: docs and package metadata name an internal GitLab as the canonical repository, with git.wayne.edu and GitHub as read-only mirrors, until git.wayne.edu has CI runners.
 
-## 0.1.1 (2026-10-29)[#](https://pinstripe.apps.wayne.edu/docs/changelog.html#0-1-1-2026-10-29)
+## 0.1.1 (2026-10-29) [#](https://pinstripe.apps.wayne.edu/docs/changelog.html#0-1-1-2026-10-29)
 
 - Fixed the raw and Laravel PHPStan cuts inheriting `reportMaybesInMethodSignatures` and `reportStaticMethodSignatures` from `phpstan/phpstan-strict-rules`, which made them report phpdoc method signature issues they should not; `base.neon` now pins both to false and `strict.neon` keeps them on.
 - Pinned the other eight parameters `phpstan/phpstan-strict-rules` forces on: four low-noise ones stay on in every cut, and `checkDynamicProperties`, `reportMaybesInPropertyPhpDocTypes`, `reportWrongPhpDocTypeInVarTag` and `reportNonIntStringArrayKey` are off in `base.neon` and on in `strict.neon`; the README lists each decision.
 
-## 0.1.0 (2026-10-29)[#](https://pinstripe.apps.wayne.edu/docs/changelog.html#0-1-0-2026-10-29)
+## 0.1.0 (2026-10-29) [#](https://pinstripe.apps.wayne.edu/docs/changelog.html#0-1-0-2026-10-29)
 
 - Added `bin/pinstripe-baseline`, which counts a PHPStan baseline's ignored errors (`count`) and fails when the baseline grows (`check --max=<n>` or `check --against=<git-ref>`), so baselines only shrink.
 - Added `phpstan/strict.neon`, an opt-in PHPStan preset for new apps that turns on `phpstan/phpstan-strict-rules`.

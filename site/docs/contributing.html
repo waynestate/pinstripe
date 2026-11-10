@@ -39,9 +39,9 @@
   <nav class="docs-nav docs-nav--sidebar" aria-label="Documentation"><ul class="docs-nav__list"><li class="docs-nav__group"><span class="docs-nav__label">Getting started</span><ul><li><a href="../docs/index.html">Overview</a></li></ul></li><li class="docs-nav__group"><span class="docs-nav__label">Guides</span><ul><li><a href="../docs/guides/raw-php.html">Raw PHP apps</a></li><li><a href="../docs/guides/strict-types.html">Require strict types</a></li><li><a href="../docs/guides/laravel.html">Laravel apps</a></li><li><a href="../docs/guides/vue.html">Vue</a></li><li><a href="../docs/guides/rector.html">Rector</a></li><li><a href="../docs/guides/strict-cut.html">The strict cut</a></li><li><a href="../docs/guides/adopting.html">Adopting on an existing app</a></li><li><a href="../docs/guides/baselines.html">Baselines only shrink</a></li></ul></li><li class="docs-nav__group"><span class="docs-nav__label">Reference</span><ul><li><a href="../docs/reference/tested-with.html">Tested with and tool floors</a></li><li><a href="../docs/reference/banned-calls.html">Banned calls</a></li><li><a href="../docs/reference/best-practices.html">Best practices</a></li><li><a href="../docs/reference/proof.html">Proof</a></li><li><a href="../docs/adr/0001-phpstan-level-and-baseline-policy.html">ADR-0001: PHPStan level 8 and baselines</a></li></ul></li><li class="docs-nav__group"><span class="docs-nav__label">Deploying</span><ul><li><a href="../docs/deploying/releasing.html">Releasing</a></li></ul></li><li><a href="../docs/upgrading.html">Upgrading</a></li><li><a href="../docs/contributing.html" aria-current="page">Contributing</a></li><li><a href="../docs/changelog.html">Changelog</a></li></ul></nav>
   <div class="docs-content">
     <main id="main">
-      <article class="docs-article"><h1 id="contributing">Contributing<a class="docs-heading-link" aria-label="Link to this section" href="#contributing">#</a></h1>
+      <article class="docs-article"><h1 id="contributing"><span class="docs-heading-tail"><span>Contributing</span><a class="docs-heading-link" aria-label="Link to this section" href="#contributing">#</a></span></h1>
 <p>This page explains how to build, test and change Pinstripe, and the rules every change must keep.</p>
-<h2 id="build-and-test">Build and test<a class="docs-heading-link" aria-label="Link to this section" href="#build-and-test">#</a></h2>
+<h2 id="build-and-test">Build and <span class="docs-heading-tail"><span>test</span><a class="docs-heading-link" aria-label="Link to this section" href="#build-and-test">#</a></span></h2>
 <div class="docs-table" role="region" aria-label="Table" tabindex="0"><table>
 <thead>
 <tr>
@@ -72,21 +72,21 @@
 <pre tabindex="0"><code>docker run --rm -v &quot;${PWD}:/app&quot; -w /app composer:2.11.1@sha256:8de2184c6de224f4689e8f80ed5f5edaf0030b6b8b7839a22a2bcb6722ac87d0 sh -c &quot;composer install --no-interaction &amp;&amp; composer ci&quot;
 </code></pre>
 <p><code>composer ci</code> runs <code>composer validate --strict</code>, PHPUnit, the agent-ready check (<code>php bin/agent-ready.php --check</code>), <code>composer audit</code> and the docs check (<code>php bin/docs-site.php --check</code>). The PHPUnit suite is the real check: it installs fixture apps and runs Pint, PHPStan and Rector with each preset against planted code, so a preset that stops catching something fails a test. <code>npm test</code> (<code>node --test</code>) covers the JS presets, and both pipelines run it on Node 22, 24 and 26, so a broken ESLint or Prettier preset fails the build too.</p>
-<h2 id="ci">CI<a class="docs-heading-link" aria-label="Link to this section" href="#ci">#</a></h2>
+<h2 id="ci"><span class="docs-heading-tail"><span>CI</span><a class="docs-heading-link" aria-label="Link to this section" href="#ci">#</a></span></h2>
 <ul>
 <li><strong>GitLab:</strong> Preflight's <code>php-test</code> (PHP 8.3, 8.4, 8.5), <code>composer-audit</code>, <code>proctor</code> (on <code>deploy/</code>) and <code>a11y</code> (on <code>site/</code>) components, pinned to 0.4.0, plus <code>composer-ci</code>, <code>npm-test</code> (Node 22, 24 and 26) and <code>wayneui-copies</code> jobs.</li>
 <li><strong>GitHub:</strong> <code>.github/workflows/ci.yml</code> calls Preflight's reusable workflow (0.1.4) with <code>composer ci</code>, and runs <code>npm ci</code> then <code>npm test</code> in <code>node:22</code>, <code>node:24</code> and <code>node:26</code> containers.</li>
 <li>Green means <code>composer ci</code> passed on all three PHP versions and <code>npm test</code> passed on Node 22, 24 and 26, on both.</li>
 </ul>
-<h2 id="changing-a-preset">Changing a preset<a class="docs-heading-link" aria-label="Link to this section" href="#changing-a-preset">#</a></h2>
+<h2 id="changing-a-preset">Changing a <span class="docs-heading-tail"><span>preset</span><a class="docs-heading-link" aria-label="Link to this section" href="#changing-a-preset">#</a></span></h2>
 <ul>
 <li>A stricter preset breaks consumers' builds. Add the rule with a fixture that proves it, note it in the CHANGELOG, and ship it in a minor version so consumers opt in.</li>
 <li>Keep the &quot;Tested with&quot; versions in the README in step with what the fixtures actually install.</li>
 <li>When PHPStan, Pint, Larastan or Rector release a major version, bump the constraint here first and run the full suite.</li>
 </ul>
-<h2 id="rules-a-change-must-keep">Rules a change must keep<a class="docs-heading-link" aria-label="Link to this section" href="#rules-a-change-must-keep">#</a></h2>
+<h2 id="rules-a-change-must-keep">Rules a change must <span class="docs-heading-tail"><span>keep</span><a class="docs-heading-link" aria-label="Link to this section" href="#rules-a-change-must-keep">#</a></span></h2>
 <p>Every preset is enforced by a test that runs the real tool against a fixture, so a preset that stops working fails <code>composer ci</code> here instead of failing a developer's app. A preset is <strong>Enforced</strong> when a test asserts both directions: a clean fixture passes, and a deliberately broken one is caught. The PHP presets run under <code>composer ci</code> (PHPUnit); the JavaScript presets run under <code>npm test</code>. Both run in CI on GitLab and GitHub, so a preset that stops working fails the pipeline before it reaches an app.</p>
-<h2 id="related">Related<a class="docs-heading-link" aria-label="Link to this section" href="#related">#</a></h2>
+<h2 id="related"><span class="docs-heading-tail"><span>Related</span><a class="docs-heading-link" aria-label="Link to this section" href="#related">#</a></span></h2>
 <ul>
 <li><a href="reference/best-practices.html">Best practices</a></li>
 <li><a href="deploying/releasing.html">Releasing</a></li>

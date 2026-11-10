@@ -5,11 +5,11 @@ llms: https://pinstripe.apps.wayne.edu/llms.txt
 generator: Squire agent-ready
 ---
 
-# ADR-0001: PHPStan level 8 and baselines that only shrink[#](https://pinstripe.apps.wayne.edu/docs/adr/0001-phpstan-level-and-baseline-policy.html#adr-0001-phpstan-level-8-and-baselines-that-only-shrink)
+# ADR-0001: PHPStan level 8 and baselines that only shrink [#](https://pinstripe.apps.wayne.edu/docs/adr/0001-phpstan-level-and-baseline-policy.html#adr-0001-phpstan-level-8-and-baselines-that-only-shrink)
 
 Status: Accepted
 
-## Context[#](https://pinstripe.apps.wayne.edu/docs/adr/0001-phpstan-level-and-baseline-policy.html#context)
+## Context [#](https://pinstripe.apps.wayne.edu/docs/adr/0001-phpstan-level-and-baseline-policy.html#context)
 
 Pinstripe is the coding standard for the Wayne State app stack, and PHPStan is its static analysis cut. Until now the level, the baseline policy and the place where the policy is enforced lived only in config comments and README prose, so each reader had to reassemble the decision from scattered notes.
 
@@ -17,7 +17,7 @@ Two populations need different handling: new code should be held to the full lev
 
 The preset files already encode most of this: `phpstan/base.neon` carries the level and the ignore rules, the other presets are the cuts, and `bin/pinstripe-baseline` is the tool. What was missing was one document naming the decision.
 
-## Decision[#](https://pinstripe.apps.wayne.edu/docs/adr/0001-phpstan-level-and-baseline-policy.html#decision)
+## Decision [#](https://pinstripe.apps.wayne.edu/docs/adr/0001-phpstan-level-and-baseline-policy.html#decision)
 
 - New code runs at PHPStan level 8, set once in `phpstan/base.neon`; the PHP version is inferred from the consumer's composer.json, not pinned in the preset.
 - Every cut keeps `reportIgnoresWithoutComments` and `reportUnmatchedIgnoredErrors` on, so an `@phpstan-ignore` needs a reason in parentheses and must still match an error on its line.
@@ -32,7 +32,7 @@ The preset files already encode most of this: `phpstan/base.neon` carries the le
 - Enforcement point, per `.gitlab-ci.yml`: a `composer-ci` job runs `composer install --no-interaction --no-progress --prefer-dist` and then `composer ci`, which runs the checks defined by the "ci" script in composer.json.
 - Enforcement point, per the README's "Baselines only shrink" section: it shows the same `pinstripe-baseline check` command (with `--max` or `--against`) and says it fails the build the moment the line gets longer.
 
-## Consequences[#](https://pinstripe.apps.wayne.edu/docs/adr/0001-phpstan-level-and-baseline-policy.html#consequences)
+## Consequences [#](https://pinstripe.apps.wayne.edu/docs/adr/0001-phpstan-level-and-baseline-policy.html#consequences)
 
 Good:
 

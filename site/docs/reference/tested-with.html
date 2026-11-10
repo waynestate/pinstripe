@@ -39,9 +39,9 @@
   <nav class="docs-nav docs-nav--sidebar" aria-label="Documentation"><ul class="docs-nav__list"><li class="docs-nav__group"><span class="docs-nav__label">Getting started</span><ul><li><a href="../../docs/index.html">Overview</a></li></ul></li><li class="docs-nav__group"><span class="docs-nav__label">Guides</span><ul><li><a href="../../docs/guides/raw-php.html">Raw PHP apps</a></li><li><a href="../../docs/guides/strict-types.html">Require strict types</a></li><li><a href="../../docs/guides/laravel.html">Laravel apps</a></li><li><a href="../../docs/guides/vue.html">Vue</a></li><li><a href="../../docs/guides/rector.html">Rector</a></li><li><a href="../../docs/guides/strict-cut.html">The strict cut</a></li><li><a href="../../docs/guides/adopting.html">Adopting on an existing app</a></li><li><a href="../../docs/guides/baselines.html">Baselines only shrink</a></li></ul></li><li class="docs-nav__group"><span class="docs-nav__label">Reference</span><ul><li><a href="../../docs/reference/tested-with.html" aria-current="page">Tested with and tool floors</a></li><li><a href="../../docs/reference/banned-calls.html">Banned calls</a></li><li><a href="../../docs/reference/best-practices.html">Best practices</a></li><li><a href="../../docs/reference/proof.html">Proof</a></li><li><a href="../../docs/adr/0001-phpstan-level-and-baseline-policy.html">ADR-0001: PHPStan level 8 and baselines</a></li></ul></li><li class="docs-nav__group"><span class="docs-nav__label">Deploying</span><ul><li><a href="../../docs/deploying/releasing.html">Releasing</a></li></ul></li><li><a href="../../docs/upgrading.html">Upgrading</a></li><li><a href="../../docs/contributing.html">Contributing</a></li><li><a href="../../docs/changelog.html">Changelog</a></li></ul></nav>
   <div class="docs-content">
     <main id="main">
-      <article class="docs-article"><h1 id="tested-with-and-tool-floors">Tested with and tool floors<a class="docs-heading-link" aria-label="Link to this section" href="#tested-with-and-tool-floors">#</a></h1>
+      <article class="docs-article"><h1 id="tested-with-and-tool-floors">Tested with and tool <span class="docs-heading-tail"><span>floors</span><a class="docs-heading-link" aria-label="Link to this section" href="#tested-with-and-tool-floors">#</a></span></h1>
 <p>This page records the tool versions Pinstripe is tested with and the PHP or Node floor each locked tool declares.</p>
-<h2 id="tested-with">Tested with<a class="docs-heading-link" aria-label="Link to this section" href="#tested-with">#</a></h2>
+<h2 id="tested-with">Tested <span class="docs-heading-tail"><span>with</span><a class="docs-heading-link" aria-label="Link to this section" href="#tested-with">#</a></span></h2>
 <ul>
 <li>Pint 1.32.1</li>
 <li>PHPStan 2.3.3</li>
@@ -57,7 +57,7 @@
 <li>typescript-eslint 8.72.1</li>
 <li>Node 22, 24 and 26 (the JS presets run in CI on all three; the floor stays 22.13)</li>
 </ul>
-<h2 id="tool-floors">Tool floors<a class="docs-heading-link" aria-label="Link to this section" href="#tool-floors">#</a></h2>
+<h2 id="tool-floors">Tool <span class="docs-heading-tail"><span>floors</span><a class="docs-heading-link" aria-label="Link to this section" href="#tool-floors">#</a></span></h2>
 <p>Can your app run Pinstripe's tools? Each row shows the floor the locked package itself declares, read verbatim from <code>composer.lock</code> and <code>package-lock.json</code> today and checked against them by <code>tests/ToolFloorsTest.php</code>, so a dependency bump forces a README update in the same change.</p>
 <p>PHP tools:</p>
 <div class="docs-table" role="region" aria-label="Table" tabindex="0"><table>
@@ -144,7 +144,7 @@
 <li>ESLint 10 is what sets the Node floor: Node 20 before 20.19 is out.</li>
 </ul>
 <p>Measure twice, cut once: these floors are cut from the lock files, and the test keeps the hem honest.</p>
-<h2 id="related">Related<a class="docs-heading-link" aria-label="Link to this section" href="#related">#</a></h2>
+<h2 id="related"><span class="docs-heading-tail"><span>Related</span><a class="docs-heading-link" aria-label="Link to this section" href="#related">#</a></span></h2>
 <ul>
 <li><a href="best-practices.html">Best practices</a></li>
 <li><a href="../adr/0001-phpstan-level-and-baseline-policy.html">ADR-0001: PHPStan level 8 and baselines</a></li>

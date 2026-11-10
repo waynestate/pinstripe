@@ -6,11 +6,11 @@ llms: https://pinstripe.apps.wayne.edu/llms.txt
 generator: Squire agent-ready
 ---
 
-# Overview[#](https://pinstripe.apps.wayne.edu/docs/#overview)
+# Overview [#](https://pinstripe.apps.wayne.edu/docs/#overview)
 
 This page summarizes what Pinstripe is, shows the install and run commands, and points you to the guide for your stack.
 
-## What Pinstripe is[#](https://pinstripe.apps.wayne.edu/docs/#what-pinstripe-is)
+## What Pinstripe is [#](https://pinstripe.apps.wayne.edu/docs/#what-pinstripe-is)
 
 **Sharp code. Every line.**
 
@@ -22,7 +22,7 @@ Note
 
 **Not to be confused with:** Pinstripe is the code style settings you run locally; Preflight runs them, and PROCTOR, in CI. Pinstripe's Rector set modernizes code within the app's current PHP version, while Booster upgrades the app to a newer PHP version.
 
-## Install and run[#](https://pinstripe.apps.wayne.edu/docs/#install-and-run)
+## Install and run [#](https://pinstripe.apps.wayne.edu/docs/#install-and-run)
 
 In your app, add Pinstripe as a dev dependency, then run the checks:
 
@@ -36,7 +36,7 @@ composer analyse
 
 `composer lint` fails on style. `composer fix` fixes it. `composer analyse` runs PHPStan at level 8, with deprecation checks too.
 
-## Pick your path[#](https://pinstripe.apps.wayne.edu/docs/#pick-your-path)
+## Pick your path [#](https://pinstripe.apps.wayne.edu/docs/#pick-your-path)
 
 - [Raw PHP apps](https://pinstripe.apps.wayne.edu/docs/guides/raw-php.html): point PHPStan at the raw config and Pint at the `per` preset.
 - [Laravel apps](https://pinstripe.apps.wayne.edu/docs/guides/laravel.html): the Laravel preset, with Larastan registered for you.
@@ -44,11 +44,11 @@ composer analyse
 - [Rector](https://pinstripe.apps.wayne.edu/docs/guides/rector.html): modernize code for the PHP version your app already supports.
 - [Tested with](https://pinstripe.apps.wayne.edu/docs/reference/tested-with.html): the tool versions Pinstripe is tested with, and the floors each tool needs.
 
-## Status[#](https://pinstripe.apps.wayne.edu/docs/#status)
+## Status [#](https://pinstripe.apps.wayne.edu/docs/#status)
 
 The repository is at version 0.3.1: every cut bans SQL joined from strings, TLS checks turned off and leftover debug calls ([Banned calls](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html)), and `^0.3` installs it. Packagist reads the GitHub mirror, which can trail a release; the [Raw PHP guide](https://pinstripe.apps.wayne.edu/docs/guides/raw-php.html#add-the-dependency) shows the one line that installs it from git.wayne.edu meanwhile. The npm package, `@waynestate/pinstripe`, follows each tag at the same version, published by hand; its ESLint and Prettier presets have not changed since 0.1.4. The canonical repository is on git.wayne.edu; GitHub is a read-only push mirror of it, and Packagist and npm read from it. The agent-ready site ships a plain-text twin for machines: [llms.txt](https://pinstripe.apps.wayne.edu/llms.txt).
 
-## Related[#](https://pinstripe.apps.wayne.edu/docs/#related)
+## Related [#](https://pinstripe.apps.wayne.edu/docs/#related)
 
 - [Upgrading](https://pinstripe.apps.wayne.edu/docs/upgrading.html)
 - [Contributing](https://pinstripe.apps.wayne.edu/docs/contributing.html)

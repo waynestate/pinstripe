@@ -39,13 +39,13 @@
   <nav class="docs-nav docs-nav--sidebar" aria-label="Documentation"><ul class="docs-nav__list"><li class="docs-nav__group"><span class="docs-nav__label">Getting started</span><ul><li><a href="../../docs/index.html">Overview</a></li></ul></li><li class="docs-nav__group"><span class="docs-nav__label">Guides</span><ul><li><a href="../../docs/guides/raw-php.html">Raw PHP apps</a></li><li><a href="../../docs/guides/strict-types.html">Require strict types</a></li><li><a href="../../docs/guides/laravel.html">Laravel apps</a></li><li><a href="../../docs/guides/vue.html">Vue</a></li><li><a href="../../docs/guides/rector.html" aria-current="page">Rector</a></li><li><a href="../../docs/guides/strict-cut.html">The strict cut</a></li><li><a href="../../docs/guides/adopting.html">Adopting on an existing app</a></li><li><a href="../../docs/guides/baselines.html">Baselines only shrink</a></li></ul></li><li class="docs-nav__group"><span class="docs-nav__label">Reference</span><ul><li><a href="../../docs/reference/tested-with.html">Tested with and tool floors</a></li><li><a href="../../docs/reference/banned-calls.html">Banned calls</a></li><li><a href="../../docs/reference/best-practices.html">Best practices</a></li><li><a href="../../docs/reference/proof.html">Proof</a></li><li><a href="../../docs/adr/0001-phpstan-level-and-baseline-policy.html">ADR-0001: PHPStan level 8 and baselines</a></li></ul></li><li class="docs-nav__group"><span class="docs-nav__label">Deploying</span><ul><li><a href="../../docs/deploying/releasing.html">Releasing</a></li></ul></li><li><a href="../../docs/upgrading.html">Upgrading</a></li><li><a href="../../docs/contributing.html">Contributing</a></li><li><a href="../../docs/changelog.html">Changelog</a></li></ul></nav>
   <div class="docs-content">
     <main id="main">
-      <article class="docs-article"><h1 id="rector">Rector<a class="docs-heading-link" aria-label="Link to this section" href="#rector">#</a></h1>
+      <article class="docs-article"><h1 id="rector"><span class="docs-heading-tail"><span>Rector</span><a class="docs-heading-link" aria-label="Link to this section" href="#rector">#</a></span></h1>
 <p>This guide shows how to use the Pinstripe Rector preset to modernize code for the PHP version your app already supports.</p>
-<h2 id="install">Install<a class="docs-heading-link" aria-label="Link to this section" href="#install">#</a></h2>
+<h2 id="install"><span class="docs-heading-tail"><span>Install</span><a class="docs-heading-link" aria-label="Link to this section" href="#install">#</a></span></h2>
 <p>Add Rector as a dev dependency:</p>
 <pre tabindex="0"><code>composer require --dev rector/rector
 </code></pre>
-<h2 id="configure">Configure<a class="docs-heading-link" aria-label="Link to this section" href="#configure">#</a></h2>
+<h2 id="configure"><span class="docs-heading-tail"><span>Configure</span><a class="docs-heading-link" aria-label="Link to this section" href="#configure">#</a></span></h2>
 <p>Create <code>rector.php</code> and use the Pinstripe preset, adding only your own paths:</p>
 <pre tabindex="0"><code class="language-php">&lt;?php
 
@@ -54,16 +54,16 @@ $base = require __DIR__ . '/vendor/waynestate/pinstripe/rector/base.php';
 return $base-&gt;withPaths([__DIR__ . '/src']);
 </code></pre>
 <p>The preset reads the PHP floor from your app's own <code>composer.json</code>, so it cannot drift out of step with the version the app actually runs on.</p>
-<h2 id="laravel-upgrade-rules">Laravel upgrade rules<a class="docs-heading-link" aria-label="Link to this section" href="#laravel-upgrade-rules">#</a></h2>
+<h2 id="laravel-upgrade-rules">Laravel upgrade <span class="docs-heading-tail"><span>rules</span><a class="docs-heading-link" aria-label="Link to this section" href="#laravel-upgrade-rules">#</a></span></h2>
 <p>The preset turns on Rector's composer-based Laravel sets with <code>withComposerBased(laravel: true)</code>. Add <code>driftingly/rector-laravel</code> as a dev dependency and the preset applies the Laravel upgrade rules that match your app's installed <code>laravel/framework</code> version:</p>
 <pre tabindex="0"><code>composer require --dev driftingly/rector-laravel
 </code></pre>
 <p>Without the package the call is a no-op, so an app that does not want Laravel rules sees no change.</p>
-<h2 id="run">Run<a class="docs-heading-link" aria-label="Link to this section" href="#run">#</a></h2>
+<h2 id="run"><span class="docs-heading-tail"><span>Run</span><a class="docs-heading-link" aria-label="Link to this section" href="#run">#</a></span></h2>
 <p>Check with <code>vendor/bin/rector process --dry-run</code> and apply with <code>vendor/bin/rector process</code>.</p>
-<h2 id="proven-on-fixtures">Proven on fixtures<a class="docs-heading-link" aria-label="Link to this section" href="#proven-on-fixtures">#</a></h2>
+<h2 id="proven-on-fixtures">Proven on <span class="docs-heading-tail"><span>fixtures</span><a class="docs-heading-link" aria-label="Link to this section" href="#proven-on-fixtures">#</a></span></h2>
 <p><code>composer ci</code> runs the preset against a modern app (<code>tests/fixtures/rector-clean</code>) and an old-style one (<code>tests/fixtures/rector-old</code>) on every run, and fails if the clean one changes or the old one is left alone. Rector is the tailor's press: it smooths old code to the standard without changing the cut.</p>
-<h2 id="related">Related<a class="docs-heading-link" aria-label="Link to this section" href="#related">#</a></h2>
+<h2 id="related"><span class="docs-heading-tail"><span>Related</span><a class="docs-heading-link" aria-label="Link to this section" href="#related">#</a></span></h2>
 <ul>
 <li><a href="raw-php.html">Raw PHP apps</a></li>
 <li><a href="strict-cut.html">The strict cut</a></li>
