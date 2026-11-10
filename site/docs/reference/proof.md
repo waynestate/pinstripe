@@ -27,7 +27,7 @@ To refresh this table, regenerate the site with `composer docs` and `composer si
 
 ## What ran [#](https://pinstripe.apps.wayne.edu/docs/reference/proof.html#what-ran)
 
-Pinstripe 0.1.3, the presets as they are on `main`, with PHP 8.4. The 82 applications are 64 raw PHP apps (33 with a `composer.json`, 31 without one), 17 Laravel apps from 5.8 to 13, and 1 Slim 2 app. Laravel apps got the `laravel` presets; every other app got `per` and `raw`.
+Pinstripe 0.1.3, with the presets as they were on `main` on 2026-11-05 (later changes this run did not cover, such as the Inertia page rule in the Vue presets), with PHP 8.4. The 82 applications are 64 raw PHP apps (33 with a `composer.json`, 31 without one), 17 Laravel apps from 5.8 to 13, and 1 Slim 2 app. Laravel apps got the `laravel` presets; every other app got `per` and `raw`.
 
 Each app was a throwaway copy of its default branch, checked out with Linux line endings, with `.env` files, `auth.json` and `config.files/` removed. Packagist was reachable; every Wayne State host was mapped to `127.0.0.1`, so nothing private could be fetched. Then, for each app:
 
