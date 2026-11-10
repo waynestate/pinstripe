@@ -4,6 +4,7 @@ All notable changes to Pinstripe are documented here.
 
 ## Unreleased
 
+- Docs: the Proof page says its 82-app run used the presets as they were on `main` on 2026-11-05, not "as they are on main".
 - Changed: the deploy layer requires PROCTOR ^0.12 (locked 0.12.0, was ^0.11): two new warning-only checks, nothing breaks.
 - Docs: the proof page's last run is 2026-11-10 at e42cf2f (113 PHP tests, 36 npm tests with the raw-vue and laravel-inertia fixtures).
 - Changed: the deploy kit is Squire 0.10.7 (was 0.10.6): it ships a `.gitattributes` that pins line endings, so the deploy layer clears PROCTOR's line-ending warnings.
