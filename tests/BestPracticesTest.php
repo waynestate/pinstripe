@@ -76,6 +76,31 @@ final class BestPracticesTest extends TestCase
         $this->assertStringContainsString($body, $page, 'docs/reference/best-practices.md must carry BEST_PRACTICES.md below its title, word for word');
     }
 
+    public function testTheTallyCountsTheTable(): void
+    {
+        // The tally under the table is what a reader skims first, so it is
+        // counted, not typed: a row added, or one slipping to Checked, must
+        // move the tally in the same change. Measure twice, report once.
+        $this->assertSame(
+            1,
+            preg_match('/^Tally: (\d+) rows, (\d+) Enforced, (\d+) Checked\.$/m', $this->bestPractices(), $tally),
+            'BEST_PRACTICES.md needs one line "Tally: N rows, N Enforced, N Checked." under the table'
+        );
+
+        $statuses = array_column($this->rows(), 2);
+        $counted = [
+            count($statuses),
+            count(array_keys($statuses, 'Enforced', true)),
+            count(array_keys($statuses, 'Checked', true)),
+        ];
+
+        $this->assertSame(
+            $counted,
+            [(int) $tally[1], (int) $tally[2], (int) $tally[3]],
+            sprintf('the tally is stale: the table has %d rows, %d Enforced, %d Checked', ...$counted)
+        );
+    }
+
     private function root(): string
     {
         return dirname(__DIR__);
