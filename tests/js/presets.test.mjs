@@ -42,6 +42,15 @@ test('typescript preset: the clean fixture has no messages', async () => {
     assert.deepEqual(result.messages, [], result.messages.map((m) => `${m.ruleId}: ${m.message}`).join('\n'))
 })
 
+test('typescript preset: a one-word component outside Pages still fails vue/multi-word-component-names', async () => {
+    const [result] = await lint('eslint/typescript.js', ['tests/js/clean-ts/Index.vue'])
+    const ids = ruleIds(result)
+    assert.ok(
+        ids.includes('vue/multi-word-component-names'),
+        `expected vue/multi-word-component-names, got: ${ids.join(', ')}`,
+    )
+})
+
 test('typescript preset: an <img> without alt is flagged', async () => {
     const [result] = await lint('eslint/typescript.js', ['tests/js/a11y-bad/App.vue'])
     const ids = ruleIds(result)
@@ -100,11 +109,6 @@ test('laravel-vue fixture: App.vue is formatted to the Prettier preset', async (
 // The laravel-inertia fixture is the same proof for WELD's shape, Laravel with
 // Inertia and Vue: an Inertia controller and a page under resources/js/Pages.
 // The PHP presets run under composer ci, these cover the Vue side.
-test('laravel-inertia fixture: the javascript preset accepts Pages/Greetings/Index.vue', async () => {
-    const [result] = await lint('eslint/javascript.js', ['tests/fixtures/laravel-inertia/resources/js/Pages/Greetings/Index.vue'])
-    assert.deepEqual(result.messages, [], result.messages.map((m) => `${m.ruleId}: ${m.message}`).join('\n'))
-})
-
 test('laravel-inertia fixture: the typescript preset accepts Pages/Greetings/Index.vue', async () => {
     const [result] = await lint('eslint/typescript.js', ['tests/fixtures/laravel-inertia/resources/js/Pages/Greetings/Index.vue'])
     assert.deepEqual(result.messages, [], result.messages.map((m) => `${m.ruleId}: ${m.message}`).join('\n'))

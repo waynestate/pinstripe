@@ -1,5 +1,5 @@
 <script setup lang="ts">
-defineProps<{ greetings: Array<{ id: number; body: string }> }>()
+defineProps<{ greetings: Array<{ id: number; body: string }> }>();
 </script>
 
 <template>

@@ -240,7 +240,8 @@ recommended configs report a rule as a warning, Pinstripe reports it as an error
 all agree on what fails. `npm run format` fixes the layout. The preset is the off-the-rack suit: it fits every app,
 and you only add your own cufflinks. If an app adopts Oxlint for speed, ESLint stays in the toolchain for `.vue`
 files, because Pinstripe's Vue and accessibility rules (eslint-plugin-vue and eslint-plugin-vuejs-accessibility) run
-only in ESLint.
+only in ESLint. Page components under `Pages/` or `pages/` (Inertia) may have one-word names such as `Index`;
+everywhere else `vue/multi-word-component-names` still applies.
 
 ### Adopt gradually with the -warn presets
 

@@ -33,6 +33,15 @@ export default [
     // Accessibility rules for .vue templates, with every warning raised to
     // an error.
     ...raiseWarnToError(pluginVueA11y.configs['flat/recommended']),
+    // Inertia page components are rendered by name from the server
+    // (Inertia::render('Greetings/Index')), never used as a tag, so a
+    // one-word name like Index or Show cannot clash with an HTML element.
+    {
+        files: ['**/Pages/**/*.vue', '**/pages/**/*.vue'],
+        rules: {
+            'vue/multi-word-component-names': 'off',
+        },
+    },
     {
         languageOptions: {
             globals: {
