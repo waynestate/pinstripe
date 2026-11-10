@@ -12,6 +12,7 @@ All notable changes to Pinstripe are documented here.
 ## Unreleased
 
 - Added: `rector/strict-types.php`, an opt-in Rector preset for the careful route to strict types on an old app. It runs Rector's `SafeDeclareStrictTypesRector` and nothing else, so it adds `declare(strict_types=1)` only to files whose calls, returns and property assignments already pass the types they ask for, and leaves the rest for a later run. Opt-in, so no app sees a change until it points a config at it. New fixture `tests/fixtures/rector-strict-types` with `PresetsTest::testRectorStrictTypesPresetDeclaresOnlyTheSafeFile` and `testRectorStrictTypesPresetLeavesTheCoercingFileAlone`; the README, Require strict types and Rector guides show it, and BEST_PRACTICES.md gains the row (24 rows, 24 Enforced).
+- Site: the front page's "Just off the cutting table" note says what 0.3.2 brought (it still led with 0.3.0), and new `tests/FrontPageTest.php` fails `composer ci` while the note names anything but the newest CHANGELOG release, so it cannot fall behind again. The release steps in MAINTAINING.md and on the Releasing page say to rewrite it in the release commit.
 
 ## 0.3.2 (2026-11-10)
 

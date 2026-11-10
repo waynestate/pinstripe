@@ -429,7 +429,7 @@ To see the presets work before you add them to an app, clone Pinstripe and run i
 
 The commands are the same on Windows, macOS and Linux. You need PHP 8.3 or newer, Composer, and Node 22.13 or newer.
 
-Just off the cutting table 0.3.0 refuses SQL joined from strings and TLS checks turned off, in every cut. [Upgrading](https://pinstripe.apps.wayne.edu/docs/upgrading.html) walks an app through it.
+Just off the cutting table 0.3.2 lets Inertia pages have one-word names like `Index` and `Show`, and every app shape in the stack now has a fixture of its own. Since 0.3.0 every cut refuses SQL joined from strings and TLS checks turned off. [Upgrading](https://pinstripe.apps.wayne.edu/docs/upgrading.html) walks an app through each release.
 
 Fitting room any OS
 

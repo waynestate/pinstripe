@@ -46,7 +46,7 @@
 <p>Move the lines under <code>## Unreleased</code> in <code>CHANGELOG.md</code> to a new <code>## X.Y.Z (YYYY-MM-DD)</code> heading.</p>
 </li>
 <li>
-<p>Set the same version in <code>package.json</code>, in the same release commit: <code>tests/PackageVersionTest.php</code> fails otherwise.</p>
+<p>Set the same version in <code>package.json</code>, in the same release commit: <code>tests/PackageVersionTest.php</code> fails otherwise. In the same commit, rewrite the front page's &quot;Just off the cutting table&quot; note (<code>site/index.html</code>, then <code>composer site:agent-ready</code>) to lead with the new version and what it brought: <code>tests/FrontPageTest.php</code> fails while it names an older one.</p>
 </li>
 <li>
 <p><code>composer ci</code> and <code>npm test</code> green locally, then both pipelines green for that commit.</p>
