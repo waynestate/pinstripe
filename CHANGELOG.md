@@ -4,6 +4,7 @@ All notable changes to Pinstripe are documented here.
 
 ## Unreleased
 
+- Changed: the deploy layer requires PROCTOR ^0.15 (locked 0.15.0, was ^0.12): 0.13 checks the release cooldown against the CREED policy, 0.14 adds `script-pair` and 0.15 adds `mysql56-ci`; all only warn, nothing breaks.
 - Docs: the Proof page says its 82-app run used the presets as they were on `main` on 2026-11-05, not "as they are on main".
 - Added: `node scripts/readme-art/build.mjs --check` rebuilds the README art in a temp folder and fails when `docs/readme/` is stale (SVGs byte for byte, images by pixels within a small tolerance), and the `readme-art` CI job runs it. The license badge says `license`, not `licence`.
 - Changed: the deploy layer requires PROCTOR ^0.12 (locked 0.12.0, was ^0.11): two new warning-only checks, nothing breaks.
