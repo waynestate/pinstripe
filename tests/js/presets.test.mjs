@@ -97,6 +97,43 @@ test('laravel-vue fixture: App.vue is formatted to the Prettier preset', async (
     assert.equal(await prettier.check(source, { ...options, filepath: 'App.vue' }), true)
 })
 
+// The raw-vue fixture is the same proof for a plain PHP app with a Vue front
+// end and no Laravel: the PHP presets run under composer ci, these cover the
+// Vue side under resources/js.
+test('raw-vue fixture: the javascript preset accepts App.vue', async () => {
+    const [result] = await lint('eslint/javascript.js', ['tests/fixtures/raw-vue/resources/js/App.vue'])
+    assert.deepEqual(result.messages, [], result.messages.map((m) => `${m.ruleId}: ${m.message}`).join('\n'))
+})
+
+test('raw-vue fixture: the typescript preset accepts App.vue', async () => {
+    const [result] = await lint('eslint/typescript.js', ['tests/fixtures/raw-vue/resources/js/App.vue'])
+    assert.deepEqual(result.messages, [], result.messages.map((m) => `${m.ruleId}: ${m.message}`).join('\n'))
+})
+
+test('raw-vue fixture: the javascript preset flags bad/Broken.vue with vue/require-v-for-key', async () => {
+    const [result] = await lint('eslint/javascript.js', ['tests/fixtures/raw-vue/resources/js/bad/Broken.vue'])
+    const ids = ruleIds(result)
+    assert.ok(
+        ids.includes('vue/require-v-for-key'),
+        `expected vue/require-v-for-key, got: ${ids.join(', ')}`,
+    )
+})
+
+test('raw-vue fixture: the typescript preset flags bad/NoAlt.vue with vuejs-accessibility/alt-text', async () => {
+    const [result] = await lint('eslint/typescript.js', ['tests/fixtures/raw-vue/resources/js/bad/NoAlt.vue'])
+    const ids = ruleIds(result)
+    assert.ok(
+        ids.includes('vuejs-accessibility/alt-text'),
+        `expected vuejs-accessibility/alt-text, got: ${ids.join(', ')}`,
+    )
+})
+
+test('raw-vue fixture: App.vue is formatted to the Prettier preset', async () => {
+    const options = JSON.parse(await readFile(path.join(root, 'prettier', 'index.json'), 'utf8'))
+    const source = await readFile(path.join(root, 'tests/fixtures/raw-vue/resources/js/App.vue'), 'utf8')
+    assert.equal(await prettier.check(source, { ...options, filepath: 'App.vue' }), true)
+})
+
 // The warn-tier fixture violates only rules that the plugins' plain
 // recommended configs reported as warnings: vue/attributes-order and
 // vue/no-v-html. The strict presets must raise them to errors; the -warn
