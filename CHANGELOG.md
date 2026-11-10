@@ -18,6 +18,7 @@ All notable changes to Pinstripe are documented here.
 - Docs: Banned calls shows the fix for the joined-SQL report older apps meet most: SQL kept in `.sql` files, read by one helper typed `@return literal-string` with a single reasoned ignore (its file name is `literal-string` too, so a request value cannot pick the file). It also says to type a wrapper's SQL parameter `literal-string` and never baseline it, because a plain-`string` wrapper is reported once, inside, and hides every caller. Both are proven: new fixtures `SqlFiles.php` (green in the raw and strict cuts) and `JoinedThroughAWrapper.php` (each joined caller reported as `argument.type`, the loose wrapper once), with `PresetsTest::testPhpStanAcceptsSqlReadFromFilesThroughATypedWrapper` and `PresetsTest::testPhpStanReportsSqlJoinedThroughAWrapperAtTheCaller`. No rule changed.
 - Added: "Show PHPStan findings in the merge request" (README and the Raw PHP guide): an `analyse:gitlab` script with PHPStan's own `--error-format=gitlab`, each finding named by its identifier. New `PresetsTest::testPhpStanGitlabFormatReportsTheNullBugAsCodeQualityJson` and `testPhpStanGitlabFormatIsAnEmptyArrayForTheCleanFixture` prove both sides, and BEST_PRACTICES.md gains the row (23 rows, 23 Enforced).
 - Fixed: the Pint, PHPStan and ESLint Code Quality snippets set `artifacts: when: always`. Without it GitLab keeps a job's artifacts only when the job passes, so a lint job that found something, the one time the report matters, uploaded nothing.
+- Docs: no internal decision numbers in public text. This changelog's 0.2.0 and 0.1.5 entries, the CI file, the deploy layer's composer.json and a comment on the front page drop numbers that pointed into a private repository, and the old entries say "an internal GitLab" instead of naming it.
 
 ## 0.3.0 (2026-11-09)
 
@@ -34,9 +35,9 @@ All notable changes to Pinstripe are documented here.
 - Docs: the README says how CREED's PHP floor reaches the tools (PROCTOR's php-floor check, then Booster; the presets keep reading composer.json); "Coming next" is empty for now, since both items it named are built.
 - Changed: the deploy layer runs Squire's kit 0.7.1 (was 0.6.0): `.squire/php.ini` no longer sets the deprecated `session.sid_*` lines, web requests get a `disable_functions` list and Apache hardening (`.squire/php-web.ini`, `.squire/apache-hardening.conf`), and opcache gets production settings with `SQUIRE_OPCACHE_VALIDATE` as the one switch.
 - Added: CI runs Preflight's a11y component (0.3.1) on site/, every page in light and dark at 320 and 1280 px with the WCAG 1.4.10 reflow check, blocking.
-- Changed: CI pins the Preflight components to 0.3.1 (fixed cache keys, and caches saved even when a job fails; D-072).
-- Changed: CI saves its Composer and npm caches even when a job fails, so a retry after a dropped download fetches only what is missing (D-072).
-- Changed: CI caches Composer and npm downloads under a fixed key, so a lock change downloads only what changed (D-072).
+- Changed: CI pins the Preflight components to 0.3.1 (fixed cache keys, and caches saved even when a job fails).
+- Changed: CI saves its Composer and npm caches even when a job fails, so a retry after a dropped download fetches only what is missing.
+- Changed: CI caches Composer and npm downloads under a fixed key, so a lock change downloads only what changed.
 - Changed: HELMET moves to `^1.0`, its first stable release, wherever this repo requires it.
 - Fixed: the docs menu closes with Escape and hands focus back to its button (docs kit synced from Squire).
 - Fixed: the docs kit's copy button no longer covers the first line of code when it says Copied or Failed: over the code it keeps its resting width and shows a check or a cross when the word does not fit (docs kit synced from Squire).
@@ -52,7 +53,7 @@ All notable changes to Pinstripe are documented here.
 - Fixed: the front page says Sourdough starts all five app shapes and that every app it makes comes with Pinstripe on; it said raw PHP only, and that Sourdough apps did not include Pinstripe yet.
 - Changed: CI caches Composer and npm downloads per lock file (`.composer-cache`, keyed on `composer.lock` and `deploy/composer.lock`, and `.npm-cache`), so a pipeline stops fetching every package from Packagist and npm on every run. Images already come through the Dependency Proxy.
 - Changed: the front page's deploy layer (`deploy/`) runs Squire's kit 0.5.0 (was 0.3.4): `oracle-check.php` arrives, `scripts/release.sh`, `scripts/parity.ps1` and `.squire/base-fallback.Dockerfile` take the new templates, and `docker-compose.squire.yml`, which Renovate had edited, is Squire's template again, so `squire init --check` passes. `site/assets/stack-env.js` takes the stack's one copy, with bindingless catch blocks.
-- Changed: The canonical repository is git.wayne.edu (ADR-0021); docs, links and package metadata no longer point at the archived nougat copy.
+- Changed: The canonical repository is git.wayne.edu; docs, links and package metadata no longer point at the archived internal copy.
 - Added: The Proof page records its last run.
 
 ## 0.1.5 (2026-11-09)
@@ -60,7 +61,7 @@ All notable changes to Pinstripe are documented here.
 A patch on the 0.1 line, cut from 0.1.4 on the `0.1.x` branch, for consumers that pin `^0.1` (Booster among them). It changes no preset; 0.2.0 and 0.3.0 already carry the same fix.
 
 - Fixed: the deploy kit's lock (`deploy/composer.lock`) names git.wayne.edu and GitHub for CREED, HELMET and PROCTOR instead of the archived internal host.
-- Changed: The canonical repository is git.wayne.edu (ADR-0021); docs, links and package metadata no longer point at the archived nougat copy.
+- Changed: The canonical repository is git.wayne.edu; docs, links and package metadata no longer point at the archived internal copy.
 
 ## 0.1.4 (2026-11-06)
 
@@ -109,7 +110,7 @@ A patch on the 0.1 line, cut from 0.1.4 on the `0.1.x` branch, for consumers tha
 - Added: `tests/PackageVersionTest.php`, which fails `composer ci` when the `version` in `package.json` does not match the newest `## X.Y.Z (date)` heading in `CHANGELOG.md` or, on a tag pipeline, the tag itself, so npm can always publish from the tag; `package.json` is now 0.1.1, the version the 0.1.1 tag shipped without.
 - Changed: CI pulls its Docker Hub images through the GitLab Dependency Proxy (the group's CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX), so pipelines no longer hit Docker Hub's anonymous pull limit.
 - Changed: `deploy/composer.json` drops `minimum-stability: dev` (every constraint resolves at stable), and the PROCTOR job for `deploy/` in `.gitlab-ci.yml` drops `allow_failure`, since PROCTOR now passes on `deploy/`.
-- Changed: docs and package metadata name nougat as the canonical repository, with git.wayne.edu and GitHub as read-only mirrors, until git.wayne.edu has CI runners.
+- Changed: docs and package metadata name an internal GitLab as the canonical repository, with git.wayne.edu and GitHub as read-only mirrors, until git.wayne.edu has CI runners.
 
 ## 0.1.1 (2026-10-29)
 

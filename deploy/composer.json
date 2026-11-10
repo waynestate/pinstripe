@@ -1,5 +1,5 @@
 {
-    "description": "The front page deploy layer: static site/ served behind HELMET (ADR-0017).",
+    "description": "The front page deploy layer: static site/ served behind HELMET.",
     "license": "MIT",
     "type": "project",
     "require": {
