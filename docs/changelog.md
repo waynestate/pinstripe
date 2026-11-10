@@ -11,6 +11,7 @@ All notable changes to Pinstripe are documented here.
 
 ## Unreleased
 
+- Changed: the deploy kit is Squire 0.10.7 (was 0.10.6): it ships a `.gitattributes` that pins line endings, so the deploy layer clears PROCTOR's line-ending warnings.
 - Changed: the Vue presets let Inertia page components under `Pages/` or `pages/` have one-word names such as `Index` and `Show` (`vue/multi-word-component-names` is off there only).
 - Tests: a Laravel plus Inertia plus Vue fixture (tests/fixtures/laravel-inertia) proves the presets on WELD's app shape, so every stack app shape now has a fixture.
 - Docs: the ban tables in the README and on the Banned calls page name the OWASP ASVS 5.0 requirement each ban enforces (V1.2.4, V1.3.2, V12.3.2, V13.4.2, and V15.3.3 as the closest fit for `extract()`). The messages keep their OWASP Top 10 tags.
