@@ -2075,6 +2075,12 @@ h1, h2, h3 {
     width: 100%;
   }
 
+  /* Fifteen on the rail since Parity arrived: three rails of five, so
+     nobody hangs alone at the end of the rack like last season's jacket. */
+  .rail {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+
 }
 
 @media (min-width: 1200px) {

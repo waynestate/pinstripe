@@ -74,6 +74,7 @@ const CAST = [
   "helmet",
   "sourdough",
   "squire",
+  "parity",
   "preflight",
   "pinstripe",
   "booster",

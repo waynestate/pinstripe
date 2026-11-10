@@ -470,6 +470,8 @@ Most of the stack's PHP projects check their own code with Pinstripe. WELD start
   The Laravel and Vue starter
 - [Squire](https://squire.apps.wayne.edu/)
   Carries the release
+- Parity
+  Citadel on your computer
 - [Rollcall](https://rollcall.apps.wayne.edu/)
   Every app answers present
 - [ADVISOR](https://advisor.apps.wayne.edu/)
