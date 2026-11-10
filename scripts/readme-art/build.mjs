@@ -15,6 +15,11 @@
      npm --prefix scripts/readme-art ci
      npx --prefix scripts/readme-art playwright install chromium
      node scripts/readme-art/build.mjs
+     node scripts/readme-art/build.mjs --check
+
+   With --check the build lands in a temp folder and is compared with the
+   committed docs/readme/: same picture, or the check names the file that moved.
+   It writes nothing into the repo.
 
    The page is opened as a file:// URL: no server, no network.
    ========================================================================== */
@@ -22,7 +27,8 @@
 import { chromium } from "playwright";
 import { makeBadge } from "badge-maker";
 import sharp from "sharp";
-import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
@@ -31,11 +37,29 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(scriptDir, "..", "..");
 const siteDir = path.join(repoRoot, "site");
-const outDir = path.join(repoRoot, "docs", "readme");
-const castDir = path.join(outDir, "cast");
+const committedDir = path.join(repoRoot, "docs", "readme");
+
+// No argument builds into docs/readme/ as always; --check builds into a fresh
+// temp folder and compares, so a check never writes into the repo.
+const cliArgs = process.argv.slice(2);
+let checkMode = false;
+if (cliArgs.length === 1 && cliArgs[0] === "--check") checkMode = true;
+else if (cliArgs.length !== 0) {
+  console.error("usage: node scripts/readme-art/build.mjs [--check]");
+  process.exit(2);
+}
+let outDir = committedDir;
+let castDir = path.join(outDir, "cast");
+let tempDir = null;
+if (checkMode) {
+  tempDir = mkdtempSync(path.join(os.tmpdir(), "pinstripe-readme-art-"));
+  outDir = tempDir;
+  castDir = path.join(outDir, "cast");
+}
 
 const MAX_BYTES = 300 * 1024; // every file in docs/readme/ stays at or under this
 const FORBIDDEN = /noug[a]t|snu[.]gs|citadel/i; // internal names never ship in art
+const PIXEL_TOLERANCE = 2; // CI is arm64 and a dev box may be amd64: Chromium and libvips round a little differently per architecture
 
 const GREEN = "#0C5449";
 const GREEN_DEEP = "#073A32";
@@ -54,8 +78,13 @@ function record(rel, buf) {
   console.log(`  ${rel}  ${buf.length} bytes`);
 }
 
+function rmTemp() {
+  if (tempDir && existsSync(tempDir)) rmSync(tempDir, { recursive: true, force: true });
+}
+
 function fail(msg) {
   console.error(`FAIL: ${msg}`);
+  rmTemp();
   process.exit(1);
 }
 
@@ -145,7 +174,7 @@ function buildBadges() {
   if (!level) fail("phpstan/base.neon: no level");
   const defs = [
     { key: "php", label: "php", message: composer.require.php },
-    { key: "license", label: "licence", message: composer.license },
+    { key: "license", label: "license", message: composer.license },
     { key: "phpstan", label: "phpstan", message: `level ${level[1]}` },
   ];
   for (const d of defs) {
@@ -418,6 +447,53 @@ async function buildBoard() {
   record("board.jpg", jpg);
 }
 
+/* -------------------------------------------------------------------- check */
+
+// --check compares the fresh temp build with the committed docs/readme/:
+// SVGs are text, so byte for byte; images are pixels within a small
+// tolerance; plus anything missing from, or extra in, docs/readme/.
+async function checkAgainstCommitted() {
+  const problems = [];
+  const produced = new Set(outputs.map((o) => o.rel));
+  for (const { rel } of outputs) {
+    const committed = path.join(committedDir, rel);
+    if (!existsSync(committed)) {
+      problems.push(`missing: ${rel}`);
+      continue;
+    }
+    if (rel.endsWith(".svg")) {
+      if (!readFileSync(path.join(outDir, rel)).equals(readFileSync(committed))) problems.push(`stale: ${rel}`);
+      continue;
+    }
+    const [fresh, old] = await Promise.all([
+      sharp(path.join(outDir, rel)).ensureAlpha().raw().toBuffer({ resolveWithObject: true }),
+      sharp(committed).ensureAlpha().raw().toBuffer({ resolveWithObject: true }),
+    ]);
+    if (fresh.info.width !== old.info.width || fresh.info.height !== old.info.height) {
+      problems.push(
+        `stale: ${rel} (size ${fresh.info.width}x${fresh.info.height}, committed ${old.info.width}x${old.info.height})`,
+      );
+      continue;
+    }
+    let diff = 0;
+    for (let i = 0; i < fresh.data.length; i += 1) diff += Math.abs(fresh.data[i] - old.data[i]);
+    const mean = diff / fresh.data.length;
+    if (mean > PIXEL_TOLERANCE) problems.push(`stale: ${rel} (mean pixel difference ${mean.toFixed(2)})`);
+  }
+  const walk = (dir) => {
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      const abs = path.join(dir, entry.name);
+      if (entry.isDirectory()) walk(abs);
+      else {
+        const rel = path.relative(committedDir, abs).split(path.sep).join("/");
+        if (!produced.has(rel)) problems.push(`extra: ${rel}`);
+      }
+    }
+  };
+  if (existsSync(committedDir)) walk(committedDir);
+  return problems;
+}
+
 /* -------------------------------------------------------------------- main */
 
 async function main() {
@@ -443,8 +519,23 @@ async function main() {
       over = true;
     }
   }
-  if (over) process.exit(1);
+  if (over) {
+    rmTemp();
+    process.exit(1);
+  }
   console.log(`done: ${outputs.length} files, all at or under ${MAX_BYTES} bytes`);
+
+  if (!checkMode) return;
+  const problems = await checkAgainstCommitted();
+  rmTemp();
+  if (problems.length > 0) {
+    for (const line of [...problems].sort()) console.error(line);
+    console.error(
+      `FAIL: ${problems.length} README art files are out of date; run node scripts/readme-art/build.mjs and commit docs/readme/`,
+    );
+    process.exit(1);
+  }
+  console.log(`check: ${outputs.length} files match docs/readme/`);
 }
 
 main().catch((err) => {

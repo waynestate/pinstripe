@@ -38,5 +38,23 @@ network) and is deterministic: same inputs, same outputs.
 Every file must stay at or under 300 KB, and no captured text may mention an
 internal host; the script exits 1 otherwise.
 
+## Check
+
+`node scripts/readme-art/build.mjs --check` builds into a fresh temp folder
+(writing nothing into the repo) and compares it with the committed
+`docs/readme/`: SVGs byte for byte, images by pixels within a small tolerance
+(the CI runner is arm64 and a developer box may be amd64, and Chromium and
+libvips round a little differently per architecture), plus any file missing
+from or extra in `docs/readme/`. It names every problem, then exits 1 when
+anything is out of date and 0 when all files match. CI runs it in the
+`readme-art` job, so a stale image fails the pipeline instead of drifting.
+
+Windows PowerShell and Linux/macOS sh, side by side:
+
+| Windows PowerShell | Linux / macOS sh |
+|---|---|
+| `npm --prefix scripts/readme-art ci` | `npm --prefix scripts/readme-art ci` |
+| `node scripts/readme-art/build.mjs --check` | `node scripts/readme-art/build.mjs --check` |
+
 If a number on the tape is ever wrong, the preset file is wrong, not the tape.
 Measure twice, cut once.
