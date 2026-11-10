@@ -56,42 +56,49 @@
 <tbody>
 <tr>
 <td><code>composer ci</code> (all five)</td>
-<td>2026-11-07</td>
-<td>bf8a2c3</td>
-<td>pass: 67 tests, 382 assertions, 1 skipped, exit 0</td>
-<td>744 s</td>
+<td>2026-11-10</td>
+<td>e42cf2f</td>
+<td>pass: 113 tests, 943 assertions, 1 skipped, exit 0</td>
+<td>74 s</td>
 </tr>
 <tr>
 <td><code>composer validate --strict</code></td>
-<td>2026-11-07</td>
-<td>bf8a2c3</td>
+<td>2026-11-10</td>
+<td>e42cf2f</td>
 <td>pass: composer.json is valid</td>
-<td>under 1 s</td>
+<td>1 s</td>
 </tr>
 <tr>
 <td><code>php bin/agent-ready.php --check</code></td>
-<td>2026-11-07</td>
-<td>bf8a2c3</td>
-<td>pass: 22 agent-ready files current</td>
-<td>1 s</td>
+<td>2026-11-10</td>
+<td>e42cf2f</td>
+<td>pass: 23 agent-ready files current</td>
+<td>under 1 s</td>
 </tr>
 <tr>
 <td><code>composer audit</code></td>
-<td>2026-11-07</td>
-<td>bf8a2c3</td>
+<td>2026-11-10</td>
+<td>e42cf2f</td>
 <td>pass: no security vulnerability advisories found</td>
-<td>1 s</td>
+<td>under 1 s</td>
 </tr>
 <tr>
 <td><code>php bin/docs-site.php --check</code></td>
-<td>2026-11-07</td>
-<td>bf8a2c3</td>
-<td>pass: 17 docs pages current</td>
-<td>3 s</td>
+<td>2026-11-10</td>
+<td>e42cf2f</td>
+<td>pass: 18 docs pages current</td>
+<td>under 1 s</td>
+</tr>
+<tr>
+<td><code>npm test</code> (ESLint and Prettier presets, Node 22)</td>
+<td>2026-11-10</td>
+<td>e42cf2f</td>
+<td>pass: 36 of 36, including the raw-vue and laravel-inertia fixtures</td>
+<td>1 s after <code>npm ci</code></td>
 </tr>
 </tbody>
 </table></div>
-<p>To refresh this table, regenerate the site with <code>composer docs</code> and <code>composer site:agent-ready</code>, rerun <code>composer ci</code>, and rewrite the rows with the new counts and the commit you ran on. The 82-application proof run described below did not run here: its corpus of internal application repositories is not reachable from this machine, and the npm side (ESLint and Prettier for Vue) runs in the npm-test CI job, not in <code>composer ci</code>.</p>
+<p>To refresh this table, regenerate the site with <code>composer docs</code> and <code>composer site:agent-ready</code>, rerun <code>composer ci</code>, and rewrite the rows with the new counts and the commit you ran on. The 82-application proof run described below did not run here: its corpus of internal application repositories is not reachable from this machine, and the npm side (ESLint and Prettier for Vue) runs in the npm-test CI job, not in <code>composer ci</code>; the <code>npm test</code> row was run by hand in <code>node:22</code>.</p>
 <h2 id="what-ran">What <span class="docs-heading-tail"><span>ran</span><a class="docs-heading-link" aria-label="Link to this section" href="#what-ran">#</a></span></h2>
 <p>Pinstripe 0.1.3, the presets as they are on <code>main</code>, with PHP 8.4. The 82 applications are 64 raw PHP apps (33 with a <code>composer.json</code>, 31 without one), 17 Laravel apps from 5.8 to 13, and 1 Slim 2 app. Laravel apps got the <code>laravel</code> presets; every other app got <code>per</code> and <code>raw</code>.</p>
 <p>Each app was a throwaway copy of its default branch, checked out with Linux line endings, with <code>.env</code> files, <code>auth.json</code> and <code>config.files/</code> removed. Packagist was reachable; every Wayne State host was mapped to <code>127.0.0.1</code>, so nothing private could be fetched. Then, for each app:</p>

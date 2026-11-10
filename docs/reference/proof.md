@@ -13,13 +13,14 @@ A suit is proven at the fitting, not on the hanger. So on 2026-11-05 the presets
 
 | Check | Date | Commit | Result | Duration |
 |---|---|---|---|---|
-| `composer ci` (all five) | 2026-11-07 | bf8a2c3 | pass: 67 tests, 382 assertions, 1 skipped, exit 0 | 744 s |
-| `composer validate --strict` | 2026-11-07 | bf8a2c3 | pass: composer.json is valid | under 1 s |
-| `php bin/agent-ready.php --check` | 2026-11-07 | bf8a2c3 | pass: 22 agent-ready files current | 1 s |
-| `composer audit` | 2026-11-07 | bf8a2c3 | pass: no security vulnerability advisories found | 1 s |
-| `php bin/docs-site.php --check` | 2026-11-07 | bf8a2c3 | pass: 17 docs pages current | 3 s |
+| `composer ci` (all five) | 2026-11-10 | e42cf2f | pass: 113 tests, 943 assertions, 1 skipped, exit 0 | 74 s |
+| `composer validate --strict` | 2026-11-10 | e42cf2f | pass: composer.json is valid | 1 s |
+| `php bin/agent-ready.php --check` | 2026-11-10 | e42cf2f | pass: 23 agent-ready files current | under 1 s |
+| `composer audit` | 2026-11-10 | e42cf2f | pass: no security vulnerability advisories found | under 1 s |
+| `php bin/docs-site.php --check` | 2026-11-10 | e42cf2f | pass: 18 docs pages current | under 1 s |
+| `npm test` (ESLint and Prettier presets, Node 22) | 2026-11-10 | e42cf2f | pass: 36 of 36, including the raw-vue and laravel-inertia fixtures | 1 s after `npm ci` |
 
-To refresh this table, regenerate the site with `composer docs` and `composer site:agent-ready`, rerun `composer ci`, and rewrite the rows with the new counts and the commit you ran on. The 82-application proof run described below did not run here: its corpus of internal application repositories is not reachable from this machine, and the npm side (ESLint and Prettier for Vue) runs in the npm-test CI job, not in `composer ci`.
+To refresh this table, regenerate the site with `composer docs` and `composer site:agent-ready`, rerun `composer ci`, and rewrite the rows with the new counts and the commit you ran on. The 82-application proof run described below did not run here: its corpus of internal application repositories is not reachable from this machine, and the npm side (ESLint and Prettier for Vue) runs in the npm-test CI job, not in `composer ci`; the `npm test` row was run by hand in `node:22`.
 
 ## What ran
 
