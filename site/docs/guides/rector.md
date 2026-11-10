@@ -46,6 +46,10 @@ Without the package the call is a no-op, so an app that does not want Laravel ru
 
 Check with `vendor/bin/rector process --dry-run` and apply with `vendor/bin/rector process`.
 
+## Strict types, file by file [#](https://pinstripe.apps.wayne.edu/docs/guides/rector.html#strict-types-file-by-file)
+
+A second, opt-in preset, `rector/strict-types.php`, adds `declare(strict_types=1)` only to the files where it cannot change what the code does. Keep it in its own config so its diff is only declarations. [Require strict types](https://pinstripe.apps.wayne.edu/docs/guides/strict-types.html) walks through it.
+
 ## Proven on fixtures [#](https://pinstripe.apps.wayne.edu/docs/guides/rector.html#proven-on-fixtures)
 
 `composer ci` runs the preset against a modern app (`tests/fixtures/rector-clean`) and an old-style one (`tests/fixtures/rector-old`) on every run, and fails if the clean one changes or the old one is left alone. Rector is the tailor's press: it smooths old code to the standard without changing the cut.
@@ -54,5 +58,6 @@ Check with `vendor/bin/rector process --dry-run` and apply with `vendor/bin/rect
 
 - [Raw PHP apps](https://pinstripe.apps.wayne.edu/docs/guides/raw-php.html)
 - [The strict cut](https://pinstripe.apps.wayne.edu/docs/guides/strict-cut.html)
+- [Require strict types](https://pinstripe.apps.wayne.edu/docs/guides/strict-types.html)
 - [Adopting on an existing app](https://pinstripe.apps.wayne.edu/docs/guides/adopting.html)
 - [Best practices](https://pinstripe.apps.wayne.edu/docs/reference/best-practices.html)

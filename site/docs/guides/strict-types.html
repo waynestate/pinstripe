@@ -51,9 +51,28 @@
 }
 </code></pre>
 <aside class="docs-callout docs-callout--warning" role="note"><p class="docs-callout__label">Warning</p><p><code>composer fix</code> adds <code>declare(strict_types=1);</code> to every file it touches, so run your tests first and commit the change on its own.</p></aside>
-<p>For a big app, Rector's <code>SafeDeclareStrictTypesRector</code> is the careful route. Strict types leave no loose threads.</p>
+<p>Strict types leave no loose threads.</p>
+<h2 id="the-careful-route-on-a-big-app">The careful route on a big <span class="docs-heading-tail"><span>app</span><a class="docs-heading-link" aria-label="Link to this section" href="#the-careful-route-on-a-big-app">#</a></span></h2>
+<p>A file that passes <code>'3'</code> to an <code>int</code> parameter works today and throws a <code>TypeError</code> the day it turns strict. On an old app, let Rector declare strict types only where nothing changes. <code>rector/strict-types.php</code> runs Rector's <code>SafeDeclareStrictTypesRector</code> and nothing else: it reads every call, attribute, return and property assignment in a file, and declares strict types only when none of them leans on PHP's type juggling. The other files are left for a later run.</p>
+<p>Keep it in a config of its own, so its diff is only declarations and lands in a commit of its own:</p>
+<pre tabindex="0"><code class="language-php">&lt;?php
+
+// rector-strict-types.php
+$strict = require __DIR__ . '/vendor/waynestate/pinstripe/rector/strict-types.php';
+
+return $strict-&gt;withPaths([__DIR__ . '/src']);
+</code></pre>
+<p>Then:</p>
+<ol>
+<li><code>vendor/bin/rector process --dry-run -c rector-strict-types.php</code> lists the files that are ready.</li>
+<li><code>vendor/bin/rector process -c rector-strict-types.php</code> declares them. Run your tests and commit.</li>
+<li>Run it again after other fixes (Rector's type declarations, PHPStan findings) add types: the list grows.</li>
+<li>Once every file is declared, point <code>composer lint</code> at <code>per-strict.json</code> or <code>laravel-strict.json</code>, so a new file cannot slip in without it.</li>
+</ol>
+<p>Measure twice, declare once.</p>
 <h2 id="covered-by-tests">Covered by <span class="docs-heading-tail"><span>tests</span><a class="docs-heading-link" aria-label="Link to this section" href="#covered-by-tests">#</a></span></h2>
 <p>Pinstripe runs the real Pint against clean and missing fixtures for <code>pint/per-strict.json</code> and <code>pint/laravel-strict.json</code>, and asserts each strict config declares its preset and the <code>declare_strict_types</code> rule.</p>
+<p>It also runs the real Rector with <code>rector/strict-types.php</code> on <code>tests/fixtures/rector-strict-types</code>: the preset must declare <code>Measure.php</code>, whose calls pass the types they ask for, and leave <code>Hem.php</code> (it passes the string <code>'3'</code> to <code>str_repeat()</code>) and the already strict <code>Lapel.php</code> alone.</p>
 <h2 id="related"><span class="docs-heading-tail"><span>Related</span><a class="docs-heading-link" aria-label="Link to this section" href="#related">#</a></span></h2>
 <ul>
 <li><a href="../index.html">Overview</a></li>
@@ -65,7 +84,7 @@
     </main>
     <nav class="docs-pager" aria-label="Pages"><a class="docs-pager__link" href="../../docs/guides/raw-php.html"><span class="docs-pager__dir">Previous</span><span class="docs-pager__title">Raw PHP apps</span></a><a class="docs-pager__link docs-pager__link--next" href="../../docs/guides/laravel.html"><span class="docs-pager__dir">Next</span><span class="docs-pager__title">Laravel apps</span></a></nav>
   </div>
-  <nav class="docs-toc" aria-label="On this page"><h2 class="docs-toc__title">On this page</h2><ul class="docs-toc__list"><li class="docs-toc__item"><a href="#point-the-scripts-at-the-strict-preset">Point the scripts at the strict preset</a></li><li class="docs-toc__item"><a href="#covered-by-tests">Covered by tests</a></li><li class="docs-toc__item"><a href="#related">Related</a></li></ul></nav>
+  <nav class="docs-toc" aria-label="On this page"><h2 class="docs-toc__title">On this page</h2><ul class="docs-toc__list"><li class="docs-toc__item"><a href="#point-the-scripts-at-the-strict-preset">Point the scripts at the strict preset</a></li><li class="docs-toc__item"><a href="#the-careful-route-on-a-big-app">The careful route on a big app</a></li><li class="docs-toc__item"><a href="#covered-by-tests">Covered by tests</a></li><li class="docs-toc__item"><a href="#related">Related</a></li></ul></nav>
 </div>
 <footer class="docs-footer">
   <span>Documents Pinstripe <span data-docs-version>0.3.2</span></span>

@@ -23,7 +23,7 @@
     },
     "suggest": {
         "larastan/larastan": "^3.13 (Laravel apps: include phpstan/laravel.neon)",
-        "rector/rector": "^2.8 (apps: use rector/base.php from your rector.php)"
+        "rector/rector": "^2.8 (apps: use rector/base.php from your rector.php, and rector/strict-types.php to declare strict types file by file)"
     },
     "require-dev": {
         "larastan/larastan": "^3.13",

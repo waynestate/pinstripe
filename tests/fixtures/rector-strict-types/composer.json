@@ -1,0 +1,8 @@
+{
+    "name": "waynestate/pinstripe-fixture-rector-strict-types",
+    "description": "A PHP app without strict types that proves Pinstripe's rector/strict-types.php declares only the files that are safe.",
+    "type": "project",
+    "require": {
+        "php": "^8.3"
+    }
+}

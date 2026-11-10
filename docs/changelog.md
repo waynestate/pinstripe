@@ -11,6 +11,8 @@ All notable changes to Pinstripe are documented here.
 
 ## Unreleased
 
+- Added: `rector/strict-types.php`, an opt-in Rector preset for the careful route to strict types on an old app. It runs Rector's `SafeDeclareStrictTypesRector` and nothing else, so it adds `declare(strict_types=1)` only to files whose calls, returns and property assignments already pass the types they ask for, and leaves the rest for a later run. Opt-in, so no app sees a change until it points a config at it. New fixture `tests/fixtures/rector-strict-types` with `PresetsTest::testRectorStrictTypesPresetDeclaresOnlyTheSafeFile` and `testRectorStrictTypesPresetLeavesTheCoercingFileAlone`; the README, Require strict types and Rector guides show it, and BEST_PRACTICES.md gains the row (24 rows, 24 Enforced).
+
 ## 0.3.2 (2026-11-10)
 
 - Changed: the deploy layer requires PROCTOR ^0.15 (locked 0.15.0, was ^0.12): 0.13 checks the release cooldown against the CREED policy, 0.14 adds `script-pair` and 0.15 adds `mysql56-ci`; all only warn, nothing breaks.

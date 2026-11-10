@@ -6,8 +6,8 @@ changes here are small, tested, and announced.
 
 ## What Pinstripe is and what it depends on
 
-- `waynestate/pinstripe` on Packagist: Pint presets in `pint/`, PHPStan presets in `phpstan/`, a Rector preset in
-  `rector/`, and `bin/pinstripe-baseline` (counts and checks PHPStan baselines so they only shrink, and refuses to
+- `waynestate/pinstripe` on Packagist: Pint presets in `pint/`, PHPStan presets in `phpstan/`, Rector presets in
+  `rector/` (`base.php`, and the opt-in `strict-types.php`), and `bin/pinstripe-baseline` (counts and checks PHPStan baselines so they only shrink, and refuses to
   run unless the app's composer.json carries `extra.pinstripe.legacy: true`).
 - `@waynestate/pinstripe` on npm: the ESLint presets in `eslint/` and the Prettier config in `prettier/`.
 - Runtime dependencies (Composer): `laravel/pint`, `phpstan/phpstan`, `phpstan/extension-installer`,

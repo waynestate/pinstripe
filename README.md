@@ -163,7 +163,29 @@ Opt-in. Point `composer lint` and `composer fix` at the strict preset instead of
 }
 ```
 
-`composer fix` adds `declare(strict_types=1);` to every file it touches, so run your tests first and commit the change on its own. For a big app, Rector's `SafeDeclareStrictTypesRector` is the careful route. Strict types leave no loose threads.
+`composer fix` adds `declare(strict_types=1);` to every file it touches, so run your tests first and commit the change on its own. Strict types leave no loose threads.
+
+### The careful route on a big app
+
+A file that passes `'3'` to an `int` parameter works today and throws a `TypeError` the day it turns strict. On an old
+app, let Rector declare strict types only where nothing changes: `rector/strict-types.php` runs Rector's
+`SafeDeclareStrictTypesRector` and nothing else, so it skips every file whose calls, returns or property assignments
+lean on PHP's type juggling. Keep it in a config of its own, so the diff is only declarations:
+
+```php
+<?php
+
+// rector-strict-types.php
+$strict = require __DIR__ . '/vendor/waynestate/pinstripe/rector/strict-types.php';
+
+return $strict->withPaths([__DIR__ . '/src']);
+```
+
+`vendor/bin/rector process --dry-run -c rector-strict-types.php` lists the files that are ready, and the same command
+without `--dry-run` declares them. Run it again after other fixes add types, and the list grows. Switch `composer lint`
+to `per-strict.json` once every file is declared, so new files cannot slip in without it. Proven on fixtures: the
+preset must declare `tests/fixtures/rector-strict-types/src/Measure.php` and leave `Hem.php`, which passes a string to
+`str_repeat()`, alone. Measure twice, declare once.
 
 ## Use it in a Laravel app
 

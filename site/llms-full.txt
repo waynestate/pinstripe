@@ -147,7 +147,29 @@ Opt-in. Point `composer lint` and `composer fix` at the strict preset instead of
 }
 ```
 
-`composer fix` adds `declare(strict_types=1);` to every file it touches, so run your tests first and commit the change on its own. For a big app, Rector's `SafeDeclareStrictTypesRector` is the careful route. Strict types leave no loose threads.
+`composer fix` adds `declare(strict_types=1);` to every file it touches, so run your tests first and commit the change on its own. Strict types leave no loose threads.
+
+#### The careful route on a big app
+
+A file that passes `'3'` to an `int` parameter works today and throws a `TypeError` the day it turns strict. On an old
+app, let Rector declare strict types only where nothing changes: `rector/strict-types.php` runs Rector's
+`SafeDeclareStrictTypesRector` and nothing else, so it skips every file whose calls, returns or property assignments
+lean on PHP's type juggling. Keep it in a config of its own, so the diff is only declarations:
+
+```php
+<?php
+
+// rector-strict-types.php
+$strict = require __DIR__ . '/vendor/waynestate/pinstripe/rector/strict-types.php';
+
+return $strict->withPaths([__DIR__ . '/src']);
+```
+
+`vendor/bin/rector process --dry-run -c rector-strict-types.php` lists the files that are ready, and the same command
+without `--dry-run` declares them. Run it again after other fixes add types, and the list grows. Switch `composer lint`
+to `per-strict.json` once every file is declared, so new files cannot slip in without it. Proven on fixtures: the
+preset must declare `tests/fixtures/rector-strict-types/src/Measure.php` and leave `Hem.php`, which passes a string to
+`str_repeat()`, alone. Measure twice, declare once.
 
 ### Use it in a Laravel app
 
@@ -703,8 +725,8 @@ There are seven, each named for a part of the suit. The status comes from `BEST_
    Loaded by `phpstan/extension-installer`, so there's no include line to add.
    Enforced
 4. The press Rector
-   `rector/base.php`
-   Reads your PHP version from `composer.json`. It runs the dead code, code quality, type declaration and early return sets.
+   `rector/base.php` `rector/strict-types.php`
+   Reads your PHP version from `composer.json`. It runs the dead code, code quality, type declaration and early return sets. The strict-types press declares `strict_types` only in files it cannot break.
    Enforced
 5. The buttonholes ESLint
    `eslint/javascript.js` `eslint/typescript.js`
@@ -1135,6 +1157,8 @@ Source: https://pinstripe.apps.wayne.edu/docs/changelog.html
 All notable changes to Pinstripe are documented here.
 
 ### Unreleased [#](https://pinstripe.apps.wayne.edu/docs/changelog.html#unreleased)
+
+- Added: `rector/strict-types.php`, an opt-in Rector preset for the careful route to strict types on an old app. It runs Rector's `SafeDeclareStrictTypesRector` and nothing else, so it adds `declare(strict_types=1)` only to files whose calls, returns and property assignments already pass the types they ask for, and leaves the rest for a later run. Opt-in, so no app sees a change until it points a config at it. New fixture `tests/fixtures/rector-strict-types` with `PresetsTest::testRectorStrictTypesPresetDeclaresOnlyTheSafeFile` and `testRectorStrictTypesPresetLeavesTheCoercingFileAlone`; the README, Require strict types and Rector guides show it, and BEST_PRACTICES.md gains the row (24 rows, 24 Enforced).
 
 ### 0.3.2 (2026-11-10) [#](https://pinstripe.apps.wayne.edu/docs/changelog.html#0-3-2-2026-11-10)
 
@@ -1673,6 +1697,10 @@ Without the package the call is a no-op, so an app that does not want Laravel ru
 
 Check with `vendor/bin/rector process --dry-run` and apply with `vendor/bin/rector process`.
 
+### Strict types, file by file [#](https://pinstripe.apps.wayne.edu/docs/guides/rector.html#strict-types-file-by-file)
+
+A second, opt-in preset, `rector/strict-types.php`, adds `declare(strict_types=1)` only to the files where it cannot change what the code does. Keep it in its own config so its diff is only declarations. [Require strict types](https://pinstripe.apps.wayne.edu/docs/guides/strict-types.html) walks through it.
+
 ### Proven on fixtures [#](https://pinstripe.apps.wayne.edu/docs/guides/rector.html#proven-on-fixtures)
 
 `composer ci` runs the preset against a modern app (`tests/fixtures/rector-clean`) and an old-style one (`tests/fixtures/rector-old`) on every run, and fails if the clean one changes or the old one is left alone. Rector is the tailor's press: it smooths old code to the standard without changing the cut.
@@ -1681,6 +1709,7 @@ Check with `vendor/bin/rector process --dry-run` and apply with `vendor/bin/rect
 
 - [Raw PHP apps](https://pinstripe.apps.wayne.edu/docs/guides/raw-php.html)
 - [The strict cut](https://pinstripe.apps.wayne.edu/docs/guides/strict-cut.html)
+- [Require strict types](https://pinstripe.apps.wayne.edu/docs/guides/strict-types.html)
 - [Adopting on an existing app](https://pinstripe.apps.wayne.edu/docs/guides/adopting.html)
 - [Best practices](https://pinstripe.apps.wayne.edu/docs/reference/best-practices.html)
 
@@ -1752,11 +1781,37 @@ Warning
 
 `composer fix` adds `declare(strict_types=1);` to every file it touches, so run your tests first and commit the change on its own.
 
-For a big app, Rector's `SafeDeclareStrictTypesRector` is the careful route. Strict types leave no loose threads.
+Strict types leave no loose threads.
+
+### The careful route on a big app [#](https://pinstripe.apps.wayne.edu/docs/guides/strict-types.html#the-careful-route-on-a-big-app)
+
+A file that passes `'3'` to an `int` parameter works today and throws a `TypeError` the day it turns strict. On an old app, let Rector declare strict types only where nothing changes. `rector/strict-types.php` runs Rector's `SafeDeclareStrictTypesRector` and nothing else: it reads every call, attribute, return and property assignment in a file, and declares strict types only when none of them leans on PHP's type juggling. The other files are left for a later run.
+
+Keep it in a config of its own, so its diff is only declarations and lands in a commit of its own:
+
+```php
+<?php
+
+// rector-strict-types.php
+$strict = require __DIR__ . '/vendor/waynestate/pinstripe/rector/strict-types.php';
+
+return $strict->withPaths([__DIR__ . '/src']);
+```
+
+Then:
+
+1. `vendor/bin/rector process --dry-run -c rector-strict-types.php` lists the files that are ready.
+2. `vendor/bin/rector process -c rector-strict-types.php` declares them. Run your tests and commit.
+3. Run it again after other fixes (Rector's type declarations, PHPStan findings) add types: the list grows.
+4. Once every file is declared, point `composer lint` at `per-strict.json` or `laravel-strict.json`, so a new file cannot slip in without it.
+
+Measure twice, declare once.
 
 ### Covered by tests [#](https://pinstripe.apps.wayne.edu/docs/guides/strict-types.html#covered-by-tests)
 
 Pinstripe runs the real Pint against clean and missing fixtures for `pint/per-strict.json` and `pint/laravel-strict.json`, and asserts each strict config declares its preset and the `declare_strict_types` rule.
+
+It also runs the real Rector with `rector/strict-types.php` on `tests/fixtures/rector-strict-types`: the preset must declare `Measure.php`, whose calls pass the types they ask for, and leave `Hem.php` (it passes the string `'3'` to `str_repeat()`) and the already strict `Lapel.php` alone.
 
 ### Related [#](https://pinstripe.apps.wayne.edu/docs/guides/strict-types.html#related)
 
@@ -2094,13 +2149,14 @@ A preset is **Enforced** when a test asserts both directions: a clean fixture pa
 | `SQL joined from strings banned` | PHPStan (`literal-string`) + disallowed-calls | Enforced | `PresetsTest::testPhpStanReportsSqlJoinedFromStringsInRawPhp`, `PresetsTest::testPhpStanAcceptsLiteralSqlWithBoundValuesInRawPhp`, `PresetsTest::testPhpStanAcceptsSqlReadFromFilesThroughATypedWrapper`, `PresetsTest::testPhpStanReportsSqlJoinedThroughAWrapperAtTheCaller`, `PresetsTest::testLaravelPresetReportsSqlJoinedFromStrings`, `PresetsTest::testLaravelPresetAcceptsLiteralSqlWithBindings` |
 | `Banned call tips link to the CREED rule` | PHPStan | Enforced | `tests/BannedCallLinksTest.php` (`BannedCallLinksTest::testEveryBanCarriesAnIdentifierAndATip` makes sure no entry goes without) |
 | `rector/base.php` | Rector | Enforced | `PresetsTest::testRectorPresetAcceptsTheCleanFixture`, `PresetsTest::testRectorPresetReportsChangesOnTheOldFixture` |
+| `rector/strict-types.php` | Rector | Enforced | `PresetsTest::testRectorStrictTypesPresetDeclaresOnlyTheSafeFile`, `PresetsTest::testRectorStrictTypesPresetLeavesTheCoercingFileAlone` |
 | `eslint/javascript.js` | ESLint | Enforced | `tests/js/presets.test.mjs` (`npm test`) |
 | `eslint/typescript.js` | ESLint | Enforced | `tests/js/presets.test.mjs` (`npm test`) |
 | `prettier/index.json` | Prettier | Enforced | `tests/js/prettier.test.mjs` (`npm test`) |
 | README "Tool floors" | composer.lock + package-lock.json | Enforced | `ToolFloorsTest::testToolFloorsMatchTheLockFiles` |
 | This page | PHPUnit | Enforced | `BestPracticesTest::testEveryTestNamedHereExists`, `BestPracticesTest::testEveryFileNamedHereExists`, `BestPracticesTest::testEveryRowHasAKnownStatusAndAnEnforcedRowNamesItsTests`, `BestPracticesTest::testTheDocsPageCarriesTheSameTable`, `BestPracticesTest::testTheTallyCountsTheTable` |
 
-Tally: 23 rows, 23 Enforced, 0 Checked.
+Tally: 24 rows, 24 Enforced, 0 Checked.
 
 ### Related [#](https://pinstripe.apps.wayne.edu/docs/reference/best-practices.html#related)
 

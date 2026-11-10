@@ -43,6 +43,10 @@ Without the package the call is a no-op, so an app that does not want Laravel ru
 
 Check with `vendor/bin/rector process --dry-run` and apply with `vendor/bin/rector process`.
 
+## Strict types, file by file
+
+A second, opt-in preset, `rector/strict-types.php`, adds `declare(strict_types=1)` only to the files where it cannot change what the code does. Keep it in its own config so its diff is only declarations. [Require strict types](strict-types.md) walks through it.
+
 ## Proven on fixtures
 
 `composer ci` runs the preset against a modern app (`tests/fixtures/rector-clean`) and an old-style one (`tests/fixtures/rector-old`) on every run, and fails if the clean one changes or the old one is left alone. Rector is the tailor's press: it smooths old code to the standard without changing the cut.
@@ -51,5 +55,6 @@ Check with `vendor/bin/rector process --dry-run` and apply with `vendor/bin/rect
 
 - [Raw PHP apps](raw-php.md)
 - [The strict cut](strict-cut.md)
+- [Require strict types](strict-types.md)
 - [Adopting on an existing app](adopting.md)
 - [Best practices](../reference/best-practices.md)

@@ -61,12 +61,15 @@ return $base-&gt;withPaths([__DIR__ . '/src']);
 <p>Without the package the call is a no-op, so an app that does not want Laravel rules sees no change.</p>
 <h2 id="run"><span class="docs-heading-tail"><span>Run</span><a class="docs-heading-link" aria-label="Link to this section" href="#run">#</a></span></h2>
 <p>Check with <code>vendor/bin/rector process --dry-run</code> and apply with <code>vendor/bin/rector process</code>.</p>
+<h2 id="strict-types-file-by-file">Strict types, file by <span class="docs-heading-tail"><span>file</span><a class="docs-heading-link" aria-label="Link to this section" href="#strict-types-file-by-file">#</a></span></h2>
+<p>A second, opt-in preset, <code>rector/strict-types.php</code>, adds <code>declare(strict_types=1)</code> only to the files where it cannot change what the code does. Keep it in its own config so its diff is only declarations. <a href="strict-types.html">Require strict types</a> walks through it.</p>
 <h2 id="proven-on-fixtures">Proven on <span class="docs-heading-tail"><span>fixtures</span><a class="docs-heading-link" aria-label="Link to this section" href="#proven-on-fixtures">#</a></span></h2>
 <p><code>composer ci</code> runs the preset against a modern app (<code>tests/fixtures/rector-clean</code>) and an old-style one (<code>tests/fixtures/rector-old</code>) on every run, and fails if the clean one changes or the old one is left alone. Rector is the tailor's press: it smooths old code to the standard without changing the cut.</p>
 <h2 id="related"><span class="docs-heading-tail"><span>Related</span><a class="docs-heading-link" aria-label="Link to this section" href="#related">#</a></span></h2>
 <ul>
 <li><a href="raw-php.html">Raw PHP apps</a></li>
 <li><a href="strict-cut.html">The strict cut</a></li>
+<li><a href="strict-types.html">Require strict types</a></li>
 <li><a href="adopting.html">Adopting on an existing app</a></li>
 <li><a href="../reference/best-practices.html">Best practices</a></li>
 </ul>
@@ -74,7 +77,7 @@ return $base-&gt;withPaths([__DIR__ . '/src']);
     </main>
     <nav class="docs-pager" aria-label="Pages"><a class="docs-pager__link" href="../../docs/guides/vue.html"><span class="docs-pager__dir">Previous</span><span class="docs-pager__title">Vue</span></a><a class="docs-pager__link docs-pager__link--next" href="../../docs/guides/strict-cut.html"><span class="docs-pager__dir">Next</span><span class="docs-pager__title">The strict cut</span></a></nav>
   </div>
-  <nav class="docs-toc" aria-label="On this page"><h2 class="docs-toc__title">On this page</h2><ul class="docs-toc__list"><li class="docs-toc__item"><a href="#install">Install</a></li><li class="docs-toc__item"><a href="#configure">Configure</a></li><li class="docs-toc__item"><a href="#laravel-upgrade-rules">Laravel upgrade rules</a></li><li class="docs-toc__item"><a href="#run">Run</a></li><li class="docs-toc__item"><a href="#proven-on-fixtures">Proven on fixtures</a></li><li class="docs-toc__item"><a href="#related">Related</a></li></ul></nav>
+  <nav class="docs-toc" aria-label="On this page"><h2 class="docs-toc__title">On this page</h2><ul class="docs-toc__list"><li class="docs-toc__item"><a href="#install">Install</a></li><li class="docs-toc__item"><a href="#configure">Configure</a></li><li class="docs-toc__item"><a href="#laravel-upgrade-rules">Laravel upgrade rules</a></li><li class="docs-toc__item"><a href="#run">Run</a></li><li class="docs-toc__item"><a href="#strict-types-file-by-file">Strict types, file by file</a></li><li class="docs-toc__item"><a href="#proven-on-fixtures">Proven on fixtures</a></li><li class="docs-toc__item"><a href="#related">Related</a></li></ul></nav>
 </div>
 <footer class="docs-footer">
   <span>Documents Pinstripe <span data-docs-version>0.3.2</span></span>

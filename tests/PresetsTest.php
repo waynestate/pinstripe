@@ -1025,6 +1025,76 @@ final class PresetsTest extends TestCase
     }
 
     /**
+     * rector/strict-types.php is the careful route to strict types: it must
+     * declare the file whose calls already pass the right types (Measure.php)
+     * and nothing else, leaving the file that leans on type juggling
+     * (Hem.php) and the one already strict (Lapel.php) alone.
+     */
+    public function testRectorStrictTypesPresetDeclaresOnlyTheSafeFile(): void
+    {
+        $diffs = $this->rectorStrictTypesDiffs();
+
+        $this->assertSame(['Measure.php'], array_keys($diffs));
+        $this->assertStringContainsString('+declare(strict_types=1);', $diffs['Measure.php']['diff']);
+        $this->assertSame(
+            ['Rector\\TypeDeclaration\\Rector\\StmtsAwareInterface\\SafeDeclareStrictTypesRector'],
+            $diffs['Measure.php']['applied_rectors']
+        );
+    }
+
+    public function testRectorStrictTypesPresetLeavesTheCoercingFileAlone(): void
+    {
+        $diffs = $this->rectorStrictTypesDiffs();
+
+        $this->assertArrayNotHasKey('Hem.php', $diffs);
+        $this->assertArrayNotHasKey('Lapel.php', $diffs);
+        $this->assertStringNotContainsString('strict_types', (string) file_get_contents(
+            $this->root() . '/tests/fixtures/rector-strict-types/src/Hem.php'
+        ), 'the coercing fixture must stay without strict types, or the test proves nothing');
+    }
+
+    /**
+     * Dry-run the strict-types preset on its fixture and key the proposed
+     * diffs by file name.
+     *
+     * @return array<string, array{diff: string, applied_rectors: list<string>}>
+     */
+    private function rectorStrictTypesDiffs(): array
+    {
+        [$exit, $output] = $this->runInDir([
+            PHP_BINARY,
+            $this->root() . '/vendor/bin/rector',
+            'process',
+            '--dry-run',
+            '--no-progress-bar',
+            '--output-format=json',
+            '-c',
+            'rector.php',
+        ], $this->root() . '/tests/fixtures/rector-strict-types');
+
+        // A dry run exits non-zero when it proposes changes.
+        $this->assertNotSame(0, $exit, $output);
+
+        // runInDir() hands back stdout then stderr, so cut the JSON report
+        // out from its first brace to its last.
+        $start = (int) strpos($output, '{');
+        $report = json_decode(substr($output, $start, (int) strrpos($output, '}') - $start + 1), true, 512, JSON_THROW_ON_ERROR);
+        $this->assertIsArray($report);
+        $this->assertArrayHasKey('file_diffs', $report, $output);
+
+        $diffs = [];
+
+        foreach ($report['file_diffs'] as $fileDiff) {
+            $diffs[basename($fileDiff['file'])] = [
+                'diff' => $fileDiff['diff'],
+                'applied_rectors' => $fileDiff['applied_rectors'],
+            ];
+        }
+
+        return $diffs;
+    }
+
+    /**
      * Run `rector process --dry-run` on a fixture, with the fixture as the
      * working directory so Rector reads the PHP floor from the fixture's own
      * composer.json, exactly as it would from an app's.

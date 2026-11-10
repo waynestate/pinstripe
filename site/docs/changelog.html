@@ -43,6 +43,9 @@
 <h1 id="changelog"><span class="docs-heading-tail"><span>Changelog</span><a class="docs-heading-link" aria-label="Link to this section" href="#changelog">#</a></span></h1>
 <p>All notable changes to Pinstripe are documented here.</p>
 <h2 id="unreleased"><span class="docs-heading-tail"><span>Unreleased</span><a class="docs-heading-link" aria-label="Link to this section" href="#unreleased">#</a></span></h2>
+<ul>
+<li>Added: <code>rector/strict-types.php</code>, an opt-in Rector preset for the careful route to strict types on an old app. It runs Rector's <code>SafeDeclareStrictTypesRector</code> and nothing else, so it adds <code>declare(strict_types=1)</code> only to files whose calls, returns and property assignments already pass the types they ask for, and leaves the rest for a later run. Opt-in, so no app sees a change until it points a config at it. New fixture <code>tests/fixtures/rector-strict-types</code> with <code>PresetsTest::testRectorStrictTypesPresetDeclaresOnlyTheSafeFile</code> and <code>testRectorStrictTypesPresetLeavesTheCoercingFileAlone</code>; the README, Require strict types and Rector guides show it, and BEST_PRACTICES.md gains the row (24 rows, 24 Enforced).</li>
+</ul>
 <h2 id="0-3-2-2026-11-10">0.3.2 <span class="docs-heading-tail"><span>(2026-11-10)</span><a class="docs-heading-link" aria-label="Link to this section" href="#0-3-2-2026-11-10">#</a></span></h2>
 <ul>
 <li>Changed: the deploy layer requires PROCTOR ^0.15 (locked 0.15.0, was ^0.12): 0.13 checks the release cooldown against the CREED policy, 0.14 adds <code>script-pair</code> and 0.15 adds <code>mysql56-ci</code>; all only warn, nothing breaks.</li>
