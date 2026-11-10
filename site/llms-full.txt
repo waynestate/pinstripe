@@ -340,8 +340,12 @@ with a variable in it does not (an `int` too: bind it). Laravel already types `D
 query builder's `whereRaw()`, `selectRaw()`, `orderByRaw()` and other raw methods as `literal-string`, so PHPStan
 reports a joined string there by itself (`argument.type`); Pinstripe covers the connection calls Laravel leaves as
 plain `string`. SQL that is safe but not literal (read from a `.sql` file, or a helper's return value) can say so: type
-the helper `@return literal-string`, or keep the call with a reasoned ignore. Postgres's `pg_query()` is not covered,
-since its connection argument is optional and the SQL has no fixed position.
+the helper `@return literal-string`, or keep the call with a reasoned ignore. Apps that keep their queries in `.sql`
+files clear every report with one typed reader; the
+[Banned calls](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html#sql-kept-in-sql-files) page has it.
+A wrapper that takes the whole SQL as a plain `string` is reported once, inside, and never at its callers, so type its
+parameter `literal-string` and PHPStan checks each caller; never baseline a wrapper. Postgres's `pg_query()` is not
+covered, since its connection argument is optional and the SQL has no fixed position.
 
 Only the off switch is banned. Setting `CURLOPT_SSL_VERIFYPEER` to true, `verify` to a CA bundle, or `false` on an
 option that has nothing to do with TLS passes. The `curl_setopt()` ban is the one Pinstripe writes itself
@@ -382,7 +386,9 @@ and `dump()` methods in and must be reported for each, while its twin `SchemaDum
 streams, eight ways) and `VerifyFalse.php` (Laravel and Guzzle, five ways) must be reported for each, while their
 twins `SecureTransport.php` and `VerifiedHttp.php` stay green; `JoinedSql.php` (PDO, mysqli and oci8, nine ways)
 and `JoinedQueries.php` (Laravel, six of Pinstripe's and three of Laravel's own) must be reported for each, while
-`BoundSql.php` and `BoundQueries.php` bind their values and stay green; and the
+`BoundSql.php` and `BoundQueries.php` bind their values and stay green; `SqlFiles.php` reads its SQL from `.sql`
+files through a typed reader and wrapper and stays green, while `JoinedThroughAWrapper.php` must be reported at each
+joined caller; and the
 Laravel app fixture installs Pinstripe through Composer and must fail on a leftover `dd()` and on curl told to skip
 the certificate check, which proves the curl rule loads from `vendor/`. A suit with a `dd()` in
 the pocket does not leave the shop.
@@ -1107,6 +1113,7 @@ All notable changes to Pinstripe are documented here.
 - Docs: MAINTAINING.md names the maintainer as a role (the stack maintainer), reached through an issue on git.wayne.edu, not a person; the CI file's cache comment drops an internal decision number.
 - Added: the three presets the truth pass marked Checked are Enforced again, each now proven in both directions: `PresetsTest::testPintLaravelPresetRejectsTheMessyFixture` (`pint/laravel.json` fails the messy fixture), `PresetsTest::testPintLaravelStrictPresetAcceptsTheStrictTypesLaravelCleanFixture` (`pint/laravel-strict.json` passes a new Laravel-style clean fixture, `tests/fixtures/strict-types/laravel-clean`), and a `gitlab-formatter.test.mjs` case where the clean Vue fixture gives an empty Code Quality report. Two stale comments are fixed: the GitHub workflow names its real Preflight pin (0.1.4, not 0.1.2), and `PresetsTest` says the `ociparse()` deprecation is expected on every PHP version, not only 8.4 and newer.
 - Added: BEST_PRACTICES.md (and its docs page) ends the table with a tally, today 22 rows, 22 Enforced, 0 Checked, and `BestPracticesTest::testTheTallyCountsTheTable` recounts it on every run, so a new row or one slipping back to Checked moves the tally in the same change.
+- Docs: Banned calls shows the fix for the joined-SQL report older apps meet most: SQL kept in `.sql` files, read by one helper typed `@return literal-string` with a single reasoned ignore (its file name is `literal-string` too, so a request value cannot pick the file). It also says to type a wrapper's SQL parameter `literal-string` and never baseline it, because a plain-`string` wrapper is reported once, inside, and hides every caller. Both are proven: new fixtures `SqlFiles.php` (green in the raw and strict cuts) and `JoinedThroughAWrapper.php` (each joined caller reported as `argument.type`, the loose wrapper once), with `PresetsTest::testPhpStanAcceptsSqlReadFromFilesThroughATypedWrapper` and `PresetsTest::testPhpStanReportsSqlJoinedThroughAWrapperAtTheCaller`. No rule changed.
 
 ### 0.3.0 (2026-11-09)[#](https://pinstripe.apps.wayne.edu/docs/changelog.html#0-3-0-2026-11-09)
 
@@ -1852,11 +1859,65 @@ DB::select("select * from users where id = {$id}");                 // pinstripe
 
 Laravel already types `DB::raw()`, `DB::unprepared()` and the query builder's `whereRaw()`, `selectRaw()`, `orderByRaw()` and other raw methods as `literal-string`, so PHPStan reports a joined string there by itself, as `argument.type`; Pinstripe covers the connection calls Laravel leaves as plain `string`. The query builder's own `insert()`, `update()`, `delete()` and `select()` take arrays and column names, not SQL, and are not touched.
 
-SQL that is safe but not a literal (read from a `.sql` file, or returned by a helper) can say so, or the call can keep a reasoned ignore. An older app with many joined queries can baseline the rest while it binds them, since a baseline only shrinks.
+SQL that is safe but not a literal (read from a `.sql` file, or returned by a helper) can say so, or the call can keep a reasoned ignore.
 
-- Type the helper that reads or builds the SQL `@return literal-string`, when its SQL really is a literal (a trusted `.sql` file, for example); the value then counts as a literal.
-- Wrap the SQL parameter as `literal-string`, so a call site can only hand the method literal SQL.
+#### SQL kept in .sql files[#](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html#sql-kept-in-sql-files)
+
+Many apps keep their queries in `.sql` files and bind every value. That is safe, but PHPStan cannot tell that a file's contents are static, so the ban reports every call that runs one. It is the report older Wayne State apps meet most often. One typed reader clears all of them, with the one reasoned ignore in one place:
+
+```php
+/**
+ * @param literal-string $name
+ *
+ * @return literal-string
+ */
+function sqlFile(string $name): string
+{
+    $sql = file_get_contents(__DIR__ . '/sql/' . $name . '.sql');
+    if ($sql === false) {
+        throw new RuntimeException('No such query: ' . $name);
+    }
+
+    // @phpstan-ignore return.type (the SQL is read from the app's own sql/ folder, and every value is bound)
+    return $sql;
+}
+
+$statement = oci_parse($oracle, sqlFile('people'));
+oci_bind_by_name($statement, ':id', $id);
+```
+
+The name is `literal-string` too, so a request value can never pick the file. A helper that only ever returns literals needs no ignore at all: type it `@return literal-string` and PHPStan checks that it is true.
+
+#### Type a wrapper, never baseline it[#](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html#type-a-wrapper-never-baseline-it)
+
+A wrapper that takes the whole SQL as a plain `string` is reported once, inside the wrapper, and never at its callers:
+
+```php
+function query($db, string $sql)
+{
+    return oci_parse($db, $sql); // pinstripe.banned.joinedSql, here and only here
+}
+```
+
+Baseline that one line and every caller, today's and every one written after it, goes unchecked for good. Type the parameter instead:
+
+```php
+/**
+ * @param resource $db
+ * @param literal-string $sql
+ */
+function query($db, string $sql)
+{
+    return oci_parse($db, $sql);
+}
+```
+
+Now PHPStan checks each caller: literal SQL passes, and a joined string is reported where it is joined, as `argument.type` ("expects literal-string").
+
+#### Other ways out[#](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html#other-ways-out)
+
 - Give PHPStan the connection's type, a typed property or `@var \PDO $db`; with a `mixed` connection PHPStan cannot see the call, and the ban stays quiet.
+- An older app with many joined queries can baseline the rest while it binds them, since a baseline only shrinks. Baseline call sites, never a wrapper.
 
 Only the off switch is banned: `CURLOPT_SSL_VERIFYPEER` set to true, `verify` pointed at a CA bundle, and `false` on an option that has nothing to do with TLS all pass. The match is on literal values, so `'verify' => $verify`, or a curl option read from config, passes too; keep the value a literal where you can.
 
@@ -1906,6 +1967,7 @@ List more bans under the same parameters (`disallowedFunctionCalls`, `disallowed
 - `tests/fixtures/raw-disallowed/src/InsecureTransport.php` turns TLS checks off eight ways through curl and stream contexts, and the raw and strict cuts must report each one; its twin `SecureTransport.php` sets verification on and must stay green.
 - `tests/fixtures/laravel/src/VerifyFalse.php` sets `verify` to false five ways through `withOptions()` and Guzzle, and the Laravel preset must report each one; its twin `VerifiedHttp.php` points `verify` at a CA bundle and must stay green.
 - `tests/fixtures/raw-disallowed/src/JoinedSql.php` joins a variable into SQL nine ways through PDO, mysqli, `oci_parse()` and its old alias `ociparse()`, and the raw and strict cuts must report each one; its twin `BoundSql.php` binds every value and must stay green.
+- `tests/fixtures/raw-disallowed/src/SqlFiles.php` reads its SQL from `.sql` files through the typed reader and wrapper above and must stay green in the raw and strict cuts; `JoinedThroughAWrapper.php` hands joined SQL to that wrapper and must be reported at each caller, while a plain-`string` wrapper is reported once, inside, and its joined caller not at all.
 - `tests/fixtures/laravel/src/JoinedQueries.php` does the same six ways through Laravel's connection and three through the raw builder methods, and the Laravel preset must report all nine (six as `pinstripe.banned.joinedSql`, three as Laravel's own `argument.type`); its twin `BoundQueries.php` uses bindings and the query builder and must stay green.
 - The Laravel app fixture installs Pinstripe through Composer, like an app does, and must fail on a leftover `dd()`, and on curl told to skip the certificate check (which proves Pinstripe's own curl rule loads from `vendor/`).
 
@@ -1946,7 +2008,7 @@ A preset is **Enforced** when a test asserts both directions: a clean fixture pa
 | `PHPStan ignore comments` | PHPStan | Enforced | `PresetsTest::testPhpStanRawConfigReportsAnIgnoreWithoutAComment`, `PresetsTest::testPhpStanRawConfigReportsAnIgnoreThatMatchesNothing`, `PresetsTest::testPhpStanRawConfigAcceptsAnIgnoreWithAComment` |
 | `Laravel dd() and dump() methods banned` | PHPStan + Larastan | Enforced | `PresetsTest::testLaravelPresetReportsDdAndDumpMethodsLeftIn`, `PresetsTest::testLaravelPresetAcceptsASchemaDump` |
 | `TLS checks turned off banned` | PHPStan (+ Pinstripe's curl rule) | Enforced | `PresetsTest::testPhpStanReportsTlsChecksTurnedOffInRawPhp`, `PresetsTest::testPhpStanAcceptsTlsChecksLeftOnInRawPhp`, `PresetsTest::testLaravelPresetReportsTheVerifyOptionSetToFalse`, `PresetsTest::testLaravelPresetAcceptsVerifyPointedAtACaBundle`, `PresetsTest::testPhpStanLaravelConfigReportsCurlVerifyOffInTheLaravelAppFixture` |
-| `SQL joined from strings banned` | PHPStan (`literal-string`) + disallowed-calls | Enforced | `PresetsTest::testPhpStanReportsSqlJoinedFromStringsInRawPhp`, `PresetsTest::testPhpStanAcceptsLiteralSqlWithBoundValuesInRawPhp`, `PresetsTest::testLaravelPresetReportsSqlJoinedFromStrings`, `PresetsTest::testLaravelPresetAcceptsLiteralSqlWithBindings` |
+| `SQL joined from strings banned` | PHPStan (`literal-string`) + disallowed-calls | Enforced | `PresetsTest::testPhpStanReportsSqlJoinedFromStringsInRawPhp`, `PresetsTest::testPhpStanAcceptsLiteralSqlWithBoundValuesInRawPhp`, `PresetsTest::testPhpStanAcceptsSqlReadFromFilesThroughATypedWrapper`, `PresetsTest::testPhpStanReportsSqlJoinedThroughAWrapperAtTheCaller`, `PresetsTest::testLaravelPresetReportsSqlJoinedFromStrings`, `PresetsTest::testLaravelPresetAcceptsLiteralSqlWithBindings` |
 | `Banned call tips link to the CREED rule` | PHPStan | Enforced | `tests/BannedCallLinksTest.php` (`BannedCallLinksTest::testEveryBanCarriesAnIdentifierAndATip` makes sure no entry goes without) |
 | `rector/base.php` | Rector | Enforced | `PresetsTest::testRectorPresetAcceptsTheCleanFixture`, `PresetsTest::testRectorPresetReportsChangesOnTheOldFixture` |
 | `eslint/javascript.js` | ESLint | Enforced | `tests/js/presets.test.mjs` (`npm test`) |

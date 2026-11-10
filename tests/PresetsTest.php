@@ -797,6 +797,64 @@ final class PresetsTest extends TestCase
         $this->assertSame(0, $exit, $output);
     }
 
+    #[DataProvider('bannedCallConfigs')]
+    public function testPhpStanAcceptsSqlReadFromFilesThroughATypedWrapper(string $config): void
+    {
+        // The fix the Banned calls page gives for SQL kept in .sql files: a
+        // reader typed @return literal-string (one reasoned ignore) and a
+        // wrapper whose SQL parameter is literal-string. No baseline needed.
+        [$exit, $output] = $this->runInDir([
+            PHP_BINARY,
+            $this->root() . '/vendor/bin/phpstan',
+            'analyse',
+            '-c',
+            $this->root() . '/phpstan/' . $config,
+            '--no-progress',
+            '--error-format=raw',
+            $this->root() . '/tests/fixtures/raw-disallowed/src/SqlFiles.php',
+        ], $this->root() . '/tests/fixtures/laravel');
+
+        $this->assertSame(0, $exit, $output);
+    }
+
+    #[DataProvider('bannedCallConfigs')]
+    public function testPhpStanReportsSqlJoinedThroughAWrapperAtTheCaller(string $config): void
+    {
+        // A literal-string wrapper moves the report to each joined caller
+        // (argument.type). A plain-string wrapper is reported once, inside,
+        // and its joined caller (line 23) is not reported at all: that is why
+        // the docs say to type a wrapper, never to baseline it.
+        [$exit, $output, $messages] = $this->runPhpStanJson([
+            PHP_BINARY,
+            $this->root() . '/vendor/bin/phpstan',
+            'analyse',
+            '-c',
+            $this->root() . '/phpstan/' . $config,
+            '--no-progress',
+            $this->root() . '/tests/fixtures/raw-disallowed/src/SqlFiles.php',
+            $this->root() . '/tests/fixtures/raw-disallowed/src/JoinedThroughAWrapper.php',
+        ], $this->root() . '/tests/fixtures/laravel');
+
+        $this->assertNotSame(0, $exit, $output);
+        $this->assertSame(
+            [
+                ['argument.type', 21],
+                ['argument.type', 22],
+                ['pinstripe.banned.joinedSql', 40],
+            ],
+            array_map(static fn (array $message): array => [$message[0], $message[2]], $messages),
+            $output
+        );
+
+        foreach ($messages as [$identifier, $message]) {
+            if ($identifier === 'argument.type') {
+                $this->assertStringContainsString('expects literal-string', $message);
+            } else {
+                $this->assertStringContainsString('is forbidden, it runs SQL joined from strings', $message);
+            }
+        }
+    }
+
     public function testLaravelPresetReportsSqlJoinedFromStrings(): void
     {
         // Pinstripe bans the connection's calls; the builder's raw methods

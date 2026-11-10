@@ -57,11 +57,65 @@ DB::select("select * from users where id = {$id}");                 // pinstripe
 
 Laravel already types `DB::raw()`, `DB::unprepared()` and the query builder's `whereRaw()`, `selectRaw()`, `orderByRaw()` and other raw methods as `literal-string`, so PHPStan reports a joined string there by itself, as `argument.type`; Pinstripe covers the connection calls Laravel leaves as plain `string`. The query builder's own `insert()`, `update()`, `delete()` and `select()` take arrays and column names, not SQL, and are not touched.
 
-SQL that is safe but not a literal (read from a `.sql` file, or returned by a helper) can say so, or the call can keep a reasoned ignore. An older app with many joined queries can baseline the rest while it binds them, since a baseline only shrinks.
+SQL that is safe but not a literal (read from a `.sql` file, or returned by a helper) can say so, or the call can keep a reasoned ignore.
 
-- Type the helper that reads or builds the SQL `@return literal-string`, when its SQL really is a literal (a trusted `.sql` file, for example); the value then counts as a literal.
-- Wrap the SQL parameter as `literal-string`, so a call site can only hand the method literal SQL.
+### SQL kept in .sql files
+
+Many apps keep their queries in `.sql` files and bind every value. That is safe, but PHPStan cannot tell that a file's contents are static, so the ban reports every call that runs one. It is the report older Wayne State apps meet most often. One typed reader clears all of them, with the one reasoned ignore in one place:
+
+```php
+/**
+ * @param literal-string $name
+ *
+ * @return literal-string
+ */
+function sqlFile(string $name): string
+{
+    $sql = file_get_contents(__DIR__ . '/sql/' . $name . '.sql');
+    if ($sql === false) {
+        throw new RuntimeException('No such query: ' . $name);
+    }
+
+    // @phpstan-ignore return.type (the SQL is read from the app's own sql/ folder, and every value is bound)
+    return $sql;
+}
+
+$statement = oci_parse($oracle, sqlFile('people'));
+oci_bind_by_name($statement, ':id', $id);
+```
+
+The name is `literal-string` too, so a request value can never pick the file. A helper that only ever returns literals needs no ignore at all: type it `@return literal-string` and PHPStan checks that it is true.
+
+### Type a wrapper, never baseline it
+
+A wrapper that takes the whole SQL as a plain `string` is reported once, inside the wrapper, and never at its callers:
+
+```php
+function query($db, string $sql)
+{
+    return oci_parse($db, $sql); // pinstripe.banned.joinedSql, here and only here
+}
+```
+
+Baseline that one line and every caller, today's and every one written after it, goes unchecked for good. Type the parameter instead:
+
+```php
+/**
+ * @param resource $db
+ * @param literal-string $sql
+ */
+function query($db, string $sql)
+{
+    return oci_parse($db, $sql);
+}
+```
+
+Now PHPStan checks each caller: literal SQL passes, and a joined string is reported where it is joined, as `argument.type` ("expects literal-string").
+
+### Other ways out
+
 - Give PHPStan the connection's type, a typed property or `@var \PDO $db`; with a `mixed` connection PHPStan cannot see the call, and the ban stays quiet.
+- An older app with many joined queries can baseline the rest while it binds them, since a baseline only shrinks. Baseline call sites, never a wrapper.
 
 Only the off switch is banned: `CURLOPT_SSL_VERIFYPEER` set to true, `verify` pointed at a CA bundle, and `false` on an option that has nothing to do with TLS all pass. The match is on literal values, so `'verify' => $verify`, or a curl option read from config, passes too; keep the value a literal where you can.
 
@@ -111,6 +165,7 @@ List more bans under the same parameters (`disallowedFunctionCalls`, `disallowed
 - `tests/fixtures/raw-disallowed/src/InsecureTransport.php` turns TLS checks off eight ways through curl and stream contexts, and the raw and strict cuts must report each one; its twin `SecureTransport.php` sets verification on and must stay green.
 - `tests/fixtures/laravel/src/VerifyFalse.php` sets `verify` to false five ways through `withOptions()` and Guzzle, and the Laravel preset must report each one; its twin `VerifiedHttp.php` points `verify` at a CA bundle and must stay green.
 - `tests/fixtures/raw-disallowed/src/JoinedSql.php` joins a variable into SQL nine ways through PDO, mysqli, `oci_parse()` and its old alias `ociparse()`, and the raw and strict cuts must report each one; its twin `BoundSql.php` binds every value and must stay green.
+- `tests/fixtures/raw-disallowed/src/SqlFiles.php` reads its SQL from `.sql` files through the typed reader and wrapper above and must stay green in the raw and strict cuts; `JoinedThroughAWrapper.php` hands joined SQL to that wrapper and must be reported at each caller, while a plain-`string` wrapper is reported once, inside, and its joined caller not at all.
 - `tests/fixtures/laravel/src/JoinedQueries.php` does the same six ways through Laravel's connection and three through the raw builder methods, and the Laravel preset must report all nine (six as `pinstripe.banned.joinedSql`, three as Laravel's own `argument.type`); its twin `BoundQueries.php` uses bindings and the query builder and must stay green.
 - The Laravel app fixture installs Pinstripe through Composer, like an app does, and must fail on a leftover `dd()`, and on curl told to skip the certificate check (which proves Pinstripe's own curl rule loads from `vendor/`).
 

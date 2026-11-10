@@ -74,6 +74,9 @@
 <li>
 <p>Added: BEST_PRACTICES.md (and its docs page) ends the table with a tally, today 22 rows, 22 Enforced, 0 Checked, and <code>BestPracticesTest::testTheTallyCountsTheTable</code> recounts it on every run, so a new row or one slipping back to Checked moves the tally in the same change.</p>
 </li>
+<li>
+<p>Docs: Banned calls shows the fix for the joined-SQL report older apps meet most: SQL kept in <code>.sql</code> files, read by one helper typed <code>@return literal-string</code> with a single reasoned ignore (its file name is <code>literal-string</code> too, so a request value cannot pick the file). It also says to type a wrapper's SQL parameter <code>literal-string</code> and never baseline it, because a plain-<code>string</code> wrapper is reported once, inside, and hides every caller. Both are proven: new fixtures <code>SqlFiles.php</code> (green in the raw and strict cuts) and <code>JoinedThroughAWrapper.php</code> (each joined caller reported as <code>argument.type</code>, the loose wrapper once), with <code>PresetsTest::testPhpStanAcceptsSqlReadFromFilesThroughATypedWrapper</code> and <code>PresetsTest::testPhpStanReportsSqlJoinedThroughAWrapperAtTheCaller</code>. No rule changed.</p>
+</li>
 </ul>
 <h2 id="0-3-0-2026-11-09">0.3.0 (2026-11-09)<a class="docs-heading-link" aria-label="Link to this section" href="#0-3-0-2026-11-09">#</a></h2>
 <ul>
