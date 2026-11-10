@@ -12,6 +12,7 @@ All notable changes to Pinstripe are documented here.
 
 ## Unreleased [#](https://pinstripe.apps.wayne.edu/docs/changelog.html#unreleased)
 
+- Changed: the deploy layer requires PROCTOR ^0.12 (locked 0.12.0, was ^0.11): two new warning-only checks, nothing breaks.
 - Docs: the proof page's last run is 2026-11-10 at e42cf2f (113 PHP tests, 36 npm tests with the raw-vue and laravel-inertia fixtures).
 - Changed: the deploy kit is Squire 0.10.7 (was 0.10.6): it ships a `.gitattributes` that pins line endings, so the deploy layer clears PROCTOR's line-ending warnings.
 - Changed: the Vue presets let Inertia page components under `Pages/` or `pages/` have one-word names such as `Index` and `Show` (`vue/multi-word-component-names` is off there only).
