@@ -11,6 +11,16 @@ This page walks through each released version of Pinstripe, what changed for con
 
 A stricter preset breaks consumers' builds. Pinstripe ships such a change in a minor version, not a major one, so you opt in by updating the package. When a version below marks a change as breaking, it is a stricter preset taking effect in your app the moment you update to it; hold the current version until you are ready.
 
+## 0.3.1 (2026-11-09)
+
+No breaking change and no preset change: every cut passes and fails exactly what it did in 0.3.0.
+
+**Also new for you:** [Banned calls](reference/banned-calls.md#sql-kept-in-sql-files) shows the one-helper fix for SQL kept in `.sql` files and says to type a wrapper's SQL parameter `literal-string` instead of baselining it; the README and [Raw PHP apps](guides/raw-php.md#show-phpstan-findings-in-the-merge-request) show PHPStan findings in the merge request (`analyse:gitlab`). If you copied a Code Quality snippet from an earlier version, add `when: always` under `artifacts:`: without it GitLab drops the report whenever the lint job fails.
+
+**Steps:** Your constraint is `^0.3`, which already allows 0.3.1: run `composer update waynestate/pinstripe`. The ESLint and Prettier presets have not changed since 0.1.4, so move `@waynestate/pinstripe` to 0.3.1 whenever `npm view @waynestate/pinstripe version` shows it.
+
+**How to verify:** `composer show waynestate/pinstripe` reports 0.3.1, and `composer analyse` reports exactly what it did on 0.3.0.
+
 ## 0.3.0 (2026-11-09)
 
 **Breaking (a stricter fit):** every cut bans three more families of calls, all listed on [Banned calls](reference/banned-calls.md). SQL joined from strings (`pinstripe.banned.joinedSql`): a variable concatenated, interpolated or `sprintf()`'d into the SQL passed to `PDO::query()`, `prepare()` or `exec()`, mysqli's `query()`, `prepare()`, `mysqli_query()` and the rest, `oci_parse()` (and the old alias `ociparse()`), or Laravel's `DB::select()`, `insert()`, `update()`, `delete()`, `statement()`, `scalar()`, `cursor()` and `fromQuery()`. TLS checks turned off (`pinstripe.banned.curlVerifyOff`, `pinstripe.banned.streamVerifyOff` and `pinstripe.banned.verifyFalse`): `curl_setopt()` or `curl_setopt_array()` with `CURLOPT_SSL_VERIFYPEER` false or `CURLOPT_SSL_VERIFYHOST` 0, `stream_context_create()` with `ssl` `verify_peer` or `verify_peer_name` false or `allow_self_signed` true, and Guzzle's `verify` option set to false, through Laravel's `withOptions()`, `new GuzzleHttp\Client()` or a request's options. And in Laravel apps, Laravel's own `dd()` and `dump()` methods (`pinstripe.banned.dd` and `pinstripe.banned.dump`): `$users->dd()`, `DB::table('users')->dumpRawSql()`, `$request->dump()`, `Http::get($url)->dd()`, `Http::dump()` and the rest of the family, not only the functions. Your own methods named `dump()` and the schema dump behind `php artisan schema:dump` are not affected.

@@ -47,7 +47,7 @@ composer require --dev waynestate/pinstripe:^0.3
 Pinstripe loads its PHPStan rules through `phpstan/extension-installer`, and Composer will not ask when it cannot prompt.
 If Composer stops because a package your app already locks (often an older PHPStan) does not fit, run the same `composer require` again with `-W`, as Composer suggests, so it may update that package too.
 
-`^0.3` gets you 0.3.0, the current release, with every [banned call](#banned-calls) below. Packagist reads the GitHub
+`^0.3` gets you 0.3.1, the current release, with every [banned call](#banned-calls) below. Packagist reads the GitHub
 mirror, which can trail a release by a while. If Composer says it cannot find a 0.3 version, point it at the
 canonical repository first (it asks for your git.wayne.edu sign-in), then run the `composer require` again:
 
@@ -610,7 +610,7 @@ Shared presets for **Pint**, **PHPStan** with Larastan, **Rector**, **ESLint** f
 
 **[WELD](https://weld.apps.wayne.edu/) already has it.** WELD starts with a copy of the Laravel presets. Install Pinstripe yourself to bring the same settings to an app you already have.
 
-Version 0.3.0 is cut: joined SQL and switched-off TLS now fail the build. Walk-ins welcome.
+Version 0.3 is cut: joined SQL and switched-off TLS now fail the build. Walk-ins welcome.
 
 Scroll, and the tailor gets to work
 
@@ -664,7 +664,7 @@ final class Greeter
 }
 ```
 
-Alterations No. 0.3.0
+Alterations No. 0.3.1
 
 1. Rector Promote the property into the constructor.
 2. Rector Add the return type, `: string`.
@@ -788,7 +788,7 @@ composer require --dev waynestate/pinstripe:^0.3
 
 Pinstripe loads its PHPStan rules through `phpstan/extension-installer`, and Composer will not ask when it cannot prompt.
 
-`^0.3` gets you 0.3.0, the current release. Composer cannot find it yet? Packagist reads the GitHub mirror, which can trail a release: the [Raw PHP guide](https://pinstripe.apps.wayne.edu/docs/guides/raw-php.html#add-the-dependency) has the one line that installs it from git.wayne.edu.
+`^0.3` gets you 0.3.1, the current release. Composer cannot find it yet? Packagist reads the GitHub mirror, which can trail a release: the [Raw PHP guide](https://pinstripe.apps.wayne.edu/docs/guides/raw-php.html#add-the-dependency) has the one line that installs it from git.wayne.edu.
 
 phpstan.neon
 
@@ -1128,6 +1128,10 @@ All notable changes to Pinstripe are documented here.
 
 ### Unreleased[#](https://pinstripe.apps.wayne.edu/docs/changelog.html#unreleased)
 
+### 0.3.1 (2026-11-09)[#](https://pinstripe.apps.wayne.edu/docs/changelog.html#0-3-1-2026-11-09)
+
+A patch: no preset passes or fails anything it did not in 0.3.0. It adds proof and docs (PHPStan findings in the merge request, the fix for SQL kept in `.sql` files), keeps Code Quality reports when a lint job fails, and brings the deploy kit and CI pins up to date.
+
 - Docs: Parity joins the party. The README cast ("Fifteen parts, one fitting room") and the front page's rail carry Parity next to Squire, with its spirit-level mark: the stack's new tool that runs Citadel on your computer (its PHP image, its proxy and MySQL 5.6). 0.1.0 is coming and it has no site yet, so its tag links nowhere. With fifteen parts the rail hangs three rows of five on wide screens, so no part is left hanging alone at the end. Every good suit gets a fitting at home before the big day, and the hem comes out level.
 - Changed: the deploy kit is Squire 0.10.0 (was 0.7.1): release.sh keeps Composer and npm download caches in the app folder and the gate takes SQUIRE_PHP_RUNTIME; the compose file, health.php and .env.squire.example follow the template, and the portable image files are added (build.sh keeps its deliberate SQUIRE_BUILD_REVISION=2 marker).
 - Docs: every install line says `^0.3` (it said `^0.1`, which stops at 0.1.4), with the one `composer config repositories` line that installs 0.3.0 from git.wayne.edu while Packagist's GitHub mirror trails the release; the npm notes say the ESLint and Prettier presets have not changed since 0.1.4. The front page drops its "0.1.4 on Packagist and npm" note and a "coming soon" chip for the CREED PHP floor (built in 0.2.0), keeps a Docs link in the header at phone width, and gains House rules: a notice of the banned call families with their OWASP tags, struck through in chalk and stamped as they scroll in (already struck and stamped with reduced motion).
@@ -1460,7 +1464,7 @@ composer config allow-plugins.phpstan/extension-installer true
 composer require --dev waynestate/pinstripe:^0.3 larastan/larastan
 ```
 
-`^0.3` gets you 0.3.0, the current release. If Composer cannot find it yet (Packagist reads the GitHub mirror, which can trail a release), add the canonical repository first, as [Raw PHP apps](https://pinstripe.apps.wayne.edu/docs/guides/raw-php.html#add-the-dependency) shows.
+`^0.3` gets you 0.3.1, the current release. If Composer cannot find it yet (Packagist reads the GitHub mirror, which can trail a release), add the canonical repository first, as [Raw PHP apps](https://pinstripe.apps.wayne.edu/docs/guides/raw-php.html#add-the-dependency) shows.
 
 Note
 
@@ -1511,7 +1515,7 @@ composer require --dev waynestate/pinstripe:^0.3
 
 Pinstripe loads its PHPStan rules through `phpstan/extension-installer`, and Composer will not ask when it cannot prompt. If Composer stops because a package your app already locks (often an older PHPStan) does not fit, run the same `composer require` again with `-W`, as Composer suggests, so it may update that package too.
 
-`^0.3` gets you 0.3.0, the current release, with every [banned call](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html). Packagist reads the GitHub mirror, which can trail a release by a while. If Composer says it cannot find a 0.3 version, point it at the canonical repository first (it asks for your git.wayne.edu sign-in), then run the `composer require` again:
+`^0.3` gets you 0.3.1, the current release, with every [banned call](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html). Packagist reads the GitHub mirror, which can trail a release by a while. If Composer says it cannot find a 0.3 version, point it at the canonical repository first (it asks for your git.wayne.edu sign-in), then run the `composer require` again:
 
 ```bash
 composer config repositories.pinstripe vcs https://git.wayne.edu/enterprise-apps/pinstripe.git
@@ -1845,7 +1849,7 @@ composer analyse
 
 ### Status[#](https://pinstripe.apps.wayne.edu/docs/#status)
 
-The repository is at version 0.3.0: every cut bans SQL joined from strings, TLS checks turned off and leftover debug calls ([Banned calls](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html)), and `^0.3` installs it. Packagist reads the GitHub mirror, which can trail a release; the [Raw PHP guide](https://pinstripe.apps.wayne.edu/docs/guides/raw-php.html#add-the-dependency) shows the one line that installs 0.3.0 from git.wayne.edu meanwhile. The npm package, `@waynestate/pinstripe`, follows each tag at the same version, published by hand; its ESLint and Prettier presets have not changed since 0.1.4. The canonical repository is on git.wayne.edu; GitHub is a read-only push mirror of it, and Packagist and npm read from it. The agent-ready site ships a plain-text twin for machines: [llms.txt](https://pinstripe.apps.wayne.edu/llms.txt).
+The repository is at version 0.3.1: every cut bans SQL joined from strings, TLS checks turned off and leftover debug calls ([Banned calls](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html)), and `^0.3` installs it. Packagist reads the GitHub mirror, which can trail a release; the [Raw PHP guide](https://pinstripe.apps.wayne.edu/docs/guides/raw-php.html#add-the-dependency) shows the one line that installs it from git.wayne.edu meanwhile. The npm package, `@waynestate/pinstripe`, follows each tag at the same version, published by hand; its ESLint and Prettier presets have not changed since 0.1.4. The canonical repository is on git.wayne.edu; GitHub is a read-only push mirror of it, and Packagist and npm read from it. The agent-ready site ships a plain-text twin for machines: [llms.txt](https://pinstripe.apps.wayne.edu/llms.txt).
 
 ### Related[#](https://pinstripe.apps.wayne.edu/docs/#related)
 
@@ -2239,6 +2243,16 @@ This page walks through each released version of Pinstripe, what changed for con
 ### What a stricter preset means to you[#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#what-a-stricter-preset-means-to-you)
 
 A stricter preset breaks consumers' builds. Pinstripe ships such a change in a minor version, not a major one, so you opt in by updating the package. When a version below marks a change as breaking, it is a stricter preset taking effect in your app the moment you update to it; hold the current version until you are ready.
+
+### 0.3.1 (2026-11-09)[#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#0-3-1-2026-11-09)
+
+No breaking change and no preset change: every cut passes and fails exactly what it did in 0.3.0.
+
+**Also new for you:** [Banned calls](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html#sql-kept-in-sql-files) shows the one-helper fix for SQL kept in `.sql` files and says to type a wrapper's SQL parameter `literal-string` instead of baselining it; the README and [Raw PHP apps](https://pinstripe.apps.wayne.edu/docs/guides/raw-php.html#show-phpstan-findings-in-the-merge-request) show PHPStan findings in the merge request (`analyse:gitlab`). If you copied a Code Quality snippet from an earlier version, add `when: always` under `artifacts:`: without it GitLab drops the report whenever the lint job fails.
+
+**Steps:** Your constraint is `^0.3`, which already allows 0.3.1: run `composer update waynestate/pinstripe`. The ESLint and Prettier presets have not changed since 0.1.4, so move `@waynestate/pinstripe` to 0.3.1 whenever `npm view @waynestate/pinstripe version` shows it.
+
+**How to verify:** `composer show waynestate/pinstripe` reports 0.3.1, and `composer analyse` reports exactly what it did on 0.3.0.
 
 ### 0.3.0 (2026-11-09)[#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#0-3-0-2026-11-09)
 

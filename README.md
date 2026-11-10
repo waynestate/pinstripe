@@ -63,7 +63,7 @@ composer require --dev waynestate/pinstripe:^0.3
 Pinstripe loads its PHPStan rules through `phpstan/extension-installer`, and Composer will not ask when it cannot prompt.
 If Composer stops because a package your app already locks (often an older PHPStan) does not fit, run the same `composer require` again with `-W`, as Composer suggests, so it may update that package too.
 
-`^0.3` gets you 0.3.0, the current release, with every [banned call](#banned-calls) below. Packagist reads the GitHub
+`^0.3` gets you 0.3.1, the current release, with every [banned call](#banned-calls) below. Packagist reads the GitHub
 mirror, which can trail a release by a while. If Composer says it cannot find a 0.3 version, point it at the
 canonical repository first (it asks for your git.wayne.edu sign-in), then run the `composer require` again:
 
