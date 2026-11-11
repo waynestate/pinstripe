@@ -404,7 +404,7 @@ var_dump($report);</code></pre>
 <pre class="pattern__code" tabindex="0"><code>composer config allow-plugins.phpstan/extension-installer true
 composer require --dev waynestate/pinstripe:^0.3</code></pre>
           <p class="pattern__fit">Pinstripe loads its PHPStan rules through <code>phpstan/extension-installer</code>, and Composer will not ask when it cannot prompt.</p>
-          <p class="pattern__fit"><code>^0.3</code> gets you 0.3.1, the current release. Composer cannot find it yet? Packagist reads the GitHub mirror, which can trail a release: the <a href="docs/guides/raw-php.html#add-the-dependency">Raw PHP guide</a> has the one line that installs it from git.wayne.edu.</p>
+          <p class="pattern__fit"><code>^0.3</code> gets you <span data-docs-version>0.3.2</span>, the current release. Composer cannot find it yet? Packagist reads the GitHub mirror, which can trail a release: the <a href="docs/guides/raw-php.html#add-the-dependency">Raw PHP guide</a> has the one line that installs it from git.wayne.edu.</p>
           <p class="pattern__fit"><button class="copy-btn" type="button" data-copy="composer config allow-plugins.phpstan/extension-installer true
 composer require --dev waynestate/pinstripe:^0.3"><span class="copy-btn__label">Copy</span></button></p>
           <p class="pattern__file">phpstan.neon</p>

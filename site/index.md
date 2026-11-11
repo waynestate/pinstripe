@@ -196,7 +196,7 @@ composer require --dev waynestate/pinstripe:^0.3
 
 Pinstripe loads its PHPStan rules through `phpstan/extension-installer`, and Composer will not ask when it cannot prompt.
 
-`^0.3` gets you 0.3.1, the current release. Composer cannot find it yet? Packagist reads the GitHub mirror, which can trail a release: the [Raw PHP guide](https://pinstripe.apps.wayne.edu/docs/guides/raw-php.html#add-the-dependency) has the one line that installs it from git.wayne.edu.
+`^0.3` gets you 0.3.2, the current release. Composer cannot find it yet? Packagist reads the GitHub mirror, which can trail a release: the [Raw PHP guide](https://pinstripe.apps.wayne.edu/docs/guides/raw-php.html#add-the-dependency) has the one line that installs it from git.wayne.edu.
 
 phpstan.neon
 
