@@ -41,14 +41,14 @@ Add Pinstripe as a dev dependency:
 
 ```
 composer config allow-plugins.phpstan/extension-installer true
-composer require --dev waynestate/pinstripe:^0.3
+composer require --dev waynestate/pinstripe:^0.4
 ```
 
 Pinstripe loads its PHPStan rules through `phpstan/extension-installer`, and Composer will not ask when it cannot prompt.
 If Composer stops because a package your app already locks (often an older PHPStan) does not fit, run the same `composer require` again with `-W`, as Composer suggests, so it may update that package too.
 
-`^0.3` gets you 0.3.2, the current release, with every [banned call](#banned-calls) below. Packagist reads the GitHub
-mirror, which can trail a release by a while. If Composer says it cannot find a 0.3 version, point it at the
+`^0.4` gets you 0.4.0, the current release, with every [banned call](#banned-calls) below. Packagist reads the GitHub
+mirror, which can trail a release by a while. If Composer says it cannot find a 0.4 version, point it at the
 canonical repository first (it asks for your git.wayne.edu sign-in), then run the `composer require` again:
 
 ```
@@ -177,7 +177,7 @@ Same, with the Laravel parts:
 
 ```
 composer config allow-plugins.phpstan/extension-installer true
-composer require --dev waynestate/pinstripe:^0.3 larastan/larastan
+composer require --dev waynestate/pinstripe:^0.4 larastan/larastan
 ```
 
 Pinstripe loads its PHPStan rules through `phpstan/extension-installer`, and Composer will not ask when it cannot prompt.
@@ -726,7 +726,7 @@ final class Greeter
 }
 ```
 
-Alterations No. 0.3.2
+Alterations No. 0.4.0
 
 1. Rector Promote the property into the constructor.
 2. Rector Add the return type, `: string`.
@@ -859,12 +859,12 @@ Install
 
 ```
 composer config allow-plugins.phpstan/extension-installer true
-composer require --dev waynestate/pinstripe:^0.3
+composer require --dev waynestate/pinstripe:^0.4
 ```
 
 Pinstripe loads its PHPStan rules through `phpstan/extension-installer`, and Composer will not ask when it cannot prompt.
 
-`^0.3` gets you 0.3.2, the current release. Composer cannot find it yet? Packagist reads the GitHub mirror, which can trail a release: the [Raw PHP guide](https://pinstripe.apps.wayne.edu/docs/guides/raw-php.html#add-the-dependency) has the one line that installs it from git.wayne.edu.
+`^0.4` gets you 0.4.0, the current release. Composer cannot find it yet? Packagist reads the GitHub mirror, which can trail a release: the [Raw PHP guide](https://pinstripe.apps.wayne.edu/docs/guides/raw-php.html#add-the-dependency) has the one line that installs it from git.wayne.edu.
 
 phpstan.neon
 
@@ -897,7 +897,7 @@ Install
 
 ```
 composer config allow-plugins.phpstan/extension-installer true
-composer require --dev waynestate/pinstripe:^0.3 larastan/larastan
+composer require --dev waynestate/pinstripe:^0.4 larastan/larastan
 ```
 
 Pinstripe loads its PHPStan rules through `phpstan/extension-installer`, and Composer will not ask when it cannot prompt.
@@ -1015,7 +1015,7 @@ Read first:
 - composer.json, and the folders that hold the app's PHP code.
 
 Task:
-1. Add Pinstripe with `composer require --dev waynestate/pinstripe:^0.3`.
+1. Add Pinstripe with `composer require --dev waynestate/pinstripe:^0.4`.
 2. Write phpstan.neon: include vendor/waynestate/pinstripe/phpstan/raw.neon and list the app's own code folders under paths.
 3. Add the lint, fix and analyse Composer scripts from the README, with Pint pointed at vendor/waynestate/pinstripe/pint/per.json.
 4. Run `composer lint` and `composer analyse`. If existing code fails, generate a baseline with `phpstan analyse --generate-baseline`, include it, and report its size with `vendor/bin/pinstripe-baseline count phpstan-baseline.neon`.
@@ -1044,7 +1044,7 @@ Read first:
 - composer.json (config.allow-plugins included), and any pint.json and phpstan.neon the app already has.
 
 Task:
-1. Add Pinstripe and Larastan with `composer require --dev waynestate/pinstripe:^0.3 larastan/larastan`. Allow phpstan/extension-installer when Composer asks: it registers Larastan, so there is no Larastan line to add.
+1. Add Pinstripe and Larastan with `composer require --dev waynestate/pinstripe:^0.4 larastan/larastan`. Allow phpstan/extension-installer when Composer asks: it registers Larastan, so there is no Larastan line to add.
 2. Make phpstan.neon include vendor/waynestate/pinstripe/phpstan/laravel.neon and nothing else, as the README shows.
 3. Add lint, fix and analyse Composer scripts like the raw PHP ones in the README, with Pint pointed at vendor/waynestate/pinstripe/pint/laravel.json.
 4. Run `composer lint` and `composer analyse`. If existing code fails, generate a baseline with `phpstan analyse --generate-baseline`, include it, and report its size with `vendor/bin/pinstripe-baseline count phpstan-baseline.neon`.
@@ -1097,7 +1097,7 @@ To see the presets work before you add them to an app, clone Pinstripe and run i
 
 The commands are the same on Windows, macOS and Linux. You need PHP 8.3 or newer, Composer, and Node 22.13 or newer.
 
-Just off the cutting table 0.3.2 lets Inertia pages have one-word names like `Index` and `Show`, and every app shape in the stack now has a fixture of its own. Since 0.3.0 every cut refuses SQL joined from strings and TLS checks turned off. [Upgrading](https://pinstripe.apps.wayne.edu/docs/upgrading.html) walks an app through each release.
+Just off the cutting table 0.4.0 brings two Rector presets for the suit that has hung in the back of the closet since PHP 5: `rector/levels.php` lets an app that has never met Rector take it in one notch at a time, and `rector/strict-types.php` declares strict types only on the files that already fit. Both are opt-in, so nothing you wear today gets any tighter. [Upgrading](https://pinstripe.apps.wayne.edu/docs/upgrading.html) walks an app through each release.
 
 Fitting room any OS
 
@@ -1202,8 +1202,9 @@ Source: https://pinstripe.apps.wayne.edu/docs/changelog.html
 
 All notable changes to Pinstripe are documented here.
 
-### Unreleased [#](https://pinstripe.apps.wayne.edu/docs/changelog.html#unreleased)
+### 0.4.0 (2026-11-11) [#](https://pinstripe.apps.wayne.edu/docs/changelog.html#0-4-0-2026-11-11)
 
+- Docs: every install line says `^0.4` (README, front page, its agent prompts, the Raw PHP, Laravel and Proof pages), since `^0.3` does not allow 0.4.0, and the Upgrading section's steps say to move the constraint rather than `composer update`. The front page's "Just off the cutting table" note names 0.4.0 and its two opt-in Rector presets.
 - CI pins Preflight 0.8.0 on GitLab; MAINTAINING.md and the contributing guide say so (the GitHub workflow stays on 0.5.0, the newest tag on the mirror it can call).
 - Added: `rector/strict-types.php`, an opt-in Rector preset for the careful route to strict types on an old app. It runs Rector's `SafeDeclareStrictTypesRector` and nothing else, so it adds `declare(strict_types=1)` only to files whose calls, returns and property assignments already pass the types they ask for, and leaves the rest for a later run. Opt-in, so no app sees a change until it points a config at it. New fixture `tests/fixtures/rector-strict-types` with `PresetsTest::testRectorStrictTypesPresetDeclaresOnlyTheSafeFile` and `testRectorStrictTypesPresetLeavesTheCoercingFileAlone`; the README, Require strict types and Rector guides show it, and BEST_PRACTICES.md gains the row (24 rows, 24 Enforced).
 - Added: `rector/levels.php`, an opt-in Rector preset for an app that has never met Rector. It returns a function: `$levels(deadCode: 0)` runs only the first dead-code rule, and you raise the number one merge request at a time, then start `typeCoverage`, `codeQuality` or `php` the same way (each family stays off until named, and naming none throws). It wraps Rector's own `withDeadCodeLevel`, `withTypeCoverageLevel`, `withCodeQualityLevel` and `withPhpLevel`, and leaves out the import tidying and Laravel rules that touch every file. Opt-in, so no app sees a change until it points a config at it. New fixture `tests/fixtures/rector-levels` with four `PresetsTest::testRectorLevelsPreset*` tests; the README and Rector guide show the climb, and BEST_PRACTICES.md gains the row (25 rows, 25 Enforced).
@@ -1566,10 +1567,10 @@ Add Pinstripe and Larastan as dev dependencies:
 
 ```
 composer config allow-plugins.phpstan/extension-installer true
-composer require --dev waynestate/pinstripe:^0.3 larastan/larastan
+composer require --dev waynestate/pinstripe:^0.4 larastan/larastan
 ```
 
-`^0.3` gets you 0.3.2, the current release. If Composer cannot find it yet (Packagist reads the GitHub mirror, which can trail a release), add the canonical repository first, as [Raw PHP apps](https://pinstripe.apps.wayne.edu/docs/guides/raw-php.html#add-the-dependency) shows.
+`^0.4` gets you 0.4.0, the current release. If Composer cannot find it yet (Packagist reads the GitHub mirror, which can trail a release), add the canonical repository first, as [Raw PHP apps](https://pinstripe.apps.wayne.edu/docs/guides/raw-php.html#add-the-dependency) shows.
 
 Note
 
@@ -1615,12 +1616,12 @@ Add Pinstripe as a dev dependency:
 
 ```bash
 composer config allow-plugins.phpstan/extension-installer true
-composer require --dev waynestate/pinstripe:^0.3
+composer require --dev waynestate/pinstripe:^0.4
 ```
 
 Pinstripe loads its PHPStan rules through `phpstan/extension-installer`, and Composer will not ask when it cannot prompt. If Composer stops because a package your app already locks (often an older PHPStan) does not fit, run the same `composer require` again with `-W`, as Composer suggests, so it may update that package too.
 
-`^0.3` gets you 0.3.2, the current release, with every [banned call](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html). Packagist reads the GitHub mirror, which can trail a release by a while. If Composer says it cannot find a 0.3 version, point it at the canonical repository first (it asks for your git.wayne.edu sign-in), then run the `composer require` again:
+`^0.4` gets you 0.4.0, the current release, with every [banned call](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html). Packagist reads the GitHub mirror, which can trail a release by a while. If Composer says it cannot find a 0.4 version, point it at the canonical repository first (it asks for your git.wayne.edu sign-in), then run the `composer require` again:
 
 ```bash
 composer config repositories.pinstripe vcs https://git.wayne.edu/enterprise-apps/pinstripe.git
@@ -2011,7 +2012,7 @@ In your app, add Pinstripe as a dev dependency, then run the checks:
 
 ```bash
 composer config allow-plugins.phpstan/extension-installer true
-composer require --dev waynestate/pinstripe:^0.3
+composer require --dev waynestate/pinstripe:^0.4
 composer lint
 composer fix
 composer analyse
@@ -2029,7 +2030,7 @@ composer analyse
 
 ### Status [#](https://pinstripe.apps.wayne.edu/docs/#status)
 
-The repository is at version 0.3.2: every cut bans SQL joined from strings, TLS checks turned off and leftover debug calls ([Banned calls](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html)), and `^0.3` installs it. Packagist reads the GitHub mirror, which can trail a release; the [Raw PHP guide](https://pinstripe.apps.wayne.edu/docs/guides/raw-php.html#add-the-dependency) shows the one line that installs it from git.wayne.edu meanwhile. The npm package, `@waynestate/pinstripe`, follows each tag at the same version, published by hand; its ESLint and Prettier presets have not changed since 0.1.4. The canonical repository is on git.wayne.edu; GitHub is a read-only push mirror of it, and Packagist and npm read from it. The agent-ready site ships a plain-text twin for machines: [llms.txt](https://pinstripe.apps.wayne.edu/llms.txt).
+The repository is at version 0.4.0: every cut bans SQL joined from strings, TLS checks turned off and leftover debug calls ([Banned calls](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html)), and `^0.4` installs it. Packagist reads the GitHub mirror, which can trail a release; the [Raw PHP guide](https://pinstripe.apps.wayne.edu/docs/guides/raw-php.html#add-the-dependency) shows the one line that installs it from git.wayne.edu meanwhile. The npm package, `@waynestate/pinstripe`, follows each tag at the same version, published by hand; its ESLint and Prettier presets have not changed since 0.1.4. The canonical repository is on git.wayne.edu; GitHub is a read-only push mirror of it, and Packagist and npm read from it. The agent-ready site ships a plain-text twin for machines: [llms.txt](https://pinstripe.apps.wayne.edu/llms.txt).
 
 ### Related [#](https://pinstripe.apps.wayne.edu/docs/#related)
 
@@ -2362,7 +2363,7 @@ The same steps on your own app, from its root:
 
 ```sh
 composer config allow-plugins.phpstan/extension-installer true
-composer require --dev waynestate/pinstripe:^0.3
+composer require --dev waynestate/pinstripe:^0.4
 vendor/bin/pint --test --config vendor/waynestate/pinstripe/pint/per.json
 vendor/bin/phpstan analyse
 ```
@@ -2450,13 +2451,13 @@ This page walks through each released version of Pinstripe, what changed for con
 
 A stricter preset breaks consumers' builds. Pinstripe ships such a change in a minor version, not a major one, so you opt in by updating the package. When a version below marks a change as breaking, it is a stricter preset taking effect in your app the moment you update to it; hold the current version until you are ready.
 
-### Unreleased [#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#unreleased)
+### 0.4.0 (2026-11-11) [#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#0-4-0-2026-11-11)
 
-Not tagged yet: this is what the next release brings, so you can plan for it. No breaking change: two Rector presets arrive, both opt-in, and no preset you already use passes or fails anything new.
+No breaking change: two Rector presets arrived, both opt-in, and no preset you already use passes or fails anything new.
 
 **What changed for you:** an app that has never met Rector can take it [one level at a time](https://pinstripe.apps.wayne.edu/docs/guides/rector.html#one-level-at-a-time-on-a-big-old-app) with `rector/levels.php`: name a rule family and how far up it goes (`$levels(deadCode: 0)`), and raise the number one merge request at a time. And `rector/strict-types.php` takes the careful route to strict types: it adds `declare(strict_types=1)` only to files whose calls already pass the types they ask for, and leaves the rest for a later run ([Require strict types](https://pinstripe.apps.wayne.edu/docs/guides/strict-types.html#the-careful-route-on-a-big-app)).
 
-**Steps:** None until the release is tagged. Then run `composer update waynestate/pinstripe`, and point a `rector.php` at either preset when you want it. Nothing changes on the npm side.
+**Steps:** Your constraint is `^0.3`, which does not allow 0.4.0, so nothing changes until you move. When you are ready, run `composer require --dev waynestate/pinstripe:^0.4` (add `larastan/larastan` on Laravel, as before). If Composer cannot find a 0.4 version yet (Packagist reads the GitHub mirror, which can trail a release), add the canonical repository first, as [Raw PHP apps](https://pinstripe.apps.wayne.edu/docs/guides/raw-php.html#add-the-dependency) shows. Then point a `rector.php` at either preset when you want it. Nothing changes on the npm side: no ESLint or Prettier preset changed, so move `@waynestate/pinstripe` to 0.4.0 whenever `npm view @waynestate/pinstripe version` shows it.
 
 **How to verify:** `vendor/waynestate/pinstripe/rector/` holds `levels.php` and `strict-types.php`, and `composer analyse` reports exactly what it did before.
 

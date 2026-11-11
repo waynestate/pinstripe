@@ -73,7 +73,7 @@ The same steps on your own app, from its root:
 
 ```sh
 composer config allow-plugins.phpstan/extension-installer true
-composer require --dev waynestate/pinstripe:^0.3
+composer require --dev waynestate/pinstripe:^0.4
 vendor/bin/pint --test --config vendor/waynestate/pinstripe/pint/per.json
 vendor/bin/phpstan analyse
 ```

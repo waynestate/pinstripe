@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Upgrading | Pinstripe docs</title>
 <meta name="description" content="How to upgrade Pinstripe, version by version.">
-<meta name="docs-version" content="0.3.2">
+<meta name="docs-version" content="0.4.0">
 <link rel="stylesheet" href="../assets/wayne-ui/wayne-ui.css">
 <link rel="stylesheet" href="../assets/docs.css">
 <link rel="stylesheet" href="../docs/theme/pinstripe.css">
@@ -29,7 +29,7 @@
       <a href="../index.html#try">Try it on</a>
       <a href="../docs/index.html" aria-current="page">Docs</a>
     </nav>
-    <span class="size-label"><span class="size-label__k">size</span> 0.3.2</span>
+    <span class="size-label"><span class="size-label__k">size</span> 0.4.0</span>
   </div>
 </header><div class="docs-layout docs-layout--toc">
   <details class="docs-menu">
@@ -43,10 +43,10 @@
 <p>This page walks through each released version of Pinstripe, what changed for consumers, and how to verify the upgrade.</p>
 <h2 id="what-a-stricter-preset-means-to-you">What a stricter preset means to <span class="docs-heading-tail"><span>you</span><a class="docs-heading-link" aria-label="Link to this section" href="#what-a-stricter-preset-means-to-you">#</a></span></h2>
 <p>A stricter preset breaks consumers' builds. Pinstripe ships such a change in a minor version, not a major one, so you opt in by updating the package. When a version below marks a change as breaking, it is a stricter preset taking effect in your app the moment you update to it; hold the current version until you are ready.</p>
-<h2 id="unreleased"><span class="docs-heading-tail"><span>Unreleased</span><a class="docs-heading-link" aria-label="Link to this section" href="#unreleased">#</a></span></h2>
-<p>Not tagged yet: this is what the next release brings, so you can plan for it. No breaking change: two Rector presets arrive, both opt-in, and no preset you already use passes or fails anything new.</p>
+<h2 id="0-4-0-2026-11-11">0.4.0 <span class="docs-heading-tail"><span>(2026-11-11)</span><a class="docs-heading-link" aria-label="Link to this section" href="#0-4-0-2026-11-11">#</a></span></h2>
+<p>No breaking change: two Rector presets arrived, both opt-in, and no preset you already use passes or fails anything new.</p>
 <p><strong>What changed for you:</strong> an app that has never met Rector can take it <a href="guides/rector.html#one-level-at-a-time-on-a-big-old-app">one level at a time</a> with <code>rector/levels.php</code>: name a rule family and how far up it goes (<code>$levels(deadCode: 0)</code>), and raise the number one merge request at a time. And <code>rector/strict-types.php</code> takes the careful route to strict types: it adds <code>declare(strict_types=1)</code> only to files whose calls already pass the types they ask for, and leaves the rest for a later run (<a href="guides/strict-types.html#the-careful-route-on-a-big-app">Require strict types</a>).</p>
-<p><strong>Steps:</strong> None until the release is tagged. Then run <code>composer update waynestate/pinstripe</code>, and point a <code>rector.php</code> at either preset when you want it. Nothing changes on the npm side.</p>
+<p><strong>Steps:</strong> Your constraint is <code>^0.3</code>, which does not allow 0.4.0, so nothing changes until you move. When you are ready, run <code>composer require --dev waynestate/pinstripe:^0.4</code> (add <code>larastan/larastan</code> on Laravel, as before). If Composer cannot find a 0.4 version yet (Packagist reads the GitHub mirror, which can trail a release), add the canonical repository first, as <a href="guides/raw-php.html#add-the-dependency">Raw PHP apps</a> shows. Then point a <code>rector.php</code> at either preset when you want it. Nothing changes on the npm side: no ESLint or Prettier preset changed, so move <code>@waynestate/pinstripe</code> to 0.4.0 whenever <code>npm view @waynestate/pinstripe version</code> shows it.</p>
 <p><strong>How to verify:</strong> <code>vendor/waynestate/pinstripe/rector/</code> holds <code>levels.php</code> and <code>strict-types.php</code>, and <code>composer analyse</code> reports exactly what it did before.</p>
 <h2 id="0-3-2-2026-11-10">0.3.2 <span class="docs-heading-tail"><span>(2026-11-10)</span><a class="docs-heading-link" aria-label="Link to this section" href="#0-3-2-2026-11-10">#</a></span></h2>
 <p>No breaking change: one preset is looser, none is stricter, so every cut that passed on 0.3.1 still passes.</p>
@@ -106,10 +106,10 @@
     </main>
     <nav class="docs-pager" aria-label="Pages"><a class="docs-pager__link" href="../docs/deploying/releasing.html"><span class="docs-pager__dir">Previous</span><span class="docs-pager__title">Releasing</span></a><a class="docs-pager__link docs-pager__link--next" href="../docs/contributing.html"><span class="docs-pager__dir">Next</span><span class="docs-pager__title">Contributing</span></a></nav>
   </div>
-  <nav class="docs-toc" aria-label="On this page"><h2 class="docs-toc__title">On this page</h2><ul class="docs-toc__list"><li class="docs-toc__item"><a href="#what-a-stricter-preset-means-to-you">What a stricter preset means to you</a></li><li class="docs-toc__item"><a href="#unreleased">Unreleased</a></li><li class="docs-toc__item"><a href="#0-3-2-2026-11-10">0.3.2 (2026-11-10)</a></li><li class="docs-toc__item"><a href="#0-3-1-2026-11-09">0.3.1 (2026-11-09)</a></li><li class="docs-toc__item"><a href="#0-3-0-2026-11-09">0.3.0 (2026-11-09)</a></li><li class="docs-toc__item"><a href="#0-2-0-2026-11-08">0.2.0 (2026-11-08)</a></li><li class="docs-toc__item"><a href="#0-1-5-2026-11-09">0.1.5 (2026-11-09)</a></li><li class="docs-toc__item"><a href="#0-1-4-2026-11-06">0.1.4 (2026-11-06)</a></li><li class="docs-toc__item"><a href="#0-1-3-2026-11-03">0.1.3 (2026-11-03)</a></li><li class="docs-toc__item"><a href="#0-1-2-2026-11-03">0.1.2 (2026-11-03)</a></li><li class="docs-toc__item"><a href="#0-1-1-2026-10-29">0.1.1 (2026-10-29)</a></li><li class="docs-toc__item"><a href="#0-1-0-2026-10-29">0.1.0 (2026-10-29)</a></li><li class="docs-toc__item"><a href="#related">Related</a></li></ul></nav>
+  <nav class="docs-toc" aria-label="On this page"><h2 class="docs-toc__title">On this page</h2><ul class="docs-toc__list"><li class="docs-toc__item"><a href="#what-a-stricter-preset-means-to-you">What a stricter preset means to you</a></li><li class="docs-toc__item"><a href="#0-4-0-2026-11-11">0.4.0 (2026-11-11)</a></li><li class="docs-toc__item"><a href="#0-3-2-2026-11-10">0.3.2 (2026-11-10)</a></li><li class="docs-toc__item"><a href="#0-3-1-2026-11-09">0.3.1 (2026-11-09)</a></li><li class="docs-toc__item"><a href="#0-3-0-2026-11-09">0.3.0 (2026-11-09)</a></li><li class="docs-toc__item"><a href="#0-2-0-2026-11-08">0.2.0 (2026-11-08)</a></li><li class="docs-toc__item"><a href="#0-1-5-2026-11-09">0.1.5 (2026-11-09)</a></li><li class="docs-toc__item"><a href="#0-1-4-2026-11-06">0.1.4 (2026-11-06)</a></li><li class="docs-toc__item"><a href="#0-1-3-2026-11-03">0.1.3 (2026-11-03)</a></li><li class="docs-toc__item"><a href="#0-1-2-2026-11-03">0.1.2 (2026-11-03)</a></li><li class="docs-toc__item"><a href="#0-1-1-2026-10-29">0.1.1 (2026-10-29)</a></li><li class="docs-toc__item"><a href="#0-1-0-2026-10-29">0.1.0 (2026-10-29)</a></li><li class="docs-toc__item"><a href="#related">Related</a></li></ul></nav>
 </div>
 <footer class="docs-footer">
-  <span>Documents Pinstripe <span data-docs-version>0.3.2</span></span>
+  <span>Documents Pinstripe <span data-docs-version>0.4.0</span></span>
   <span><a rel="noopener" href="https://github.com/waynestate/pinstripe">Source</a> <a href="upgrading.md">Markdown</a></span>
 </footer>
 </body>

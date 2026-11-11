@@ -13,10 +13,10 @@ Add Pinstripe and Larastan as dev dependencies:
 
 ```
 composer config allow-plugins.phpstan/extension-installer true
-composer require --dev waynestate/pinstripe:^0.3 larastan/larastan
+composer require --dev waynestate/pinstripe:^0.4 larastan/larastan
 ```
 
-`^0.3` gets you 0.3.2, the current release. If Composer cannot find it yet (Packagist reads the GitHub mirror, which can trail a release), add the canonical repository first, as [Raw PHP apps](raw-php.md#add-the-dependency) shows.
+`^0.4` gets you 0.4.0, the current release. If Composer cannot find it yet (Packagist reads the GitHub mirror, which can trail a release), add the canonical repository first, as [Raw PHP apps](raw-php.md#add-the-dependency) shows.
 
 > [!NOTE]
 > Pinstripe loads its PHPStan rules through `phpstan/extension-installer`, and Composer will not ask when it cannot prompt. Pinstripe pulls in `phpstan/extension-installer`, which registers Larastan for you. When Composer asks, allow the plugin (`config.allow-plugins` in your `composer.json`).

@@ -28,7 +28,7 @@ In your app, add Pinstripe as a dev dependency, then run the checks:
 
 ```bash
 composer config allow-plugins.phpstan/extension-installer true
-composer require --dev waynestate/pinstripe:^0.3
+composer require --dev waynestate/pinstripe:^0.4
 composer lint
 composer fix
 composer analyse
@@ -46,7 +46,7 @@ composer analyse
 
 ## Status [#](https://pinstripe.apps.wayne.edu/docs/#status)
 
-The repository is at version 0.3.2: every cut bans SQL joined from strings, TLS checks turned off and leftover debug calls ([Banned calls](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html)), and `^0.3` installs it. Packagist reads the GitHub mirror, which can trail a release; the [Raw PHP guide](https://pinstripe.apps.wayne.edu/docs/guides/raw-php.html#add-the-dependency) shows the one line that installs it from git.wayne.edu meanwhile. The npm package, `@waynestate/pinstripe`, follows each tag at the same version, published by hand; its ESLint and Prettier presets have not changed since 0.1.4. The canonical repository is on git.wayne.edu; GitHub is a read-only push mirror of it, and Packagist and npm read from it. The agent-ready site ships a plain-text twin for machines: [llms.txt](https://pinstripe.apps.wayne.edu/llms.txt).
+The repository is at version 0.4.0: every cut bans SQL joined from strings, TLS checks turned off and leftover debug calls ([Banned calls](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html)), and `^0.4` installs it. Packagist reads the GitHub mirror, which can trail a release; the [Raw PHP guide](https://pinstripe.apps.wayne.edu/docs/guides/raw-php.html#add-the-dependency) shows the one line that installs it from git.wayne.edu meanwhile. The npm package, `@waynestate/pinstripe`, follows each tag at the same version, published by hand; its ESLint and Prettier presets have not changed since 0.1.4. The canonical repository is on git.wayne.edu; GitHub is a read-only push mirror of it, and Packagist and npm read from it. The agent-ready site ships a plain-text twin for machines: [llms.txt](https://pinstripe.apps.wayne.edu/llms.txt).
 
 ## Related [#](https://pinstripe.apps.wayne.edu/docs/#related)
 

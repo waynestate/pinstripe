@@ -14,13 +14,13 @@ This page walks through each released version of Pinstripe, what changed for con
 
 A stricter preset breaks consumers' builds. Pinstripe ships such a change in a minor version, not a major one, so you opt in by updating the package. When a version below marks a change as breaking, it is a stricter preset taking effect in your app the moment you update to it; hold the current version until you are ready.
 
-## Unreleased [#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#unreleased)
+## 0.4.0 (2026-11-11) [#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#0-4-0-2026-11-11)
 
-Not tagged yet: this is what the next release brings, so you can plan for it. No breaking change: two Rector presets arrive, both opt-in, and no preset you already use passes or fails anything new.
+No breaking change: two Rector presets arrived, both opt-in, and no preset you already use passes or fails anything new.
 
 **What changed for you:** an app that has never met Rector can take it [one level at a time](https://pinstripe.apps.wayne.edu/docs/guides/rector.html#one-level-at-a-time-on-a-big-old-app) with `rector/levels.php`: name a rule family and how far up it goes (`$levels(deadCode: 0)`), and raise the number one merge request at a time. And `rector/strict-types.php` takes the careful route to strict types: it adds `declare(strict_types=1)` only to files whose calls already pass the types they ask for, and leaves the rest for a later run ([Require strict types](https://pinstripe.apps.wayne.edu/docs/guides/strict-types.html#the-careful-route-on-a-big-app)).
 
-**Steps:** None until the release is tagged. Then run `composer update waynestate/pinstripe`, and point a `rector.php` at either preset when you want it. Nothing changes on the npm side.
+**Steps:** Your constraint is `^0.3`, which does not allow 0.4.0, so nothing changes until you move. When you are ready, run `composer require --dev waynestate/pinstripe:^0.4` (add `larastan/larastan` on Laravel, as before). If Composer cannot find a 0.4 version yet (Packagist reads the GitHub mirror, which can trail a release), add the canonical repository first, as [Raw PHP apps](https://pinstripe.apps.wayne.edu/docs/guides/raw-php.html#add-the-dependency) shows. Then point a `rector.php` at either preset when you want it. Nothing changes on the npm side: no ESLint or Prettier preset changed, so move `@waynestate/pinstripe` to 0.4.0 whenever `npm view @waynestate/pinstripe version` shows it.
 
 **How to verify:** `vendor/waynestate/pinstripe/rector/` holds `levels.php` and `strict-types.php`, and `composer analyse` reports exactly what it did before.
 

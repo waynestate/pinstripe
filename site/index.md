@@ -72,7 +72,7 @@ final class Greeter
 }
 ```
 
-Alterations No. 0.3.2
+Alterations No. 0.4.0
 
 1. Rector Promote the property into the constructor.
 2. Rector Add the return type, `: string`.
@@ -205,12 +205,12 @@ Install
 
 ```
 composer config allow-plugins.phpstan/extension-installer true
-composer require --dev waynestate/pinstripe:^0.3
+composer require --dev waynestate/pinstripe:^0.4
 ```
 
 Pinstripe loads its PHPStan rules through `phpstan/extension-installer`, and Composer will not ask when it cannot prompt.
 
-`^0.3` gets you 0.3.2, the current release. Composer cannot find it yet? Packagist reads the GitHub mirror, which can trail a release: the [Raw PHP guide](https://pinstripe.apps.wayne.edu/docs/guides/raw-php.html#add-the-dependency) has the one line that installs it from git.wayne.edu.
+`^0.4` gets you 0.4.0, the current release. Composer cannot find it yet? Packagist reads the GitHub mirror, which can trail a release: the [Raw PHP guide](https://pinstripe.apps.wayne.edu/docs/guides/raw-php.html#add-the-dependency) has the one line that installs it from git.wayne.edu.
 
 phpstan.neon
 
@@ -243,7 +243,7 @@ Install
 
 ```
 composer config allow-plugins.phpstan/extension-installer true
-composer require --dev waynestate/pinstripe:^0.3 larastan/larastan
+composer require --dev waynestate/pinstripe:^0.4 larastan/larastan
 ```
 
 Pinstripe loads its PHPStan rules through `phpstan/extension-installer`, and Composer will not ask when it cannot prompt.
@@ -361,7 +361,7 @@ Read first:
 - composer.json, and the folders that hold the app's PHP code.
 
 Task:
-1. Add Pinstripe with `composer require --dev waynestate/pinstripe:^0.3`.
+1. Add Pinstripe with `composer require --dev waynestate/pinstripe:^0.4`.
 2. Write phpstan.neon: include vendor/waynestate/pinstripe/phpstan/raw.neon and list the app's own code folders under paths.
 3. Add the lint, fix and analyse Composer scripts from the README, with Pint pointed at vendor/waynestate/pinstripe/pint/per.json.
 4. Run `composer lint` and `composer analyse`. If existing code fails, generate a baseline with `phpstan analyse --generate-baseline`, include it, and report its size with `vendor/bin/pinstripe-baseline count phpstan-baseline.neon`.
@@ -390,7 +390,7 @@ Read first:
 - composer.json (config.allow-plugins included), and any pint.json and phpstan.neon the app already has.
 
 Task:
-1. Add Pinstripe and Larastan with `composer require --dev waynestate/pinstripe:^0.3 larastan/larastan`. Allow phpstan/extension-installer when Composer asks: it registers Larastan, so there is no Larastan line to add.
+1. Add Pinstripe and Larastan with `composer require --dev waynestate/pinstripe:^0.4 larastan/larastan`. Allow phpstan/extension-installer when Composer asks: it registers Larastan, so there is no Larastan line to add.
 2. Make phpstan.neon include vendor/waynestate/pinstripe/phpstan/laravel.neon and nothing else, as the README shows.
 3. Add lint, fix and analyse Composer scripts like the raw PHP ones in the README, with Pint pointed at vendor/waynestate/pinstripe/pint/laravel.json.
 4. Run `composer lint` and `composer analyse`. If existing code fails, generate a baseline with `phpstan analyse --generate-baseline`, include it, and report its size with `vendor/bin/pinstripe-baseline count phpstan-baseline.neon`.
@@ -443,7 +443,7 @@ To see the presets work before you add them to an app, clone Pinstripe and run i
 
 The commands are the same on Windows, macOS and Linux. You need PHP 8.3 or newer, Composer, and Node 22.13 or newer.
 
-Just off the cutting table 0.3.2 lets Inertia pages have one-word names like `Index` and `Show`, and every app shape in the stack now has a fixture of its own. Since 0.3.0 every cut refuses SQL joined from strings and TLS checks turned off. [Upgrading](https://pinstripe.apps.wayne.edu/docs/upgrading.html) walks an app through each release.
+Just off the cutting table 0.4.0 brings two Rector presets for the suit that has hung in the back of the closet since PHP 5: `rector/levels.php` lets an app that has never met Rector take it in one notch at a time, and `rector/strict-types.php` declares strict types only on the files that already fit. Both are opt-in, so nothing you wear today gets any tighter. [Upgrading](https://pinstripe.apps.wayne.edu/docs/upgrading.html) walks an app through each release.
 
 Fitting room any OS
 

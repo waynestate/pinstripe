@@ -17,7 +17,7 @@ No breaking change: two Rector presets arrived, both opt-in, and no preset you a
 
 **What changed for you:** an app that has never met Rector can take it [one level at a time](guides/rector.md#one-level-at-a-time-on-a-big-old-app) with `rector/levels.php`: name a rule family and how far up it goes (`$levels(deadCode: 0)`), and raise the number one merge request at a time. And `rector/strict-types.php` takes the careful route to strict types: it adds `declare(strict_types=1)` only to files whose calls already pass the types they ask for, and leaves the rest for a later run ([Require strict types](guides/strict-types.md#the-careful-route-on-a-big-app)).
 
-**Steps:** Run `composer update waynestate/pinstripe`, and point a `rector.php` at either preset when you want it. Nothing changes on the npm side.
+**Steps:** Your constraint is `^0.3`, which does not allow 0.4.0, so nothing changes until you move. When you are ready, run `composer require --dev waynestate/pinstripe:^0.4` (add `larastan/larastan` on Laravel, as before). If Composer cannot find a 0.4 version yet (Packagist reads the GitHub mirror, which can trail a release), add the canonical repository first, as [Raw PHP apps](guides/raw-php.md#add-the-dependency) shows. Then point a `rector.php` at either preset when you want it. Nothing changes on the npm side: no ESLint or Prettier preset changed, so move `@waynestate/pinstripe` to 0.4.0 whenever `npm view @waynestate/pinstripe version` shows it.
 
 **How to verify:** `vendor/waynestate/pinstripe/rector/` holds `levels.php` and `strict-types.php`, and `composer analyse` reports exactly what it did before.
 
