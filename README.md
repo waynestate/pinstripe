@@ -238,6 +238,13 @@ export default [...pinstripe]
 
 For plain JavaScript, import `@waynestate/pinstripe/eslint/javascript` instead.
 
+The TypeScript preset lints with types (typescript-eslint's `recommendedTypeChecked`, through `projectService`), so
+it catches what the syntax alone cannot, such as a promise nobody awaits: `save()` called without `await` fails lint
+with `@typescript-eslint/no-floating-promises`, in a `.ts` file and in a `.vue` file alike. It reads the app's
+`tsconfig.json`, so that file must include the `.ts` and `.vue` files you lint. Typed linting is slower than syntax
+linting, so run it in CI rather than on every save. Proven on fixtures: `tests/js/typed` holds a clean `.ts` file
+that must pass and a floating promise in `.ts` and in `.vue` that must each fail (`npm test`).
+
 Point Prettier at the preset in `package.json`:
 
 ```json

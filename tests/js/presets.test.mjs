@@ -60,6 +60,36 @@ test('typescript preset: an <img> without alt is flagged', async () => {
     )
 })
 
+// The other TypeScript tests check Vue and accessibility rules only, so these prove the type-aware half of the preset (projectService) still runs.
+test('typescript preset: a plain .ts file with its promises handled has no messages', async () => {
+    const [result] = await lint('eslint/typescript.js', ['tests/js/typed/clean.ts'])
+    assert.deepEqual(result.messages, [], result.messages.map((m) => `${m.ruleId}: ${m.message}`).join('\n'))
+})
+
+test('typescript preset: typed linting flags a floating promise in a .ts file', async () => {
+    const [result] = await lint('eslint/typescript.js', ['tests/js/typed/floating.ts'])
+    const ids = ruleIds(result)
+    assert.ok(
+        ids.includes('@typescript-eslint/no-floating-promises'),
+        `expected @typescript-eslint/no-floating-promises, got: ${ids.join(', ')}`,
+    )
+    for (const message of result.messages) {
+        assert.equal(message.severity, 2, `${message.ruleId} should be an error: ${message.message}`)
+    }
+})
+
+test('typescript preset: typed linting flags a floating promise in a .vue file', async () => {
+    const [result] = await lint('eslint/typescript.js', ['tests/js/typed/FloatingSave.vue'])
+    const ids = ruleIds(result)
+    assert.ok(
+        ids.includes('@typescript-eslint/no-floating-promises'),
+        `expected @typescript-eslint/no-floating-promises, got: ${ids.join(', ')}`,
+    )
+    for (const message of result.messages) {
+        assert.equal(message.severity, 2, `${message.ruleId} should be an error: ${message.message}`)
+    }
+})
+
 test('javascript preset: a v-for without :key is flagged', async () => {
     const [result] = await lint('eslint/javascript.js', ['tests/js/vue-bad/App.vue'])
     const ids = ruleIds(result)

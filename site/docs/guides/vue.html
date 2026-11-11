@@ -52,6 +52,14 @@
 export default [...pinstripe]
 </code></pre>
 <p>For plain JavaScript, import <code>@waynestate/pinstripe/eslint/javascript</code> instead.</p>
+<h3 id="typed-linting">Typed <span class="docs-heading-tail"><span>linting</span><a class="docs-heading-link" aria-label="Link to this section" href="#typed-linting">#</a></span></h3>
+<p>The TypeScript preset lints with types (typescript-eslint's <code>recommendedTypeChecked</code>, through <code>projectService</code>), so it catches what the syntax alone cannot. A promise nobody awaits is the classic: the save button looks done, and the error vanishes into the night.</p>
+<pre tabindex="0"><code class="language-ts">async function save(): Promise&lt;void&gt; {}
+
+save() // @typescript-eslint/no-floating-promises: await it, return it, or mark it with void
+</code></pre>
+<p>That fails lint in a <code>.ts</code> file and in a <code>.vue</code> file's <code>&lt;script setup lang=&quot;ts&quot;&gt;</code> alike. The preset reads the app's <code>tsconfig.json</code>, so that file must include the <code>.ts</code> and <code>.vue</code> files you lint. Typed linting is slower than syntax linting, so run it in CI rather than on every save.</p>
+<p>Proven on fixtures: <code>tests/js/typed</code> holds a clean <code>.ts</code> file that must pass, and a floating promise in <code>floating.ts</code> and in <code>FloatingSave.vue</code> that must each fail with <code>@typescript-eslint/no-floating-promises</code> as an error (<code>npm test</code>).</p>
 <h2 id="configure-prettier">Configure <span class="docs-heading-tail"><span>Prettier</span><a class="docs-heading-link" aria-label="Link to this section" href="#configure-prettier">#</a></span></h2>
 <p>Point Prettier at the preset in <code>package.json</code>:</p>
 <pre tabindex="0"><code class="language-json">{
@@ -80,7 +88,7 @@ export default [...pinstripe]
     </main>
     <nav class="docs-pager" aria-label="Pages"><a class="docs-pager__link" href="../../docs/guides/laravel.html"><span class="docs-pager__dir">Previous</span><span class="docs-pager__title">Laravel apps</span></a><a class="docs-pager__link docs-pager__link--next" href="../../docs/guides/rector.html"><span class="docs-pager__dir">Next</span><span class="docs-pager__title">Rector</span></a></nav>
   </div>
-  <nav class="docs-toc" aria-label="On this page"><h2 class="docs-toc__title">On this page</h2><ul class="docs-toc__list"><li class="docs-toc__item"><a href="#install">Install</a></li><li class="docs-toc__item"><a href="#configure-eslint">Configure ESLint</a></li><li class="docs-toc__item"><a href="#configure-prettier">Configure Prettier</a></li><li class="docs-toc__item"><a href="#add-scripts">Add scripts</a></li><li class="docs-toc__item"><a href="#related">Related</a></li></ul></nav>
+  <nav class="docs-toc" aria-label="On this page"><h2 class="docs-toc__title">On this page</h2><ul class="docs-toc__list"><li class="docs-toc__item"><a href="#install">Install</a></li><li class="docs-toc__item"><a href="#configure-eslint">Configure ESLint</a></li><li class="docs-toc__item docs-toc__item--sub"><a href="#typed-linting">Typed linting</a></li><li class="docs-toc__item"><a href="#configure-prettier">Configure Prettier</a></li><li class="docs-toc__item"><a href="#add-scripts">Add scripts</a></li><li class="docs-toc__item"><a href="#related">Related</a></li></ul></nav>
 </div>
 <footer class="docs-footer">
   <span>Documents Pinstripe <span data-docs-version>0.3.2</span></span>

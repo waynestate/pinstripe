@@ -30,6 +30,20 @@ export default [...pinstripe]
 
 For plain JavaScript, import `@waynestate/pinstripe/eslint/javascript` instead.
 
+### Typed linting [#](https://pinstripe.apps.wayne.edu/docs/guides/vue.html#typed-linting)
+
+The TypeScript preset lints with types (typescript-eslint's `recommendedTypeChecked`, through `projectService`), so it catches what the syntax alone cannot. A promise nobody awaits is the classic: the save button looks done, and the error vanishes into the night.
+
+```ts
+async function save(): Promise<void> {}
+
+save() // @typescript-eslint/no-floating-promises: await it, return it, or mark it with void
+```
+
+That fails lint in a `.ts` file and in a `.vue` file's `<script setup lang="ts">` alike. The preset reads the app's `tsconfig.json`, so that file must include the `.ts` and `.vue` files you lint. Typed linting is slower than syntax linting, so run it in CI rather than on every save.
+
+Proven on fixtures: `tests/js/typed` holds a clean `.ts` file that must pass, and a floating promise in `floating.ts` and in `FloatingSave.vue` that must each fail with `@typescript-eslint/no-floating-promises` as an error (`npm test`).
+
 ## Configure Prettier [#](https://pinstripe.apps.wayne.edu/docs/guides/vue.html#configure-prettier)
 
 Point Prettier at the preset in `package.json`:

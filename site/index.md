@@ -132,6 +132,7 @@ It fits
 - `BoundSql` binds every value and `SecureTransport` keeps TLS on, so no ban fires
 - `rector-clean` is left alone by Rector
 - `clean-js` and `clean-ts` lint clean
+- `typed/clean.ts` passes with typed linting on
 - a clean JS module and a clean Vue SFC pass Prettier
 
 It catches
@@ -141,6 +142,7 @@ It catches
 - `Leftovers` and `JoinedSql`: every banned call, by name
 - `rector-old` gets altered
 - an `<img>` without alt, a `v-for` without `:key`
+- a `save()` nobody awaits, in `.ts` and in `.vue`
 - double quotes and a missing semicolon fail Prettier
 
 Measured on every shape

@@ -311,6 +311,7 @@
                 <li><code>BoundSql</code> binds every value and <code>SecureTransport</code> keeps TLS on, so no ban fires</li>
                 <li><code>rector-clean</code> is left alone by Rector</li>
                 <li><code>clean-js</code> and <code>clean-ts</code> lint clean</li>
+                <li><code>typed/clean.ts</code> passes with typed linting on</li>
                 <li>a clean JS module and a clean Vue SFC pass Prettier</li>
               </ul>
             </div>
@@ -322,6 +323,7 @@
                 <li><code>Leftovers</code> and <code>JoinedSql</code>: every banned call, by name</li>
                 <li><code>rector-old</code> gets altered</li>
                 <li>an <code>&lt;img&gt;</code> without alt, a <code>v-for</code> without <code>:key</code></li>
+                <li>a <code>save()</code> nobody awaits, in <code>.ts</code> and in <code>.vue</code></li>
                 <li>double quotes and a missing semicolon fail Prettier</li>
               </ul>
             </div>
