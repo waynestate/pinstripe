@@ -1166,6 +1166,70 @@ h1, h2, h3 {
   overflow-wrap: anywhere;
 }
 
+/* Size labels along the foot of the glass: one per app shape, each sewn on
+   with a gold running stitch and named for the fixture that wears it. */
+.mirror__shapes {
+  margin-top: 1.5rem;
+}
+
+/* Flex, not grid, so a short last row hangs centered under the glass. */
+.shapes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.shape {
+  position: relative;
+  flex: 0 1 8.25rem;
+  display: grid;
+  gap: 0.2rem;
+  justify-items: center;
+  align-content: center;
+  text-align: center;
+  padding: 0.7rem 0.6rem 0.65rem;
+  background: var(--ps-tissue);
+  border-radius: 3px;
+  box-shadow: 0 6px 14px -10px rgba(7, 58, 50, 0.55);
+}
+
+/* The running stitch: a dashed line just inside the edge. */
+.shape::before {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  border: 1.5px dashed var(--ps-gold);
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+.shape__name {
+  font-family: var(--ps-display);
+  font-style: italic;
+  font-size: 1.0625rem;
+  line-height: 1.2;
+  color: var(--ps-green-deep);
+  text-wrap: balance;
+}
+
+.shape code {
+  font-size: 0.8125rem;
+  color: var(--ps-ink-soft);
+  overflow-wrap: anywhere;
+}
+
+.mirror__foot {
+  max-width: 38rem;
+  margin: 1rem auto 0;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--ps-ink-soft);
+}
+
 /* --------------------------------------------- 6. made to measure, patterns */
 
 .measure {
@@ -2310,6 +2374,38 @@ h1, h2, h3 {
 
 .motion .patterns [data-reveal]:nth-child(2) { transition-delay: 0.1s; }
 .motion .patterns [data-reveal]:nth-child(3) { transition-delay: 0.2s; }
+
+/* The size labels are sewn on one by one once the mirror is in: each drops
+   into place a little crooked, then its gold stitch runs round it. */
+.motion .mirror .shape {
+  --sew: 0s;
+  opacity: 0;
+  transform: translateY(12px) rotate(-4deg);
+  transition: opacity 0.5s var(--ps-ease-out) calc(0.5s + var(--sew)), transform 0.8s var(--ps-ease-spring) calc(0.5s + var(--sew));
+}
+
+.motion .mirror .shape:nth-child(even) {
+  transform: translateY(12px) rotate(3deg);
+}
+
+.motion .mirror .shape::before {
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 0.7s ease-in-out calc(0.95s + var(--sew));
+}
+
+.motion .mirror.is-in .shape {
+  opacity: 1;
+  transform: none;
+}
+
+.motion .mirror.is-in .shape::before {
+  clip-path: inset(0);
+}
+
+.motion .mirror .shape:nth-child(2) { --sew: 0.12s; }
+.motion .mirror .shape:nth-child(3) { --sew: 0.24s; }
+.motion .mirror .shape:nth-child(4) { --sew: 0.36s; }
+.motion .mirror .shape:nth-child(5) { --sew: 0.48s; }
 
 .motion .rail .hanger {
   opacity: 0;

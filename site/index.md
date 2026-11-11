@@ -129,6 +129,7 @@ It fits
 
 - `raw-clean` passes Pint and PHPStan
 - `laravel-app` passes the Laravel presets
+- `BoundSql` binds every value and `SecureTransport` keeps TLS on, so no ban fires
 - `rector-clean` is left alone by Rector
 - `clean-js` and `clean-ts` lint clean
 - a clean JS module and a clean Vue SFC pass Prettier
@@ -137,9 +138,20 @@ It catches
 
 - `raw-messy` fails Pint
 - `raw-nullbug`: PHPStan reports the null
+- `Leftovers` and `JoinedSql`: every banned call, by name
 - `rector-old` gets altered
 - an `<img>` without alt, a `v-for` without `:key`
 - double quotes and a missing semicolon fail Prettier
+
+Measured on every shape
+
+- Raw PHP `raw-clean`
+- Raw PHP with Vue `raw-vue`
+- Laravel with Blade `laravel-app`
+- Blade with Vue `laravel-vue`
+- Inertia and Vue `laravel-inertia`
+
+Every shape Sourdough starts has a small app of its own in the fixtures, and every run lints it: the clean code must pass and each planted mistake must be found.
 
 What this shop will not sew
 

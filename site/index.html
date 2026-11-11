@@ -308,6 +308,7 @@
               <ul>
                 <li><code>raw-clean</code> passes Pint and PHPStan</li>
                 <li><code>laravel-app</code> passes the Laravel presets</li>
+                <li><code>BoundSql</code> binds every value and <code>SecureTransport</code> keeps TLS on, so no ban fires</li>
                 <li><code>rector-clean</code> is left alone by Rector</li>
                 <li><code>clean-js</code> and <code>clean-ts</code> lint clean</li>
                 <li>a clean JS module and a clean Vue SFC pass Prettier</li>
@@ -318,11 +319,23 @@
               <ul>
                 <li><code>raw-messy</code> fails Pint</li>
                 <li><code>raw-nullbug</code>: PHPStan reports the null</li>
+                <li><code>Leftovers</code> and <code>JoinedSql</code>: every banned call, by name</li>
                 <li><code>rector-old</code> gets altered</li>
                 <li>an <code>&lt;img&gt;</code> without alt, a <code>v-for</code> without <code>:key</code></li>
                 <li>double quotes and a missing semicolon fail Prettier</li>
               </ul>
             </div>
+          </div>
+          <div class="mirror__shapes">
+            <p class="mirror__k">Measured on every shape</p>
+            <ul class="shapes">
+              <li class="shape"><span class="shape__name">Raw PHP</span> <code>raw-clean</code></li>
+              <li class="shape"><span class="shape__name">Raw PHP with Vue</span> <code>raw-vue</code></li>
+              <li class="shape"><span class="shape__name">Laravel with Blade</span> <code>laravel-app</code></li>
+              <li class="shape"><span class="shape__name">Blade with Vue</span> <code>laravel-vue</code></li>
+              <li class="shape"><span class="shape__name">Inertia and Vue</span> <code>laravel-inertia</code></li>
+            </ul>
+            <p class="mirror__foot">Every shape Sourdough starts has a small app of its own in the fixtures, and every run lints it: the clean code must pass and each planted mistake must be found.</p>
           </div>
         </div>
       </div>
