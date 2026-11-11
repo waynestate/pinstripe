@@ -14,6 +14,16 @@ This page walks through each released version of Pinstripe, what changed for con
 
 A stricter preset breaks consumers' builds. Pinstripe ships such a change in a minor version, not a major one, so you opt in by updating the package. When a version below marks a change as breaking, it is a stricter preset taking effect in your app the moment you update to it; hold the current version until you are ready.
 
+## Unreleased [#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#unreleased)
+
+Not tagged yet: this is what the next release brings, so you can plan for it. No breaking change: two Rector presets arrive, both opt-in, and no preset you already use passes or fails anything new.
+
+**What changed for you:** an app that has never met Rector can take it [one level at a time](https://pinstripe.apps.wayne.edu/docs/guides/rector.html#one-level-at-a-time-on-a-big-old-app) with `rector/levels.php`: name a rule family and how far up it goes (`$levels(deadCode: 0)`), and raise the number one merge request at a time. And `rector/strict-types.php` takes the careful route to strict types: it adds `declare(strict_types=1)` only to files whose calls already pass the types they ask for, and leaves the rest for a later run ([Require strict types](https://pinstripe.apps.wayne.edu/docs/guides/strict-types.html#the-careful-route-on-a-big-app)).
+
+**Steps:** None until the release is tagged. Then run `composer update waynestate/pinstripe`, and point a `rector.php` at either preset when you want it. Nothing changes on the npm side.
+
+**How to verify:** `vendor/waynestate/pinstripe/rector/` holds `levels.php` and `strict-types.php`, and `composer analyse` reports exactly what it did before.
+
 ## 0.3.2 (2026-11-10) [#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#0-3-2-2026-11-10)
 
 No breaking change: one preset is looser, none is stricter, so every cut that passed on 0.3.1 still passes.
@@ -76,7 +86,7 @@ For apps still on `^0.1`. No breaking change and no change to the presets: the p
 
 No breaking change. The one change that touches your app is that the install instructions now include `composer config allow-plugins.phpstan/extension-installer true`, so a non-interactive install works. The remaining items (the ADR, the Node 22, 24 and 26 test matrix, the `laravel-vue` fixture, and the CI and deploy pins) are internal to Pinstripe.
 
-## 0.1.2 [#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#0-1-2)
+## 0.1.2 (2026-11-03) [#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#0-1-2-2026-11-03)
 
 **Breaking (Laravel apps):** `phpstan/laravel.neon` now pins Larastan's `noEnvCallsOutsideOfConfig` rule on, so an `env()` call outside `config/` fails analysis. This is a stricter preset shipped in a minor version, so you opt in by updating rather than being forced into a breaking major.
 
@@ -84,7 +94,7 @@ No breaking change. The one change that touches your app is that the install ins
 
 **How to verify:** Run `composer analyse` in your app. Any `env()` call outside `config/` is now reported; read config with `config()` instead, because once the config is cached `env()` returns null.
 
-## 0.1.1 [#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#0-1-1)
+## 0.1.1 (2026-10-29) [#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#0-1-1-2026-10-29)
 
 No breaking change: this release only removes reports the raw and Laravel cuts should never have made. It fixes the raw and Laravel PHPStan cuts inheriting `reportMaybesInMethodSignatures` and `reportStaticMethodSignatures` from `phpstan/phpstan-strict-rules`, which made them report phpdoc method signature issues they should not; `base.neon` now pins both to false and `strict.neon` keeps them on. It also pins the other eight parameters `phpstan/phpstan-strict-rules` forces on: four low-noise ones stay on in every cut, and `checkDynamicProperties`, `reportMaybesInPropertyPhpDocTypes`, `reportWrongPhpDocTypeInVarTag` and `reportNonIntStringArrayKey` are off in `base.neon` and on in `strict.neon`.
 
@@ -92,7 +102,7 @@ No breaking change: this release only removes reports the raw and Laravel cuts s
 
 **How to verify:** Run `composer analyse` in your app. The raw and Laravel cuts no longer report the inherited phpdoc method signature issues.
 
-## 0.1.0 [#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#0-1-0)
+## 0.1.0 (2026-10-29) [#](https://pinstripe.apps.wayne.edu/docs/upgrading.html#0-1-0-2026-10-29)
 
 First release, so there is nothing to break. It adds `bin/pinstripe-baseline`, which counts a PHPStan baseline's ignored errors (`count`) and fails when the baseline grows (`check --max=<n>` or `check --against=<git-ref>`), so baselines only shrink. It adds `phpstan/strict.neon`, an opt-in PHPStan preset for new apps that turns on `phpstan/phpstan-strict-rules`, and adds `tests/fixtures/per`, a Pint fixture proving the `per` preset is the PER Coding Style.
 

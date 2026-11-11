@@ -72,7 +72,9 @@ it on Node 22, 24 and 26, so a broken ESLint or Prettier preset fails the build 
 2. Set the same version in `package.json`, in the same release commit: `tests/PackageVersionTest.php` fails
    otherwise. In the same commit, rewrite the front page's "Just off the cutting table" note (`site/index.html`, then
    `composer site:agent-ready`) to lead with the new version and what it brought: `tests/FrontPageTest.php` fails
-   while it names an older one.
+   while it names an older one. And rename the `## Unreleased` draft in `docs/upgrading.md` to the same
+   `## X.Y.Z (YYYY-MM-DD)` heading (write the section if there is no draft: what changed for an app, the steps, how
+   to verify): `tests/UpgradingTest.php` fails while a release has no section there.
 3. `composer ci` and `npm test` green locally, then both pipelines green for that commit.
 4. Run a secrets scan of the history and check that nothing internal is in the tree.
 5. Tag `X.Y.Z` (no `v`) on git.wayne.edu. The push mirror carries the tag to GitHub, and Packagist picks it up from there.
