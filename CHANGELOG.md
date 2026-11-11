@@ -2,7 +2,7 @@
 
 All notable changes to Pinstripe are documented here.
 
-## Unreleased
+## 0.4.0 (2026-11-11)
 
 - CI pins Preflight 0.8.0 on GitLab; MAINTAINING.md and the contributing guide say so (the GitHub workflow stays on 0.5.0, the newest tag on the mirror it can call).
 - Added: `rector/strict-types.php`, an opt-in Rector preset for the careful route to strict types on an old app. It runs Rector's `SafeDeclareStrictTypesRector` and nothing else, so it adds `declare(strict_types=1)` only to files whose calls, returns and property assignments already pass the types they ask for, and leaves the rest for a later run. Opt-in, so no app sees a change until it points a config at it. New fixture `tests/fixtures/rector-strict-types` with `PresetsTest::testRectorStrictTypesPresetDeclaresOnlyTheSafeFile` and `testRectorStrictTypesPresetLeavesTheCoercingFileAlone`; the README, Require strict types and Rector guides show it, and BEST_PRACTICES.md gains the row (24 rows, 24 Enforced).
