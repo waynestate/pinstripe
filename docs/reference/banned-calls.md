@@ -114,9 +114,29 @@ function query($db, string $sql)
 
 Now PHPStan checks each caller: literal SQL passes, and a joined string is reported where it is joined, as `argument.type` ("expects literal-string").
 
+### Type the connection, or the ban cannot see it
+
+The ban knows `PDO::query()` from any other `query()` by the type of the object it is called on. A connection PHPStan cannot type, such as a `global $db` handed out by an old include or an untyped static property, is `mixed`, and a joined query on it passes without a word:
+
+```php
+global $db;
+
+$db->query('SELECT * FROM people WHERE person_id = ' . $id); // passes: PHPStan cannot tell $db is a PDO
+```
+
+Name the type and the same line is reported:
+
+```php
+global $db;
+
+/** @var \PDO $db */
+$db->query('SELECT * FROM people WHERE person_id = ' . $id); // pinstripe.banned.joinedSql
+```
+
+Better still, pass the connection in or keep it in a typed property (`private \PDO $db`), which level 8 asks for anyway. `oci_parse()` and the other functions need no help: a function has no receiver to type, so the ban always sees them.
+
 ### Other ways out
 
-- Give PHPStan the connection's type, a typed property or `@var \PDO $db`; with a `mixed` connection PHPStan cannot see the call, and the ban stays quiet.
 - An older app with many joined queries can baseline the rest while it binds them, since a baseline only shrinks. Baseline call sites, never a wrapper.
 
 Only the off switch is banned: `CURLOPT_SSL_VERIFYPEER` set to true, `verify` pointed at a CA bundle, and `false` on an option that has nothing to do with TLS all pass. The match is on literal values, so `'verify' => $verify`, or a curl option read from config, passes too; keep the value a literal where you can.
@@ -168,6 +188,7 @@ List more bans under the same parameters (`disallowedFunctionCalls`, `disallowed
 - `tests/fixtures/laravel/src/VerifyFalse.php` sets `verify` to false five ways through `withOptions()` and Guzzle, and the Laravel preset must report each one; its twin `VerifiedHttp.php` points `verify` at a CA bundle and must stay green.
 - `tests/fixtures/raw-disallowed/src/JoinedSql.php` joins a variable into SQL nine ways through PDO, mysqli, `oci_parse()` and its old alias `ociparse()`, and the raw and strict cuts must report each one; its twin `BoundSql.php` binds every value and must stay green.
 - `tests/fixtures/raw-disallowed/src/SqlFiles.php` reads its SQL from `.sql` files through the typed reader and wrapper above and must stay green in the raw and strict cuts; `JoinedThroughAWrapper.php` hands joined SQL to that wrapper and must be reported at each caller, while a plain-`string` wrapper is reported once, inside, and its joined caller not at all.
+- `tests/fixtures/raw-disallowed/src/UntypedConnection.php` runs one joined query on an untyped `global` connection and must pass, then the same query after `@var \PDO` and must be reported, in the raw and strict cuts: proof of the blind spot and of its fix.
 - `tests/fixtures/laravel/src/JoinedQueries.php` does the same six ways through Laravel's connection and three through the raw builder methods, and the Laravel preset must report all nine (six as `pinstripe.banned.joinedSql`, three as Laravel's own `argument.type`); its twin `BoundQueries.php` uses bindings and the query builder and must stay green.
 - The Laravel app fixture installs Pinstripe through Composer, like an app does, and must fail on a leftover `dd()`, and on curl told to skip the certificate check (which proves Pinstripe's own curl rule loads from `vendor/`).
 

@@ -935,6 +935,33 @@ final class PresetsTest extends TestCase
         }
     }
 
+    #[DataProvider('bannedCallConfigs')]
+    public function testPhpStanSeesJoinedSqlOnlyOnATypedConnection(string $config): void
+    {
+        // The ban matches PDO and mysqli methods by the receiver's type. On a
+        // connection PHPStan cannot type (a `global` from an old include) it
+        // stays quiet, line 22; one `@var \PDO` and the same query is
+        // reported, line 32. The Banned calls page tells apps to type the
+        // connection; this proves both halves of that advice.
+        [$exit, $output, $messages] = $this->runPhpStanJson([
+            PHP_BINARY,
+            $this->root() . '/vendor/bin/phpstan',
+            'analyse',
+            '-c',
+            $this->root() . '/phpstan/' . $config,
+            '--no-progress',
+            $this->root() . '/tests/fixtures/raw-disallowed/src/UntypedConnection.php',
+        ], $this->root() . '/tests/fixtures/laravel');
+
+        $this->assertNotSame(0, $exit, $output);
+        $this->assertSame(
+            [['pinstripe.banned.joinedSql', 32]],
+            array_map(static fn (array $message): array => [$message[0], $message[2]], $messages),
+            $output
+        );
+        $this->assertStringStartsWith('Calling PDO::query() is forbidden, it runs SQL joined from strings', $messages[0][1]);
+    }
+
     public function testLaravelPresetReportsSqlJoinedFromStrings(): void
     {
         // Pinstripe bans the connection's calls; the builder's raw methods

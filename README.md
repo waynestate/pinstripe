@@ -436,7 +436,10 @@ the helper `@return literal-string`, or keep the call with a reasoned ignore. Ap
 files clear every report with one typed reader; the
 [Banned calls](https://pinstripe.apps.wayne.edu/docs/reference/banned-calls.html#sql-kept-in-sql-files) page has it.
 A wrapper that takes the whole SQL as a plain `string` is reported once, inside, and never at its callers, so type its
-parameter `literal-string` and PHPStan checks each caller; never baseline a wrapper. Postgres's `pg_query()` is not
+parameter `literal-string` and PHPStan checks each caller; never baseline a wrapper. The PDO and mysqli methods are
+matched by the connection's type, so a connection PHPStan cannot type (a `global $db` from an old include) hides
+every joined query made on it: name the type (`/** @var \PDO $db */`, or better a typed property) and they are
+reported. Postgres's `pg_query()` is not
 covered, since its connection argument is optional and the SQL has no fixed position.
 
 Only the off switch is banned. Setting `CURLOPT_SSL_VERIFYPEER` to true, `verify` to a CA bundle, or `false` on an
@@ -480,7 +483,8 @@ twins `SecureTransport.php` and `VerifiedHttp.php` stay green; `JoinedSql.php` (
 and `JoinedQueries.php` (Laravel, six of Pinstripe's and three of Laravel's own) must be reported for each, while
 `BoundSql.php` and `BoundQueries.php` bind their values and stay green; `SqlFiles.php` reads its SQL from `.sql`
 files through a typed reader and wrapper and stays green, while `JoinedThroughAWrapper.php` must be reported at each
-joined caller; and the
+joined caller; `UntypedConnection.php` must pass a joined query on an untyped `global` connection and report the same
+query once the connection is typed; and the
 Laravel app fixture installs Pinstripe through Composer and must fail on a leftover `dd()` and on curl told to skip
 the certificate check, which proves the curl rule loads from `vendor/`. A suit with a `dd()` in
 the pocket does not leave the shop.

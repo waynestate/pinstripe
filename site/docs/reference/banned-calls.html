@@ -196,9 +196,21 @@ function query($db, string $sql)
 }
 </code></pre>
 <p>Now PHPStan checks each caller: literal SQL passes, and a joined string is reported where it is joined, as <code>argument.type</code> (&quot;expects literal-string&quot;).</p>
+<h3 id="type-the-connection-or-the-ban-cannot-see-it">Type the connection, or the ban cannot see <span class="docs-heading-tail"><span>it</span><a class="docs-heading-link" aria-label="Link to this section" href="#type-the-connection-or-the-ban-cannot-see-it">#</a></span></h3>
+<p>The ban knows <code>PDO::query()</code> from any other <code>query()</code> by the type of the object it is called on. A connection PHPStan cannot type, such as a <code>global $db</code> handed out by an old include or an untyped static property, is <code>mixed</code>, and a joined query on it passes without a word:</p>
+<pre tabindex="0"><code class="language-php">global $db;
+
+$db-&gt;query('SELECT * FROM people WHERE person_id = ' . $id); // passes: PHPStan cannot tell $db is a PDO
+</code></pre>
+<p>Name the type and the same line is reported:</p>
+<pre tabindex="0"><code class="language-php">global $db;
+
+/** @var \PDO $db */
+$db-&gt;query('SELECT * FROM people WHERE person_id = ' . $id); // pinstripe.banned.joinedSql
+</code></pre>
+<p>Better still, pass the connection in or keep it in a typed property (<code>private \PDO $db</code>), which level 8 asks for anyway. <code>oci_parse()</code> and the other functions need no help: a function has no receiver to type, so the ban always sees them.</p>
 <h3 id="other-ways-out">Other ways <span class="docs-heading-tail"><span>out</span><a class="docs-heading-link" aria-label="Link to this section" href="#other-ways-out">#</a></span></h3>
 <ul>
-<li>Give PHPStan the connection's type, a typed property or <code>@var \PDO $db</code>; with a <code>mixed</code> connection PHPStan cannot see the call, and the ban stays quiet.</li>
 <li>An older app with many joined queries can baseline the rest while it binds them, since a baseline only shrinks. Baseline call sites, never a wrapper.</li>
 </ul>
 <p>Only the off switch is banned: <code>CURLOPT_SSL_VERIFYPEER</code> set to true, <code>verify</code> pointed at a CA bundle, and <code>false</code> on an option that has nothing to do with TLS all pass. The match is on literal values, so <code>'verify' =&gt; $verify</code>, or a curl option read from config, passes too; keep the value a literal where you can.</p>
@@ -234,6 +246,7 @@ var_dump($report);
 <li><code>tests/fixtures/laravel/src/VerifyFalse.php</code> sets <code>verify</code> to false five ways through <code>withOptions()</code> and Guzzle, and the Laravel preset must report each one; its twin <code>VerifiedHttp.php</code> points <code>verify</code> at a CA bundle and must stay green.</li>
 <li><code>tests/fixtures/raw-disallowed/src/JoinedSql.php</code> joins a variable into SQL nine ways through PDO, mysqli, <code>oci_parse()</code> and its old alias <code>ociparse()</code>, and the raw and strict cuts must report each one; its twin <code>BoundSql.php</code> binds every value and must stay green.</li>
 <li><code>tests/fixtures/raw-disallowed/src/SqlFiles.php</code> reads its SQL from <code>.sql</code> files through the typed reader and wrapper above and must stay green in the raw and strict cuts; <code>JoinedThroughAWrapper.php</code> hands joined SQL to that wrapper and must be reported at each caller, while a plain-<code>string</code> wrapper is reported once, inside, and its joined caller not at all.</li>
+<li><code>tests/fixtures/raw-disallowed/src/UntypedConnection.php</code> runs one joined query on an untyped <code>global</code> connection and must pass, then the same query after <code>@var \PDO</code> and must be reported, in the raw and strict cuts: proof of the blind spot and of its fix.</li>
 <li><code>tests/fixtures/laravel/src/JoinedQueries.php</code> does the same six ways through Laravel's connection and three through the raw builder methods, and the Laravel preset must report all nine (six as <code>pinstripe.banned.joinedSql</code>, three as Laravel's own <code>argument.type</code>); its twin <code>BoundQueries.php</code> uses bindings and the query builder and must stay green.</li>
 <li>The Laravel app fixture installs Pinstripe through Composer, like an app does, and must fail on a leftover <code>dd()</code>, and on curl told to skip the certificate check (which proves Pinstripe's own curl rule loads from <code>vendor/</code>).</li>
 </ul>
@@ -249,7 +262,7 @@ var_dump($report);
     </main>
     <nav class="docs-pager" aria-label="Pages"><a class="docs-pager__link" href="../../docs/reference/tested-with.html"><span class="docs-pager__dir">Previous</span><span class="docs-pager__title">Tested with and tool floors</span></a><a class="docs-pager__link docs-pager__link--next" href="../../docs/reference/best-practices.html"><span class="docs-pager__dir">Next</span><span class="docs-pager__title">Best practices</span></a></nav>
   </div>
-  <nav class="docs-toc" aria-label="On this page"><h2 class="docs-toc__title">On this page</h2><ul class="docs-toc__list"><li class="docs-toc__item"><a href="#what-is-banned">What is banned</a></li><li class="docs-toc__item"><a href="#sql-joined-from-strings">SQL joined from strings</a></li><li class="docs-toc__item docs-toc__item--sub"><a href="#sql-kept-in-sql-files">SQL kept in .sql files</a></li><li class="docs-toc__item docs-toc__item--sub"><a href="#type-a-wrapper-never-baseline-it">Type a wrapper, never baseline it</a></li><li class="docs-toc__item docs-toc__item--sub"><a href="#other-ways-out">Other ways out</a></li><li class="docs-toc__item"><a href="#keep-one-on-purpose">Keep one on purpose</a></li><li class="docs-toc__item"><a href="#add-your-own">Add your own</a></li><li class="docs-toc__item"><a href="#not-covered-yet">Not covered yet</a></li><li class="docs-toc__item"><a href="#not-banned-yet">Not banned yet</a></li><li class="docs-toc__item"><a href="#how-it-is-proven">How it is proven</a></li><li class="docs-toc__item"><a href="#related">Related</a></li></ul></nav>
+  <nav class="docs-toc" aria-label="On this page"><h2 class="docs-toc__title">On this page</h2><ul class="docs-toc__list"><li class="docs-toc__item"><a href="#what-is-banned">What is banned</a></li><li class="docs-toc__item"><a href="#sql-joined-from-strings">SQL joined from strings</a></li><li class="docs-toc__item docs-toc__item--sub"><a href="#sql-kept-in-sql-files">SQL kept in .sql files</a></li><li class="docs-toc__item docs-toc__item--sub"><a href="#type-a-wrapper-never-baseline-it">Type a wrapper, never baseline it</a></li><li class="docs-toc__item docs-toc__item--sub"><a href="#type-the-connection-or-the-ban-cannot-see-it">Type the connection, or the ban cannot see it</a></li><li class="docs-toc__item docs-toc__item--sub"><a href="#other-ways-out">Other ways out</a></li><li class="docs-toc__item"><a href="#keep-one-on-purpose">Keep one on purpose</a></li><li class="docs-toc__item"><a href="#add-your-own">Add your own</a></li><li class="docs-toc__item"><a href="#not-covered-yet">Not covered yet</a></li><li class="docs-toc__item"><a href="#not-banned-yet">Not banned yet</a></li><li class="docs-toc__item"><a href="#how-it-is-proven">How it is proven</a></li><li class="docs-toc__item"><a href="#related">Related</a></li></ul></nav>
 </div>
 <footer class="docs-footer">
   <span>Documents Pinstripe <span data-docs-version>0.3.2</span></span>
