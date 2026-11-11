@@ -47,7 +47,7 @@ it on Node 22, 24 and 26, so a broken ESLint or Prettier preset fails the build 
 ## CI
 
 - **GitLab:** Preflight's `php-test` (PHP 8.3, 8.4, 8.5), `composer-audit`, `proctor` (on `deploy/`) and `a11y`
-  (on `site/`) components, pinned to 0.5.0, plus `composer-ci`, `npm-test` (Node 22, 24 and 26) and
+  (on `site/`) components, pinned to 0.8.0, plus `composer-ci`, `npm-test` (Node 22, 24 and 26) and
   `wayneui-copies` jobs.
 - **GitHub:** `.github/workflows/ci.yml` calls Preflight's reusable workflow (0.5.0) with `composer ci`, and runs
   `npm ci` then `npm test` in `node:22`, `node:24` and `node:26` containers.
