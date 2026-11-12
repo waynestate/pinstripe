@@ -18,7 +18,7 @@ Shared presets for **Pint**, **PHPStan** with Larastan, **Rector**, **ESLint** f
 
 **[WELD](https://weld.apps.wayne.edu/) already has it.** WELD starts with a copy of the Laravel presets. Install Pinstripe yourself to bring the same settings to an app you already have.
 
-Version 0.3 is cut: joined SQL and switched-off TLS now fail the build. Walk-ins welcome.
+Version 0.4.0 is cut and [just off the cutting table](https://pinstripe.apps.wayne.edu/#try). Walk-ins welcome.
 
 Scroll, and the tailor gets to work
 

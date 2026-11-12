@@ -672,7 +672,7 @@ Shared presets for **Pint**, **PHPStan** with Larastan, **Rector**, **ESLint** f
 
 **[WELD](https://weld.apps.wayne.edu/) already has it.** WELD starts with a copy of the Laravel presets. Install Pinstripe yourself to bring the same settings to an app you already have.
 
-Version 0.3 is cut: joined SQL and switched-off TLS now fail the build. Walk-ins welcome.
+Version 0.4.0 is cut and [just off the cutting table](https://pinstripe.apps.wayne.edu/#try). Walk-ins welcome.
 
 Scroll, and the tailor gets to work
 
@@ -1201,6 +1201,10 @@ Source: https://pinstripe.apps.wayne.edu/docs/changelog.html
 ## Changelog [#](https://pinstripe.apps.wayne.edu/docs/changelog.html#changelog)
 
 All notable changes to Pinstripe are documented here.
+
+### Unreleased [#](https://pinstripe.apps.wayne.edu/docs/changelog.html#unreleased)
+
+- Site: the line under the hero's buttons says "Version 0.4.0 is cut" (it still said 0.3, with 0.3.0's news). The number carries `data-docs-version` like the hang tag, so the docs builder rewrites it at every release and `composer docs:check` fails while it is stale; the words name no feature and link to the "Just off the cutting table" note, which the release steps already rewrite. New `FrontPageTest::testTheHeroNoteWearsTheVersionStamp` fails `composer ci` if the number is typed by hand again.
 
 ### 0.4.0 (2026-11-11) [#](https://pinstripe.apps.wayne.edu/docs/changelog.html#0-4-0-2026-11-11)
 

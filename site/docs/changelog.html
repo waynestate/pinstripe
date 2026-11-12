@@ -42,6 +42,10 @@
       <article class="docs-article"><!-- Generated from CHANGELOG.md by bin/docs-site.php. Edit CHANGELOG.md, not this file. -->
 <h1 id="changelog"><span class="docs-heading-tail"><span>Changelog</span><a class="docs-heading-link" aria-label="Link to this section" href="#changelog">#</a></span></h1>
 <p>All notable changes to Pinstripe are documented here.</p>
+<h2 id="unreleased"><span class="docs-heading-tail"><span>Unreleased</span><a class="docs-heading-link" aria-label="Link to this section" href="#unreleased">#</a></span></h2>
+<ul>
+<li>Site: the line under the hero's buttons says &quot;Version 0.4.0 is cut&quot; (it still said 0.3, with 0.3.0's news). The number carries <code>data-docs-version</code> like the hang tag, so the docs builder rewrites it at every release and <code>composer docs:check</code> fails while it is stale; the words name no feature and link to the &quot;Just off the cutting table&quot; note, which the release steps already rewrite. New <code>FrontPageTest::testTheHeroNoteWearsTheVersionStamp</code> fails <code>composer ci</code> if the number is typed by hand again.</li>
+</ul>
 <h2 id="0-4-0-2026-11-11">0.4.0 <span class="docs-heading-tail"><span>(2026-11-11)</span><a class="docs-heading-link" aria-label="Link to this section" href="#0-4-0-2026-11-11">#</a></span></h2>
 <ul>
 <li>
@@ -253,7 +257,7 @@
     </main>
     <nav class="docs-pager" aria-label="Pages"><a class="docs-pager__link" href="../docs/contributing.html"><span class="docs-pager__dir">Previous</span><span class="docs-pager__title">Contributing</span></a></nav>
   </div>
-  <nav class="docs-toc" aria-label="On this page"><h2 class="docs-toc__title">On this page</h2><ul class="docs-toc__list"><li class="docs-toc__item"><a href="#0-4-0-2026-11-11">0.4.0 (2026-11-11)</a></li><li class="docs-toc__item"><a href="#0-3-2-2026-11-10">0.3.2 (2026-11-10)</a></li><li class="docs-toc__item"><a href="#0-3-1-2026-11-09">0.3.1 (2026-11-09)</a></li><li class="docs-toc__item"><a href="#0-3-0-2026-11-09">0.3.0 (2026-11-09)</a></li><li class="docs-toc__item"><a href="#0-2-0-2026-11-08">0.2.0 (2026-11-08)</a></li><li class="docs-toc__item"><a href="#0-1-5-2026-11-09">0.1.5 (2026-11-09)</a></li><li class="docs-toc__item"><a href="#0-1-4-2026-11-06">0.1.4 (2026-11-06)</a></li><li class="docs-toc__item"><a href="#0-1-3-2026-11-03">0.1.3 (2026-11-03)</a></li><li class="docs-toc__item"><a href="#0-1-2-2026-11-03">0.1.2 (2026-11-03)</a></li><li class="docs-toc__item"><a href="#0-1-1-2026-10-29">0.1.1 (2026-10-29)</a></li><li class="docs-toc__item"><a href="#0-1-0-2026-10-29">0.1.0 (2026-10-29)</a></li></ul></nav>
+  <nav class="docs-toc" aria-label="On this page"><h2 class="docs-toc__title">On this page</h2><ul class="docs-toc__list"><li class="docs-toc__item"><a href="#unreleased">Unreleased</a></li><li class="docs-toc__item"><a href="#0-4-0-2026-11-11">0.4.0 (2026-11-11)</a></li><li class="docs-toc__item"><a href="#0-3-2-2026-11-10">0.3.2 (2026-11-10)</a></li><li class="docs-toc__item"><a href="#0-3-1-2026-11-09">0.3.1 (2026-11-09)</a></li><li class="docs-toc__item"><a href="#0-3-0-2026-11-09">0.3.0 (2026-11-09)</a></li><li class="docs-toc__item"><a href="#0-2-0-2026-11-08">0.2.0 (2026-11-08)</a></li><li class="docs-toc__item"><a href="#0-1-5-2026-11-09">0.1.5 (2026-11-09)</a></li><li class="docs-toc__item"><a href="#0-1-4-2026-11-06">0.1.4 (2026-11-06)</a></li><li class="docs-toc__item"><a href="#0-1-3-2026-11-03">0.1.3 (2026-11-03)</a></li><li class="docs-toc__item"><a href="#0-1-2-2026-11-03">0.1.2 (2026-11-03)</a></li><li class="docs-toc__item"><a href="#0-1-1-2026-10-29">0.1.1 (2026-10-29)</a></li><li class="docs-toc__item"><a href="#0-1-0-2026-10-29">0.1.0 (2026-10-29)</a></li></ul></nav>
 </div>
 <footer class="docs-footer">
   <span>Documents Pinstripe <span data-docs-version>0.4.0</span></span>

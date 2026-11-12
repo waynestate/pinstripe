@@ -9,6 +9,10 @@ description: All notable changes to this project.
 
 All notable changes to Pinstripe are documented here.
 
+## Unreleased
+
+- Site: the line under the hero's buttons says "Version 0.4.0 is cut" (it still said 0.3, with 0.3.0's news). The number carries `data-docs-version` like the hang tag, so the docs builder rewrites it at every release and `composer docs:check` fails while it is stale; the words name no feature and link to the "Just off the cutting table" note, which the release steps already rewrite. New `FrontPageTest::testTheHeroNoteWearsTheVersionStamp` fails `composer ci` if the number is typed by hand again.
+
 ## 0.4.0 (2026-11-11)
 
 - Docs: every install line says `^0.4` (README, front page, its agent prompts, the Raw PHP, Laravel and Proof pages), since `^0.3` does not allow 0.4.0, and the Upgrading section's steps say to move the constraint rather than `composer update`. The front page's "Just off the cutting table" note names 0.4.0 and its two opt-in Rector presets.
