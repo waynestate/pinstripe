@@ -34,6 +34,29 @@ final class FrontPageTest extends TestCase
         );
     }
 
+    /**
+     * The hero's "Version X is cut" line said 0.3 a release after 0.4.0 was
+     * cut, because the number was typed by hand. Now it wears the docs stamp
+     * (`data-docs-version`), which the docs builder rewrites at every release
+     * and `composer docs:check` holds to the stamp. This keeps it on the stamp
+     * and on the newest release, so nobody sews a hand-typed number back on.
+     */
+    public function testTheHeroNoteWearsTheVersionStamp(): void
+    {
+        $html = file_get_contents(dirname(__DIR__) . '/site/index.html');
+        $this->assertNotFalse($html, 'could not read site/index.html');
+
+        $count = preg_match_all('/<p class="hero__note">(.*?)<\/p>/s', $html, $matches);
+        $this->assertSame(1, $count, 'expected exactly one hero note on the front page');
+
+        $this->assertSame(
+            1,
+            preg_match('/Version <span data-docs-version>(\d+\.\d+\.\d+)<\/span> is cut/', $matches[1][0], $version),
+            'the hero note must say "Version <span data-docs-version>X.Y.Z</span> is cut", so the docs builder keeps the number current: ' . $matches[1][0]
+        );
+        $this->assertSame($this->newestChangelogRelease(), $version[1], 'the hero note names an older release than CHANGELOG.md.');
+    }
+
     public function testTheCuttingTableNoteLinksToUpgrading(): void
     {
         $this->assertStringContainsString('href="docs/upgrading.html"', $this->cuttingTableNote(true));
