@@ -57,7 +57,7 @@
         "site:agent-ready-check": "php bin/agent-ready.php --check"
     },
     "scripts-descriptions": {
-        "ci": "The full CI contract: validate composer.json, run the PHPUnit suite (Pint and PHPStan against the fixtures), check the agent-ready files, check the docs site, audit dependencies. Same command on GitLab and GitHub.",
+        "ci": "The full CI contract: validate composer.json, run the PHPUnit suite (Pint and PHPStan against the fixtures), check the agent-ready files, check the docs site, audit dependencies. Same command as CI on git.wayne.edu.",
         "docs": "Build the docs site into site/docs/ from docs/ (Squire's shared builder).",
         "docs:check": "Fail when site/docs/ is stale or a docs page has a broken link, block or nav entry.",
         "site:agent-ready": "Rewrite the Markdown twins, llms.txt, llms-full.txt, robots.txt and sitemap.xml in site/ (Squire's agent-ready kit).",

@@ -16,7 +16,7 @@ This page summarizes what Pinstripe is, shows the install and run commands, and 
 
 The coding standard for the Wayne State app stack: shared presets for Pint, PHPStan (with Larastan for Laravel), Rector, and ESLint with Prettier. Your app points at them and adds only its own exceptions. Pinstripe is to code what a good suit is to a job interview: nobody notices it, everybody notices when it's missing.
 
-It needs PHP ^8.3, runs PHPStan at level 8, and is MIT licensed. Checks: `composer ci` (the same command runs on GitLab and GitHub).
+It needs PHP ^8.3, runs PHPStan at level 8, and is MIT licensed. Checks: `composer ci` (the same command CI runs on git.wayne.edu).
 
 Note
 

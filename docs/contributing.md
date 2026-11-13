@@ -22,13 +22,12 @@ With only Docker:
 docker run --rm -v "${PWD}:/app" -w /app composer:2.11.1@sha256:8de2184c6de224f4689e8f80ed5f5edaf0030b6b8b7839a22a2bcb6722ac87d0 sh -c "composer install --no-interaction && composer ci"
 ```
 
-`composer ci` runs `composer validate --strict`, PHPUnit, the agent-ready check (`php bin/agent-ready.php --check`), `composer audit` and the docs check (`php bin/docs-site.php --check`). The PHPUnit suite is the real check: it installs fixture apps and runs Pint, PHPStan and Rector with each preset against planted code, so a preset that stops catching something fails a test. `npm test` (`node --test`) covers the JS presets, and both pipelines run it on Node 22, 24 and 26, so a broken ESLint or Prettier preset fails the build too.
+`composer ci` runs `composer validate --strict`, PHPUnit, the agent-ready check (`php bin/agent-ready.php --check`), `composer audit` and the docs check (`php bin/docs-site.php --check`). The PHPUnit suite is the real check: it installs fixture apps and runs Pint, PHPStan and Rector with each preset against planted code, so a preset that stops catching something fails a test. `npm test` (`node --test`) covers the JS presets, and the pipeline runs it on Node 22, 24 and 26, so a broken ESLint or Prettier preset fails the build too.
 
 ## CI
 
 - **GitLab:** Preflight's `php-test` (PHP 8.3, 8.4, 8.5), `composer-audit`, `proctor` (on `deploy/`) and `a11y` (on `site/`) components, pinned to 0.8.0, plus `composer-ci`, `npm-test` (Node 22, 24 and 26) and `wayneui-copies` jobs.
-- **GitHub:** `.github/workflows/ci.yml` calls Preflight's reusable workflow (0.5.0) with `composer ci`, and runs `npm ci` then `npm test` in `node:22`, `node:24` and `node:26` containers.
-- Green means `composer ci` passed on all three PHP versions and `npm test` passed on Node 22, 24 and 26, on both.
+- Green means `composer ci` passed on all three PHP versions and `npm test` passed on Node 22, 24 and 26.
 
 ## Changing a preset
 

@@ -7,11 +7,10 @@ namespace WayneState\Pinstripe\Tests;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Proves the JS presets on Node 22, 24 and 26. The npm-test job on both
- * pipelines must run on all three Node majors while the floor stays 22.13,
+ * Proves the JS presets on Node 22, 24 and 26. The npm-test job on the
+ * pipeline must run on all three Node majors while the floor stays 22.13,
  * from package.json engines: GitLab declares a parallel matrix over
- * NODE_MAJOR and GitHub a strategy matrix over node, and neither file may
- * pin a single node:22 image anymore. A preset that only works on one Node
+ * NODE_MAJOR, and the file may not pin a single node:22 image anymore. A preset that only works on one Node
  * major would otherwise reach an app before CI notices.
  */
 final class NodeMatrixTest extends TestCase
@@ -45,39 +44,15 @@ final class NodeMatrixTest extends TestCase
         );
     }
 
-    public function testGitHubRunsNpmTestOnNode2224And26(): void
+    public function testThePipelineStillPinsNoNode22Image(): void
     {
-        $workflow = $this->readRootFile('.github/workflows/ci.yml');
+        $contents = $this->readRootFile('.gitlab-ci.yml');
 
-        $majors = $this->githubNodeMajors($workflow);
-
-        $this->assertSame(
-            self::NODE_MAJORS,
-            $majors,
-            sprintf(
-                '.github/workflows/ci.yml npm-test must declare strategy: matrix: node: [\'22\', \'24\', \'26\'] so the JS presets run on Node 22, 24 and 26 (found %s).',
-                json_encode($majors, JSON_THROW_ON_ERROR)
-            )
+        $this->assertStringNotContainsString(
+            'node:22',
+            $contents,
+            '.gitlab-ci.yml still pins a node:22 image: point the npm-test job at the matrix instead (node:${NODE_MAJOR}).'
         );
-
-        $this->assertStringContainsString(
-            'node:${{ matrix.node }}',
-            $workflow,
-            '.github/workflows/ci.yml npm-test must set container: node:${{ matrix.node }} so the matrix picks the Node major.'
-        );
-    }
-
-    public function testNoPipelineStillPinsANode22Image(): void
-    {
-        foreach (['.gitlab-ci.yml', '.github/workflows/ci.yml'] as $file) {
-            $contents = $this->readRootFile($file);
-
-            $this->assertStringNotContainsString(
-                'node:22',
-                $contents,
-                $file . ' still pins a node:22 image: point the npm-test job at the matrix instead (node:${NODE_MAJOR} on GitLab, node:${{ matrix.node }} on GitHub).'
-            );
-        }
     }
 
     /**
@@ -106,55 +81,6 @@ final class NodeMatrixTest extends TestCase
             }
 
             break;
-        }
-
-        return [];
-    }
-
-    /**
-     * The quoted values of the node flow list under the strategy matrix of
-     * the npm-test job in .github/workflows/ci.yml, or [] when the job has
-     * no such matrix line.
-     *
-     * @return list<string>
-     */
-    private function githubNodeMajors(string $workflow): array
-    {
-        $lines = preg_split('/\R/', $workflow) ?: [];
-        $jobIndent = null;
-        $matrixIndent = null;
-
-        foreach ($lines as $line) {
-            if (trim($line) === 'npm-test:') {
-                $jobIndent = $this->indentOf($line);
-                $matrixIndent = null;
-
-                continue;
-            }
-
-            if ($jobIndent === null || trim($line) === '') {
-                continue;
-            }
-
-            $indent = $this->indentOf($line);
-
-            if ($indent <= $jobIndent) {
-                break;
-            }
-
-            if (preg_match('/^\s*matrix:\s*$/', $line) === 1) {
-                $matrixIndent = $indent;
-
-                continue;
-            }
-
-            if ($matrixIndent !== null && $indent <= $matrixIndent) {
-                $matrixIndent = null;
-            }
-
-            if ($matrixIndent !== null && preg_match('/^\s*node:\s*\[([^\]]*)\]\s*$/', $line, $matches) === 1) {
-                return $this->quotedValues($matches[1]);
-            }
         }
 
         return [];

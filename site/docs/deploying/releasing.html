@@ -49,7 +49,7 @@
 <p>Set the same version in <code>package.json</code>, in the same release commit: <code>tests/PackageVersionTest.php</code> fails otherwise. In the same commit, rewrite the front page's &quot;Just off the cutting table&quot; note (<code>site/index.html</code>, then <code>composer site:agent-ready</code>) to lead with the new version and what it brought: <code>tests/FrontPageTest.php</code> fails while it names an older one. And rename the <code>## Unreleased</code> draft in <code>docs/upgrading.md</code> to the same <code>## X.Y.Z (YYYY-MM-DD)</code> heading (write the section if there is no draft: what changed for an app, the steps, how to verify): <code>tests/UpgradingTest.php</code> fails while a release has no section there.</p>
 </li>
 <li>
-<p><code>composer ci</code> and <code>npm test</code> green locally, then both pipelines green for that commit.</p>
+<p><code>composer ci</code> and <code>npm test</code> green locally, then the git.wayne.edu pipeline green for that commit.</p>
 </li>
 <li>
 <p>Run a secrets scan of the history and check that nothing internal is in the tree.</p>

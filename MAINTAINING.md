@@ -41,7 +41,7 @@ docker run --rm -v "${PWD}:/app" -w /app composer:2.11.1@sha256:8de2184c6de224f4
 `composer ci` runs `composer validate --strict`, PHPUnit, the agent-ready check (`php bin/agent-ready.php --check`),
 `composer audit` and the docs check (`php bin/docs-site.php --check`). The PHPUnit suite is the real check:
 it installs fixture apps and runs Pint, PHPStan and Rector with each preset against planted code, so a preset that
-stops catching something fails a test. `npm test` (`node --test`) covers the JS presets, and both pipelines run
+stops catching something fails a test. `npm test` (`node --test`) covers the JS presets, and the pipeline runs
 it on Node 22, 24 and 26, so a broken ESLint or Prettier preset fails the build too.
 
 ## CI
@@ -49,9 +49,7 @@ it on Node 22, 24 and 26, so a broken ESLint or Prettier preset fails the build 
 - **GitLab:** Preflight's `php-test` (PHP 8.3, 8.4, 8.5), `composer-audit`, `proctor` (on `deploy/`) and `a11y`
   (on `site/`) components, pinned to 0.8.0, plus `composer-ci`, `npm-test` (Node 22, 24 and 26) and
   `wayneui-copies` jobs.
-- **GitHub:** `.github/workflows/ci.yml` calls Preflight's reusable workflow (0.5.0) with `composer ci`, and runs
-  `npm ci` then `npm test` in `node:22`, `node:24` and `node:26` containers.
-- Green means `composer ci` passed on all three PHP versions and `npm test` passed on Node 22, 24 and 26, on both.
+- Green means `composer ci` passed on all three PHP versions and `npm test` passed on Node 22, 24 and 26.
 
 ## Changing a preset
 
@@ -75,7 +73,7 @@ it on Node 22, 24 and 26, so a broken ESLint or Prettier preset fails the build 
    while it names an older one. And rename the `## Unreleased` draft in `docs/upgrading.md` to the same
    `## X.Y.Z (YYYY-MM-DD)` heading (write the section if there is no draft: what changed for an app, the steps, how
    to verify): `tests/UpgradingTest.php` fails while a release has no section there.
-3. `composer ci` and `npm test` green locally, then both pipelines green for that commit.
+3. `composer ci` and `npm test` green locally, then the git.wayne.edu pipeline green for that commit.
 4. Run a secrets scan of the history and check that nothing internal is in the tree.
 5. Tag `X.Y.Z` (no `v`) on git.wayne.edu. The push mirror carries the tag to GitHub, and Packagist picks it up from there.
 6. **npm is published by hand,** after the tag, from a clean checkout of the tagged commit, by an owner of the
