@@ -44,6 +44,7 @@
 <p>All notable changes to Pinstripe are documented here.</p>
 <h2 id="unreleased"><span class="docs-heading-tail"><span>Unreleased</span><a class="docs-heading-link" aria-label="Link to this section" href="#unreleased">#</a></span></h2>
 <ul>
+<li>Changed: <code>deploy/</code> requires PROCTOR <code>^0.16</code>, whose <code>ci-pipelines</code> check no longer asks for a GitHub workflow (D-069); <code>^0.15</code> failed the <code>wayneui-copies</code> job.</li>
 <li>Removed: the GitHub Actions workflow; CI runs on git.wayne.edu only (the GitHub copy is a mirror).</li>
 <li>Site: the line under the hero's buttons says &quot;Version 0.4.0 is cut&quot; (it still said 0.3, with 0.3.0's news). The number carries <code>data-docs-version</code> like the hang tag, so the docs builder rewrites it at every release and <code>composer docs:check</code> fails while it is stale; the words name no feature and link to the &quot;Just off the cutting table&quot; note, which the release steps already rewrite. New <code>FrontPageTest::testTheHeroNoteWearsTheVersionStamp</code> fails <code>composer ci</code> if the number is typed by hand again.</li>
 </ul>
