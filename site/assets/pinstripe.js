@@ -143,8 +143,8 @@
     var run = rect.height - window.innerHeight;
     var p = run > 0 ? Math.min(1, Math.max(0, -rect.top / run)) : 0;
 
-    // 0 – 0.1: as it walked in. 0.1 – 0.55: chalk, one mark at a time.
-    // 0.55 – 0.82: the iron passes. After that: pressed.
+    // 0 to 0.1: as it walked in. 0.1 to 0.55: chalk, one mark at a time.
+    // 0.55 to 0.82: the iron passes. After that: pressed.
     var chalked = p < 0.1 ? 0 : Math.min(STEPS, Math.ceil(((p - 0.1) / 0.45) * STEPS));
     var press = p < 0.55 ? 0 : Math.min(1, (p - 0.55) / 0.27);
 
