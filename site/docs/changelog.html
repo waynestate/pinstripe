@@ -44,6 +44,7 @@
 <p>All notable changes to Pinstripe are documented here.</p>
 <h2 id="unreleased"><span class="docs-heading-tail"><span>Unreleased</span><a class="docs-heading-link" aria-label="Link to this section" href="#unreleased">#</a></span></h2>
 <ul>
+<li>Changed: the deploy kit is Squire 0.11.1 (was 0.10.7): the release script fetches PROCTOR when <code>--no-dev</code> left it out and installs the frontend from a <code>yarn.lock</code>, the HAProxy pin is current, the fallback base follows the app's PHP line, and the parity scripts carry the deprecation note.</li>
 <li>Changed: CI pins Preflight 0.9.0 (components and the a11y checker copy).</li>
 <li>Changed: <code>deploy/</code> requires PROCTOR <code>^0.16</code>, whose <code>ci-pipelines</code> check no longer asks for a GitHub workflow (D-069); <code>^0.15</code> failed the <code>wayneui-copies</code> job.</li>
 <li>Removed: the GitHub Actions workflow; CI runs on git.wayne.edu only (the GitHub copy is a mirror).</li>
