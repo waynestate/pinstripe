@@ -8,6 +8,7 @@ All notable changes to Pinstripe are documented here.
 - Changed: `deploy/` requires PROCTOR `^0.16`, whose `ci-pipelines` check no longer asks for a GitHub workflow (D-069); `^0.15` failed the `wayneui-copies` job.
 - Removed: the GitHub Actions workflow; CI runs on git.wayne.edu only (the GitHub copy is a mirror).
 - Site: the line under the hero's buttons says "Version 0.4.0 is cut" (it still said 0.3, with 0.3.0's news). The number carries `data-docs-version` like the hang tag, so the docs builder rewrites it at every release and `composer docs:check` fails while it is stale; the words name no feature and link to the "Just off the cutting table" note, which the release steps already rewrite. New `FrontPageTest::testTheHeroNoteWearsTheVersionStamp` fails `composer ci` if the number is typed by hand again.
+- Docs: the README shows the Docker command for `composer ci`, so the checks run with no local PHP.
 
 ## 0.4.0 (2026-11-11)
 
