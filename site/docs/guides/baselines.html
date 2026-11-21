@@ -68,6 +68,16 @@
 <p>In GitLab CI the merge request's base SHA is already in the environment:</p>
 <pre tabindex="0"><code>vendor/bin/pinstripe-baseline check --against=$CI_MERGE_REQUEST_DIFF_BASE_SHA phpstan-baseline.neon
 </code></pre>
+<h2 id="update-notice">Update <span class="docs-heading-tail"><span>notice</span><a class="docs-heading-link" aria-label="Link to this section" href="#update-notice">#</a></span></h2>
+<p>After <code>count</code> and <code>check</code> finish, the command prints one line on stderr when a newer stable release of Pinstripe
+exists:</p>
+<pre tabindex="0"><code>pinstripe 0.4.0 is out of date: 0.5.0 is the newest release. Update: composer update waynestate/pinstripe
+</code></pre>
+<p>The update command matches the install: <code>git pull</code> in a source checkout, <code>composer global update waynestate/pinstripe</code> for a Composer global install, or <code>composer require waynestate/pinstripe:^X.Y</code> (with <code>--dev</code>
+when the pin is in require-dev) when the project's constraint excludes the newest release. When the newest release
+has a higher major version, the line adds a link to <a href="../upgrading.html">the upgrading guide</a>.</p>
+<p>The check asks Packagist at most once a day and caches the answer in your user cache dir. It never writes to stdout
+and never changes an exit code. It stays silent in CI (when <code>CI</code> is set) and when <code>WAYNE_NO_UPDATE_CHECK=1</code> is set.</p>
 <h2 id="the-policy">The <span class="docs-heading-tail"><span>policy</span><a class="docs-heading-link" aria-label="Link to this section" href="#the-policy">#</a></span></h2>
 <p>An existing app may generate a baseline once with <code>phpstan analyse --generate-baseline</code> and include it in its <code>phpstan.neon</code>; new code gets no baseline. The count a baseline holds is the sum of each entry's <code>count</code>, 1 when <code>count</code> is absent, and <code>pinstripe-baseline count</code> prints it. <code>bin/pinstripe-baseline check</code> fails the build (exit 1) when the baseline grows, either against a fixed limit with <code>--max=&lt;n&gt;</code> or against a git ref with <code>--against=&lt;git-ref&gt;</code>; in GitLab CI the merge request's base SHA is already in the environment as <code>$CI_MERGE_REQUEST_DIFF_BASE_SHA</code>. Exit codes: 0 ok, 1 the baseline grew, 2 usage or baseline problem.</p>
 <aside class="docs-callout docs-callout--note" role="note"><p class="docs-callout__label">Note</p><p>A baseline is a tailor's chalk line, and this command is the tape measure: it fails the build the moment the line gets longer. The policy behind this section is recorded in <a href="../adr/0001-phpstan-level-and-baseline-policy.html">the ADR</a>.</p></aside>
@@ -82,7 +92,7 @@
     </main>
     <nav class="docs-pager" aria-label="Pages"><a class="docs-pager__link" href="../../docs/guides/adopting.html"><span class="docs-pager__dir">Previous</span><span class="docs-pager__title">Adopting on an existing app</span></a><a class="docs-pager__link docs-pager__link--next" href="../../docs/reference/tested-with.html"><span class="docs-pager__dir">Next</span><span class="docs-pager__title">Tested with and tool floors</span></a></nav>
   </div>
-  <nav class="docs-toc" aria-label="On this page"><h2 class="docs-toc__title">On this page</h2><ul class="docs-toc__list"><li class="docs-toc__item"><a href="#opt-in-first">Opt in first</a></li><li class="docs-toc__item"><a href="#count-the-baseline">Count the baseline</a></li><li class="docs-toc__item"><a href="#check-against-a-limit">Check against a limit</a></li><li class="docs-toc__item"><a href="#check-against-the-target-branch">Check against the target branch</a></li><li class="docs-toc__item"><a href="#the-policy">The policy</a></li><li class="docs-toc__item"><a href="#related">Related</a></li></ul></nav>
+  <nav class="docs-toc" aria-label="On this page"><h2 class="docs-toc__title">On this page</h2><ul class="docs-toc__list"><li class="docs-toc__item"><a href="#opt-in-first">Opt in first</a></li><li class="docs-toc__item"><a href="#count-the-baseline">Count the baseline</a></li><li class="docs-toc__item"><a href="#check-against-a-limit">Check against a limit</a></li><li class="docs-toc__item"><a href="#check-against-the-target-branch">Check against the target branch</a></li><li class="docs-toc__item"><a href="#update-notice">Update notice</a></li><li class="docs-toc__item"><a href="#the-policy">The policy</a></li><li class="docs-toc__item"><a href="#related">Related</a></li></ul></nav>
 </div>
 <footer class="docs-footer">
   <span>Documents Pinstripe <span data-docs-version>0.4.0</span></span>
