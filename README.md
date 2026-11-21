@@ -712,3 +712,5 @@ Nothing on the cutting table right now: the banned calls link to their CREED rul
 
 <div align="center"><sub>Fifteen parts, one fitting room. The README art is cut from the front page by
 <a href="scripts/readme-art/README.md"><code>scripts/readme-art</code></a>; no suit was harmed, and every hem was pinned first.</sub></div>
+
+Found a security problem? See [SECURITY.md](SECURITY.md); please do not open a public issue.
