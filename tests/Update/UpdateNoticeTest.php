@@ -329,16 +329,40 @@ final class UpdateNoticeTest extends TestCase
         $this->assertTrue(copy(dirname(__DIR__) . '/../tests/fixtures/baseline/phpstan-baseline.neon', $home . '/phpstan-baseline.neon'));
 
         // The app's autoloader loads the package's real autoloader, then
-        // registers the running version the way an installed package would.
+        // registers a second ClassLoader whose vendor directory holds its
+        // own composer/installed.php naming the running version, the way an
+        // installed package would. InstalledVersions scans registered
+        // loaders before the repository's own installed.php, so the 0.4.0
+        // below wins over the root package's 1.0.0+no-version-set.
         file_put_contents($home . '/vendor/autoload.php', "<?php\n\nrequire "
             . var_export(dirname(dirname(__DIR__)) . '/vendor/autoload.php', true) . ";\n\n"
-            . "\Composer\InstalledVersions::reload([\n"
+            . "\$shimLoader = new \\Composer\\Autoload\\ClassLoader(__DIR__);\n"
+            . "\$shimLoader->register(true);\n");
+
+        mkdir($home . '/vendor/composer', 0777, true);
+        file_put_contents($home . '/vendor/composer/installed.php', "<?php\n\nreturn [\n"
+            . "    'root' => [\n"
+            . "        'name' => 'wayne-state/update-test-app',\n"
+            . "        'pretty_version' => '1.0.0+no-version-set',\n"
+            . "        'version' => '1.0.0.0',\n"
+            . "        'reference' => null,\n"
+            . "        'type' => 'project',\n"
+            . "        'install_path' => __DIR__ . '/../../',\n"
+            . "        'aliases' => [],\n"
+            . "        'dev' => false,\n"
+            . "    ],\n"
             . "    'versions' => [\n"
             . "        'waynestate/pinstripe' => [\n"
             . "            'pretty_version' => '0.4.0',\n"
+            . "            'version' => '0.4.0.0',\n"
+            . "            'reference' => null,\n"
+            . "            'type' => 'library',\n"
+            . "            'install_path' => __DIR__ . '/../waynestate/pinstripe',\n"
+            . "            'aliases' => [],\n"
+            . "            'dev_requirement' => false,\n"
             . "        ],\n"
             . "    ],\n"
-            . "]);\n");
+            . "];\n");
 
         // 0.9.9 stays on the same major as the running 0.4.0, so the line
         // carries no upgrading link.
@@ -485,12 +509,17 @@ final class UpdateNoticeTest extends TestCase
     }
 
     /**
-     * @return array{0: callable(string): void, 1: array{text: string}}
+     * A write closure and the sink it appends to. The sink is an
+     * ArrayObject, not a plain array: the closure and the caller must see
+     * the same variable, and only an object is shared by handle when the
+     * helper returns.
+     *
+     * @return array{0: callable(string): void, 1: \ArrayObject<string, string>}
      */
     private function stderr(): array
     {
-        $sink = ['text' => ''];
-        $write = static function (string $message) use (&$sink): void {
+        $sink = new \ArrayObject(['text' => '']);
+        $write = static function (string $message) use ($sink): void {
             $sink['text'] .= $message;
         };
 
