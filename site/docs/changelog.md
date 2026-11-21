@@ -12,6 +12,7 @@ All notable changes to Pinstripe are documented here.
 
 ## Unreleased [#](https://pinstripe.apps.wayne.edu/docs/changelog.html#unreleased)
 
+- Changed: CI pins Preflight 0.12.0 (components and the a11y checker copy). The php-test component now also runs an advisory PHP 8.6 job that may fail and never gates the pipeline.
 - Docs: SECURITY.md says how to report a vulnerability privately.
 - Added: `pinstripe-baseline` shows an update notice. After `count` and `check` finish, it prints one line on stderr when a newer stable release of Pinstripe exists (`pinstripe 0.4.0 is out of date: 0.5.0 is the newest release. Update: composer update waynestate/pinstripe`). The update command matches the install: `git pull` in a source checkout, `composer global update waynestate/pinstripe` for a Composer global install, or `composer require waynestate/pinstripe:^X.Y` (with `--dev` when the pin is in require-dev) when the project's caret or tilde pin excludes the newest release; a higher major adds a link to the upgrading guide. The check asks Packagist at most once a day (the answer is cached in the user cache dir), never writes to stdout, and never changes an exit code. It stays silent in CI and when `WAYNE_NO_UPDATE_CHECK=1` is set. New `src/Update/` (InstallKind, LatestReleaseFetcher, PackagistFetcher, UpdateCache, UpdateNotice) and `tests/Update/UpdateNoticeTest.php`.
 - Fixed: the contributing guide names Preflight 0.9.0, the tag CI pins, where it still said 0.8.0. Content only.
