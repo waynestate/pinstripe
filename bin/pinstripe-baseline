@@ -37,8 +37,13 @@ foreach ([__DIR__ . '/../vendor/autoload.php', __DIR__ . '/../../../autoload.php
 }
 error_reporting($pinstripeErrorLevel);
 
+use Composer\InstalledVersions;
 use WayneState\Pinstripe\Baseline;
 use WayneState\Pinstripe\BaselineException;
+use WayneState\Pinstripe\Update\InstallKind;
+use WayneState\Pinstripe\Update\PackagistFetcher;
+use WayneState\Pinstripe\Update\UpdateCache;
+use WayneState\Pinstripe\Update\UpdateNotice;
 
 function pinstripe_baseline_usage(): never
 {
@@ -51,6 +56,40 @@ function pinstripe_baseline_fail(string $message): never
 {
     fwrite(STDERR, $message . "\n");
     exit(2);
+}
+
+// After any command finishes, one line on stderr when a newer stable release
+// exists, with the command that updates this install. It reads the running
+// version from Composer's InstalledVersions, so a source checkout, where the
+// package is not in its own vendor, stays silent. Every step is wrapped: the
+// notice never changes stdout or an exit code.
+function pinstripe_baseline_notice(array $argv): void
+{
+    try {
+        $env = getenv();
+        if ($env === false) {
+            $env = [];
+        }
+        if (!class_exists(InstalledVersions::class)) {
+            return;
+        }
+        $version = InstalledVersions::getPrettyVersion('waynestate/pinstripe');
+        if (!is_string($version)) {
+            return;
+        }
+        $root = dirname(__DIR__);
+        $notice = new UpdateNotice(
+            'pinstripe',
+            $root,
+            InstallKind::detect($root, $env),
+            new UpdateCache('pinstripe'),
+            new PackagistFetcher(),
+            static fn (): int => time(),
+        );
+        $notice->run($env, $argv, $version, STDERR);
+    } catch (Throwable) {
+        // The notice never gets in the way of the count.
+    }
 }
 
 $arguments = array_slice($argv, 1);
@@ -100,6 +139,7 @@ switch ($command) {
         } catch (BaselineException $exception) {
             pinstripe_baseline_fail($exception->getMessage());
         }
+        pinstripe_baseline_notice($argv);
         exit(0);
 
     case 'check':
@@ -113,6 +153,7 @@ switch ($command) {
 
             if ($max !== null && $count > $max) {
                 fwrite(STDERR, "baseline grew: {$count} errors, the most allowed is {$max}\n");
+                pinstripe_baseline_notice($argv);
                 exit(1);
             }
 
@@ -120,6 +161,7 @@ switch ($command) {
                 $allowed = Baseline::countAtRef($path, $against);
                 if ($count > $allowed) {
                     fwrite(STDERR, "baseline grew: {$count} errors, the most allowed is {$allowed}\n");
+                    pinstripe_baseline_notice($argv);
                     exit(1);
                 }
             }
@@ -127,6 +169,7 @@ switch ($command) {
             pinstripe_baseline_fail($exception->getMessage());
         }
 
+        pinstripe_baseline_notice($argv);
         exit(0);
 
     default:
