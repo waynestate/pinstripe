@@ -16,6 +16,7 @@ All notable changes to Pinstripe are documented here.
 - Removed: the GitHub Actions workflow; CI runs on git.wayne.edu only (the GitHub copy is a mirror).
 - Site: the line under the hero's buttons says "Version 0.4.0 is cut" (it still said 0.3, with 0.3.0's news). The number carries `data-docs-version` like the hang tag, so the docs builder rewrites it at every release and `composer docs:check` fails while it is stale; the words name no feature and link to the "Just off the cutting table" note, which the release steps already rewrite. New `FrontPageTest::testTheHeroNoteWearsTheVersionStamp` fails `composer ci` if the number is typed by hand again.
 - Docs: the README shows the Docker command for `composer ci`, so the checks run with no local PHP.
+- Site: the front page's "Just off the cutting table" note says what 1.0.0 is (the first stable release, no rule or config changed from 0.4.0, the update notice, the open questions that do not hold the release), and its install lines and agent prompts say `^1.0`, since `^0.4` does not allow 1.0.0.
 
 ## 0.4.0 (2026-11-11)
 
