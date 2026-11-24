@@ -11,6 +11,10 @@ This page walks through each released version of Pinstripe, what changed for con
 
 A stricter preset breaks consumers' builds. Pinstripe ships such a change in a minor version, not a major one, so you opt in by updating the package. When a version below marks a change as breaking, it is a stricter preset taking effect in your app the moment you update to it; hold the current version until you are ready.
 
+## 1.0.0 (2026-11-24)
+
+No action needed for apps already on 0.4.0: 1.0.0 changes no rule or config, and nothing in the [changelog](changelog.md) section for it asks an app to do anything. The update notice `pinstripe-baseline` now prints is one line on stderr, silent in CI, and never changes an exit code, so even that needs no action. Your constraint is `^0.4`, which does not allow 1.0.0, so nothing moves until you run `composer require --dev waynestate/pinstripe:^1.0`; when you do, `composer analyse` reports exactly what it did on 0.4.0. The open questions the release carries are listed in [Open questions](../OPEN_QUESTIONS.md), and none gates 1.0.
+
 ## 0.4.0 (2026-11-11)
 
 No breaking change: two Rector presets arrived, both opt-in, and no preset you already use passes or fails anything new.
