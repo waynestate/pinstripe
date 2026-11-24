@@ -47,7 +47,7 @@ it on Node 22, 24 and 26, so a broken ESLint or Prettier preset fails the build 
 ## CI
 
 - **GitLab:** Preflight's `php-test` (PHP 8.3, 8.4, 8.5), `composer-audit`, `proctor` (on `deploy/`) and `a11y`
-  (on `site/`) components, pinned to 0.9.0, plus `composer-ci`, `npm-test` (Node 22, 24 and 26) and
+  (on `site/`) components, pinned to 0.12.0, plus `composer-ci`, `npm-test` (Node 22, 24 and 26) and
   `wayneui-copies` jobs.
 - Green means `composer ci` passed on all three PHP versions and `npm test` passed on Node 22, 24 and 26.
 
