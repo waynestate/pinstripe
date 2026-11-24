@@ -11,6 +11,9 @@ All notable changes to Pinstripe are documented here.
 
 ## Unreleased
 
+## 1.0.0 (2026-11-24)
+
+- 1.0.0: known open questions are listed in OPEN_QUESTIONS.md and none gates 1.0.
 - Changed: CI pins Preflight 0.12.0 (components and the a11y checker copy). The php-test component now also runs an advisory PHP 8.6 job that may fail and never gates the pipeline.
 - Docs: SECURITY.md says how to report a vulnerability privately.
 - Added: `pinstripe-baseline` shows an update notice. After `count` and `check` finish, it prints one line on stderr when a newer stable release of Pinstripe exists (`pinstripe 0.4.0 is out of date: 0.5.0 is the newest release. Update: composer update waynestate/pinstripe`). The update command matches the install: `git pull` in a source checkout, `composer global update waynestate/pinstripe` for a Composer global install, or `composer require waynestate/pinstripe:^X.Y` (with `--dev` when the pin is in require-dev) when the project's caret or tilde pin excludes the newest release; a higher major adds a link to the upgrading guide. The check asks Packagist at most once a day (the answer is cached in the user cache dir), never writes to stdout, and never changes an exit code. It stays silent in CI and when `WAYNE_NO_UPDATE_CHECK=1` is set. New `src/Update/` (InstallKind, LatestReleaseFetcher, PackagistFetcher, UpdateCache, UpdateNotice) and `tests/Update/UpdateNoticeTest.php`.
@@ -20,6 +23,7 @@ All notable changes to Pinstripe are documented here.
 - Removed: the GitHub Actions workflow; CI runs on git.wayne.edu only (the GitHub copy is a mirror).
 - Site: the line under the hero's buttons says "Version 0.4.0 is cut" (it still said 0.3, with 0.3.0's news). The number carries `data-docs-version` like the hang tag, so the docs builder rewrites it at every release and `composer docs:check` fails while it is stale; the words name no feature and link to the "Just off the cutting table" note, which the release steps already rewrite. New `FrontPageTest::testTheHeroNoteWearsTheVersionStamp` fails `composer ci` if the number is typed by hand again.
 - Docs: the README shows the Docker command for `composer ci`, so the checks run with no local PHP.
+- Site: the front page's "Just off the cutting table" note says what 1.0.0 is (the first stable release, no rule or config changed from 0.4.0, the update notice, the open questions that do not hold the release), and its install lines and agent prompts say `^1.0`, since `^0.4` does not allow 1.0.0.
 
 ## 0.4.0 (2026-11-11)
 
