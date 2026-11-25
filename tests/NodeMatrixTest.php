@@ -7,40 +7,86 @@ namespace WayneState\Pinstripe\Tests;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Proves the JS presets on Node 22, 24 and 26. The npm-test job on the
- * pipeline must run on all three Node majors while the floor stays 22.13,
- * from package.json engines: GitLab declares a parallel matrix over
- * NODE_MAJOR, and the file may not pin a single node:22 image anymore. A preset that only works on one Node
- * major would otherwise reach an app before CI notices.
+ * Proves the JS presets on Node 22, 24 and 26. Pushes run Node 26 in the
+ * npm-test job, and the full tier (nightly schedules, tags, web runs) adds
+ * 22 and 24 in npm-test-matrix; the floor stays 22.13, from package.json
+ * engines. A preset that only works on one Node major would otherwise
+ * reach an app before CI notices.
  */
 final class NodeMatrixTest extends TestCase
 {
     /**
-     * The Node majors the npm-test job must run on.
+     * The Node majors the JS presets must run on across the two jobs.
      *
      * @var list<string>
      */
     private const NODE_MAJORS = ['22', '24', '26'];
 
-    public function testGitLabRunsNpmTestOnNode2224And26(): void
+    public function testGitLabRunsTheJsPresetsOnNode2224And26(): void
     {
         $gitlab = $this->readRootFile('.gitlab-ci.yml');
 
-        $majors = $this->gitlabNodeMajors($gitlab);
+        $npmTest = $this->jobBlock($gitlab, 'npm-test');
+
+        $this->assertNotSame(
+            '',
+            $npmTest,
+            '.gitlab-ci.yml is missing the npm-test job: pushes must run the JS presets on Node 26.'
+        );
+
+        $this->assertMatchesRegularExpression(
+            '/^\s*image:\s*\S*\/node:26$/m',
+            $npmTest,
+            '.gitlab-ci.yml npm-test must set an image line ending in /node:26 so pushes run the JS presets on Node 26.'
+        );
+
+        $this->assertStringNotContainsString(
+            'parallel:',
+            $npmTest,
+            '.gitlab-ci.yml npm-test must not carry a parallel: key: pushes run one Node, 26, and the matrix lives in npm-test-matrix.'
+        );
+
+        $npmTestMatrix = $this->jobBlock($gitlab, 'npm-test-matrix');
+
+        $this->assertNotSame(
+            '',
+            $npmTestMatrix,
+            '.gitlab-ci.yml is missing the npm-test-matrix job: the full tier must add Node 22 and 24.'
+        );
+
+        $majors = $this->gitlabNodeMajors($npmTestMatrix);
 
         $this->assertSame(
-            self::NODE_MAJORS,
+            ['22', '24'],
             $majors,
             sprintf(
-                '.gitlab-ci.yml npm-test must declare parallel: matrix: - NODE_MAJOR: [\'22\', \'24\', \'26\'] so the JS presets run on Node 22, 24 and 26 (found %s).',
+                '.gitlab-ci.yml npm-test-matrix must declare parallel: matrix: - NODE_MAJOR: [\'22\', \'24\'] in that order so the full tier adds Node 22 and 24 (found %s).',
                 json_encode($majors, JSON_THROW_ON_ERROR)
             )
         );
 
+        $this->assertMatchesRegularExpression(
+            '/^\s*image:\s*\S*\/node:\$\{NODE_MAJOR\}$/m',
+            $npmTestMatrix,
+            '.gitlab-ci.yml npm-test-matrix must set an image line ending in /node:${NODE_MAJOR} so the matrix picks the Node major.'
+        );
+
         $this->assertStringContainsString(
-            'node:${NODE_MAJOR}',
-            $gitlab,
-            '.gitlab-ci.yml npm-test must set image: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/node:${NODE_MAJOR} so the matrix picks the Node major.'
+            "- if: '\$PREFLIGHT_TIER == \"full\"'",
+            $npmTestMatrix,
+            ".gitlab-ci.yml npm-test-matrix must carry the rule '- if: \$PREFLIGHT_TIER == \"full\"' so the matrix runs only on the full tier."
+        );
+
+        $covered = array_unique(array_merge(['26'], $majors));
+        sort($covered);
+
+        $this->assertSame(
+            self::NODE_MAJORS,
+            $covered,
+            sprintf(
+                '.gitlab-ci.yml must cover Node 22, 24 and 26 across npm-test (26) and npm-test-matrix (sorted union found %s).',
+                json_encode($covered, JSON_THROW_ON_ERROR)
+            )
         );
     }
 
@@ -56,31 +102,41 @@ final class NodeMatrixTest extends TestCase
     }
 
     /**
-     * The quoted values of the NODE_MAJOR flow list under the npm-test job
-     * in .gitlab-ci.yml, or [] when the job has no such matrix line.
-     *
-     * @return list<string>
+     * The lines of one job's block in .gitlab-ci.yml: everything after the
+     * column-0 '<job>:' line up to the next column-0 line, or '' when the
+     * job is missing.
      */
-    private function gitlabNodeMajors(string $gitlab): array
+    private function jobBlock(string $gitlab, string $job): string
     {
-        $lines = preg_split('/\R/', $gitlab) ?: [];
+        $block = '';
+        $inside = false;
 
-        foreach ($lines as $index => $line) {
-            if (trim($line) !== 'npm-test:') {
+        foreach (preg_split('/\R/', $gitlab) ?: [] as $line) {
+            if (preg_match('/^\S/', $line) === 1) {
+                $inside = rtrim($line) === $job . ':';
                 continue;
             }
 
-            foreach (array_slice($lines, $index + 1) as $later) {
-                if (preg_match('/^\S/', $later) === 1) {
-                    break;
-                }
-
-                if (preg_match('/^\s*-\s*NODE_MAJOR:\s*\[([^\]]*)\]\s*$/', $later, $matches) === 1) {
-                    return $this->quotedValues($matches[1]);
-                }
+            if ($inside) {
+                $block .= $line . "\n";
             }
+        }
 
-            break;
+        return $block;
+    }
+
+    /**
+     * The quoted values of the NODE_MAJOR flow list in a job block of
+     * .gitlab-ci.yml, or [] when the block has no such matrix line.
+     *
+     * @return list<string>
+     */
+    private function gitlabNodeMajors(string $block): array
+    {
+        foreach (preg_split('/\R/', $block) ?: [] as $line) {
+            if (preg_match('/^\s*-\s*NODE_MAJOR:\s*\[([^\]]*)\]\s*$/', $line, $matches) === 1) {
+                return $this->quotedValues($matches[1]);
+            }
         }
 
         return [];
@@ -96,14 +152,6 @@ final class NodeMatrixTest extends TestCase
         preg_match_all('/[\'"]([^\'"]+)[\'"]/', $body, $matches);
 
         return $matches[1] ?? [];
-    }
-
-    /**
-     * The number of leading spaces of a line.
-     */
-    private function indentOf(string $line): int
-    {
-        return strlen($line) - strlen(ltrim($line, ' '));
     }
 
     private function readRootFile(string $name): string
