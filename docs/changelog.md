@@ -11,6 +11,8 @@ All notable changes to Pinstripe are documented here.
 
 ## Unreleased
 
+- Changed: CI follows the stack's D-176 pipeline shape on Preflight 0.13.0. A push runs the fast tier (composer ci, the audits, PROCTOR, the secret scan, the WayneUI copies and `npm test` on Node 26). The PHP matrix, the a11y check (now axe-core 4.14.1), the README art check and `npm test` on Node 22 and 24 run nightly, on tags and on manual runs. Merge-request pipelines are gone, and a new commit cancels the pipeline it replaces.
+
 ## 1.0.0 (2026-11-24)
 
 - 1.0.0: known open questions are listed in OPEN_QUESTIONS.md and none gates 1.0.
